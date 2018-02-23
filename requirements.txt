@@ -1,3 +1,7 @@
 Django==2.0.2
+django-filter==1.1.0
+django-webpack-loader==0.6.0
+djangorestframework==3.7.7
+Pillow==5.0.0
 python-decouple==3.1
 pytz==2018.3
