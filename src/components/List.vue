@@ -17,6 +17,9 @@
             <h2 v-html="fanfic.title"></h2>
             </router-link>
             <p v-html="fanfic.author"></p>
+            <p v-html="fanfic.genres"></p>
+            <p> {{ moment(fanfic.publish).format('DD/MM/YYYY') }}</p>
+            <p>{{ fanfic.likes }} likes</p>
         </article>
     </section>
 
@@ -24,6 +27,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'List',
   data () {
@@ -46,6 +51,9 @@ export default {
         } finally {
 
         }
+    },
+    methods: {
+        moment
     }
 }
 </script>

@@ -6,6 +6,10 @@
         Can't load the fic
     </div>
 
+    <ul v-for="element of chapter.results" v-if="element.fanfic === fanfic.id">
+        <li><a v-bind:href="'#' + element.id">{{ element.title }}</a></li>
+    </ul>
+
     <section>
             <h2 v-html="fanfic.title"></h2>
             <p v-html="fanfic.category"></p>
@@ -21,10 +25,11 @@
             <p v-html="fanfic.credits"></p>
             ===
             <div v-for="chap of chapter.results" v-if="chap.fanfic === fanfic.id">
-                ***
-                <p v-html="chap.description"></p>
-                ***
-                <div>{{ chap.text }}</div>
+                <h3 v-html="chap.title" :id="chap.id"></h3>
+
+                <div class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chap.description" role="alert">{{ chap.description }}</div>
+
+                <div v-html="chap.text"></div>
             </div>
     </section>
 
