@@ -149,8 +149,7 @@ WEBPACK_LOADER = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS':
-    'api.custompagination.LimitOffsetPaginationWithUpperBound',
+    'DEFAULT_PAGINATION_CLASS': 'api.custompagination.LimitOffsetPaginationWithUpperBound',
     'PAGE_SIZE': 4,
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -169,5 +168,6 @@ REST_FRAMEWORK = {
         'anon': '3/hour',
         'user': '10/hour',
         'fanfic': '20/hour',
-    }
+    },
+    # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }

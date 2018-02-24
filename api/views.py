@@ -142,8 +142,8 @@ class ApiRoot(generics.GenericAPIView):
         return Response({
             'fanfics' : reverse('fanfic-list', request=request),
             'chapters': reverse('chapter-list', request=request),
-            'comments': reverse(CommentList.name, request=request),
-            'category': reverse(CategoryList.name, request=request),
-            'sub-category': reverse(SubCategoryList.name, request=request),
+            'comments': reverse('comment-list', request=request),
+            'category': reverse('category-list', request=request),
+            'sub-category': reverse('subcategory-list', request=request),
             'users': reverse('user-list', request=request),
         })
