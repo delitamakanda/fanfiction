@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'multiselectfield',
     'embed_video',
+    'django_filters',
 ]
 
 INSTALLED_APPS += [
     'rest_framework',
+    'rest_framework.authtoken',
     'webpack_loader',
     'api',
 ]
@@ -146,4 +148,26 @@ WEBPACK_LOADER = {
     }
 }
 
-REST_FRAMEWORK = {}
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS':
+    'api.custompagination.LimitOffsetPaginationWithUpperBound',
+    'PAGE_SIZE': 4,
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+        'rest_framework.filters.SearchFilter',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '3/hour',
+        'user': '10/hour',
+        'fanfic': '20/hour',
+    }
+}

@@ -6,20 +6,12 @@ from api.models import Chapter
 from api.models import Category
 from api.models import SubCategory
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    fanfics = serializers.HyperlinkedRelatedField(many=True, view_name='fanfic-detail', read_only=True)
-
-    class Meta:
-        model = User
-        fields = ('url', 'id', 'username', 'fanfics',)
-
-
 class FanficSerializer(serializers.HyperlinkedModelSerializer):
     category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='name')
     subcategory = serializers.SlugRelatedField(queryset=SubCategory.objects.all(), slug_field='name')
     genres = serializers.ChoiceField(choices=Fanfic.GENRES_CHOICES, source='get_genres_display')
     classement = serializers.ChoiceField(choices=Fanfic.CLASSEMENT_CHOICES,source='get_classement_display')
-    author = UserSerializer()
+    author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
         model = Fanfic
@@ -45,6 +37,14 @@ class FanficSerializer(serializers.HyperlinkedModelSerializer):
             'subcategory',
         )
 
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    fanfics = FanficSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('url', 'id', 'username', 'fanfics',)
+
+
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -59,8 +59,9 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'category', 'name', 'slug', 'image', 'description',)
 
 
-class ChapterSerializer(serializers.HyperlinkedModelSerializer):
-
+class ChapterSerializer(serializers.ModelSerializer):
+    fanfic = FanficSerializer()
+    
     class Meta:
         model = Chapter
         fields = ('id', 'fanfic', 'title', 'description', 'text', 'order',)
