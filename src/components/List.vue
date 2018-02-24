@@ -1,9 +1,25 @@
 <template>
   <div>
-    <h1>{{ msg }}</h1>
-    <button class="bg-blue hover:bg-blue-light text-white font-bold py-2 px-4 border-b-4 border-blue-dark hover:border-blue rounded">
-     Button
-   </button>
+    <h1>{{ subtitle }}</h1>
+
+    <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
+        Can't load the fics
+    </div>
+
+    <section>
+        <article v-for="fanfic of fanfics.results">
+            <router-link :to="{
+              name: 'Detail',
+              params: {
+                id: fanfic.id
+              },
+            }">
+            <h2 v-html="fanfic.title"></h2>
+            </router-link>
+            <p v-html="fanfic.author"></p>
+        </article>
+    </section>
+
   </div>
 </template>
 
@@ -12,9 +28,25 @@ export default {
   name: 'List',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+        subtitle: 'Lire des histoires',
+        error: null,
+        fanfics: [],
+        }
+    },
+    async created () {
+        try {
+            const response = await fetch('/api/fanfics')
+            if (response.ok) {
+                this.fanfics = await response.json()
+            } else {
+                throw new Error('error')
+            }
+        } catch (e) {
+            this.error = e
+        } finally {
+
+        }
     }
-  }
 }
 </script>
 
