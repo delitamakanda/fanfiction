@@ -60,8 +60,8 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ChapterSerializer(serializers.ModelSerializer):
-    fanfic = FanficSerializer()
-    
+    fanfic = serializers.SlugRelatedField(queryset=Fanfic.objects.all(), slug_field='id')
+
     class Meta:
         model = Chapter
         fields = ('id', 'fanfic', 'title', 'description', 'text', 'order',)

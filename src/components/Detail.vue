@@ -19,6 +19,13 @@
             <p v-html="fanfic.classement"></p>
             <p v-html="fanfic.description"></p>
             <p v-html="fanfic.credits"></p>
+            ===
+            <div v-for="chap of chapter.results" v-if="chap.fanfic === fanfic.id">
+                ***
+                <p v-html="chap.description"></p>
+                ***
+                <div>{{ chap.text }}</div>
+            </div>
     </section>
 
   </div>
@@ -39,15 +46,18 @@ export default {
     return {
         error: null,
         fanfic: [],
+        chapter: [],
         date: null,
         }
     },
     async created () {
         try {
             const response = await fetch('/api/fanfics/' + this.$route.params.id)
+            const res = await fetch('api/chapters');
+
             if (response.ok) {
                 this.fanfic = await response.json()
-                console.log(this.fanfic);
+                this.chapter = await res.json()
             } else {
                 throw new Error('error')
             }
