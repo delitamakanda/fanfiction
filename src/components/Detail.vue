@@ -23,11 +23,11 @@
             <p v-html="fanfic.classement"></p>
             <p v-html="fanfic.description"></p>
             <p v-html="fanfic.credits"></p>
-            ===
+            
             <div v-for="chap of chapter.results" v-if="chap.fanfic === fanfic.id">
                 <h3 v-html="chap.title" :id="chap.id"></h3>
 
-                <div class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chap.description" role="alert">{{ chap.description }}</div>
+                <div v-if="chap.description !== ''" class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chap.description" role="alert">{{ chap.description }}</div>
 
                 <div v-html="chap.text"></div>
             </div>

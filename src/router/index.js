@@ -6,6 +6,10 @@ import Category from '@/components/Category'
 import Login from '@/components/Login'
 import Signup from '@/components/Signup'
 
+import Loading from '@/components/Loading'
+
+Vue.component('Loading', Loading)
+
 Vue.use(Router)
 
 export default new Router({

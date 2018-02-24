@@ -7,6 +7,8 @@
     </div>
 
     <section>
+        <Loading v-if="loading" />
+
         <article v-for="fanfic of fanfics.results">
             <router-link :to="{
               name: 'Detail',
@@ -36,9 +38,11 @@ export default {
         subtitle: 'Lire des histoires',
         error: null,
         fanfics: [],
+        loading: false,
         }
     },
     async created () {
+        this.loading = true
         try {
             const response = await fetch('/api/fanfics')
             if (response.ok) {
@@ -48,9 +52,8 @@ export default {
             }
         } catch (e) {
             this.error = e
-        } finally {
-
         }
+        this.loading = false
     },
     methods: {
         moment
