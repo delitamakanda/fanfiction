@@ -93,6 +93,7 @@ class Fanfic(models.Model):
     objects = models.Manager()
     published = PublishedManager()
     category = models.ForeignKey(Category, related_name="categories", on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(SubCategory, related_name="sub_categories", on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('-publish',)
@@ -110,7 +111,8 @@ class Fanfic(models.Model):
 class Chapter(models.Model):
     fanfic = models.ForeignKey(Fanfic, related_name="chapters", on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, default='')
+    text = models.TextField()
     order = OrderField(blank=True, for_fields=['fanfic'])
 
     class Meta:
@@ -119,43 +121,6 @@ class Chapter(models.Model):
     def __str__(self):
         return '{}. {}'.format(self.order, self.title)
 
-
-class ItemBase(models.Model):
-    author = models.ForeignKey(User, related_name='%(class)s_related', on_delete=models.CASCADE)
-    title = models.CharField(max_length=250)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-
-    def render(self):
-        return render_to_string('fanfic/content/{}.html'.format(self._meta.model_name), {'item': self})
-
-    def __str__(self):
-        return self.title
-
-class Text(ItemBase):
-    content = models.TextField()
-
-
-class Image(ItemBase):
-    file = models.FileField(upload_to='images/%Y/%m/%d')
-
-
-class Video(ItemBase):
-    url = models.URLField()
-
-
-class Content(models.Model):
-    chapter = models.ForeignKey(Chapter, related_name='contents', on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, limit_choices_to={'model__in':('text', 'video', 'image')}, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    item = GenericForeignKey('content_type', 'object_id')
-    order = OrderField(blank=True, for_fields=['chapter'])
-
-    class Meta:
-        ordering = ['order']
 
 class Comment(models.Model):
     fanfic = models.ForeignKey(Fanfic, related_name='comments', on_delete=models.CASCADE)
@@ -172,4 +137,4 @@ class Comment(models.Model):
         verbose_name_plural = 'comments'
 
     def __str__(self):
-        return 'Comment by {} on {}'.format(self.name, self.post)
+        return 'Comment by {} on {}'.format(self.name, self.fanfic)
