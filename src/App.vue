@@ -1,14 +1,29 @@
 <template>
-  <div id="app">
-    <router-view/>
+  <div id="app" class="container mx-auto">
+      <app-header v-bind:title="title"></app-header>
+        <router-view/>
+      <app-footer v-bind:title="title"></app-footer>
   </div>
 </template>
 
 <script>
 import '@/assets/styles/main.css'
 
+import Header from './components/Header.vue';
+import Footer from './components/Footer.vue';
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+      'app-header': Header,
+      'app-footer': Footer,
+  },
+  data () {
+      return {
+          title: 'Fanfiction'
+      };
+  },
+  methods: {}
 }
 </script>
 
@@ -18,5 +33,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  margin-top: 15px;
 }
 </style>
