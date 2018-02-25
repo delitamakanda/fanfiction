@@ -3,21 +3,26 @@ import Router from 'vue-router'
 import List from '@/components/List'
 import Detail from '@/components/Detail'
 import Category from '@/components/Category'
+import Subcategory from '@/components/Subcategory'
 import Login from '@/components/Login'
 import Signup from '@/components/Signup'
-
 import Loading from '@/components/Loading'
+
+import VueFetch from '../plugins/fetch'
 
 Vue.component('Loading', Loading)
 
 Vue.use(Router)
+Vue.use(VueFetch, {
+    baseUrl: 'api/'
+})
 
 export default new Router({
     routes: [
         {
             path: '/',
             name: 'List',
-            component: List
+            component: List,
         },
         {
             path: '/:id',
@@ -29,6 +34,12 @@ export default new Router({
             path: '/categories',
             name: 'Category',
             component: Category
+        },
+        {
+            path: '/categories/:id',
+            name: 'Subcategory',
+            component: Subcategory,
+            props: true
         },
         {
             path: '/login',

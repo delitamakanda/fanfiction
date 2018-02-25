@@ -53,6 +53,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
+    category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='id')
 
     class Meta:
         model = SubCategory

@@ -23,7 +23,7 @@
             <p v-html="fanfic.classement"></p>
             <p v-html="fanfic.description"></p>
             <p v-html="fanfic.credits"></p>
-            
+
             <div v-for="chap of chapter.results" v-if="chap.fanfic === fanfic.id">
                 <h3 v-html="chap.title" :id="chap.id"></h3>
 
@@ -68,8 +68,6 @@ export default {
             }
         } catch (e) {
             this.error = e
-        } finally {
-
         }
     },
     methods: {
@@ -80,18 +78,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>

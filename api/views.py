@@ -106,6 +106,7 @@ class CategoryList(generics.ListCreateAPIView):
     ordering_fields = (
         'name',
     )
+    pagination_class = None
 
 
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -118,6 +119,7 @@ class SubCategoryList(generics.ListCreateAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
     name='subcategory-list'
+    pagination_class = None
 
 
 class SubCategoryDetail(generics.RetrieveUpdateDestroyAPIView):

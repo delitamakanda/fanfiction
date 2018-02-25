@@ -33,23 +33,23 @@ import moment from 'moment'
 
 export default {
   name: 'List',
+  props: {
+      
+  },
   data () {
     return {
         subtitle: 'Lire des histoires',
         error: null,
         fanfics: [],
         loading: false,
+        souscat: []
         }
     },
     async created () {
         this.loading = true
         try {
-            const response = await fetch('/api/fanfics')
-            if (response.ok) {
-                this.fanfics = await response.json()
-            } else {
-                throw new Error('error')
-            }
+            this.fanfics = await this.$fetch('fanfics')
+            this.souscat = await this.$fetch('subcategory')
         } catch (e) {
             this.error = e
         }
@@ -63,18 +63,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>

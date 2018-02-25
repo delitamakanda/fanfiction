@@ -1,6 +1,23 @@
 <template>
   <div>
     <h1>{{ subtitle }}</h1>
+    <Loading v-if="loading" />
+
+    <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
+        Can't load the categories
+    </div>
+
+    <div v-for="category of categories">
+        <router-link :to="{
+              name: 'Subcategory',
+              params: {
+                id: category.id
+              },
+            }">
+            <h3 v-html="category.name"></h3>
+            <p v-html="category.description"></p>
+        </router-link>
+    </div>
 
   </div>
 </template>
@@ -10,26 +27,25 @@ export default {
   name: 'Category',
   data () {
     return {
-      subtitle: 'Parcourir les catégories'
+      subtitle: 'Parcourir les catégories',
+      error: null,
+      categories: [],
+      loading: false,
     }
-  }
+    },
+    async created () {
+        this.loading = true
+        try {
+            this.categories = await this.$fetch('category')
+        } catch (e) {
+            this.error = e
+        }
+        this.loading = false
+    },
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
