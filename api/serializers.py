@@ -42,7 +42,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'fanfics',)
+        fields = ('url', 'id', 'username', 'fanfics', 'password', 'email',)
 
 
 class CategorySerializer(serializers.ModelSerializer):

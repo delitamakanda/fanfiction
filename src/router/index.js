@@ -6,11 +6,16 @@ import Category from '@/components/Category'
 import Subcategory from '@/components/Subcategory'
 import Login from '@/components/Login'
 import Signup from '@/components/Signup'
+import Dashboard from '@/components/Dashboard'
 import Loading from '@/components/Loading'
+import Form from '@/components/Form'
+import Input from '@/components/Input'
 
 import VueFetch from '../plugins/fetch'
 
 Vue.component('Loading', Loading)
+Vue.component('Form', Form)
+Vue.component('Input', Input)
 
 Vue.use(Router)
 Vue.use(VueFetch, {
@@ -22,7 +27,7 @@ export default new Router({
         {
             path: '/',
             name: 'List',
-            component: List,
+            component: List
         },
         {
             path: '/:id',
@@ -50,6 +55,11 @@ export default new Router({
             path: '/signup',
             name: 'Signup',
             component: Signup
+        },
+        {
+            path: '/dashboard',
+            name: 'Dashboard',
+            component: Dashboard
         }
     ]
 })

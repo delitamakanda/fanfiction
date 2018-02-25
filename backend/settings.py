@@ -165,9 +165,9 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '300/days',
-        'user': '100/days',
-        'fanfic': '200/days',
+        'anon': '3000/days',
+        'user': '1000/days',
+        'fanfic': '2000/days',
     },
     # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }

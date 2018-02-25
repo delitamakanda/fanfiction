@@ -47,6 +47,7 @@ class FanficList(generics.ListCreateAPIView):
         'title',
         'publish',
     )
+    pagination_class = None
 
 
 class FanficDetail(generics.RetrieveUpdateDestroyAPIView):

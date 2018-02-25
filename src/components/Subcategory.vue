@@ -23,7 +23,7 @@ export default {
       id: {
           type: Number,
           required: true
-      },
+      }
   },
   data () {
     return {
@@ -41,7 +41,6 @@ export default {
             this.subcats = await this.$fetch('subcategory')
             this.cats = await this.$fetch('category/' + this.$route.params.id)
             this.fics = await this.$fetch('fanfics')
-            console.log(this.fics);
         } catch (e) {
             this.error = e
         }

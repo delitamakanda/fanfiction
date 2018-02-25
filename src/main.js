@@ -3,12 +3,17 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import state from './state'
+import VueState from './plugins/state'
+
+Vue.use(VueState, state)
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  data: state,
   router,
   components: { App },
   template: '<App/>'

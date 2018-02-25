@@ -2,14 +2,14 @@
   <div>
     <h1>{{ subtitle }}</h1>
 
-    <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
+    <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         Can't load the fics
     </div>
 
     <section>
-        <Loading v-if="loading" />
+        <Loading v-if="remoteDataBusy" />
 
-        <article v-for="fanfic of fanfics.results">
+        <article v-for="fanfic of fanficList">
             <router-link :to="{
               name: 'Detail',
               params: {
@@ -30,22 +30,27 @@
 
 <script>
 import moment from 'moment'
+import RemoteData from '../mixins/RemoteData'
 
 export default {
   name: 'List',
-  props: {
-      
-  },
+  mixins: [
+      RemoteData({
+          fanficList: 'fanfics',
+      }),
+  ],
   data () {
     return {
         subtitle: 'Lire des histoires',
-        error: null,
-        fanfics: [],
-        loading: false,
-        souscat: []
+        //error: null,
+        //fanfics: [],
+        //loading: false,
+        //souscat: [],
+        //remoteDataLoading: 42,
         }
     },
-    async created () {
+
+    /*async created () {
         this.loading = true
         try {
             this.fanfics = await this.$fetch('fanfics')
@@ -54,9 +59,9 @@ export default {
             this.error = e
         }
         this.loading = false
-    },
+    },*/
     methods: {
-        moment
+        moment,
     }
 }
 </script>
