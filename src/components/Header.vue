@@ -27,7 +27,11 @@
             <div class="text-sm lg:flex-grow">
                 <router-link :to="{ name: 'List' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">Lire des histoires</router-link>
                 <router-link :to="{ name: 'Category' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">Parcourir les catégories</router-link>
-                <router-link :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">Se connecter</router-link>
+                <template v-if="$state.user">
+                    <router-link :to="{ name: 'Dashboard' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Bonjour, {{ $state.user.username }} !</router-link>
+                    <a @click="logout" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{{ $state.user.username }}</a>
+                </template>
+                <router-link v-else :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">Se connecter</router-link>
                 <router-link :to="{ name: 'Blog' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Blog</router-link>
             </div>
         </div>
@@ -51,8 +55,14 @@ export default {
     methods: {
       toggle (){
         this.open = !this.open
-      }
-    }
+    },
+        async logout () {
+            const result = await this.$fetch('logout')
+            if (result.status === 'ok') {
+                this.$state.user = null
+            }
+        },
+    },
 }
 </script>
 
