@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import state from '../state'
 import List from '@/components/List'
 import Detail from '@/components/Detail'
 import Category from '@/components/Category'
@@ -22,7 +23,7 @@ Vue.use(VueFetch, {
     baseUrl: 'api/'
 })
 
-export default new Router({
+const router = new Router({
     routes: [
         {
             path: '/',
@@ -49,7 +50,8 @@ export default new Router({
         {
             path: '/login',
             name: 'Login',
-            component: Login
+            component: Login,
+            meta: { guest: true }
         },
         {
             path: '/blog',
@@ -59,7 +61,44 @@ export default new Router({
         {
             path: '/dashboard',
             name: 'Dashboard',
-            component: Dashboard
+            component: Dashboard,
+            meta: { private: true }
         }
-    ]
+    ],
+    mode: 'hash',
+    scrollBehavior (to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        }
+        if (to.hash) {
+            return { selector: to.hash }
+        }
+        return { x: 0, y: 0 }
+    },
 })
+
+router.beforeEach((to, from, next) => {
+
+    if (to.meta.private) {
+        // TODO:  redirect to login
+    }
+
+    if (to.meta.private && !state.user) {
+        next({
+            name: 'Login',
+            params: {
+                wantedRoute: to.fullPath,
+            },
+        })
+        return
+    }
+
+    if ( to.meta.guest && state.user) {
+        next({name: 'Dashboard'})
+        return
+    }
+    
+    next()
+})
+
+export default router

@@ -1,5 +1,8 @@
 <template>
-
+    <div>
+        <h1>Vos fanfictions</h1>
+        <!-- TODO:  -->
+    </div>
 </template>
 
 <script>

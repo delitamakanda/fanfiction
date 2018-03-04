@@ -132,7 +132,7 @@ methods: {
                 password1: this.password1,
             }),
         })
-        this.$router.push({ name: 'Dashboard'})
+        this.$router.replace(this.$route.params.wantedRoute || { name: 'Dashboard'})
     },
     async signup () {
         await this.$fetch('signup', {
