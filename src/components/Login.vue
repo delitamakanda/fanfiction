@@ -15,13 +15,13 @@
                     placeholder="Pseudo" />
                 </div>
             <div class="mb-6">
-                <label class="block text-grey-darker text-sm font-bold mb-2" for="password1">
+                <label class="block text-grey-darker text-sm font-bold mb-2" for="password">
                     Mot de passe
                 </label>
                 <Input
-                    name="password1"
+                    name="password"
                     type="password"
-                    v-model="password1"
+                    v-model="password"
                     placeholder="Mot de passe" />
             </div>
             <template v-if="mode === 'signup'">
@@ -94,7 +94,7 @@ export default {
     return {
       username: '',
       mode: 'login',
-      password1: '',
+      password: '',
       password2: '',
       email: '',
     }
@@ -109,14 +109,14 @@ computed: {
 
 
 retypePasswordError () {
-    return !!this.password2 && this.password1 !== this.password2
+    return !!this.password2 && this.password !== this.password2
 },
 
 signupValid () {
     return !!this.password2 && !!this.email && !this.retypePasswordError
 },
 valid () {
-    return !!this.username && !!this.password1 && (this.mode !== 'signup' || this.signupValid)
+    return !!this.username && !!this.password && (this.mode !== 'signup' || this.signupValid)
 },
 },
 
@@ -129,7 +129,7 @@ methods: {
             method: 'POST',
             body: JSON.stringify({
                 username: this.username,
-                password1: this.password1,
+                password: this.password,
             }),
         })
         this.$router.replace(this.$route.params.wantedRoute || { name: 'Dashboard'})
@@ -139,7 +139,7 @@ methods: {
             method: 'POST',
             body: JSON.stringify({
                 username: this.username,
-                password1: this.password1,
+                password: this.password,
                 email: this.email,
             }),
         })

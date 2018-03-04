@@ -134,7 +134,19 @@ class UserList(generics.ListAPIView):
     serializer_class = UserSerializer
 
 
+class UserCreate(generics.CreateAPIView):
+    """
+    Create an user
+    """
+    serializer_class = UserSerializer
+    authentication_classes = ()
+    permission_classes = ()
+
+
 class UserDetail(generics.RetrieveAPIView):
+    """
+    Retrieve an user
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 

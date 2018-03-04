@@ -14,5 +14,6 @@ urlpatterns = [
     path('comments/<int:pk>', views.CommentDetail.as_view(), name='comment-detail'),
     path('users', views.UserList.as_view(), name='user-list'),
     path('users/<int:pk>', views.UserDetail.as_view(), name='user-detail'),
+    path('signup', views.UserCreate.as_view(), name='signup'),
     path('', views.ApiRoot.as_view(), name=views.ApiRoot.name),
 ]
