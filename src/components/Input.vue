@@ -1,13 +1,15 @@
 <template>
-    <div>
+    <div class="row">
         <input
-            class=""
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
             :class="inputClass"
+            :id="name"
             :name="name"
             :type="type"
             :value.prop="text"
             :placeholder="placeholder"
             @input="update"
+            v-bind="$attrs"
         />
     </div>
 </template>

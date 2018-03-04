@@ -5,7 +5,7 @@ import Detail from '@/components/Detail'
 import Category from '@/components/Category'
 import Subcategory from '@/components/Subcategory'
 import Login from '@/components/Login'
-import Signup from '@/components/Signup'
+import Blog from '@/components/Blog'
 import Dashboard from '@/components/Dashboard'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
@@ -52,9 +52,9 @@ export default new Router({
             component: Login
         },
         {
-            path: '/signup',
-            name: 'Signup',
-            component: Signup
+            path: '/blog',
+            name: 'Blog',
+            component: Blog
         },
         {
             path: '/dashboard',

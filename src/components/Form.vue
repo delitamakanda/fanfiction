@@ -40,7 +40,7 @@ export default {
     }
 },
 methods: {
-    async submit() {
+    async submit () {
         if (this.valid && !this.busy) {
             this.error = null
             this.busy = true
