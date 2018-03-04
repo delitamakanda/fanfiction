@@ -125,10 +125,25 @@ methods: {
         await this[this.mode]()
     },
     async login () {
-        //
+        this.$state.user = await this.$fetch('login', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: this.username,
+                password1: this.password1,
+            }),
+        })
+        this.$router.push({ name: 'Dashboard'})
     },
     async signup () {
-        //
+        await this.$fetch('signup', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: this.username,
+                password1: this.password1,
+                email: this.email,
+            }),
+        })
+        this.mode = 'login'
     },
 
 },
