@@ -1,6 +1,8 @@
-from django.shortcuts import render
+import json
+from django.shortcuts import render, HttpResponse
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, views, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -149,6 +151,36 @@ class UserDetail(generics.RetrieveAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class LoginView(views.APIView):
+    """
+    Login user
+    """
+    serializer_class = UserSerializer
+
+    def post(self, request, *args, **kwargs):
+        login(request, request.user)
+        return Response(UserSerializer(request.user).data)
+
+
+class LogoutView(views.APIView):
+    """
+    Logout user
+    """
+    def get(self, request):
+        logout(request)
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class CheckoutUserView(views.APIView):
+    """
+    Checkout current user
+    """
+    serializer_class = UserSerializer
+
+    # def get(self, request, *args, **kwargs):
+        # return Response({'user', 'null'})
 
 
 class ApiRoot(generics.GenericAPIView):

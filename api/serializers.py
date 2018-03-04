@@ -37,13 +37,22 @@ class FanficSerializer(serializers.HyperlinkedModelSerializer):
             'subcategory',
         )
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     fanfics = FanficSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'fanfics', 'password', 'email',)
+        fields = ('id', 'username', 'fanfics', 'password', 'email',)
         extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User(
+            email = validated_data["email"],
+            username = validated_data["username"]
+        )
+        user.set_password(validated_data["password"])
+        user.save()
+        return user
 
 
 class CategorySerializer(serializers.ModelSerializer):
