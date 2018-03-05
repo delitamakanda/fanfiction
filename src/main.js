@@ -6,10 +6,15 @@ import router from './router'
 import state from './state'
 import VueState from './plugins/state'
 import VueFetch, { $fetch } from './plugins/fetch'
+import * as filters from './filters'
 
 Vue.use(VueState, state)
 
 Vue.config.productionTip = false
+
+for (const key in filters) {
+  Vue.filter(key, filters[key])
+}
 
 async function main () {
     try {
