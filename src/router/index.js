@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import state from '../state'
+import NotFound from '@/components/NotFound'
 import List from '@/components/List'
 import Detail from '@/components/Detail'
 import Category from '@/components/Category'
@@ -63,7 +64,12 @@ const router = new Router({
             name: 'Dashboard',
             component: Dashboard,
             meta: { private: true }
-        }
+        },
+        {
+            path: '*',
+            name: 'NotFound',
+            component: NotFound
+        },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {
