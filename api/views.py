@@ -23,7 +23,8 @@ from api import custompermission
 
 # Create your views here.
 class FanficList(generics.ListCreateAPIView):
-    queryset = Fanfic.objects.all()
+    # queryset = Fanfic.objects.all()
+    queryset = Fanfic.published.all()
     serializer_class = FanficSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
