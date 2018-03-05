@@ -179,6 +179,10 @@ class CheckoutUserView(views.APIView):
     Checkout current user
     """
     serializer_class = UserSerializer
+    
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
 
     # def get(self, request, *args, **kwargs):
         # return Response({'user', 'null'})
