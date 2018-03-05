@@ -15,8 +15,8 @@
             <p v-html="fanfic.category"></p>
             <p v-html="fanfic.subcategory"></p>
             <p v-html="fanfic.author"></p>
-            <p>{{ moment(fanfic.publish).format('DD/MM/YYYY')}}</p>
-            <p>{{ moment(fanfic.updated).format('DD/MM/YYYY')}}</p>
+            <p>{{fanfic.publish | date }}</p>
+            <p>{{ fanfic.updated | date }}</p>
             <p v-html="fanfic.synopsis"></p>
             <p>{{ fanfic.likes }} likes</p>
             <p v-html="fanfic.genres"></p>
@@ -37,8 +37,6 @@
 </template>
 
 <script>
-import moment from 'moment'
-
 export default {
   name: 'Detail',
   props: {
@@ -71,7 +69,7 @@ export default {
         }
     },
     methods: {
-        moment
+
     }
 }
 </script>
