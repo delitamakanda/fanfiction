@@ -20,7 +20,7 @@
             </router-link>
             <p v-html="fanfic.author"></p>
             <p v-html="fanfic.genres"></p>
-            <p> {{ moment(fanfic.publish).format('DD/MM/YYYY') }}</p>
+            <p> {{ fanfic.publish | date }}</p>
             <p>{{ fanfic.likes }} likes</p>
         </article>
     </section>
@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import RemoteData from '../mixins/RemoteData'
 
 export default {
@@ -61,7 +60,6 @@ export default {
         this.loading = false
     },*/
     methods: {
-        moment,
     }
 }
 </script>
