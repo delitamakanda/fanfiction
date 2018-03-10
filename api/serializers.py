@@ -5,6 +5,21 @@ from api.models import Comment
 from api.models import Chapter
 from api.models import Category
 from api.models import SubCategory
+from api.models import Post
+
+class PostSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = Post
+        fields = (
+            'id',
+            'user',
+            'title',
+            'slug',
+            'content',
+            'created',
+        )
 
 class FanficSerializer(serializers.HyperlinkedModelSerializer):
     category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='name')

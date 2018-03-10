@@ -7,7 +7,8 @@ import Detail from '@/components/Detail'
 import Category from '@/components/Category'
 import Subcategory from '@/components/Subcategory'
 import Login from '@/components/Login'
-import Blog from '@/components/Blog'
+import Posts from '@/components/Posts'
+import PostDetail from '@/components/PostDetail'
 import Dashboard from '@/components/Dashboard'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
@@ -43,7 +44,7 @@ const router = new Router({
             component: Category
         },
         {
-            path: '/categories/:id',
+            path: '/subcategory/:id',
             name: 'Subcategory',
             component: Subcategory,
             props: true
@@ -55,9 +56,15 @@ const router = new Router({
             meta: { guest: true }
         },
         {
-            path: '/blog',
-            name: 'Blog',
-            component: Blog
+            path: '/news',
+            name: 'Posts',
+            component: Posts
+        },
+        {
+            path: '/news/:id',
+            name: 'PostDetail',
+            component: PostDetail,
+            props: true
         },
         {
             path: '/dashboard',

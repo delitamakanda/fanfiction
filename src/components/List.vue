@@ -48,7 +48,6 @@ export default {
         //remoteDataLoading: 42,
         }
     },
-
     /*async created () {
         this.loading = true
         try {

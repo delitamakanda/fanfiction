@@ -4,6 +4,8 @@ from api import views
 urlpatterns = [
     path('fanfics', views.FanficList.as_view(), name='fanfic-list'),
     path('fanfics/<int:pk>', views.FanficDetail.as_view(), name='fanfic-detail'),
+    path('posts', views.PostList.as_view(), name='post-list'),
+    path('posts/<int:pk>', views.PostDetail.as_view(), name='post-detail'),
     path('chapters', views.ChapterList.as_view(), name='chapter-list'),
     # path('chapters/<int:pk>', views.ChapterDetail.as_view(), name='chapter-detail'),
     path('category', views.CategoryList.as_view(), name='category-list'),

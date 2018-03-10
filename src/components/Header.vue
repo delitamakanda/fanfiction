@@ -32,7 +32,7 @@
                     <a @click="logout" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">Déconnexion </a>
                 </template>
                 <router-link v-else :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">Se connecter</router-link>
-                <router-link :to="{ name: 'Blog' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Blog</router-link>
+                <router-link :to="{ name: 'Posts' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">News</router-link>
             </div>
         </div>
     </nav>

@@ -13,6 +13,8 @@ from api.models import Comment
 from api.models import Chapter
 from api.models import Category
 from api.models import SubCategory
+from api.models import Post
+from api.serializers import PostSerializer
 from api.serializers import FanficSerializer
 from api.serializers import ChapterSerializer
 from api.serializers import CommentSerializer
@@ -22,6 +24,24 @@ from api.serializers import UserSerializer
 from api import custompermission
 
 # Create your views here.
+class PostList(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
+    name='post-list'
+
+
+class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
+    name='post-detail'
+
+
 class FanficList(generics.ListCreateAPIView):
     queryset = Fanfic.objects.all()
     serializer_class = FanficSerializer
@@ -66,6 +86,7 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly
     )
+    pagination_class = None
 
 
 class ChapterList(generics.ListCreateAPIView):
@@ -74,8 +95,8 @@ class ChapterList(generics.ListCreateAPIView):
     name='chapter-list'
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
-        custompermission.IsCurrentAuthorOrReadOnly
     )
+    pagination_class = None
 
 
 # class ChapterDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -87,18 +108,27 @@ class ChapterList(generics.ListCreateAPIView):
 class CommentList(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
     name='comment-list'
 
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
     name='comment-detail'
 
 
 class CategoryList(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
     name='category-list'
     filter_fields = (
         'name',
@@ -115,12 +145,18 @@ class CategoryList(generics.ListCreateAPIView):
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
     name='category-detail'
 
 
 class SubCategoryList(generics.ListCreateAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
     name='subcategory-list'
     pagination_class = None
 
@@ -128,6 +164,9 @@ class SubCategoryList(generics.ListCreateAPIView):
 class SubCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
     name='subcategory-detail'
 
 
@@ -209,4 +248,5 @@ class ApiRoot(generics.GenericAPIView):
             'category': reverse('category-list', request=request),
             'sub-category': reverse('subcategory-list', request=request),
             'users': reverse('user-list', request=request),
+            'posts' : reverse('post-list', request=request),
         })
