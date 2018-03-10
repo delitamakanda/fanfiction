@@ -19,7 +19,6 @@ for (const key in filters) {
 async function main () {
     try {
         state.user = await $fetch('user')
-        console.log(state.user);
     } catch (e) {
         console.warn(e)
     }

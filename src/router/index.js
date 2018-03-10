@@ -99,7 +99,7 @@ router.beforeEach((to, from, next) => {
         return
     }
 
-    if ( to.meta.guest && state.user) {
+    if ( to.meta.guest && state.user && state.user.id != null) {
         next({name: 'Dashboard'})
         return
     }
