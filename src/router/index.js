@@ -103,7 +103,7 @@ router.beforeEach((to, from, next) => {
         next({name: 'Dashboard'})
         return
     }
-    
+
     next()
 })
 

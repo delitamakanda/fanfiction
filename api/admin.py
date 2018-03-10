@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import Fanfic, Chapter, Category, SubCategory, Comment
+from api.models import Fanfic, Chapter, Category, SubCategory, Comment, Post
 
 # Register your models here.
 @admin.register(Category)
@@ -31,3 +31,10 @@ class FanficAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['name', 'email', 'created']
     search_fields = ['created', 'body']
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'user', 'created']
+    search_fields = ['created', 'content']
+    prepopulated_fields = {'slug': ('title',)}

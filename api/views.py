@@ -23,8 +23,7 @@ from api import custompermission
 
 # Create your views here.
 class FanficList(generics.ListCreateAPIView):
-    # queryset = Fanfic.objects.all()
-    queryset = Fanfic.published.all()
+    queryset = Fanfic.objects.all()
     serializer_class = FanficSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -159,19 +158,32 @@ class LoginView(views.APIView):
     Login user
     """
     serializer_class = UserSerializer
+    permission_classes = ( permissions.AllowAny,)
 
-    def post(self, request, *args, **kwargs):
-        login(request, request.user)
-        return Response(UserSerializer(request.user).data)
+    def post(self, request):
+        user = authenticate (
+            username=request.data.get("username"),
+            password=request.data.get("password"))
+
+        if user is None or not user.is_active:
+            return Response({
+                'status': 'Non autorisé',
+                'message': 'Pseudo ou mot de passe incorrect.'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+
+        login(request, user)
+        return Response(UserSerializer(user).data)
 
 
 class LogoutView(views.APIView):
     """
     Logout user
     """
+    permission_classes = ( permissions.AllowAny,)
+
     def get(self, request):
         logout(request)
-        return Response({}, status=status.HTTP_200_OK)
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
 class CheckoutUserView(views.APIView):
@@ -179,13 +191,12 @@ class CheckoutUserView(views.APIView):
     Checkout current user
     """
     serializer_class = UserSerializer
-    
+    permission_classes = ( permissions.AllowAny,)
+
     def get(self, request):
         serializer = UserSerializer(request.user)
-        return Response(serializer.data)
-
-    # def get(self, request, *args, **kwargs):
-        # return Response({'user', 'null'})
+        if request.user:
+            return Response(serializer.data)
 
 
 class ApiRoot(generics.GenericAPIView):

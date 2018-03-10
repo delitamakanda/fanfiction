@@ -1,3 +1,6 @@
 export default {
-    user: null
+    user: {
+        id: null,
+        username: ""
+    }
 }

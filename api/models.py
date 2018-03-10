@@ -138,19 +138,19 @@ class Comment(models.Model):
 
     def __str__(self):
         return 'Comment by {} on {}'.format(self.name, self.fanfic)
-      
-      
-class BlogPost(models.Model):
-  user = models.ForeignKey(User, related_name='blogposts', on_delete=models.CASCADE)
-  title = models.CharField(max_length=255)
-  slug = models.SlugField(max_length=200, db_index=True, unique=True)
-  content = models.TextField()
-  created = models.DateTimeField(auto_now_add=True)
-  
-  class Meta:
+
+
+class Post(models.Model):
+    user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=200, db_index=True, unique=True)
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
         ordering = ('created',)
-        verbose_name = 'blogpost'
-        verbose_name_plural = 'blogposts'
+        verbose_name = 'post'
+        verbose_name_plural = 'posts'
 
     def __str__(self):
         return 'Blog post by {} on {}'.format(self.user, self.title)

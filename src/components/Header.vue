@@ -58,8 +58,12 @@ export default {
     },
         async logout () {
             const result = await this.$fetch('logout')
-            if (result.status === '200') {
+            if (result.status === 'ok') {
                 this.$state.user = null
+                //Object.getOwnPropertyNames(obj).forEach(function (prop) {
+                  //delete obj[prop];
+                //});
+
             }
         },
     },
