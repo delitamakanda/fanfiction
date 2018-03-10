@@ -3,7 +3,7 @@
     <h1></h1>
 
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
-        Can't load the fic
+        {{ errorFetch }}
     </div>
 
     <ul v-for="element of chapter" v-if="element.fanfic === fanfic.id">
@@ -51,6 +51,7 @@ export default {
         fanfic: [],
         chapter: [],
         date: null,
+        errorFetch: 'Il y a un problème avec la requète.',
         }
     },
     async created () {

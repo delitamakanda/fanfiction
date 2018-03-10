@@ -4,7 +4,7 @@
     <Loading v-if="loading" />
 
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
-        Can't load the categories
+        {{ errorFetch }}
     </div>
 
     <div v-for="category of categories">
@@ -31,6 +31,7 @@ export default {
       error: null,
       categories: [],
       loading: false,
+      errorFetch: 'Il y a un problème avec la requète.',
     }
     },
     async created () {

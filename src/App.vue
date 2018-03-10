@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="container mx-auto">
       <app-header v-bind:title="title"></app-header>
-        <router-view/>
+        <router-view />
       <app-footer v-bind:title="title"></app-footer>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   },
   data () {
       return {
-          title: 'Fanfiction'
+          title: 'Fanfiction',
       };
   },
   methods: {}

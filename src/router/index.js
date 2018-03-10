@@ -10,6 +10,8 @@ import Login from '@/components/Login'
 import Posts from '@/components/Posts'
 import PostDetail from '@/components/PostDetail'
 import Dashboard from '@/components/Dashboard'
+import ListUserFanfic from '@/components/ListUserFanfic'
+import NewFanfic from '@/components/NewFanfic'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -72,7 +74,16 @@ const router = new Router({
             component: Dashboard,
             meta: { private: true },
             children: [
-
+                {
+                    path: '',
+                    name: 'ListUserFanfic',
+                    component: ListUserFanfic,
+                },
+                {
+                    path: 'create',
+                    name: 'NewFanfic',
+                    component: NewFanfic,
+                },
             ]
         },
         {
@@ -95,7 +106,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     console.log('to', to.name)
-    
+
     if (to.meta.private) {
         // TODO:  redirect to login
     }

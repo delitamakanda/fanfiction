@@ -5,8 +5,9 @@
     <Loading v-if="loading" />
 
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
-        Can't load the post
+        {{ errorFetch }}
     </div>
+
     <p v-html='post.user'></p>
     <p v-html=''>{{ post.created | date }}</p>
     <p v-html='post.content'></p>
@@ -24,6 +25,7 @@ export default {
       error: null,
       post: [],
       loading: false,
+      errorFetch: 'Il y a un problème avec la requète.',
     }
 },
 

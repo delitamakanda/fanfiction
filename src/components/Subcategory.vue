@@ -4,8 +4,11 @@
     <Loading v-if="loading" />
 
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
-        Can't load the subcategories
+        {{ errorFetch }}
     </div>
+
+    <h2 v-html="cats.name"></h2>
+    <p v-html="cats.description"></p>
 
     <div v-for="subcat of subcats" v-if="subcat.category === cats.id">
         <h3 v-html="subcat.name"></h3>
@@ -33,6 +36,7 @@ export default {
       cats: [],
       fics: [],
       loading: false,
+      errorFetch: 'Il y a un problème avec la requète.',
     }
     },
     async created () {
