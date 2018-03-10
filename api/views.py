@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from rest_framework import generics, permissions, views, status
+from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -42,8 +42,26 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     name='post-detail'
 
 
+class FanficListByAuthor(generics.ListAPIView):
+    serializer_class = FanficSerializer
+    pagination_class = None
+    permission_classes = (
+        custompermission.IsCurrentAuthorOrReadOnly,
+    )
+
+    def get_queryset(self):
+        # queryset = Fanfic.objects.all()
+        # username = self.request.query_params.get('username', None)
+        # if username is not None:
+        #     queryset = queryset.filter(author__username=username)
+        # return queryset
+        user = self.kwargs['username']
+        return Fanfic.objects.filter(author__username=user)
+
+
+
 class FanficList(generics.ListCreateAPIView):
-    queryset = Fanfic.objects.all()
+    queryset = Fanfic.objects.all().filter(status='publié')
     serializer_class = FanficSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -213,6 +231,9 @@ class LoginView(views.APIView):
         login(request, user)
         return Response(UserSerializer(user).data)
 
+    # def post(self, request, *args, **kwargs):
+    #     login(request, request.user)
+    #     return Response(UserSerializer(request.user).data)
 
 class LogoutView(views.APIView):
     """
@@ -230,12 +251,12 @@ class CheckoutUserView(views.APIView):
     Checkout current user
     """
     serializer_class = UserSerializer
-    permission_classes = ( permissions.AllowAny,)
+    permission_classes = ( permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request):
         serializer = UserSerializer(request.user)
         if request.user:
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ApiRoot(generics.GenericAPIView):

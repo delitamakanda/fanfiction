@@ -70,7 +70,10 @@ const router = new Router({
             path: '/dashboard',
             name: 'Dashboard',
             component: Dashboard,
-            meta: { private: true }
+            meta: { private: true },
+            children: [
+
+            ]
         },
         {
             path: '*',
@@ -91,12 +94,13 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-
+    console.log('to', to.name)
+    
     if (to.meta.private) {
         // TODO:  redirect to login
     }
 
-    if (to.meta.private && !state.user) {
+    if (to.meta.private && !state.user && state.user.id == null) {
         next({
             name: 'Login',
             params: {
