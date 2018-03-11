@@ -108,20 +108,34 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 """
 SerializerMethodField for request model options
 """
-class OptionsSerializer(serializers.ModelSerializer):
+
+class GenresSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
-    classement = serializers.SerializerMethodField()
-    status = serializers.SerializerMethodField()
 
     def get_genres(self, obj):
         return Fanfic.GENRES_CHOICES
 
+    class Meta:
+        model = Fanfic
+        fields = ('genres',)
+
+class ClassementSerializer(serializers.ModelSerializer):
+    classement = serializers.SerializerMethodField()
+
     def get_classement(self, obj):
         return Fanfic.CLASSEMENT_CHOICES
+
+    class Meta:
+        model = Fanfic
+        fields = ('classement',)
+
+
+class StatusSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
 
     def get_status(self, obj):
         return Fanfic.STATUS_CHOICES
 
     class Meta:
         model = Fanfic
-        fields = ('genres', 'classement', 'status',)
+        fields = ('status',)

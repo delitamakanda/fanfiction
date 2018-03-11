@@ -15,12 +15,14 @@ import NewFanfic from '@/components/NewFanfic'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
+import Multiselect from 'vue-multiselect'
 
 import VueFetch from '../plugins/fetch'
 
 Vue.component('Loading', Loading)
 Vue.component('Form', Form)
 Vue.component('Input', Input)
+Vue.component('multiselect', Multiselect)
 
 Vue.use(Router)
 Vue.use(VueFetch, {
