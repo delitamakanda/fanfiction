@@ -6,6 +6,36 @@
         title="Nouvelle histoire"
         :operation="operation"
         :valid="valid">
+        <div class="flex flex-wrap -mx-3 mb-6">
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+              <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="category">
+                Catégorie
+              </label>
+              <div class="relative">
+                  <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="category" name="category" v-if="loadingCategory" v-model="category">
+                      <option value="">Sélectionner</option>
+                      <option v-for="(option, index) in dataCategories" :value="option.id">{{ option.name }}</option>
+                  </select>
+                  <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  </div>
+              </div>
+            </div>
+            <div class="w-full md:w-1/2 px-3">
+              <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="subcategory">
+                  Sous - Catégories
+              </label>
+              <div class="relative">
+                  <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="subcategory" name="subcategory" v-if="loadingSubCategory" v-model="subcategory">
+                      <option value="">Sélectionner</option>
+                      <option v-for="(option, index) in dataSubCategories" :value="option.id">{{ option.name }}</option>
+                  </select>
+                  <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  </div>
+              </div>
+            </div>
+          </div>
             <div class="mb-4">
                 <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="title">
                   Titre de l'histoire
@@ -58,9 +88,9 @@
                       Classement
                     </label>
                     <div class="relative">
-                        <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-if="loading" v-model="classement" @change="onChange($event.target.value)">
+                        <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-if="loadingClassement" v-model="classement" @change="onChange($event.target.value)">
                             <option value="">Sélectionner</option>
-                            <option v-for="(option, index) in options[0].classement" :value="option[0]">{{ option[1] }}</option>
+                            <option v-for="(option, index) in dataClassement[0].classement" :value="option[0]">{{ option[1] }}</option>
                         </select>
                         <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -80,9 +110,9 @@
                     Status
                   </label>
                   <div class="relative">
-                    <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-if="loading" v-model="status">
+                    <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-if="loadingStatus" v-model="status">
                         <option value="">Sélectionner</option>
-                        <option v-for="(option, index) in options[0].status" :value="option[0]" v-bind:value="option[0]">{{ option[1] }}</option>
+                        <option v-for="(option, index) in dataStatus[0].status" :value="option[0]" v-bind:value="option[0]">{{ option[1] }}</option>
                     </select>
                     <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                       <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -116,8 +146,15 @@ export default {
         return{
             error: null,
             loading: false,
-            options: [],
+            loadingStatus: false,
+            loadingClassement: false,
+            loadingCategory: false,
+            loadingSubCategory: false,
+            dataClassement: [],
+            dataStatus: [],
             dataGenresFormatted: [],
+            dataCategories: [],
+            dataSubCategories: [],
             title: '',
             description: '',
             synopsis: '',
@@ -144,7 +181,7 @@ export default {
                     description: this.description,
                     synopsis: this.synopsis,
                     credits: this.credits,
-                    author: this.$state.user.username,
+                    author: this.$state.user,
                     genres: this.genres,
                     classement: this.classement,
                     status: this.status,
@@ -155,15 +192,18 @@ export default {
             console.log(result)
             this.title = this.description = this.synopsis = this.credits = this.author = this.genres = this.classement = this.status = this.category = this.subcategory = ''
         },
+
         check (e) {
             if (e.target.checked) {
             }
         },
+
         onChange(value) {
             this.classement = value
         },
-        async populate () {
-            this.options = await this.$fetch('fanfics/options')
+
+        async getGenres () {
+            this.options = await this.$fetch('fanfics/genres')
             this.loading = true
             if (this.options[0].genres.length) {
                 this.options[0].genres.forEach(obj => {
@@ -171,10 +211,37 @@ export default {
                 })
             }
 
-        }
+        },
+
+        async getClassement () {
+            this.dataClassement = await this.$fetch('fanfics/classement')
+            this.loadingClassement = true
+
+        },
+
+        async getStatus () {
+            this.dataStatus = await this.$fetch('fanfics/status')
+            this.loadingStatus = true
+        },
+
+        async getCategories () {
+            this.dataCategories = await this.$fetch('category')
+            this.loadingCategory = true
+            console.log(this.dataCategories)
+        },
+
+        async getSubCategories () {
+            this.dataSubCategories = await this.$fetch('subcategory')
+            this.loadingSubCategory = true
+            console.log(this.dataSubCategories)
+        },
     },
     created () {
-        this.populate()
+        this.getGenres()
+        this.getClassement()
+        this.getStatus()
+        this.getCategories()
+        this.getSubCategories()
     },
 }
 </script>
