@@ -61,7 +61,6 @@ class FanficListByAuthor(generics.ListAPIView):
 
 
 class FanficList(generics.ListCreateAPIView):
-    queryset = Fanfic.objects.all().filter(status='publié')
     serializer_class = FanficSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -89,6 +88,15 @@ class FanficList(generics.ListCreateAPIView):
     )
     pagination_class = None
 
+    def get_queryset(self):
+        return Fanfic.objects.all().filter(status='publié')
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
     throttle_scope = 'fanfic'
@@ -102,7 +110,7 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (
         # permissions.IsAuthenticated,
         permissions.IsAuthenticatedOrReadOnly,
-        custompermission.IsCurrentAuthorOrReadOnly
+        custompermission.IsCurrentAuthorOrReadOnly,
     )
     pagination_class = None
 
@@ -270,4 +278,5 @@ class ApiRoot(generics.GenericAPIView):
             'sub-category': reverse('subcategory-list', request=request),
             'users': reverse('user-list', request=request),
             'posts' : reverse('post-list', request=request),
+            'genres': reverse('genres-list', request=request),
         })

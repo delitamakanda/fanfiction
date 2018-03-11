@@ -24,13 +24,13 @@ class PostSerializer(serializers.ModelSerializer):
 class FanficSerializer(serializers.HyperlinkedModelSerializer):
     category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='name')
     subcategory = serializers.SlugRelatedField(queryset=SubCategory.objects.all(), slug_field='name')
-    genres = serializers.ChoiceField(choices=Fanfic.GENRES_CHOICES, source='get_genres_display')
-    classement = serializers.ChoiceField(choices=Fanfic.CLASSEMENT_CHOICES,source='get_classement_display')
-    # author = serializers.ReadOnlyField(source='author.username')
+    genres = serializers.ChoiceField(choices=Fanfic.GENRES_CHOICES, default='Général', source='get_genres_display')
+    classement = serializers.ChoiceField(choices=Fanfic.CLASSEMENT_CHOICES, default='G', source='get_classement_display')
     author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = Fanfic
+        create_fields = ('genres', 'classement', 'status',)
         fields = (
             'id',
             'author',
@@ -39,8 +39,8 @@ class FanficSerializer(serializers.HyperlinkedModelSerializer):
             'synopsis',
             'credits',
             'description',
-            'classement',
             'genres',
+            'classement',
             'publish',
             'created',
             'updated',
@@ -52,6 +52,10 @@ class FanficSerializer(serializers.HyperlinkedModelSerializer):
             'category',
             'subcategory',
         )
+
+    def create(self, validated_data):
+        return Fanfic.objects.create(**validated_data)
+        
 
 class UserSerializer(serializers.ModelSerializer):
     fanfics = FanficSerializer(many=True, read_only=True)

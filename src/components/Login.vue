@@ -10,9 +10,11 @@
                     Username
                 </label>
                 <Input
+                    :text="username"
                     name="username"
                     v-model="username"
-                    placeholder="Pseudo" />
+                    placeholder="Pseudo"
+                    required />
                 </div>
             <div class="mb-6">
                 <label class="block text-grey-darker text-sm font-bold mb-2" for="password">

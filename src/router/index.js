@@ -111,7 +111,7 @@ router.beforeEach((to, from, next) => {
         // TODO:  redirect to login
     }
 
-    if (to.meta.private && !state.user && state.user.id == null) {
+    if (to.matched.some(r => r.meta.private) && !state.user && state.user.id == null) {
         next({
             name: 'Login',
             params: {
@@ -121,7 +121,7 @@ router.beforeEach((to, from, next) => {
         return
     }
 
-    if ( to.meta.guest && state.user && state.user.id != null) {
+    if ( to.matched.some(r => r.meta.guest) && state.user && state.user.id != null) {
         next({name: 'Dashboard'})
         return
     }

@@ -1,6 +1,7 @@
 <template>
     <div class="row">
         <input
+            :is="element"
             class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
             :class="inputClass"
             :id="name"
@@ -45,6 +46,9 @@ export default {
     }
 },
 computed: {
+    element () {
+        return this.type === 'textarea' ? this.type : 'input'
+    },
     inputClass () {
         return {
             'invalid': this.invalid,
