@@ -30,7 +30,6 @@ class FanficSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Fanfic
-        create_fields = ('genres', 'classement', 'status',)
         fields = (
             'id',
             'author',
@@ -55,7 +54,7 @@ class FanficSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         return Fanfic.objects.create(**validated_data)
-        
+
 
 class UserSerializer(serializers.ModelSerializer):
     fanfics = FanficSerializer(many=True, read_only=True)
@@ -104,3 +103,25 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'fanfic', 'name', 'email', 'body', 'created', 'active', 'in_reply_to',)
+
+
+"""
+SerializerMethodField for request model options
+"""
+class OptionsSerializer(serializers.ModelSerializer):
+    genres = serializers.SerializerMethodField()
+    classement = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
+    def get_genres(self, obj):
+        return Fanfic.GENRES_CHOICES
+
+    def get_classement(self, obj):
+        return Fanfic.CLASSEMENT_CHOICES
+
+    def get_status(self, obj):
+        return Fanfic.STATUS_CHOICES
+
+    class Meta:
+        model = Fanfic
+        fields = ('genres', 'classement', 'status',)

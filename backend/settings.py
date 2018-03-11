@@ -173,5 +173,6 @@ REST_FRAMEWORK = {
         'user': '1000/days',
         'fanfic': '2000/days',
     },
+    'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
     # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }

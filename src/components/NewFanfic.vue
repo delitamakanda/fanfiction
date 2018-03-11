@@ -1,12 +1,6 @@
 <template>
     <div class="w-full max-w-md">
 
-        <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
-            {{ errorFetch }}
-        </div>
-
-        <Loading v-if="remoteDataBusy" />
-
         <Form
         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
         title="Nouvelle histoire"
@@ -59,47 +53,54 @@
                     rows="4" />
             </div>
             <div class="flex flex-wrap -mx-3 mb-2">
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-              <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="classement">
-                Classement
-              </label>
-              <div class="relative">
-                <select class="block appearance-none w-full bg-grey-lighter border border-grey-lighter text-grey-darker py-3 px-4 pr-8 rounded" id="classement">
-                  <option></option>
-                </select>
-                <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                </div>
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="classement">
+                      Classement
+                    </label>
+                    <div class="relative">
+                        <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-if="loading" v-model="classement" @change="onChange($event.target.value)">
+                            <option value="">Sélectionner</option>
+                            <option v-for="(option, index) in options[0].classement" :value="option[0]">{{ option[1] }}</option>
+                        </select>
+                        <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
               </div>
-            </div>
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-              <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="genres">
-                Genres
-              </label>
-              <div class="relative">
-                <select class="block appearance-none w-full bg-grey-lighter border border-grey-lighter text-grey-darker py-3 px-4 pr-8 rounded" id="genres">
-                  <option></option>
-                </select>
-                <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                </div>
+              <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="genres">
+                  Genres
+                </label>
+                 <!-- <div v-for="grs in options[0].genres">
+                      <input
+                          type="checkbox"
+                          v-model="options[0].genres"
+                          @click="check($event)"
+                          class="mr-2" />
+
+                      <span class="md:w-2/3 block text-grey font-bold text-sm">{{ grs[1] }}</span>
+                  </div>-->
               </div>
-            </div>
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-              <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
-                Status
-              </label>
-              <div class="relative">
-                <select class="block appearance-none w-full bg-grey-lighter border border-grey-lighter text-grey-darker py-3 px-4 pr-8 rounded" id="status">
-                  <option></option>
-                </select>
-                <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                  <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                </div>
+              <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                  <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
+                    Status
+                  </label>
+                  <div class="relative">
+                    <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-if="loading" v-model="status" @change="onChange($event.target.value)">
+                        <option value="">Sélectionner</option>
+                        <option v-for="(option, index) in options[0].status" :value="option[0]" v-bind:value="option[0]">{{ option[1] }}</option>
+                    </select>
+                    <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                  </div>
               </div>
-            </div>
           </div>
+            <Input name="status" v-model="status" type="hidden" />
+            <Input name="genres" v-model="genres" type="hidden" />
             <Input name="author" v-model="author" type="hidden" />
+            <Input name="category" v-model="category" type="hidden" />
+            <Input name="subcategory" v-model="subcategory" type="hidden" />
             <template slot="actions">
                 <router-link
                     tag="button"
@@ -119,29 +120,28 @@
 </template>
 
 <script>
-import RemoteData from '../mixins/RemoteData'
-
 export default {
     name: 'NewFanfic',
-    mixins: [
-        RemoteData({
-            optionsList: 'fanfics',
-        }),
-    ],
     data(){
         return{
             error: null,
+            loading: false,
+            options: [],
             title: '',
             description: '',
             synopsis: '',
             credits: '',
             author: '',
-            errorFetch: 'Il y a un problème avec la requète.',
+            genres: '',
+            classement: '',
+            status: '',
+            category: '',
+            subcategory: '',
         }
     },
     computed: {
         valid () {
-            return !!this.title && !!this.description && !!this.synopsis && !!this.credits
+            return !!this.title && !!this.description && !!this.synopsis && !!this.credits && !!this.author && !!this.genres && !!this.classement && !!this.status && !!this.category && !!this.subcategory
         },
     },
     methods: {
@@ -154,15 +154,31 @@ export default {
                     synopsis: this.synopsis,
                     credits: this.credits,
                     author: this.$state.user.username,
+                    genres: this.genres,
+                    classement: this.classement,
+                    status: this.status,
+                    category: this.category,
+                    subcategory: this.subcategory,
                 }),
             })
-
-            this.title = this.description = this.synopsis = this.credits = ''
+            console.log(result)
+            this.title = this.description = this.synopsis = this.credits = this.author = this.genres = this.classement = this.status = this.category = this.subcategory = ''
         },
+        check (e) {
+            if (e.target.checked) {
+            }
+        },
+        onChange(value) {
+            this.classement = value
+            console.log(this.classement)
+        },
+        async populate () {
+            this.options = await this.$fetch('fanfics/options')
+            this.loading = true
+        }
     },
-    async created () {
-        let res = await this.$fetch('fanfics')
-        console.log(res)
+    created () {
+        this.populate()
     },
 }
 </script>

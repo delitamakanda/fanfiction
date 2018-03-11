@@ -21,9 +21,20 @@ from api.serializers import CommentSerializer
 from api.serializers import CategorySerializer
 from api.serializers import SubCategorySerializer
 from api.serializers import UserSerializer
+from api.serializers import OptionsSerializer
 from api import custompermission
 
 # Create your views here.
+class OptionsList(viewsets.ModelViewSet):
+    queryset = Fanfic.objects.all()[:1]
+    serializer_class = OptionsSerializer
+    pagination_class = None
+    permission_feclasses = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
+    name='options-list'
+
+
 class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -278,5 +289,5 @@ class ApiRoot(generics.GenericAPIView):
             'sub-category': reverse('subcategory-list', request=request),
             'users': reverse('user-list', request=request),
             'posts' : reverse('post-list', request=request),
-            'genres': reverse('genres-list', request=request),
+            'options': reverse('option-list', request=request),
         })
