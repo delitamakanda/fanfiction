@@ -21,11 +21,24 @@ class PostSerializer(serializers.ModelSerializer):
             'created',
         )
 
-class FanficSerializer(serializers.HyperlinkedModelSerializer):
-    category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='name')
-    subcategory = serializers.SlugRelatedField(queryset=SubCategory.objects.all(), slug_field='name')
-    genres = serializers.ChoiceField(choices=Fanfic.GENRES_CHOICES, default='Général', source='get_genres_display')
-    classement = serializers.ChoiceField(choices=Fanfic.CLASSEMENT_CHOICES, default='G', source='get_classement_display')
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'slug', 'description',)
+
+
+class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
+    category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='id')
+
+    class Meta:
+        model = SubCategory
+        fields = ('id', 'category', 'name', 'slug', 'image', 'description',)
+
+
+class FanficSerializer(serializers.ModelSerializer):
+    genres = serializers.CharField()
+    classement = serializers.CharField()
     author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
@@ -72,21 +85,6 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
-
-
-class CategorySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Category
-        fields = ('id', 'name', 'slug', 'description',)
-
-
-class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
-    category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='id')
-
-    class Meta:
-        model = SubCategory
-        fields = ('id', 'category', 'name', 'slug', 'image', 'description',)
 
 
 class ChapterSerializer(serializers.ModelSerializer):

@@ -8,6 +8,7 @@ from multiselectfield import MultiSelectField
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils import timezone
+from django.template.defaultfilters import slugify
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -78,7 +79,7 @@ class Fanfic(models.Model):
     )
     author = models.ForeignKey(User, related_name="fanfics", on_delete=models.CASCADE)
     title = models.CharField(max_length=150, db_index=True)
-    slug = models.SlugField(max_length=200, db_index=True, unique=True)
+    slug = models.SlugField(max_length=200, db_index=True, unique=True, blank=True, null=True)
     synopsis = models.CharField(max_length=250, blank=True, default='')
     credits = models.CharField(max_length=250, blank=True, default='')
     description = models.CharField(max_length=250, blank=True, default='')
@@ -117,6 +118,10 @@ class Chapter(models.Model):
 
     class Meta:
         ordering = ['order']
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Fanfic, self).save(*args, **kwargs)
 
     def __str__(self):
         return '{}. {}'.format(self.order, self.title)

@@ -14,7 +14,7 @@
               <div class="relative">
                   <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="category" name="category" v-if="loadingCategory" v-model="category">
                       <option value="">Sélectionner</option>
-                      <option v-for="(option, index) in dataCategories" v-bind:value="option.id">{{ option.name }}</option>
+                      <option v-for="(option, index) of dataCategories" v-bind:value="option.id">{{ option.name }}</option>
                   </select>
                   <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                       <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -28,7 +28,7 @@
               <div class="relative">
                   <select :disabled="category.length == 0" class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="subcategory" name="subcategory" v-if="loadingSubCategory" v-model="subcategory">
                       <option value="">Sélectionner</option>
-                      <option v-for="(option, index) in dataSubCategories" v-if="option.category === category" v-bind:value="option.id">{{ option.name }}</option>
+                      <option v-for="(option, index) of dataSubCategories" v-if="option.category === category" v-bind:value="option.id">{{ option.name }}</option>
                   </select>
                   <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                       <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -102,7 +102,7 @@
                   Genres
                 </label>
                 <div class="relative">
-                    <multiselect v-model="genres" name="genres" id="genres" v-if="loading" :options="dataGenresFormatted" :multiple="true" :close-on-select="false" :option-height="104" :show-labels="true" placeholder="Sélectionner" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"></multiselect>
+                    <multiselect v-model="genres" name="genres" id="genres" v-if="loading" :options="dataGenresFormatted" :multiple="true" :close-on-select="false" :option-height="104" :show-labels="false" placeholder="Sélectionner" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"></multiselect>
                 </div>
               </div>
               <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -153,8 +153,8 @@ export default {
             dataClassement: [],
             dataStatus: [],
             dataGenresFormatted: [],
-            dataCategories: [],
-            dataSubCategories: [],
+            dataCategories: {},
+            dataSubCategories: {},
             resCat: null,
             title: '',
             description: '',
@@ -170,7 +170,7 @@ export default {
     },
     computed: {
         valid () {
-            return !!this.title && !!this.description && !!this.synopsis && !!this.credits && !!this.author && !!this.genres && !!this.classement && !!this.status && !!this.category && !!this.subcategory
+            return !!this.title && !!this.description && !!this.synopsis && !!this.credits
         },
     },
     methods: {
@@ -182,7 +182,7 @@ export default {
                     description: this.description,
                     synopsis: this.synopsis,
                     credits: this.credits,
-                    author: this.$state.user,
+                    author: this.$state.user.username,
                     genres: this.genres,
                     classement: this.classement,
                     status: this.status,
@@ -190,7 +190,6 @@ export default {
                     subcategory: this.subcategory,
                 }),
             })
-            console.log(result)
             this.title = this.description = this.synopsis = this.credits = this.author = this.genres = this.classement = this.status = this.category = this.subcategory = ''
         },
 
@@ -238,8 +237,9 @@ export default {
     watch: {
         category () {
 
-            if (this.dataCategories.length > 0) {}
-        }
+            if (this.dataCategories.length > 0) {
+            }
+        },
     },
     created () {
         this.getGenres()
