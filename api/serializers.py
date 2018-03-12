@@ -37,7 +37,7 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FanficSerializer(serializers.ModelSerializer):
-    genres = serializers.CharField()
+    genres = serializers.MultipleChoiceField(choices=Fanfic.GENRES_CHOICES)
     classement = serializers.CharField()
     author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
