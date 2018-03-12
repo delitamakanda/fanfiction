@@ -84,7 +84,7 @@ class Fanfic(models.Model):
     credits = models.CharField(max_length=250, blank=True, default='')
     description = models.CharField(max_length=250, blank=True, default='')
     classement = models.CharField(max_length=2, choices=CLASSEMENT_CHOICES, default='g')
-    genres = MultiSelectField(choices=GENRES_CHOICES)
+    genres = MultiSelectField(choices=GENRES_CHOICES, max_choices=5, max_length=3)
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
