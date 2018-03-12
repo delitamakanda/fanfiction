@@ -38,7 +38,7 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
 
 class FanficSerializer(serializers.ModelSerializer):
     genres = serializers.MultipleChoiceField(choices=Fanfic.GENRES_CHOICES)
-    classement = serializers.CharField()
+    classement = serializers.SerializerMethodField()
     author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
@@ -67,6 +67,12 @@ class FanficSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Fanfic.objects.create(**validated_data)
+
+    def get_genres(self, obj):
+        return obj.get_genres_display()
+
+    def get_classement(self, obj):
+        return obj.get_classement_display()
 
 
 class UserSerializer(serializers.ModelSerializer):
