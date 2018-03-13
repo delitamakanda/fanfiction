@@ -15,7 +15,7 @@ from api.models import Category
 from api.models import SubCategory
 from api.models import Post
 from api.serializers import PostSerializer
-from api.serializers import FanficSerializer
+from api.serializers import FanficSerializer, FanficListSerializer
 from api.serializers import ChapterSerializer
 from api.serializers import CommentSerializer
 from api.serializers import CategorySerializer
@@ -76,7 +76,7 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class FanficListByAuthor(generics.ListAPIView):
-    serializer_class = FanficSerializer
+    serializer_class = FanficListSerializer
     pagination_class = None
     permission_classes = (
         custompermission.IsCurrentAuthorOrReadOnly,
@@ -92,6 +92,14 @@ class FanficListByAuthor(generics.ListAPIView):
         return Fanfic.objects.filter(author__username=user)
 
 
+class FanficListRemastered(generics.ListAPIView):
+    serializer_class = FanficListSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        custompermission.IsCurrentAuthorOrReadOnly
+    )
+    name='fanfic-list-remastered'
 
 class FanficList(generics.ListCreateAPIView):
     serializer_class = FanficSerializer
@@ -305,6 +313,7 @@ class ApiRoot(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         return Response({
             'fanfics' : reverse('fanfic-list', request=request),
+            'fanfics-list-remastered' : reverse('fanfics-list-remastered', request=request),
             'chapters': reverse('chapter-list', request=request),
             'comments': reverse('comment-list', request=request),
             'category': reverse('category-list', request=request),
