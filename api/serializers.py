@@ -35,44 +35,49 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
         model = SubCategory
         fields = ('id', 'category', 'name', 'slug', 'image', 'description',)
 
-
-class FanficSerializer(serializers.ModelSerializer):
-    genres = serializers.MultipleChoiceField(choices=Fanfic.GENRES_CHOICES)
-    classement = serializers.SerializerMethodField()
+        
+class FanficListSerializer(serializers.ModelSerializer):
+    genres = serializers.CharField()
+    classement = serializers.CharField()
+    status = serializers.CharField()
     author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = Fanfic
-        fields = (
-            'id',
-            'author',
-            'title',
-            'slug',
-            'synopsis',
-            'credits',
-            'description',
-            'genres',
-            'classement',
-            'publish',
-            'created',
-            'updated',
-            'was_featured_in_home',
-            'status',
-            'likes',
-            'objects',
-            'published',
-            'category',
-            'subcategory',
-        )
+        fields = ('id','author','title','slug','synopsis','credits','description','genres','classement','publish','created','updated','was_featured_in_home','status','likes','objects','published','category','subcategory',)
 
-    def create(self, validated_data):
-        return Fanfic.objects.create(**validated_data)
 
     def get_genres(self, obj):
         return obj.get_genres_display()
 
     def get_classement(self, obj):
         return obj.get_classement_display()
+
+    def get_status(self, obj):
+        return obj.get_status_display()
+      
+      
+class FanficSerializer(serializers.ModelSerializer):
+    genres = serializers.MultipleChoiceField(choices=Fanfic.GENRES_CHOICES)
+    classement = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+
+    class Meta:
+        model = Fanfic
+        fields = ('id','author','title','slug','synopsis','credits','description','genres','classement','publish','created','updated','was_featured_in_home','status','likes','objects','published','category','subcategory',)
+
+    def create(self, validated_data):
+        return Fanfic.objects.create(**validated_data)
+
+    # def get_genres(self, obj):
+        # return obj.get_genres_display()
+
+    def get_classement(self, obj):
+        return obj.get_classement_display()
+      
+    def get_status(self, obj):
+        return obj.get_status_display()
 
 
 class UserSerializer(serializers.ModelSerializer):
