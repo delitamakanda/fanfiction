@@ -35,7 +35,7 @@ export default {
   name: 'List',
   mixins: [
       RemoteData({
-          fanficList: 'fanfics',
+          fanficList: 'fanfics/v1',
       }),
   ],
   data () {
