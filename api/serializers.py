@@ -35,7 +35,10 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
         model = SubCategory
         fields = ('id', 'category', 'name', 'slug', 'image', 'description',)
 
-        
+"""
+Serializer for GET method
+"""
+
 class FanficListSerializer(serializers.ModelSerializer):
     genres = serializers.CharField()
     classement = serializers.CharField()
@@ -56,12 +59,14 @@ class FanficListSerializer(serializers.ModelSerializer):
     def get_status(self, obj):
         return obj.get_status_display()
       
-      
+"""
+Serializer for PUT/POST/DELETE method
+"""
+
 class FanficSerializer(serializers.ModelSerializer):
     genres = serializers.MultipleChoiceField(choices=Fanfic.GENRES_CHOICES)
-    classement = serializers.SerializerMethodField()
-    status = serializers.SerializerMethodField()
-    author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+    classement = serializers.ChoiceField(choices=Fanfic.CLASSEMENT_CHOICES, default='g')
+    status = serializers.ChoiceField(choices=Fanfic.STATUS_CHOICES, default='brouillon')
 
     class Meta:
         model = Fanfic
@@ -69,15 +74,6 @@ class FanficSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Fanfic.objects.create(**validated_data)
-
-    # def get_genres(self, obj):
-        # return obj.get_genres_display()
-
-    def get_classement(self, obj):
-        return obj.get_classement_display()
-      
-    def get_status(self, obj):
-        return obj.get_status_display()
 
 
 class UserSerializer(serializers.ModelSerializer):
