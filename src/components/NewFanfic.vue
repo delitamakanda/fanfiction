@@ -98,13 +98,14 @@
                     </div>
               </div>
               <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="genre">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2">
                   Genres
                 </label>
                 <div class="relative">
-                    <!--<select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="genre" name="genre" v-if="loading" v-model="genres" multiple>
-                        <option v-for="(option, index) in options[0].genres" :value="option[0]">{{ option[1] }}</option>
-                    </select>-->
+                    <label :for="select[0]" v-for="select in dataGenresFormatted[0].genres">
+                        <input :value="select[0]" v-if="loadingGenres" v-model="genres" :id="select[0]" type="checkbox">
+                        {{ select[1] }}<br>
+                    </label>
                 </div>
               </div>
               <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -122,7 +123,6 @@
                   </div>
               </div>
           </div>
-            <Input name="author" v-model="author" type="hidden" />
             <template slot="actions">
                 <router-link
                     tag="button"
@@ -147,17 +147,16 @@ export default {
     data(){
         return{
             error: null,
-            loading: false,
+            loadingGenres: false,
             loadingStatus: false,
             loadingClassement: false,
             loadingCategory: false,
             loadingSubCategory: false,
-            options: [],
             dataClassement: [],
             dataStatus: [],
             dataGenresFormatted: [],
-            dataCategories: {},
-            dataSubCategories: {},
+            dataCategories: [],
+            dataSubCategories: [],
             resCat: null,
             title: '',
             description: '',
@@ -185,7 +184,7 @@ export default {
                     description: this.description,
                     synopsis: this.synopsis,
                     credits: this.credits,
-                    author: this.$state.user.username,
+                    author: this.$state.user.id,
                     genres: this.genres,
                     classement: this.classement,
                     status: this.status,
@@ -194,52 +193,29 @@ export default {
                 }),
             })
             this.title = this.description = this.synopsis = this.credits = this.author = this.genres = this.classement = this.status = this.category = this.subcategory = ''
-        },
-
-        async getGenres () {
-            this.options = await this.$fetch('fanfics/genres')
-            this.loading = true
-        },
-
-        async getClassement () {
-            this.dataClassement = await this.$fetch('fanfics/classement')
-            this.loadingClassement = true
-
-        },
-
-        async getStatus () {
-            this.dataStatus = await this.$fetch('fanfics/status')
-            this.loadingStatus = true
-        },
-
-        async getCategories () {
-            this.dataCategories = await this.$fetch('category')
-            this.loadingCategory = true
-        },
-
-        async getSubCategories () {
-            this.dataSubCategories = await this.$fetch('subcategory')
-            this.loadingSubCategory = true
-        },
+        }
     },
-    watch: {
-        category () {},
-    },
-    created () {
-        this.getGenres()
-        this.getClassement()
-        this.getStatus()
-        this.getCategories()
-        this.getSubCategories()
-    },
+    async created () {
+        this.dataGenresFormatted = await this.$fetch('fanfics/genres')
+        this.loadingGenres = true
+
+        this.dataClassement = await this.$fetch('fanfics/classement')
+        this.loadingClassement = true
+
+        this.dataStatus = await this.$fetch('fanfics/status')
+        this.loadingStatus = true
+
+        this.dataCategories = await this.$fetch('category')
+        this.loadingCategory = true
+
+        this.dataSubCategories = await this.$fetch('subcategory')
+        this.loadingSubCategory = true
+    }
 }
 </script>
 
 <style scoped>
 .w-full {
     margin: 0 auto;
-}
-input[name="genres"]{
-    margin-left: -10px;
 }
 </style>

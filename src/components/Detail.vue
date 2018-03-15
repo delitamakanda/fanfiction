@@ -56,7 +56,7 @@ export default {
     },
     async created () {
         try {
-            const response = await fetch('/api/fanfics/' + this.$route.params.id)
+            const response = await fetch('/api/fanfics/v1/' + this.$route.params.id)
             const res = await fetch('api/chapters');
 
             if (response.ok) {

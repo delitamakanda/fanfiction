@@ -18,8 +18,10 @@
             }">
             <h2 v-html="fanfic.title"></h2>
             </router-link>
+            <p v-if="fanfic.synopsis" v-html="fanfic.synopsis"></p>
             <p v-html="fanfic.author"></p>
             <p v-html="fanfic.genres"></p>
+            <p v-html="fanfic.classement"></p>
             <p> {{ fanfic.publish | date }}</p>
             <p>{{ fanfic.likes }} likes</p>
         </article>
