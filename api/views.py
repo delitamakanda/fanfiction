@@ -1,6 +1,5 @@
 import json
 from django.shortcuts import render, HttpResponse
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.authentication import TokenAuthentication
@@ -27,6 +26,10 @@ from api.serializers import StatusSerializer
 from api import custompermission
 
 # Create your views here.
+
+"""
+Liste des genres
+"""
 class GenresList(viewsets.ModelViewSet):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = GenresSerializer
@@ -37,6 +40,9 @@ class GenresList(viewsets.ModelViewSet):
     name='genre-list'
 
 
+"""
+Liste de classement
+"""
 class ClassementList(viewsets.ModelViewSet):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = ClassementSerializer
@@ -47,6 +53,9 @@ class ClassementList(viewsets.ModelViewSet):
     name='classement-list'
 
 
+"""
+Liste des status
+"""
 class StatusList(viewsets.ModelViewSet):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = StatusSerializer
@@ -56,7 +65,7 @@ class StatusList(viewsets.ModelViewSet):
     )
     name='status-list'
 
-
+    
 class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -74,7 +83,10 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     )
     name='post-detail'
 
-
+    
+"""
+Fanfics
+"""
 class FanficListByAuthor(generics.ListAPIView):
     serializer_class = FanficListSerializer
     pagination_class = None
@@ -93,6 +105,9 @@ class FanficListByAuthor(generics.ListAPIView):
 
 
 class FanficListRemastered(generics.ListAPIView):
+    """
+    Method GET ONLY
+    """
     serializer_class = FanficListSerializer
     pagination_class = None
     permission_classes = (
@@ -101,7 +116,11 @@ class FanficListRemastered(generics.ListAPIView):
     )
     name='fanfic-list-remastered'
 
+
 class FanficList(generics.ListCreateAPIView):
+    """
+    METHOD POST ONLY
+    """
     serializer_class = FanficSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
@@ -157,6 +176,9 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ChapterList(generics.ListCreateAPIView):
+    """
+    Liste des chapitres
+    """
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
     name='chapter-list'
@@ -173,6 +195,9 @@ class ChapterList(generics.ListCreateAPIView):
 
 
 class CommentList(generics.ListCreateAPIView):
+    """
+    Liste des commentaires
+    """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (
@@ -191,6 +216,9 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CategoryList(generics.ListCreateAPIView):
+    """
+    Liste des catégories
+    """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (
@@ -219,6 +247,9 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class SubCategoryList(generics.ListCreateAPIView):
+    """
+    Liste des sous-catégories
+    """
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
     permission_classes = (
@@ -238,17 +269,11 @@ class SubCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UserList(generics.ListAPIView):
+    """
+    List all users
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-class UserCreate(generics.CreateAPIView):
-    """
-    Create an user
-    """
-    serializer_class = UserSerializer
-    authentication_classes = ()
-    permission_classes = ()
 
 
 class UserDetail(generics.RetrieveAPIView):
@@ -258,54 +283,6 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-
-class LoginView(views.APIView):
-    """
-    Login user
-    """
-    serializer_class = UserSerializer
-    permission_classes = ( permissions.AllowAny,)
-
-    def post(self, request):
-        user = authenticate (
-            username=request.data.get("username"),
-            password=request.data.get("password"))
-
-        if user is None or not user.is_active:
-            return Response({
-                'status': 'Non autorisé',
-                'message': 'Pseudo ou mot de passe incorrect.'
-            }, status=status.HTTP_401_UNAUTHORIZED)
-
-        login(request, user)
-        return Response(UserSerializer(user).data)
-
-    # def post(self, request, *args, **kwargs):
-    #     login(request, request.user)
-    #     return Response(UserSerializer(request.user).data)
-
-class LogoutView(views.APIView):
-    """
-    Logout user
-    """
-    permission_classes = ( permissions.AllowAny,)
-
-    def get(self, request):
-        logout(request)
-        return Response({"status": "ok"}, status=status.HTTP_200_OK)
-
-
-class CheckoutUserView(views.APIView):
-    """
-    Checkout current user
-    """
-    serializer_class = UserSerializer
-    permission_classes = ( permissions.IsAuthenticatedOrReadOnly,)
-
-    def get(self, request):
-        serializer = UserSerializer(request.user)
-        if request.user:
-            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ApiRoot(generics.GenericAPIView):
