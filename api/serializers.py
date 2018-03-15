@@ -40,9 +40,11 @@ Serializer for GET method
 """
 
 class FanficListSerializer(serializers.ModelSerializer):
+    category = serializers.CharField()
+    subcategory = serializers.CharField()
     genres = serializers.CharField()
-    classement = serializers.CharField()
-    status = serializers.CharField()
+    classement = serializers.CharField(source='get_classement_display')
+    status = serializers.CharField(source='get_status_display')
     author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
@@ -58,7 +60,7 @@ class FanficListSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return obj.get_status_display()
-      
+
 """
 Serializer for PUT/POST/DELETE method
 """

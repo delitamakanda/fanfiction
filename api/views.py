@@ -72,6 +72,7 @@ class PostList(generics.ListCreateAPIView):
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )
+    pagination_class = None
     name='post-list'
 
 
@@ -206,6 +207,22 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
     pagination_class = None
 
 
+class FanficListDetail(generics.RetrieveAPIView):
+    throttle_scope = 'fanfic'
+    throttle_classes = (ScopedRateThrottle,)
+    queryset = Fanfic.objects.all()
+    serializer_class = FanficListSerializer
+    name='fanfic-list-detail'
+    # authentication_classes = (
+        # TokenAuthentication,
+    # )
+    permission_classes = (
+        # permissions.IsAuthenticated,
+        permissions.IsAuthenticatedOrReadOnly,
+        custompermission.IsCurrentAuthorOrReadOnly,
+    )
+
+
 class ChapterList(generics.ListCreateAPIView):
     """
     Liste des chapitres
@@ -322,6 +339,7 @@ class ApiRoot(generics.GenericAPIView):
         return Response({
             'fanfics' : reverse('fanfic-list', request=request),
             'fanfics-list-remastered' : reverse('fanfics-list-remastered', request=request),
+            'fanfic-list-detail': reverse('fanfic-list-detail', request=request),
             'chapters': reverse('chapter-list', request=request),
             'comments': reverse('comment-list', request=request),
             'category': reverse('category-list', request=request),

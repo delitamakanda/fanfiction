@@ -6,6 +6,7 @@ urlpatterns = [
     path('fanfics', views.FanficList.as_view(), name='fanfic-list'),
     path('fanfics/v1', views.FanficListRemastered.as_view(), name='fanfic-list-remastered'),
     path('fanfics/<int:pk>', views.FanficDetail.as_view(), name='fanfic-detail'),
+    path('fanfics/v1/<int:pk>', views.FanficListDetail.as_view(), name='fanfic-list-detail'),
     path('fanfics/author/<str:username>', views.FanficListByAuthor.as_view(), name='fanfic-by-user'),
     path('posts', views.PostList.as_view(), name='post-list'),
     path('posts/<int:pk>', views.PostDetail.as_view(), name='post-detail'),
