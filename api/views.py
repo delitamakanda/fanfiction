@@ -65,7 +65,7 @@ class StatusList(viewsets.ModelViewSet):
     )
     name='status-list'
 
-    
+
 class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -83,31 +83,37 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     )
     name='post-detail'
 
-    
+
 """
 Fanfics
 """
-class FanficListByCategory(generics.ListAPIVIew):
-  queryset = Fanfic.objects.filter(category=self.category)
-  serializer_class = FanficSerializer
-  permission_classes = (
+class FanficListByCategory(generics.ListAPIView):
+    serializer_class = FanficSerializer
+    permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly
     )
     name='fanfic-list-by-category'
-    
+
+    def get_queryset(self):
+        categories = self.kwargs['category']
+        return Fanfic.objects.filter(category__category=categories)
 
 
-class FanficListBySubCategory(generics.ListAPIVIew):
-  queryset = Fanfic.objects.filter(subcategory=self.subcategory)
-  serializer_class = FanficSerializer
-  permission_classes = (
+
+class FanficListBySubCategory(generics.ListAPIView):
+    serializer_class = FanficSerializer
+    permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly
     )
     name='fanfic-list-by-subcategory'
 
-  
+    def get_queryset(self):
+        subcategories = self.kwargs['subcategory']
+        return Fanfic.objects.filter(subcategory__subcategory=subcategories)
+
+
 
 class FanficListByAuthor(generics.ListAPIView):
     serializer_class = FanficListSerializer
@@ -137,6 +143,9 @@ class FanficListRemastered(generics.ListAPIView):
         custompermission.IsCurrentAuthorOrReadOnly
     )
     name='fanfic-list-remastered'
+
+    def get_queryset(self):
+        return Fanfic.objects.all().filter(status='publié')
 
 
 class FanficList(generics.ListCreateAPIView):
