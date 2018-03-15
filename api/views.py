@@ -87,6 +87,28 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 """
 Fanfics
 """
+class FanficListByCategory(generics.ListAPIVIew):
+  queryset = Fanfic.objects.filter(category=self.category)
+  serializer_class = FanficSerializer
+  permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        custompermission.IsCurrentAuthorOrReadOnly
+    )
+    name='fanfic-list-by-category'
+    
+
+
+class FanficListBySubCategory(generics.ListAPIVIew):
+  queryset = Fanfic.objects.filter(subcategory=self.subcategory)
+  serializer_class = FanficSerializer
+  permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        custompermission.IsCurrentAuthorOrReadOnly
+    )
+    name='fanfic-list-by-subcategory'
+
+  
+
 class FanficListByAuthor(generics.ListAPIView):
     serializer_class = FanficListSerializer
     pagination_class = None
