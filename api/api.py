@@ -8,6 +8,15 @@ from api.serializers import UserSerializer
 
 # Create your api views here.
 
+class UserCreate(generics.CreateAPIView):
+    """
+    Create an user
+    """
+    serializer_class = UserSerializer
+    authentication_classes = ()
+    permission_classes = ()
+    
+
 class LoginView(views.APIView):
     """
     Login user
