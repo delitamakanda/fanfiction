@@ -15,6 +15,7 @@
                 <p>{{ userFanfic.updated | date }}</p>
                 <p v-if="userFanfic.synopsis">{{ userFanfic.synopsis }}</p>
                 <p v-html="userFanfic.status"></p>
+                <div>{{ nbrChapter }} chapter - <a href="">Ajouter un chapitre</a> - <a href="">Editer</a> - <a href="#">Supprimer</a></div>
             </div>
         </section>
 
@@ -31,6 +32,7 @@ export default {
             error: null,
             userFanfics: [],
             loading: false,
+            nbrChapter: '',
         }
     },
     async created () {
