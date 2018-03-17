@@ -142,8 +142,24 @@
 </template>
 
 <script>
+import PersistantData from '../mixins/PersistantData'
+
 export default {
     name: 'NewFanfic',
+    mixins: [
+        PersistantData('NewFanfic', [
+            'title',
+            'description',
+            'synopsis',
+            'credits',
+            'author',
+            'genres',
+            'classement',
+            'status',
+            'category',
+            'subcategory',
+        ]),
+    ],
     data(){
         return{
             error: null,
@@ -157,7 +173,6 @@ export default {
             dataGenresFormatted: [],
             dataCategories: [],
             dataSubCategories: [],
-            resCat: null,
             title: '',
             description: '',
             synopsis: '',
