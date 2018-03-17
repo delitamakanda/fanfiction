@@ -9,21 +9,19 @@
 
         <section v-else class="fanfictions-list">
             <div v-for="userFanfic of userFanfics">
-                <h3 v-html="userFanfic.title"></h3>
-                <span>{{ userFanfic.category }} {{ userFanfic.subcategory }} {{ userFanfic.genres }} {{ userFanfic.classement }}</span>
-                <p>{{ userFanfic.created | date }}</p>
-                <p>{{ userFanfic.updated | date }}</p>
-                <p v-if="userFanfic.synopsis">{{ userFanfic.synopsis }}</p>
-                <p v-html="userFanfic.status"></p>
-                <div>{{ nbrChapter }} chapter - <a href="">Ajouter un chapitre</a> - <a href="">Editer</a> - <a href="#">Supprimer</a></div>
+                <router-link :to="{name: 'fanfic', params: { id: userFanfic.id }}"> <h3>{{ userFanfic.title }}</h3> </router-link>
             </div>
         </section>
+
+        <!--<Fanfic v-if="id" :id="id" />-->
 
         <router-view />
     </div>
 </template>
 
 <script>
+import Fanfic from './Fanfic.vue'
+
 export default {
     name: 'ListUserFanfic',
     data(){
@@ -32,8 +30,11 @@ export default {
             error: null,
             userFanfics: [],
             loading: false,
-            nbrChapter: '',
+            id: null,
         }
+    },
+    components: {
+        Fanfic,
     },
     async created () {
         this.loading = true

@@ -12,6 +12,7 @@ import PostDetail from '@/components/PostDetail'
 import Dashboard from '@/components/Dashboard'
 import ListUserFanfic from '@/components/ListUserFanfic'
 import NewFanfic from '@/components/NewFanfic'
+import Fanfic from '@/components/Fanfic'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -74,16 +75,9 @@ const router = new Router({
             component: Dashboard,
             meta: { private: true },
             children: [
-                {
-                    path: '',
-                    name: 'ListUserFanfic',
-                    component: ListUserFanfic,
-                },
-                {
-                    path: 'create',
-                    name: 'NewFanfic',
-                    component: NewFanfic,
-                },
+                { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic },
+                { path: 'create', name: 'NewFanfic', component: NewFanfic },
+                { path: 'fanfic/:id', name: 'fanfic', component: Fanfic, props: true },
             ]
         },
         {

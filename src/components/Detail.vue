@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1></h1>
+    <h1 v-html="fanfic.title"></h1>
 
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
         {{ errorFetch }}
@@ -11,7 +11,6 @@
     </ul>
 
     <section>
-            <h2 v-html="fanfic.title"></h2>
             <p v-html="fanfic.category"></p>
             <p v-html="fanfic.subcategory"></p>
             <p v-html="fanfic.author"></p>
