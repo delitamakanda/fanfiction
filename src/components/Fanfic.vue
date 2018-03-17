@@ -24,8 +24,13 @@
                 <div>Sous - Catégorie : {{ fanfic.subcategory }}</div>
                 <div>Description : {{ fanfic.description }}</div>
             </section>
+            <section class="content">
+                <div v-for="(chap, i) of chapter" v-if="chap.fanfic === fanfic.id">
+                    &bull; {{ chap.title }} - Publié le {{ chap.published | date }} - <a href="">Editer le chapitre </a>
+                </div>
+            </section>
             <section class="action">
-                <div> chapter - <a href="">Ajouter un chapitre</a> - <a href="">Editer</a> - <a href="#">Supprimer</a></div>
+                <div><a href="">Ajouter un chapitre</a> - <a href="">Editer l'histoire</a> - <a href="#">Supprimer l'histoire</a></div>
             </section>
         </template>
     </div>
@@ -40,13 +45,24 @@ export default {
             fanfic () {
                 return `fanfics/v1/${this.id}`
             },
+            chapter () {
+                return `chapters`
+            }
         }),
     ],
+    data () {
+        return {
+            nbChapter: ''
+        }
+    },
     props: {
         id: {
             type: Number,
             required: true,
         },
     },
+    created () {
+        this.nbChapter = 0
+    }
 }
 </script>

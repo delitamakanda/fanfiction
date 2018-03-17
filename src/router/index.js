@@ -98,7 +98,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    console.log('to', to.name)
 
     if (to.meta.private) {
         // TODO:  redirect to login
