@@ -2,6 +2,8 @@
   <div>
     <h1 v-html="fanfic.title"></h1>
 
+    <a @click="feedback">Signaler</a>
+
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
         {{ errorFetch }}
     </div>
@@ -69,7 +71,10 @@ export default {
         }
     },
     methods: {
-
+        async feedback () {
+            const result = await fetch('api/feedback')
+            console.log(result)
+        }
     }
 }
 </script>

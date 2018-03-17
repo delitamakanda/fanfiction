@@ -69,9 +69,10 @@ class CheckoutUserView(views.APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
 def email_feedback(request):
-    id = request.POST.get('id')
-    fanfic = Fanfic.objects.get(id=id)
-    msg_html = render_to_string('templates/email.html', {'fanfic': fanfic})
+    # id = request.POST.get('id')
+    # fanfic = Fanfic.objects.get(id=id)
+    # msg_html = render_to_string('templates/email.html', {'fanfic': fanfic})
+    msg_html = ''
     msg_text = ''
     return send_mail('Une fanfiction a été signalée', msg_text, 'no-reply@fanfiction.com', ['delita.makanda@gmail.com'], html_message=msg_html, fail_silently=False)
 
