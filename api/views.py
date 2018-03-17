@@ -91,33 +91,6 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 """
 Fanfics
 """
-class FanficListByCategory(generics.ListAPIView):
-    serializer_class = FanficListSerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        custompermission.IsCurrentAuthorOrReadOnly
-    )
-    name='fanfic-list-by-category'
-
-    def get_queryset(self):
-        cat = self.category
-        return Fanfic.objects.filter(category=cat)
-
-
-
-class FanficListBySubCategory(generics.ListAPIView):
-    serializer_class = FanficListSerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        custompermission.IsCurrentAuthorOrReadOnly
-    )
-    name='fanfic-list-by-subcategory'
-
-    def get_queryset(self):
-        subcategories = self.kwargs['subcategory']
-        return Fanfic.objects.filter(subcategory__subcategory=subcategories)
-
-
 
 class FanficListByAuthor(generics.ListAPIView):
     serializer_class = FanficListSerializer
@@ -343,14 +316,10 @@ class ApiRoot(generics.GenericAPIView):
         return Response({
             'fanfics' : reverse('fanfic-list', request=request),
             'fanfics-list-remastered': reverse('fanfic-list-remastered', request=request),
-            #'fanfic-list-detail': reverse('fanfic-list-detail', request=request),
-            #'fanfic-list-by-author': reverse('fanfic-list-by-author', request=request),
             'chapters': reverse('chapter-list', request=request),
             'comments': reverse('comment-list', request=request),
             'category': reverse('category-list', request=request),
             'sub-category': reverse('subcategory-list', request=request),
-            # 'fanfic-list-by-category': reverse('fanfic-list-by-category', request=request),
-            # 'fanfic-list-by-subcategory': reverse('fanfic-list-by-subcategory', request=request),
             'users': reverse('user-list', request=request),
             'posts' : reverse('post-list', request=request),
             'genres': reverse('genre-list', request=request),

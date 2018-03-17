@@ -1,10 +1,13 @@
 import json
 from django.shortcuts import render, HttpResponse
+from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from api.serializers import UserSerializer
+from api.serializers import FanficSerializer
+from api.models import Fanfic
 
 # Create your api views here.
 
@@ -15,7 +18,7 @@ class UserCreate(generics.CreateAPIView):
     serializer_class = UserSerializer
     authentication_classes = ()
     permission_classes = ()
-    
+
 
 class LoginView(views.APIView):
     """
@@ -64,3 +67,27 @@ class CheckoutUserView(views.APIView):
         serializer = UserSerializer(request.user)
         if request.user:
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+def email_feedback(request):
+    id = request.POST.get('id')
+    fanfic = Fanfic.objects.get(id=id)
+    msg_html = render_to_string('templates/email.html', {'fanfic': fanfic})
+    msg_text = ''
+    return send_mail('Une fanfiction a été signalée', msg_text, 'no-reply@fanfiction.com', ['delita.makanda@gmail.com'], html_message=msg_html, fail_silently=False)
+
+
+class EmailFeedback(generics.ListCreateAPIView):
+    """
+    Feedback email
+    """
+    queryset = Fanfic.objects.all()
+    serializer_class = FanficSerializer
+    authentication_classes = ()
+    permission_classes = ()
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        email_feedback(request)
+        return self.create(request, *args, **kwargs)

@@ -8,8 +8,6 @@ urlpatterns = [
     path('fanfics/<int:pk>', views.FanficDetail.as_view(), name='fanfic-detail'),
     path('fanfics/v1/<int:pk>', views.FanficListDetail.as_view(), name='fanfic-list-detail'),
     path('fanfics/author/<str:username>', views.FanficListByAuthor.as_view(), name='fanfic-by-user'),
-    path('fanfics/category/<str:category>', views.FanficListByCategory.as_view(), name='fanfic-list-by-category'),
-    path('fanfics/subcategory/<str:subcategory>', views.FanficListBySubCategory.as_view(), name='fanfic-list-by-subcategory'),
     path('posts', views.PostList.as_view(), name='post-list'),
     path('posts/<int:pk>', views.PostDetail.as_view(), name='post-detail'),
     path('chapters', views.ChapterList.as_view(), name='chapter-list'),
@@ -28,5 +26,6 @@ urlpatterns = [
     path('signup', api.UserCreate.as_view(), name='signup'),
     path('login', api.LoginView.as_view(), name='login'),
     path('logout', api.LogoutView.as_view(), name='logout'),
+    path('feedback', api.EmailFeedback.as_view(), name='feedback'),
     path('', views.ApiRoot.as_view(), name=views.ApiRoot.name),
 ]
