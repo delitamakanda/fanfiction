@@ -78,7 +78,9 @@ const router = new Router({
             children: [
                 { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic },
                 { path: 'create', name: 'NewFanfic', component: NewFanfic },
+                { path: 'update/:id', name: 'UpdateFanfic', component: NewFanfic, props: true },
                 { path: 'new/chapter', name: 'NewChapter', component: NewChapter, props: true },
+                { path: 'update/chapter/:id', name: 'UpdateChapter', component: NewChapter, props: true },
                 { path: 'fanfic/:id', name: 'fanfic', component: Fanfic, props: true },
             ]
         },
