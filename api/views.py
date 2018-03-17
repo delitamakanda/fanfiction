@@ -181,7 +181,6 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly,
     )
-    pagination_class = None
 
 
 class FanficListDetail(generics.RetrieveAPIView):

@@ -30,7 +30,7 @@
                 </div>
             </section>
             <section class="action">
-                <div><router-link :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <a href="">Editer l'histoire</a> - <button v-on:click="deleteStory(id)">Supprimer l'histoire</button></div>
+                <div><router-link :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <a href="">Editer l'histoire</a> - <button @click.prevent="deleteStory(fanfic.id)">Supprimer l'histoire</button></div>
             </section>
         </template>
     </div>
@@ -62,9 +62,21 @@ export default {
         },
     },
     methods: {
-        deleteStory: function (id) {
-            alert('delete histoire')
+        async deleteStory (id) {
+            let message = confirm('Etes vous certain de supprimer cette histoire ?')
+
+            if (message == true) {
+                //console.log(id)
+                const result = await this.$fetch('fanfics/'+ id)
+
+                if (result) {
+                    fetch(`api/fanfics/${this.id}`, {method: 'DELETE', credentials: 'include', body: JSON.stringify(result)})
+                    this.$router.push({ name: 'ListUserFanfic' })
+                }
+            }
+
         }
-    },
+
+    }
 }
 </script>
