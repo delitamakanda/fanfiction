@@ -60,7 +60,7 @@ class Fanfic(models.Model):
         ('LE', 'Lemon'),
         ('HU', 'Humour'),
         ('OS', 'One-Shot'),
-        ('SU', 'Suspense'),
+        ('SUS', 'Suspense'),
         ('TH', 'Thriller'),
         ('HO', 'Horreur'),
         ('HF', 'Heroic Fantasy'),
