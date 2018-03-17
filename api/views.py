@@ -66,6 +66,9 @@ class StatusList(viewsets.ModelViewSet):
     name='status-list'
 
 
+"""
+Liste des news
+"""
 class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -89,7 +92,7 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 Fanfics
 """
 class FanficListByCategory(generics.ListAPIView):
-    serializer_class = FanficSerializer
+    serializer_class = FanficListSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly
@@ -103,7 +106,7 @@ class FanficListByCategory(generics.ListAPIView):
 
 
 class FanficListBySubCategory(generics.ListAPIView):
-    serializer_class = FanficSerializer
+    serializer_class = FanficListSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly
