@@ -102,7 +102,7 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chapter
-        fields = ('id', 'fanfic', 'title', 'description', 'text', 'order',)
+        fields = ('id', 'fanfic', 'title', 'description', 'text', 'order', 'published',)
 
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):

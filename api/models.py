@@ -115,6 +115,7 @@ class Chapter(models.Model):
     description = models.TextField(blank=True, default='')
     text = models.TextField()
     order = OrderField(blank=True, for_fields=['fanfic'])
+    published = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['order']
