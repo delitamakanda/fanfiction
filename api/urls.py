@@ -11,6 +11,7 @@ urlpatterns = [
     path('posts', views.PostList.as_view(), name='post-list'),
     path('posts/<int:pk>', views.PostDetail.as_view(), name='post-detail'),
     path('chapters', views.ChapterList.as_view(), name='chapter-list'),
+    path('chapters/<int:pk>', views.ChapterDetail.as_view(), name='chapter-detail'),
     path('fanfics/genres', views.GenresList.as_view({'get': 'list'}), name='genre-list'),
     path('fanfics/classement', views.ClassementList.as_view({'get': 'list'}), name='classement-list'),
     path('fanfics/status', views.StatusList.as_view({'get': 'list'}), name='status-list'),

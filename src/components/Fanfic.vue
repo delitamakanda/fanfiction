@@ -30,7 +30,7 @@
                 </div>
             </section>
             <section class="action">
-                <div><a href="">Ajouter un chapitre</a> - <a href="">Editer l'histoire</a> - <a href="#">Supprimer l'histoire</a></div>
+                <div><router-link :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <a href="">Editer l'histoire</a> - <button v-on:click="deleteStory(id)">Supprimer l'histoire</button></div>
             </section>
         </template>
     </div>
@@ -52,7 +52,7 @@ export default {
     ],
     data () {
         return {
-            nbChapter: ''
+            data: null
         }
     },
     props: {
@@ -61,8 +61,10 @@ export default {
             required: true,
         },
     },
-    created () {
-        this.nbChapter = 0
-    }
+    methods: {
+        deleteStory: function (id) {
+            alert('delete histoire')
+        }
+    },
 }
 </script>

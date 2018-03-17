@@ -100,6 +100,11 @@ class Fanfic(models.Model):
         ordering = ('-publish',)
         verbose_name = 'fanfic'
         verbose_name_plural = 'fanfics'
+        
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Fanfic, self).save(*args, **kwargs)
 
     @property
     def total_likes(self):
@@ -119,10 +124,6 @@ class Chapter(models.Model):
 
     class Meta:
         ordering = ['order']
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        super(Fanfic, self).save(*args, **kwargs)
 
     def __str__(self):
         return '{}. {}'.format(self.order, self.title)

@@ -74,6 +74,7 @@ class FanficSerializer(serializers.ModelSerializer):
         model = Fanfic
         fields = ('id','author','title','slug','synopsis','credits','description','genres','classement','publish','created','updated','was_featured_in_home','status','likes','objects','published','category','subcategory',)
 
+
     def create(self, validated_data):
         return Fanfic.objects.create(**validated_data)
 
@@ -98,11 +99,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ChapterSerializer(serializers.ModelSerializer):
-    fanfic = serializers.SlugRelatedField(queryset=Fanfic.objects.all(), slug_field='id')
+    # fanfic = serializers.SlugRelatedField(queryset=Fanfic.objects.all(), slug_field='id')
 
     class Meta:
         model = Chapter
         fields = ('id', 'fanfic', 'title', 'description', 'text', 'order', 'published',)
+
+
+    def create(self, validated_data):
+        return Chapter.objects.create(**validated_data)
 
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):

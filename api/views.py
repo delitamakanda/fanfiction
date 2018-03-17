@@ -213,10 +213,14 @@ class ChapterList(generics.ListCreateAPIView):
     pagination_class = None
 
 
-# class ChapterDetail(generics.RetrieveUpdateDestroyAPIView):
-    # queryset = Fanfic.objects.all()
-    # serializer_class = ChapterSerializer
-    # name='chapter-detail'
+
+class ChapterDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Chapter.objects.all()
+    serializer_class = ChapterSerializer
+    name='chapter-detail'
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
 
 
 class CommentList(generics.ListCreateAPIView):
