@@ -72,8 +72,12 @@ export default {
     },
     methods: {
         async feedback () {
-            const result = await fetch('api/feedback')
-            console.log(result)
+            const result = await this.$fetch('feedback', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: this.fanfic.id,
+                })
+            })
         }
     }
 }
