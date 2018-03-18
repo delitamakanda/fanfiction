@@ -77,6 +77,10 @@ def email_feedback(request):
     return send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com', ['delita.makanda@gmail.com'], html_message=msg_html, fail_silently=False)
 
 
+def favorited_fanfic(request):
+    pass
+
+
 class EmailFeedback(generics.ListCreateAPIView):
     """
     Feedback email
@@ -91,7 +95,7 @@ class EmailFeedback(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         email_feedback(request)
-        return self.create(request, *args, **kwargs)
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
 class FavoritedFanfic(generics.ListCreateAPIView):
@@ -104,4 +108,5 @@ class FavoritedFanfic(generics.ListCreateAPIView):
     permission_classes = ()
 
     def post(self, request, *args, **kwargs):
-        pass
+        favorited_fanfic(request)
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
