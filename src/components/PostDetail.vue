@@ -2,15 +2,19 @@
   <div>
     <h1 v-html='post.title'></h1>
 
-    <Loading v-if="loading" />
-
-    <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
+    <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         {{ errorFetch }}
     </div>
 
-    <p v-html='post.user'></p>
-    <p v-html=''>{{ post.created | date }}</p>
+    <Loading v-if="remoteDataBusy" />
+
+    <p>Ecrit par {{ post.user }}</p>
+    <p>Publié le {{ post.created | date }}</p>
     <p v-html='post.content'></p>
+
+    <a v-for="tag of post.tags" class="tag">
+        {{ tag.word }}
+    </a>
 
 
 
@@ -18,18 +22,30 @@
 </template>
 
 <script>
+import RemoteData from '../mixins/RemoteData'
+
 export default {
   name: 'PostDetail',
+  mixins: [
+      RemoteData({
+          post () {
+              return`posts/${this.$route.params.id}`
+          }
+      })
+  ],
   data () {
     return {
-      error: null,
-      post: [],
-      loading: false,
-      errorFetch: 'Il y a un problème avec la requète.',
+        errorFetch: 'Il y a un problème avec la requète.',
     }
 },
+props: {
+    id: {
+        type: Number,
+        required: true,
+    },
+},
 
-async created () {
+/*async created () {
     this.loading = true
     try {
         this.post = await this.$fetch('posts/' + this.$route.params.id)
@@ -37,7 +53,7 @@ async created () {
         this.error = e
     }
     this.loading = false
-},
+},*/
 }
 </script>
 

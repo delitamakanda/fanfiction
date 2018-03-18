@@ -102,7 +102,7 @@
                   Genres
                 </label>
                 <div class="relative">
-                    <label :for="select[0]" v-for="select in dataGenresFormatted[0].genres">
+                    <label :for="select[0]"  v-if="loadingGenres"  v-for="select in dataGenresFormatted[0].genres">
                         <input :value="select[0]" v-if="loadingGenres" v-model="genres" :id="select[0]" type="checkbox">
                         {{ select[1] }}<br>
                     </label>
@@ -154,6 +154,7 @@ export default {
             'credits',
             'author',
             'classement',
+            //'genres',
             'status',
             'category',
             'subcategory',

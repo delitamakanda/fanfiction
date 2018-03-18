@@ -18,8 +18,11 @@
                 }">
                     <h3 v-html="post.title"></h3>
                 </router-link>
-                <p v-html="post.user"></p>
-                <p>{{ post.created | date }}</p>
+                <p> Par {{ post.user }}</p>
+                <p> Publiée le {{ post.created | date }}</p>
+                <a v-for="tag of post.tags" class="tag">
+                    {{ tag.word }}
+                </a>
 
         </div>
 
