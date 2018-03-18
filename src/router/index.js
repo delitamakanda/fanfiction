@@ -11,6 +11,8 @@ import Posts from '@/components/Posts'
 import PostDetail from '@/components/PostDetail'
 import Dashboard from '@/components/Dashboard'
 import ListUserFanfic from '@/components/ListUserFanfic'
+import UpdateFanfic from '@/components/UpdateFanfic'
+import UpdateChapter from '@/components/UpdateChapter'
 import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
@@ -78,9 +80,9 @@ const router = new Router({
             children: [
                 { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic },
                 { path: 'create', name: 'NewFanfic', component: NewFanfic },
-                { path: 'update/:id', name: 'UpdateFanfic', component: NewFanfic, props: true },
+                { path: 'update/:id/edit', name: 'UpdateFanfic', component: UpdateFanfic, props: true },
                 { path: 'new/chapter', name: 'NewChapter', component: NewChapter, props: true },
-                { path: 'update/chapter/:id', name: 'UpdateChapter', component: NewChapter, props: true },
+                { path: 'update/chapter/:chapter_id/edit', name: 'UpdateChapter', component: UpdateChapter, props: true },
                 { path: 'fanfic/:id', name: 'fanfic', component: Fanfic, props: true },
             ]
         },

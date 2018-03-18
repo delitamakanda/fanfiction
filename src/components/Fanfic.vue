@@ -8,7 +8,7 @@
         <template v-else>
             <section class="infos">
                 <div class="info">
-                    Crée le {{ fanfic.created | date }}
+                    Crée le {{ fanfic.publish | date }}
                 </div>
                 <div class="info">
                     Mis à jour le {{ fanfic.updated | date }}
@@ -26,7 +26,7 @@
             </section>
             <section class="content">
                 <div v-for="(chap, i) of chapter" v-if="chap.fanfic === fanfic.id">
-                    &bull; {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { id: chap.id }}">Editer le chapitre </router-link>
+                    &bull; {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id }}">Editer le chapitre </router-link>
                 </div>
             </section>
             <section class="action">
