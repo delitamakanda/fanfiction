@@ -100,7 +100,7 @@ class Fanfic(models.Model):
         ordering = ('-publish',)
         verbose_name = 'fanfic'
         verbose_name_plural = 'fanfics'
-        
+
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -147,17 +147,35 @@ class Comment(models.Model):
         return 'Comment by {} on {}'.format(self.name, self.fanfic)
 
 
+class Tag(models.Model):
+    word = models.CharField(max_length=35)
+    slug = models.CharField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=False)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.word)
+        super(Tag, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.word
+
+
 class Post(models.Model):
     user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
     content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
 
     class Meta:
         ordering = ('created',)
         verbose_name = 'post'
         verbose_name_plural = 'posts'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Post, self).save(*args, **kwargs)
 
     def __str__(self):
         return 'Blog post by {} on {}'.format(self.user, self.title)

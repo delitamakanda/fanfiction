@@ -6,9 +6,18 @@ from api.models import Chapter
 from api.models import Category
 from api.models import SubCategory
 from api.models import Post
+from api.models import Tag
+
+class TagSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
 
 class PostSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
+    tags = TagSerializer(many=True)
 
     class Meta:
         model = Post
@@ -19,6 +28,7 @@ class PostSerializer(serializers.ModelSerializer):
             'slug',
             'content',
             'created',
+            'tags',
         )
 
 class CategorySerializer(serializers.ModelSerializer):
