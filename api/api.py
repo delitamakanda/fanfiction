@@ -81,11 +81,10 @@ def favorited_fanfic(request):
     pass
 
 
-class EmailFeedback(generics.ListCreateAPIView):
+class EmailFeedback(views.APIView):
     """
     Feedback email
     """
-    queryset = Fanfic.objects.all()
     serializer_class = FanficSerializer
     authentication_classes = ()
     permission_classes = ()
@@ -93,16 +92,15 @@ class EmailFeedback(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         email_feedback(request)
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
-class FavoritedFanfic(generics.ListCreateAPIView):
+class FavoritedFanfic(views.APIView):
     """
     Favorite fanfic
     """
-    queryset = Fanfic.objects.all()
     serializer_class = FanficSerializer()
     authentication_classes = ()
     permission_classes = ()

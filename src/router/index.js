@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
 import Router from 'vue-router'
 import state from '../state'
 import NotFound from '@/components/NotFound'
@@ -21,6 +22,23 @@ import Form from '@/components/Form'
 import Input from '@/components/Input'
 
 import VueFetch from '../plugins/fetch'
+import VueAffix from 'vue-affix'
+import Vueditor from 'vueditor'
+
+import 'vueditor/dist/style/vueditor.min.css'
+
+let config = {
+    toolbar: [
+        'removeFormat'
+    ],
+    fontName: [
+        {val: 'arial  black'},
+        {val: 'times new roman'},
+        {val: 'Courier  New'}
+    ],
+    fontSize: ['12px', '14px', '16px', '18px', '0.8rem', '1.0rem', '1.2rem', '1.5rem', '2.0rem'],
+    uploadUrl: ''
+}
 
 Vue.component('Loading', Loading)
 Vue.component('Form', Form)
@@ -30,6 +48,9 @@ Vue.use(Router)
 Vue.use(VueFetch, {
     baseUrl: 'api/'
 })
+Vue.use(VueAffix)
+Vue.use(Vuex)
+Vue.use(Vueditor, config);
 
 const router = new Router({
     routes: [
