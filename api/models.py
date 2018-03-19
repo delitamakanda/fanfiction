@@ -12,7 +12,7 @@ from django.template.defaultfilters import slugify
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
-        return super(PublishedManager, self).get_queryset().filter(status='published')
+        return super(PublishedManager, self).get_queryset().filter(status='publié')
 
 # Create your models here.
 class Category(models.Model):
@@ -89,7 +89,7 @@ class Fanfic(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     was_featured_in_home = models.BooleanField(default=False)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='brouillon')
     likes = models.PositiveIntegerField(default=0)
     objects = models.Manager()
     published = PublishedManager()
