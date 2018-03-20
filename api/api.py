@@ -69,6 +69,20 @@ class CheckoutUserView(views.APIView):
         serializer = UserSerializer(request.user)
         if request.user:
             return Response(serializer.data, status=status.HTTP_200_OK)
+          
+class ChangePasswordView(views.APIView):
+  """
+  Change password
+  """
+  pass
+ 
+
+class ForgetPasswordView(api.APIView):
+  """
+  Forgot password
+  """
+  pass
+
 
 def email_feedback(request):
     id = request.data.get('id')
