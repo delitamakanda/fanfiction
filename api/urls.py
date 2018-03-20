@@ -1,4 +1,6 @@
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from api import views
 from api import api
 
@@ -31,3 +33,6 @@ urlpatterns = [
     path('favorite', api.FavoritedFanfic.as_view(), name='favorite'),
     path('', views.ApiRoot.as_view(), name=views.ApiRoot.name),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
