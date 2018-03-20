@@ -8,6 +8,7 @@ from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from api.serializers import UserSerializer
 from api.serializers import FanficSerializer
+from api.serializers import PasswordSerializer
 from api.models import Fanfic
 
 # Create your api views here.
@@ -75,11 +76,7 @@ def email_feedback(request):
     msg_html = render_to_string('mail/feedback.html', {'fanfic': fanfic})
     msg_text = ''
     return send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com', ['delita.makanda@gmail.com'], html_message=msg_html, fail_silently=False)
-
-
-def favorited_fanfic(request):
-    pass
-
+ 
 
 class EmailFeedback(views.APIView):
     """
@@ -96,6 +93,9 @@ class EmailFeedback(views.APIView):
         email_feedback(request)
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
+
+def favorited_fanfic(request):
+    pass
 
 class FavoritedFanfic(views.APIView):
     """
