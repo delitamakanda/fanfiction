@@ -69,15 +69,15 @@ class CheckoutUserView(views.APIView):
         serializer = UserSerializer(request.user)
         if request.user:
             return Response(serializer.data, status=status.HTTP_200_OK)
-          
+
 class ChangePasswordView(views.APIView):
   """
   Change password
   """
   pass
- 
 
-class ForgetPasswordView(api.APIView):
+
+class ForgetPasswordView(views.APIView):
   """
   Forgot password
   """
@@ -90,7 +90,7 @@ def email_feedback(request):
     msg_html = render_to_string('mail/feedback.html', {'fanfic': fanfic})
     msg_text = ''
     return send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com', ['delita.makanda@gmail.com'], html_message=msg_html, fail_silently=False)
- 
+
 
 class EmailFeedback(views.APIView):
     """
