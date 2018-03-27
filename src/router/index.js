@@ -20,6 +20,7 @@ import Fanfic from '@/components/Fanfic'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
+import Pagination from '@/components/Pagination'
 
 import VueFetch from '../plugins/fetch'
 import VueAffix from 'vue-affix'
