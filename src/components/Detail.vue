@@ -72,12 +72,15 @@ export default {
     },
     methods: {
         async feedback () {
-            const result = await this.$fetch('feedback', {
-                method: 'POST',
-                body: JSON.stringify({
-                    id: this.fanfic.id,
-                })
-            })
+            let message = confirm("Seuls les fanfictions ne répondant pas à la charte de bonne conduite du site seront supprimées.");
+            if (message === true) {
+              const result = await this.$fetch('feedback', {
+                  method: 'POST',
+                  body: JSON.stringify({
+                      id: this.fanfic.id,
+                  })
+              })
+            }
         }
     }
 }
