@@ -109,7 +109,22 @@ class EmailFeedback(views.APIView):
 
 
 def favorited_fanfic(request):
-    pass
+    fanfic_id = request.data.get('id')
+    action = request.data.get('action')
+    if fanfic_id and action:
+        try:
+            fanfic = Fanfic.objects.get(id=fanfic_id)
+            if action == 'like':
+                fanfic.likes += 1
+            else:
+                fanfic.likes -= 1
+            # elif action == 'love':
+                # fanfic.likes *= 2
+            return Response({'status': 'ok', status=status.HTTP_200_OK})
+        except:
+            pass
+    return Response({'status': 'ko'})
+  
 
 class FavoritedFanfic(views.APIView):
     """
