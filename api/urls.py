@@ -31,6 +31,8 @@ urlpatterns = [
     path('logout', api.LogoutView.as_view(), name='logout'),
     path('feedback', api.EmailFeedback.as_view(), name='feedback'),
     path('favorite', api.FavoritedFanfic.as_view(), name='favorite'),
+    path('forgot-password', api.ForgetPasswordView.as_view(), name='forgot-password'),
+    path('change-password', api.ChangePasswordView.as_view(), name='change-password'),
     path('', views.ApiRoot.as_view(), name=views.ApiRoot.name),
 ]
 

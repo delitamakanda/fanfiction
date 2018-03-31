@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'multiselectfield',
     'embed_video',
     'django_filters',
+    'allauth',
+    'allauth.account',
 ]
 
 INSTALLED_APPS += [
@@ -49,6 +52,8 @@ INSTALLED_APPS += [
     'webpack_loader',
     'api',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

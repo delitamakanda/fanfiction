@@ -6,9 +6,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
+from allauth.account.forms import ResetPasswordForm
 from api.serializers import UserSerializer
 from api.serializers import FanficSerializer
 from api.serializers import PasswordSerializer
+from api.serializers import ChangePasswordSerializer
 from api.models import Fanfic
 
 # Create your api views here.
@@ -70,18 +72,44 @@ class CheckoutUserView(views.APIView):
         if request.user:
             return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class ChangePasswordView(views.APIView):
   """
   Change password
   """
-  pass
+  permission_classes = (permissions.IsAuthenticated,)
+
+  def get_object(self, queryset=None):
+      return self.request.user
+
+  def put(self, request, *args, **kwargs):
+      self.object = self.get_object()
+      serializer = ChangePasswordSerializer(data=request.data)
+
+      if serializer.is_valid():
+          old_password = serializer.data.get('old_password')
+          if not self.object.check_password(old_password):
+              return Response({'old_password': ['Mot de passe erroné.']}, status=status.HTTP_400_BAD_REQUEST)
+          self.object.set_password(serializer.data.get('new_password'))
+          self.object.save()
+          return Response(status=status.HTTP_204_NO_CONTENT)
+          
+      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ForgetPasswordView(views.APIView):
   """
   Forgot password
   """
-  pass
+  permission_classes = ( permissions.AllowAny,)
+
+  def post(self, request):
+      if request.data.get('email'):
+          form = ResetPasswordForm({'email': request.data.get('email')})
+          if form.is_valid():
+              form.save()
+              return Response({"status": "ok"}, status=status.HTTP_200_OK)
+      return Response({"status": "error"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def email_feedback(request):
@@ -120,11 +148,11 @@ def favorited_fanfic(request):
                 fanfic.likes -= 1
             # elif action == 'love':
                 # fanfic.likes *= 2
-            return Response({'status': 'ok', status=status.HTTP_200_OK})
+            return Response({'status': 'ok'}, status=status.HTTP_200_OK)
         except:
             pass
     return Response({'status': 'ko'})
-  
+
 
 class FavoritedFanfic(views.APIView):
     """
