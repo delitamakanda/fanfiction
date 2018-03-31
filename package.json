@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "sw-precache-webpack-plugin": "^0.11.5",
     "vee-validate": "^2.0.0-beta.17",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
