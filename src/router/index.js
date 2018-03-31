@@ -25,6 +25,7 @@ import Pagination from '@/components/Pagination'
 import VueFetch from '../plugins/fetch'
 import VueAffix from 'vue-affix'
 import Vueditor from 'vueditor'
+import VeeValidate from 'vee-validate'
 
 import 'vueditor/dist/style/vueditor.min.css'
 
@@ -52,6 +53,7 @@ Vue.use(VueFetch, {
 Vue.use(VueAffix)
 Vue.use(Vuex)
 Vue.use(Vueditor, config);
+Vue.use(VeeValidate);
 
 const router = new Router({
     routes: [
