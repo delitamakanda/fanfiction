@@ -11,6 +11,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const BundleTracker = require('webpack-bundle-tracker')
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 
 const env = require('../config/prod.env')
 
@@ -117,7 +118,14 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ]),
-    new BundleTracker({filename: './webpack-stats-prod.json'})
+    new BundleTracker({filename: './webpack-stats-prod.json'}),
+    new SWPrecacheWebpackPlugin({
+        cacheId: 'fanfiction',
+        filename: 'sw.js',
+        staticFileGlobs: ['dist/**/*.{js,html,css}'],
+        minify: true,
+        stripPrefix: 'dist/'
+    })
   ]
 })
 
