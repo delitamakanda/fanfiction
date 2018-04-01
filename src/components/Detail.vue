@@ -4,26 +4,33 @@
 
     <a @click="feedback">Signaler</a>
 
+    <p v-html="fanfic.category"></p>
+    <p v-html="fanfic.subcategory"></p>
+    <p v-html="fanfic.author"></p>
+    <p>{{fanfic.publish | date }}</p>
+    <p>{{ fanfic.updated | date }}</p>
+    <p v-html="fanfic.synopsis"></p>
+    <p>{{ fanfic.likes }} likes</p>
+    <p v-html="fanfic.genres"></p>
+    <p v-html="fanfic.classement"></p>
+    <p v-html="fanfic.description"></p>
+    <p v-html="fanfic.credits"></p>
+
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
         {{ errorFetch }}
     </div>
 
-    <ul v-for="element of chapter" v-if="element.fanfic === fanfic.id">
-        <li><a v-bind:href="'#' + element.id">{{ element.title }}</a></li>
-    </ul>
+    <div class="flex mb-4">
 
-    <section>
-            <p v-html="fanfic.category"></p>
-            <p v-html="fanfic.subcategory"></p>
-            <p v-html="fanfic.author"></p>
-            <p>{{fanfic.publish | date }}</p>
-            <p>{{ fanfic.updated | date }}</p>
-            <p v-html="fanfic.synopsis"></p>
-            <p>{{ fanfic.likes }} likes</p>
-            <p v-html="fanfic.genres"></p>
-            <p v-html="fanfic.classement"></p>
-            <p v-html="fanfic.description"></p>
-            <p v-html="fanfic.credits"></p>
+        <div class="w-1/4">
+            <affix class="sidebar-menu" relative-element-selector="#chapters-length">
+                <ul v-for="element of chapter" v-if="element.fanfic === fanfic.id">
+                    <li><a v-bind:href="'#' + element.id">{{ element.title }}</a></li>
+                </ul>
+            </affix>
+        </div>
+
+        <div class="w-3/4" id="chapters-length">
 
             <div v-for="chap of chapter" v-if="chap.fanfic === fanfic.id">
                 <h3 v-html="chap.title" :id="chap.id"></h3>
@@ -32,7 +39,8 @@
 
                 <div v-html="chap.text"></div>
             </div>
-    </section>
+        </div>
+    </div>
 
   </div>
 </template>
