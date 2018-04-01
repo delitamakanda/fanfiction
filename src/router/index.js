@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
 import Router from 'vue-router'
 import state from '../state'
 import NotFound from '@/components/NotFound'
@@ -24,23 +23,8 @@ import Pagination from '@/components/Pagination'
 
 import VueFetch from '../plugins/fetch'
 import VueAffix from 'vue-affix'
-import Vueditor from 'vueditor'
 import VeeValidate from 'vee-validate'
-
-import 'vueditor/dist/style/vueditor.min.css'
-
-let config = {
-    toolbar: [
-        'removeFormat'
-    ],
-    fontName: [
-        {val: 'arial  black'},
-        {val: 'times new roman'},
-        {val: 'Courier  New'}
-    ],
-    fontSize: ['12px', '14px', '16px', '18px', '0.8rem', '1.0rem', '1.2rem', '1.5rem', '2.0rem'],
-    uploadUrl: ''
-}
+import VueSVGIcon from 'vue-svgicon'
 
 Vue.component('Loading', Loading)
 Vue.component('Form', Form)
@@ -51,9 +35,8 @@ Vue.use(VueFetch, {
     baseUrl: 'api/'
 })
 Vue.use(VueAffix)
-Vue.use(Vuex)
-Vue.use(Vueditor, config);
-Vue.use(VeeValidate);
+Vue.use(VeeValidate)
+Vue.use(VueSVGIcon)
 
 const router = new Router({
     routes: [

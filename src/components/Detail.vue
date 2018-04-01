@@ -2,18 +2,17 @@
   <div>
     <h1 v-html="fanfic.title"></h1>
 
-    <a @click="feedback">Signaler</a>
+    <p>{{ fanfic.category}} / {{ fanfic.subcategory }}</p>
 
-    <p v-html="fanfic.category"></p>
-    <p v-html="fanfic.subcategory"></p>
-    <p v-html="fanfic.author"></p>
-    <p>{{fanfic.publish | date }}</p>
-    <p>{{ fanfic.updated | date }}</p>
-    <p v-html="fanfic.synopsis"></p>
-    <p>{{ fanfic.likes }} likes</p>
-    <p v-html="fanfic.genres"></p>
-    <p v-html="fanfic.classement"></p>
+    <p>{{ fanfic.classement }} <a @click="feedback" class="link" href="#">Signaler</a></p>
+
+    <p>Auteur : {{ fanfic.author }}</p>
+    <p>[ Publiée le: {{fanfic.publish | date }} ][ Mise à Jour le:{{ fanfic.updated | date }} ]</p>
+
+    <p>{{ fanfic.genres }} / <a href="#"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon> {{ fanfic.likes }} likes</a> / <a href="#">x commentaires</a></p>
+
     <p v-html="fanfic.description"></p>
+    <p v-html="fanfic.synopsis"></p>
     <p v-html="fanfic.credits"></p>
 
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="error" role="alert">
@@ -46,6 +45,8 @@
 </template>
 
 <script>
+import '../compiled-icons/heart'
+
 export default {
   name: 'Detail',
   props: {
