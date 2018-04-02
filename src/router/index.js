@@ -29,6 +29,7 @@ import VueSVGIcon from 'vue-svgicon'
 Vue.component('Loading', Loading)
 Vue.component('Form', Form)
 Vue.component('Input', Input)
+Vue.component('Pagination', Pagination)
 
 Vue.use(Router)
 Vue.use(VueFetch, {

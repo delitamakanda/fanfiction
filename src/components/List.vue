@@ -27,6 +27,14 @@
         </article>
     </section>
 
+    <pagination
+        :total-pages="4"
+        :total="5"
+        :per-page="5"
+        :current-page="this.currentPage"
+        @pagechanged="onPageChange"
+    />
+
   </div>
 </template>
 
@@ -43,6 +51,7 @@ export default {
   data () {
     return {
         subtitle: 'Lire des histoires',
+        currentPage: 1,
         //error: null,
         //fanfics: [],
         //loading: false,
@@ -62,6 +71,10 @@ export default {
         this.loading = false
     },*/
     methods: {
+        onPageChange(page) {
+            console.log(page)
+            this.currentPage = page
+        }
     }
 }
 </script>
