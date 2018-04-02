@@ -16,6 +16,7 @@ import UpdateChapter from '@/components/UpdateChapter'
 import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
+import ChangePassword from '@/components/ChangePassword'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -92,6 +93,7 @@ const router = new Router({
                 { path: 'new/chapter', name: 'NewChapter', component: NewChapter, props: true },
                 { path: 'update/chapter/:chapter_id/edit', name: 'UpdateChapter', component: UpdateChapter, props: true },
                 { path: 'fanfic/:id', name: 'fanfic', component: Fanfic, props: true },
+                { path: 'change-password', name: 'ChangePassword', component: ChangePassword },
             ]
         },
         {

@@ -10,6 +10,10 @@
             Ecrire une fanfiction
         </router-link>
 
+        <router-link v-if="$route.name !== 'ChangePassword'" tag="button" :to="{ name: 'ChangePassword' }">
+            Changer le mot de passe
+        </router-link>
+
         <router-view />
     </div>
 </template>
