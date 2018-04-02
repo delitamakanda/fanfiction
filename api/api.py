@@ -93,7 +93,7 @@ class ChangePasswordView(views.APIView):
           self.object.set_password(serializer.data.get('new_password'))
           self.object.save()
           return Response(status=status.HTTP_204_NO_CONTENT)
-          
+
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -138,19 +138,20 @@ class EmailFeedback(views.APIView):
 
 def favorited_fanfic(request):
     fanfic_id = request.data.get('id')
-    action = request.data.get('action')
-    if fanfic_id and action:
-        try:
-            fanfic = Fanfic.objects.get(id=fanfic_id)
-            if action == 'like':
-                fanfic.likes += 1
-            else:
-                fanfic.likes -= 1
-            # elif action == 'love':
-                # fanfic.likes *= 2
-            return Response({'status': 'ok'}, status=status.HTTP_200_OK)
-        except:
-            pass
+    # action = request.data.get('action')
+    fanfic = Fanfic.objects.get(id=int(fanfic_id))
+    try:
+        if fanfic:
+            likes = fanfic.likes + 1
+        else:
+            likes = fanfic.likes - 1
+        # elif action == 'love':
+            # fanfic.likes *= 2
+        fanfic.likes = likes
+        fanfic.save()
+        return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+    except:
+        pass
     return Response({'status': 'ko'})
 
 
