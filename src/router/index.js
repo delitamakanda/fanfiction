@@ -15,6 +15,7 @@ import UpdateFanfic from '@/components/UpdateFanfic'
 import UpdateChapter from '@/components/UpdateChapter'
 import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
+import NewComment from '@/components/NewComment'
 import Fanfic from '@/components/Fanfic'
 import ChangePassword from '@/components/ChangePassword'
 import Loading from '@/components/Loading'
@@ -80,6 +81,12 @@ const router = new Router({
             name: 'PostDetail',
             component: PostDetail,
             props: true
+        },
+        {
+            path: 'new-comment', 
+            name: 'NewComment',
+            component: NewComment,
+            props: true 
         },
         {
             path: '/dashboard',
