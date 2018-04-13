@@ -7,38 +7,37 @@
         :operation="operation"
         :valid="valid">
             <div class="mb-4">
-                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="title">
-                  Titre du chapitre
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="name">
+                  Nom ou Pseudo
                 </label>
                 <Input
-                    name="title"
-                    v-model="title"
-                    placeholder="Titre du chapitre"
+                    name="name"
+                    v-model="name"
+                    placeholder=""
                     maxlength="255"
                     required />
             </div>
             <div class="mb-4">
-                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="description">
-                  Description du chapitre
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="email">
+                  E-mail
                 </label>
                 <Input
-                    type="textarea"
-                    name="description"
-                    v-model="description"
-                    placeholder="Description du chapitre"
-                    maxlength="1000"
-                    rows="4" />
+                    name="email"
+                    v-model="email"
+                    placeholder="Votre e-mail (seul l'auteur le verra)"
+                    maxlength="255" />
             </div>
             <div class="mb-4">
-                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="text">
-                  Chapitre
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="body">
+                  Commentaire
                 </label>
                 <Input
                     type="textarea"
-                    name="text"
-                    v-model="text"
-                    placeholder="Ecrire le chapitre"
-                    rows="20" />
+                    name="body"
+                    v-model="body"
+                    placeholder=""
+                    rows="6"
+                    required />
             </div>
             <template slot="actions">
                 <router-link
@@ -51,7 +50,7 @@
                     type="submit"
                     class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
                     :disabled="!valid">
-                    Ajouter un chapitre
+                    Ajouter un commentaire
                 </button>
             </template>
         </Form>
@@ -65,9 +64,9 @@ export default {
     name: 'NewComment',
     mixins: [
         PersistantData('NewComment', [
-            'title',
-            'description',
-            'text',
+            'name',
+            'email',
+            'body',
         ]),
         RemoteData({
             fanfic () {
@@ -78,9 +77,9 @@ export default {
     data(){
         return{
             error: null,
-            title: '',
-            description: '',
-            text: '',
+            name: '',
+            email: '',
+            body: '',
         }
     },
     props: {
@@ -91,7 +90,7 @@ export default {
     },
     computed: {
         valid () {
-            return !!this.title && !!this.description && !!this.text
+            return !!this.name && !!this.body
         }
     },
     methods: {
@@ -99,13 +98,13 @@ export default {
             const result = await this.$fetch('comments', {
                 method: 'POST',
                 body: JSON.stringify({
-                    title: this.title,
-                    description: this.description,
-                    text: this.text,
+                    name: this.name,
+                    email: this.email,
+                    body: this.body,
                     fanfic: this.$route.params.id,
                 }),
             })
-            this.title = this.description = this.text = ''
+            this.name = this.email = this.body = ''
         }
     },
 }
