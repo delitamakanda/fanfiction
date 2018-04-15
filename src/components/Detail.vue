@@ -9,7 +9,15 @@
     <p>Auteur : {{ fanfic.author }}</p>
     <p>[ Publiée le: {{fanfic.publish | date }} ][ Mise à Jour le:{{ fanfic.updated | date }} ]</p>
 
-    <p>{{ fanfic.genres }} / <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.likes }} likes</a> / <router-link :to="{ name: 'NewComment', params: {id: fanfic.id}}">Ajouter un commentaire</router-link> </p>
+    <p>
+        {{ fanfic.genres }} /
+        <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.likes }} likes</a> /
+        <span v-if="comment.results.length <= 1">{{ comment.results.length }} commentaire</span>
+        <span v-else>{{ comment.results.length }} commentaires</span>
+
+    </p>
+
+    <router-link :to="{ name: 'NewComment', params: { id: fanfic.id } }">Ajouter un commentaire</router-link>
 
     <p v-html="fanfic.description"></p>
     <p v-html="fanfic.synopsis"></p>
@@ -60,6 +68,7 @@ export default {
         error: null,
         fanfic: [],
         chapter: [],
+        comment: [],
         date: null,
         errorFetch: 'Il y a un problème avec la requète.',
         }
@@ -67,11 +76,14 @@ export default {
     async created () {
         try {
             const response = await fetch('/api/fanfics/v1/' + this.$route.params.id)
-            const res = await fetch('api/chapters');
+            const res = await fetch('api/chapters')
+            const res_comment = await this.$fetch(`comments/${this.$route.params.id}/fanfic`)
 
             if (response.ok) {
                 this.fanfic = await response.json()
                 this.chapter = await res.json()
+                this.comment = res_comment
+                console.log(this.comment.results)
             } else {
                 throw new Error('error')
             }
@@ -100,6 +112,10 @@ export default {
                 })
             })
             this.fanfic.likes++;
+        },
+
+        async fetchComment () {
+            const res_comment = await this.$fetch(`comments/${this.fanfic.id}/fanfic`)
         }
     }
 }
