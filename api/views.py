@@ -17,6 +17,7 @@ from api.serializers import PostSerializer
 from api.serializers import FanficSerializer, FanficListSerializer
 from api.serializers import ChapterSerializer
 from api.serializers import CommentSerializer
+from api.serializers import CommentCreateSerializer
 from api.serializers import CategorySerializer
 from api.serializers import SubCategorySerializer
 from api.serializers import UserSerializer
@@ -222,7 +223,7 @@ class ChapterDetail(generics.RetrieveUpdateDestroyAPIView):
     )
 
 
-class CommentList(generics.ListCreateAPIView):
+class CommentList(generics.ListAPIView):
     """
     Liste des commentaires
     """
@@ -232,6 +233,18 @@ class CommentList(generics.ListCreateAPIView):
         permissions.IsAuthenticatedOrReadOnly,
     )
     name='comment-list'
+
+
+class CommentCreate(generics.CreateAPIView):
+    """
+    Create a comment
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentCreateSerializer
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    name='comment-create'
 
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):

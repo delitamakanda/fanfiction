@@ -137,6 +137,13 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'fanfic', 'name', 'email', 'body', 'created', 'active', 'in_reply_to',)
 
 
+class CommentCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'fanfic', 'name', 'email', 'body', 'created', 'active', 'in_reply_to',)
+
+
 """
 SerializerMethodField for request model options
 """

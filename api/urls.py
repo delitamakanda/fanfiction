@@ -22,6 +22,7 @@ urlpatterns = [
     path('subcategory', views.SubCategoryList.as_view(), name='subcategory-list'),
     path('subcategory/<int:pk>', views.SubCategoryDetail.as_view(), name='subcategory-detail'),
     path('comments', views.CommentList.as_view(), name='comment-list'),
+    path('comments/new', views.CommentCreate.as_view(), name='comment-create'),
     path('comments/<int:pk>', views.CommentDetail.as_view(), name='comment-detail'),
     path('users', views.UserList.as_view(), name='user-list'),
     path('users/<int:pk>', views.UserDetail.as_view(), name='user-detail'),
