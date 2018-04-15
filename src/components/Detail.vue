@@ -9,7 +9,7 @@
     <p>Auteur : {{ fanfic.author }}</p>
     <p>[ Publiée le: {{fanfic.publish | date }} ][ Mise à Jour le:{{ fanfic.updated | date }} ]</p>
 
-    <p>{{ fanfic.genres }} / <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.likes }} likes</a> / <a href="#">x commentaires</a></p>
+    <p>{{ fanfic.genres }} / <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.likes }} likes</a> / <router-link :to="{ name: 'NewComment', params: {id: fanfic.id}}">Ajouter un commentaire</router-link> </p>
 
     <p v-html="fanfic.description"></p>
     <p v-html="fanfic.synopsis"></p>

@@ -21,7 +21,6 @@ import ChangePassword from '@/components/ChangePassword'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
-import Pagination from '@/components/Pagination'
 
 import VueFetch from '../plugins/fetch'
 import VueAffix from 'vue-affix'
@@ -31,7 +30,6 @@ import VueSVGIcon from 'vue-svgicon'
 Vue.component('Loading', Loading)
 Vue.component('Form', Form)
 Vue.component('Input', Input)
-Vue.component('Pagination', Pagination)
 
 Vue.use(Router)
 Vue.use(VueFetch, {
@@ -83,10 +81,10 @@ const router = new Router({
             props: true
         },
         {
-            path: 'new-comment', 
+            path: 'new-comment',
             name: 'NewComment',
             component: NewComment,
-            props: true 
+            props: true
         },
         {
             path: '/dashboard',

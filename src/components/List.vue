@@ -27,14 +27,6 @@
         </article>
     </section>
 
-    <pagination
-        :total-pages="4"
-        :total="5"
-        :per-page="5"
-        :current-page="this.currentPage"
-        @pagechanged="onPageChange"
-    />
-
   </div>
 </template>
 
@@ -51,29 +43,7 @@ export default {
   data () {
     return {
         subtitle: 'Lire des histoires',
-        currentPage: 1,
-        //error: null,
-        //fanfics: [],
-        //loading: false,
-        //souscat: [],
-        //remoteDataLoading: 42,
         errorFetch: 'Il y a un problème avec la requète.',
-        }
-    },
-    /*async created () {
-        this.loading = true
-        try {
-            this.fanfics = await this.$fetch('fanfics')
-            this.souscat = await this.$fetch('subcategory')
-        } catch (e) {
-            this.error = e
-        }
-        this.loading = false
-    },*/
-    methods: {
-        onPageChange(page) {
-            console.log(page)
-            this.currentPage = page
         }
     }
 }

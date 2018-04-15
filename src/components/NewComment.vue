@@ -42,7 +42,7 @@
             <template slot="actions">
                 <router-link
                     tag="button"
-                    :to="{name: 'fanfic', params: { id: fanfic.id }}"
+                    :to="{name: 'Detail', params: { id: fanfic.id }}"
                     class="secondary inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">
                     Retour à l'histoire
                 </router-link>
@@ -95,7 +95,7 @@ export default {
     },
     methods: {
         async operation () {
-            const result = await this.$fetch('comments', {
+            const result = await this.$fetch('comments/new', {
                 method: 'POST',
                 body: JSON.stringify({
                     name: this.name,
