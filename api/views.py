@@ -235,6 +235,18 @@ class CommentList(generics.ListAPIView):
     name='comment-list'
 
 
+class CommentListByFanfic(generics.ListAPIView):
+    serializer_class = CommentCreateSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
+    name='comment-list-by-fanfic'
+
+    def get_queryset(self):
+        fanfic = self.kwargs['fanfic']
+        return Comment.objects.filter(fanfic=fanfic)
+
+
 class CommentCreate(generics.CreateAPIView):
     """
     Create a comment
@@ -334,6 +346,7 @@ class ApiRoot(generics.GenericAPIView):
             'fanfics-list-remastered': reverse('fanfic-list-remastered', request=request),
             'chapters': reverse('chapter-list', request=request),
             'comments': reverse('comment-list', request=request),
+            'comment-list-by-fanfic': reverse('comment-list-by-fanfic', request=request),
             'category': reverse('category-list', request=request),
             'sub-category': reverse('subcategory-list', request=request),
             'users': reverse('user-list', request=request),
