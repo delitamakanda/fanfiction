@@ -13,8 +13,8 @@
         {{ fanfic.genres }} /
         <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.likes }} likes</a> /
         <span v-if="comment.results.length <= 1">{{ comment.results.length }} commentaire</span>
-        <span v-else>{{ comment.results.length }} commentaires</span>
-
+        <span v-else>{{ comment.results.length }} commentaires</span> /
+        <a @click="onPrint" class="link" href="#">Imprimer</a>
     </p>
 
     <router-link :to="{ name: 'NewComment', params: { id: fanfic.id } }">Ajouter un commentaire</router-link>
@@ -116,6 +116,10 @@ export default {
 
         async fetchComment () {
             const res_comment = await this.$fetch(`comments/${this.fanfic.id}/fanfic`)
+        },
+        
+        onPrint () {
+          console.log('print')
         }
     }
 }
