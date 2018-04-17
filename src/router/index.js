@@ -4,8 +4,6 @@ import state from '../state'
 import NotFound from '@/components/NotFound'
 import List from '@/components/List'
 import Detail from '@/components/Detail'
-import Category from '@/components/Category'
-import Subcategory from '@/components/Subcategory'
 import Login from '@/components/Login'
 import Posts from '@/components/Posts'
 import PostDetail from '@/components/PostDetail'
@@ -50,17 +48,6 @@ const router = new Router({
             path: '/:id',
             name: 'Detail',
             component: Detail,
-            props: true
-        },
-        {
-            path: '/categories',
-            name: 'Category',
-            component: Category
-        },
-        {
-            path: '/subcategory/:id',
-            name: 'Subcategory',
-            component: Subcategory,
             props: true
         },
         {
