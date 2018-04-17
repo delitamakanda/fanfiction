@@ -14,12 +14,27 @@
         <h3 v-html="subcat.name"></h3>
         <img v-if="subcat.image" v-bind:src="subcat.image" />
         <p v-html="subcat.description"></p>
+        
+        <button
+          type="button"
+          class="btn"
+          @click="showModal"
+        >
+          Voir les fanfictions
+        </button>
+        
+        <modal
+          v-show="isModalVisible"
+          @close="closeModal"
+        />
     </div>
 
   </div>
 </template>
 
 <script>
+import modal from './components/Modal.vue';
+
 export default {
   name: 'Subcategory',
   props: {
@@ -27,6 +42,9 @@ export default {
           type: Number,
           required: true
       }
+  },
+  components: {
+    modal,
   },
   data () {
     return {
@@ -37,6 +55,7 @@ export default {
       fics: [],
       loading: false,
       errorFetch: 'Il y a un problème avec la requète.',
+      isModalVisible: false,
     }
     },
     async created () {
@@ -50,6 +69,18 @@ export default {
         }
         this.loading = false
     },
+    
+    methods: {
+    
+      showModal() {
+        this.isModalVisible = true;
+      },
+      
+      closeModal() {
+        this.isModalVisible = false;
+      }
+      
+    }
 }
 </script>
 
