@@ -128,11 +128,6 @@ class FanficListByAuthor(generics.ListAPIView):
     name='fanfic-list-by-author'
 
     def get_queryset(self):
-        # queryset = Fanfic.objects.all()
-        # username = self.request.query_params.get('username', None)
-        # if username is not None:
-        #     queryset = queryset.filter(author__username=username)
-        # return queryset
         user = self.kwargs['username']
         return Fanfic.objects.filter(author__username=user)
 
