@@ -26,7 +26,6 @@
         <div :class="open ? 'block': 'hidden'" class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
             <div class="text-sm lg:flex-grow">
                 <router-link :to="{ name: 'List' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">Lire des histoires</router-link>
-                <router-link :to="{ name: 'Category' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">Parcourir les catégories</router-link>
                 <template v-if="$state.user && $state.user.id != null">
                     <router-link :to="{ name: 'Dashboard' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Bonjour, {{ $state.user.username }} !</router-link>
                     <a @click="logout" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">Déconnexion </a>
