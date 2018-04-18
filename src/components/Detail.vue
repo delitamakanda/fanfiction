@@ -14,7 +14,14 @@
         <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.likes }} likes</a> /
         <span v-if="comment.results.length <= 1">{{ comment.results.length }} commentaire</span>
         <span v-else>{{ comment.results.length }} commentaires</span> /
-        <a @click="onPrint" class="link" href="#">Imprimer</a>
+        <a @click="onPrint" class="link" href="#">Imprimer</a> /
+        <button
+           type="button"
+           class="btn"
+           @click="showModal"
+         >
+           Voir les commentaires
+         </button
     </p>
 
     <router-link :to="{ name: 'NewComment', params: { id: fanfic.id } }">Ajouter un commentaire</router-link>
@@ -48,11 +55,17 @@
             </div>
         </div>
     </div>
+    
+    <modal
+      v-show="isModalVisible"
+      @close="closeModal"
+    />
 
   </div>
 </template>
 
 <script>
+import modal from './components/Modal.vue';
 import '../compiled-icons/heart'
 
 export default {
@@ -63,6 +76,9 @@ export default {
           required: true
       }
   },
+  components: {
+     modal,
+   },
   data () {
     return {
         error: null,
@@ -71,6 +87,7 @@ export default {
         comment: [],
         date: null,
         errorFetch: 'Il y a un problème avec la requète.',
+        isModalVisible: false,
         }
     },
     async created () {
@@ -120,7 +137,15 @@ export default {
         
         onPrint () {
           console.log('print')
-        }
+        },
+        
+        showModal() {
+         this.isModalVisible = true;
+       },
+       
+       closeModal() {
+         this.isModalVisible = false;
+       }
     }
 }
 </script>
