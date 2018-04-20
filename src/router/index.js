@@ -16,6 +16,7 @@ import NewChapter from '@/components/NewChapter'
 import NewComment from '@/components/NewComment'
 import Fanfic from '@/components/Fanfic'
 import ChangePassword from '@/components/ChangePassword'
+import ForgotPassword from '@/components/ForgotPassword'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -46,6 +47,7 @@ const router = new Router({
         { path: '/news/:id', name: 'PostDetail', component: PostDetail, props: true },
         { path: '/new-comment', name: 'NewComment', component: NewComment, props: true},
         { path: '/fanfics/:username/list', name: 'ListUserFanfic', component: ListUserFanfic },
+        { path: '/forgot-password', name: ForgotPassword, component: ForgotPassword },
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true },
             children: [
                 { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic },
