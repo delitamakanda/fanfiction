@@ -1,6 +1,6 @@
-# cautious-journey
+# fanfiction
 
-> A fanfic application in vue.js for learning
+> A fanfic application in vue.js and django
 
 ## Build Setup
 
