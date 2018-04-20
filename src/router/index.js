@@ -39,45 +39,13 @@ Vue.use(VueSVGIcon)
 
 const router = new Router({
     routes: [
-        {
-            path: '/',
-            name: 'List',
-            component: List
-        },
-        {
-            path: '/:id',
-            name: 'Detail',
-            component: Detail,
-            props: true
-        },
-        {
-            path: '/login',
-            name: 'Login',
-            component: Login,
-            meta: { guest: true }
-        },
-        {
-            path: '/news',
-            name: 'Posts',
-            component: Posts
-        },
-        {
-            path: '/news/:id',
-            name: 'PostDetail',
-            component: PostDetail,
-            props: true
-        },
-        {
-            path: 'new-comment',
-            name: 'NewComment',
-            component: NewComment,
-            props: true
-        },
-        {
-            path: '/dashboard',
-            name: 'Dashboard',
-            component: Dashboard,
-            meta: { private: true },
+        { path: '/', name: 'List', component: List },
+        { path: '/:id', name: 'Detail', component: Detail, props: true },
+        { path: '/login', name: 'Login', component: Login, meta: { guest: true } },
+        { path: '/news', name: 'Posts', component: Posts },
+        { path: '/news/:id', name: 'PostDetail', component: PostDetail, props: true },
+        { path: 'new-comment', name: 'NewComment', component: NewComment, props: true},
+        { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true },
             children: [
                 { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic },
                 { path: 'create', name: 'NewFanfic', component: NewFanfic },
@@ -88,10 +56,7 @@ const router = new Router({
                 { path: 'change-password', name: 'ChangePassword', component: ChangePassword },
             ]
         },
-        {
-            path: '*',
-            component: NotFound
-        },
+        { path: '*', component: NotFound },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {
