@@ -63,7 +63,7 @@
     <h3 slot="header">Voir les commentaires</h3>
     <div slot="body">
         <div v-for="com of comment.results" v-if="comment.results.length">
-            <span>{{ com.name }}</span> | <span v-if="com.email">{{ com.email }} </span> | Publié le : <span>{{ com.created | date }}</span>
+            <span>{{ com.name }}</span> <span v-if="com.email"> | {{ com.email }} </span> | Publié le : <span>{{ com.created | date }}</span>
             <div>{{ com.body }}</div>
             <hr/>
         </div>
@@ -139,10 +139,6 @@ export default {
                 })
             })
             this.fanfic.likes++;
-        },
-
-        async fetchComment () {
-            const res_comment = await this.$fetch(`comments/${this.fanfic.id}/fanfic`)
         },
 
         onPrint () {
