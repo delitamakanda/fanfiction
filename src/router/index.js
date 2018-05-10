@@ -61,7 +61,7 @@ const router = new Router({
         },
         { path: '*', component: NotFound },
     ],
-    mode: 'hash',
+    mode: 'history',
     scrollBehavior (to, from, savedPosition) {
         if (savedPosition) {
             return savedPosition
