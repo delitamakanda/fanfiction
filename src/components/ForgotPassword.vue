@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <h2>Vous avez oublié votre mot de passe ?</h2>
+    <div class="w-full max-w-xs">
         <Form
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
             :title="title"
@@ -11,6 +10,7 @@
                         E-mail
                     </label>
                     <Input
+                        id="email"
                         name="email"
                         type="email"
                         v-model="email"
@@ -23,7 +23,7 @@
                         class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
                         type="submit"
                         :disabled="!valid">
-                            Récupérer votre mot de passe
+                            Renvoyer le mot de passe
                         </button>
                     </div>
                 </template>
@@ -39,10 +39,32 @@ export default {
             email: '',
         }
     },
+    computed: {
+        title () {
+            return 'Vous avez oublié votre mot de passe ?'
+        },
+        valid () {
+            return !!this.email
+        },
+    },
     async created () {
+    },
+    methods: {
+        async operation () {
+            const result = await this.$fetch('forgot-password', {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: this.email
+                }),
+            })
+            this.email = ''
+        },
     },
 }
 </script>
 
 <style scoped>
+.w-full {
+    margin: 0 auto;
+}
 </style>
