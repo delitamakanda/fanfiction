@@ -55,17 +55,27 @@
             </div>
         </div>
     </div>
-    
+
     <modal
       v-show="isModalVisible"
       @close="closeModal"
-    />
+    >
+    <h3 slot="header">Voir les commentaires</h3>
+    <div slot="body">
+        <div v-for="com of comment.results" v-if="comment.results.length">
+            <span>{{ com.name }}</span> | <span v-if="com.email">{{ com.email }} </span> | Publié le : <span>{{ com.created | date }}</span>
+            <div>{{ com.body }}</div>
+            <hr/>
+        </div>
+        <div v-if="!comment.results.length">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+    </div>
+    </modal>
 
   </div>
 </template>
 
 <script>
-import modal from './components/Modal.vue';
+import modal from './Modal.vue';
 import '../compiled-icons/heart'
 
 export default {
@@ -134,15 +144,15 @@ export default {
         async fetchComment () {
             const res_comment = await this.$fetch(`comments/${this.fanfic.id}/fanfic`)
         },
-        
+
         onPrint () {
           console.log('print')
         },
-        
+
         showModal() {
          this.isModalVisible = true;
        },
-       
+
        closeModal() {
          this.isModalVisible = false;
        }

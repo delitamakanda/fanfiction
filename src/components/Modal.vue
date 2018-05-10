@@ -18,7 +18,7 @@
             </button>
           </slot>
         </header>
-        <section 
+        <section
           class="modal-body"
           id="modalDescription"
         >
@@ -35,7 +35,7 @@
                 @click="close"
                 aria-label="Close modal"
               >
-                Close
+                Fermer
             </button>
           </slot>
         </footer>
@@ -110,12 +110,13 @@
   }
 
   .btn-green {
-    color: white;
+    color: #FFFFFF;
     background: #4AAE9B;
     border: 1px solid #4AAE9B;
     border-radius: 2px;
+    padding: 5px 8px;
   }
-  
+
   .modal-fade-enter,
   .modal-fade-leave-active {
     opacity: 0;
@@ -126,4 +127,3 @@
     transition: opacity .5s ease
   }
 </style>
-
