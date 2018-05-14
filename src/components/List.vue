@@ -5,6 +5,11 @@
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         {{ errorFetch }}
     </div>
+    
+    <div class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Rechercher des fanfictions..." v-model="search_term" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getFanfics()">Rechercher</button>
+    </div>
 
     <section>
         <Loading v-if="remoteDataBusy" />
@@ -44,8 +49,27 @@ export default {
     return {
         subtitle: 'Lire des histoires',
         errorFetch: 'Il y a un problème avec la requète.',
+        search_term: '',
         }
-    }
+    },
+    methods: {
+      getFanfics () {
+        let api_url = 'api/fanfics/v1/';
+          if(this.search_term!==''||this.search_term!==null) {
+            api_url = `/api/fanfics/v1/?search=${this.search_term}`
+          }
+          //this.loading = true;
+          this.$http.get(api_url)
+              .then((response) => {
+                this.fanficList = response.data;
+                //this.loading = false;
+              })
+              .catch((err) => {
+                //this.loading = false;
+                console.log(err);
+              })
+      },
+    },
 }
 </script>
 
