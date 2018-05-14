@@ -26,8 +26,6 @@ from api.serializers import ClassementSerializer
 from api.serializers import StatusSerializer
 from api import custompermission
 
-# Create your views here.
-
 """
 Liste des genres
 """
@@ -143,6 +141,15 @@ class FanficListRemastered(generics.ListAPIView):
         custompermission.IsCurrentAuthorOrReadOnly
     )
     name='fanfic-list-remastered'
+    filter_fields = (
+        'title',
+        'genres',
+        'category',
+        'subcategory',
+    )
+    search_fields = (
+        '^title',
+    )
 
     def get_queryset(self):
         return Fanfic.objects.all().filter(status='publié')
@@ -157,22 +164,7 @@ class FanficList(generics.ListCreateAPIView):
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly
     )
-    # authentication_classes = (
-        # TokenAuthentication,
-    # )
-    # permission_classes = (
-        # permissions.IsAuthenticated,
-    # )
     name='fanfic-list'
-    filter_fields = (
-        'title',
-        'genres',
-        'category',
-        'subcategory',
-    )
-    search_fields = (
-        '^title',
-    )
     ordering_fields = (
         'title',
         'publish',
