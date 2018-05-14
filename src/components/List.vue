@@ -53,13 +53,13 @@ export default {
         }
     },
     methods: {
-      getFanfics () {
-        let api_url = 'api/fanfics/v1/';
+      await getFanfics () {
+        let api_url = '/api/fanfics/v1/';
           if(this.search_term!==''||this.search_term!==null) {
             api_url = `/api/fanfics/v1/?search=${this.search_term}`
           }
           //this.loading = true;
-          this.$http.get(api_url)
+          this.$fetch(api_url)
               .then((response) => {
                 this.fanficList = response.data;
                 //this.loading = false;
