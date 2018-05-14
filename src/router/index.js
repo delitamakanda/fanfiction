@@ -46,7 +46,7 @@ const router = new Router({
         { path: '/news', name: 'Posts', component: Posts },
         { path: '/news/:id', name: 'PostDetail', component: PostDetail, props: true },
         { path: '/new-comment', name: 'NewComment', component: NewComment, props: true},
-        { path: '/fanfics/:username/list', name: 'ListUserFanfic', component: ListUserFanfic },
+        //{ path: '/fanfics/:username/list', name: 'ListUserFanfic', component: ListUserFanfic },
         { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true },
             children: [

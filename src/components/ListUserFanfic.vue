@@ -12,9 +12,7 @@
                 <router-link :to="{name: 'fanfic', params: { id: userFanfic.id }}"> <h3>{{ userFanfic.title }}</h3> </router-link>
             </div>
         </section>
-
-        <!--<Fanfic v-if="id" :id="id" />-->
-
+        
         <router-view />
     </div>
 </template>

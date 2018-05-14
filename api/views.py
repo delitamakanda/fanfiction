@@ -102,7 +102,7 @@ class FanficListByCategory(generics.ListAPIView):
     def get_queryset(self):
         category = self.kwargs['category']
         return Fanfic.objects.filter(category=category)
-      
+
 
 class FanficListBySubCategory(generics.ListAPIView):
     serializer_class = FanficListSerializer
@@ -143,12 +143,13 @@ class FanficListRemastered(generics.ListAPIView):
     name='fanfic-list-remastered'
     filter_fields = (
         'title',
-        'genres',
-        'category',
-        'subcategory',
+        'publish',
     )
     search_fields = (
         '^title',
+        '^description',
+        '^credits',
+        '^synopsis',
     )
 
     def get_queryset(self):
