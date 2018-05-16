@@ -8,7 +8,7 @@
 
     <div class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="text" placeholder="Rechercher des fanfictions..." v-model="search_term" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" @click.prevent="getFanfics">Rechercher</button>
+      <button class="btn btn-outline-success my-2 my-sm-0" @click.prevent="getSearchFanfics">Rechercher</button>
     </div>
 
     <section>
@@ -53,7 +53,7 @@ export default {
         }
     },
     methods: {
-      async getFanfics () {
+      async getSearchFanfics () {
 
             try {
                 this.fanficList = await this.$fetch(`fanfics/v1?search=${this.search_term}`)
