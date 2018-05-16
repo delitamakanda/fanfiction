@@ -2,18 +2,13 @@
   "name": "Fanfiction",
   "short_name": "fanfiction",
   "icons": [
-    {
-      "src": "/static/img/icons/fanfiction-icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png"
-    },
-    {
-      "src": "/static/img/icons/fanfiction-icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+      {
+          "src": "static/img/icons/fanfiction-icon-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+      }
   ],
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#4dc0b5",
