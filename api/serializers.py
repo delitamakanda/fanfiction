@@ -37,9 +37,9 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = (
-          'id', 
-          'name', 
-          'slug', 
+          'id',
+          'name',
+          'slug',
           'description',
         )
 
@@ -50,11 +50,11 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SubCategory
         fields = (
-          'id', 
-          'category', 
-          'name', 
-          'slug', 
-          'image', 
+          'id',
+          'category',
+          'name',
+          'slug',
+          'image',
           'description',
         )
 
@@ -148,14 +148,14 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-          'id', 
-          'username', 
-          'fanfics', 
-          'password', 
+          'id',
+          'username',
+          'fanfics',
+          'password',
           'email',
           'is_active',
-          'is_staff', 
-          'is_superuser', 
+          'is_staff',
+          'is_superuser',
           'date_joined',
         )
         extra_kwargs = {'password': {'write_only': True}}
@@ -170,25 +170,17 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class PasswordSerializer(serializers.Serializer):
-  """
-  Serializer for password change endpoint.
-  """
-  old_password = serializers.CharField(required=True)
-  new_password = serializers.CharField(required=True)
-
-
 class ChapterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chapter
         fields = (
-          'id', 
-          'fanfic', 
-          'title', 
-          'description', 
-          'text', 
-          'order', 
+          'id',
+          'fanfic',
+          'title',
+          'description',
+          'text',
+          'order',
           'published',
         )
 
@@ -203,13 +195,13 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Comment
         fields = (
-          'id', 
-          'fanfic', 
-          'name', 
-          'email', 
-          'body', 
-          'created', 
-          'active', 
+          'id',
+          'fanfic',
+          'name',
+          'email',
+          'body',
+          'created',
+          'active',
           'in_reply_to',
         )
 
@@ -219,13 +211,13 @@ class CommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = (
-          'id', 
-          'fanfic', 
-          'name', 
-          'email', 
-          'body', 
-          'created', 
-          'active', 
+          'id',
+          'fanfic',
+          'name',
+          'email',
+          'body',
+          'created',
+          'active',
           'in_reply_to',
         )
 
