@@ -16,7 +16,6 @@ import NewChapter from '@/components/NewChapter'
 import NewComment from '@/components/NewComment'
 import Fanfic from '@/components/Fanfic'
 import ChangePassword from '@/components/ChangePassword'
-import ForgotPassword from '@/components/ForgotPassword'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -47,16 +46,15 @@ const router = new Router({
         { path: '/news/:id', name: 'PostDetail', component: PostDetail, props: true },
         { path: '/new-comment', name: 'NewComment', component: NewComment, props: true},
         //{ path: '/fanfics/:username/list', name: 'ListUserFanfic', component: ListUserFanfic },
-        { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true },
             children: [
-                { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic },
-                { path: 'create', name: 'NewFanfic', component: NewFanfic },
-                { path: 'update/:id/edit', name: 'UpdateFanfic', component: UpdateFanfic, props: true },
-                { path: 'new/chapter', name: 'NewChapter', component: NewChapter, props: true },
-                { path: 'update/chapter/:chapter_id/edit', name: 'UpdateChapter', component: UpdateChapter, props: true },
-                { path: 'fanfic/:id', name: 'fanfic', component: Fanfic, props: true },
-                { path: 'change-password', name: 'ChangePassword', component: ChangePassword },
+                { path: '/fanfics', name: 'ListUserFanfic', component: ListUserFanfic },
+                { path: '/create', name: 'NewFanfic', component: NewFanfic },
+                { path: '/update/:id/edit', name: 'UpdateFanfic', component: UpdateFanfic, props: true },
+                { path: '/new/chapter', name: 'NewChapter', component: NewChapter, props: true },
+                { path: '/update/chapter/:chapter_id/edit', name: 'UpdateChapter', component: UpdateChapter, props: true },
+                { path: '/fanfic/:id', name: 'Fanfic', component: Fanfic, props: true },
+                { path: '/change-password', name: 'ChangePassword', component: ChangePassword },
             ]
         },
         { path: '*', component: NotFound },

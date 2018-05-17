@@ -51,7 +51,7 @@
             </template>
             <template slot="actions">
                 <template v-if="mode === 'login'">
-                    <router-link :to="{ name: 'ForgotPassword'}" class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Forgot Password?</router-link> 
+                    <a href="accounts/password_reset/" class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Forgot Password?</a> 
                     <div class="flex items-center justify-between">
                         <button
                         class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker"

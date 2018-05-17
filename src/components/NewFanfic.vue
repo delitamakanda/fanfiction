@@ -3,7 +3,7 @@
 
         <Form
         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        title="Nouvelle histoire"
+        :title="titre"
         :operation="operation"
         :valid="valid">
         <div class="flex flex-wrap -mx-3 mb-6">
@@ -12,7 +12,7 @@
                 Catégorie
               </label>
               <div class="relative">
-                  <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="category" name="category" v-if="loadingCategory" v-model="category">
+                  <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="category" name="category" v-model="category">
                       <option value="">Sélectionner</option>
                       <option v-for="(option, index) of dataCategories" v-bind:value="option.id">{{ option.name }}</option>
                   </select>
@@ -26,7 +26,7 @@
                   Sous - Catégories
               </label>
               <div class="relative">
-                  <select :disabled="category.length == 0" class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="subcategory" name="subcategory" v-if="loadingSubCategory" v-model="subcategory">
+                  <select :disabled="category.length == 0" class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="subcategory" name="subcategory" v-model="subcategory">
                       <option value="">Sélectionner</option>
                       <option v-for="(option, index) of dataSubCategories" v-if="option.category === category" v-bind:value="option.id">{{ option.name }}</option>
                   </select>
@@ -88,7 +88,7 @@
                       Classement
                     </label>
                     <div class="relative">
-                        <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-if="loadingClassement" v-model="classement">
+                        <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="classement">
                             <option value="">Sélectionner</option>
                             <option v-for="(option, index) in dataClassement[0].classement" :value="option[0]" :key="index" :selected="index == 1">{{ option[1] }}</option>
                         </select>
@@ -102,8 +102,8 @@
                   Genres
                 </label>
                 <div class="relative">
-                    <label :for="select[0]"  v-if="loadingGenres"  v-for="select in dataGenresFormatted[0].genres">
-                        <input :value="select[0]" v-if="loadingGenres" v-model="genres" :id="select[0]" type="checkbox">
+                    <label :for="select[0]"  v-for="select in dataGenresFormatted[0].genres">
+                        <input :value="select[0]" v-model="genres" :id="select[0]" type="checkbox">
                         {{ select[1] }}<br>
                     </label>
                 </div>
@@ -113,7 +113,7 @@
                     Status
                   </label>
                   <div class="relative">
-                    <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-if="loadingStatus" v-model="status">
+                    <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status"  v-model="status">
                         <option value="">Sélectionner</option>
                         <option v-for="(option, index) in dataStatus[0].status" :value="option[0]" :key="index" :selected="index == 1">{{ option[1] }}</option>
                     </select>
@@ -154,7 +154,6 @@ export default {
             'credits',
             'author',
             'classement',
-            //'genres',
             'status',
             'category',
             'subcategory',
@@ -163,11 +162,6 @@ export default {
     data(){
         return{
             error: null,
-            loadingGenres: false,
-            loadingStatus: false,
-            loadingClassement: false,
-            loadingCategory: false,
-            loadingSubCategory: false,
             dataClassement: [],
             dataStatus: [],
             dataGenresFormatted: [],
@@ -186,9 +180,19 @@ export default {
         }
     },
     computed: {
+        titre () {
+            return "Nouvelle histoire"
+        },
         valid () {
             return !!this.title && !!this.description && !!this.category && !!this.subcategory && !!this.status && !!this.genres && !!this.classement
         }
+    },
+    mounted () {
+        this.getClassement ()
+        this.getGenres ()
+        this.getCategories ()
+        this.getSubcategories ()
+        this.getStatus ()
     },
     methods: {
         async operation () {
@@ -208,24 +212,23 @@ export default {
                 }),
             })
             this.title = this.description = this.synopsis = this.credits = this.author = this.genres = this.classement = this.status = this.category = this.subcategory = ''
-        }
+        },
+        async getGenres() {
+            this.dataGenresFormatted = await this.$fetch('fanfics/genres')
+        },
+        async getClassement() {
+            this.dataClassement = await this.$fetch('fanfics/classement')
+        },
+        async getStatus() {
+            this.dataStatus = await this.$fetch('fanfics/status')
+        },
+        async getCategories() {
+            this.dataCategories = await this.$fetch('category')
+        },
+        async getSubcategories() {
+            this.dataSubCategories = await this.$fetch('subcategory')
+        },
     },
-    async created () {
-        this.dataGenresFormatted = await this.$fetch('fanfics/genres')
-        this.loadingGenres = true
-
-        this.dataClassement = await this.$fetch('fanfics/classement')
-        this.loadingClassement = true
-
-        this.dataStatus = await this.$fetch('fanfics/status')
-        this.loadingStatus = true
-
-        this.dataCategories = await this.$fetch('category')
-        this.loadingCategory = true
-
-        this.dataSubCategories = await this.$fetch('subcategory')
-        this.loadingSubCategory = true
-    }
 }
 </script>
 

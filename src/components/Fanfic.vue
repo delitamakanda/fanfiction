@@ -41,6 +41,7 @@
 import RemoteData from '../mixins/RemoteData'
 
 export default {
+    name: 'Fanfic',
     mixins: [
         RemoteData({
             fanfic () {
@@ -71,7 +72,7 @@ export default {
                 const result = await this.$fetch('fanfics/'+ id)
 
                 if (result) {
-                    fetch(`api/fanfics/${this.id}`, {method: 'DELETE', credentials: 'include', body: JSON.stringify(result)})
+                    this.$fetch(`fanfics/${this.id}`, {method: 'DELETE', body: JSON.stringify(result)})
                     this.$router.push({ name: 'Dashboard' })
                 }
             }

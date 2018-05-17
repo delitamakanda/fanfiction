@@ -128,7 +128,7 @@
           </div>
             <router-link
                 tag="button"
-                :to="{name: 'fanfic', params: {id: fanfic.id }}"
+                :to="{name: 'Fanfic', params: {id: fanfic.id }}"
                 class="secondary inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">
                 Retour à la l'histoire
             </router-link>
@@ -197,7 +197,7 @@ export default {
                     subcategory: this.fanfic.subcategory,
                 }),
             })
-            this.$router.push({name: 'fanfic', params: { id: this.fanfic.id }})
+            this.$router.push({name: 'Fanfic', params: { id: this.fanfic.id }})
         }
     },
     async created () {

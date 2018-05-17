@@ -3,7 +3,7 @@
 
         <Form
         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        title="Nouveau chapitre"
+        :title="titre"
         :operation="operation"
         :valid="valid">
             <div class="mb-4">
@@ -43,7 +43,7 @@
             <template slot="actions">
                 <router-link
                     tag="button"
-                    :to="{name: 'fanfic', params: { id: fanfic.id }}"
+                    :to="{name: 'Fanfic', params: { id: fanfic.id }}"
                     class="secondary inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">
                     Retour à l'histoire
                 </router-link>
@@ -91,6 +91,9 @@ export default {
         },
     },
     computed: {
+        titre () {
+            return "Nouveau chapitre"
+        },
         valid () {
             return !!this.title && !!this.description && !!this.text
         }
