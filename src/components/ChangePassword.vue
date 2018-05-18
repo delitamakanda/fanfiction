@@ -51,9 +51,29 @@ export default {
             new_password: ''
         }
     },
+    computed: {
+      title () {
+        return "Changer le mot de passe"
+      },
+      valid () {
+        return !!this.old_password && !!this.new_password
+      },
+    },
     async created () {
 
     },
+    methods: {
+      async operation () {
+        const result = await this.$fetch('change-password', {
+                method: 'POST',
+                body: JSON.stringify({
+                    old_password: this.old_password,
+                    new_password: this.new_password
+                }),
+            })
+            this.old_password = this.new_password = ''
+      }
+    }
 }
 </script>
 
