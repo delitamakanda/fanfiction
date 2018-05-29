@@ -6,12 +6,41 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
-from api.serializers import UserSerializer
+from api.models import Fanfic
+from api.models import StaticPage
+from api.serializers import CGUSerializer
 from api.serializers import FanficSerializer
 from api.serializers import ChangePasswordSerializer
-from api.models import Fanfic
+from api.serializers import MentionsLegalesSerializer
+from api.serializers import UserSerializer
 
 # Create your api views here.
+
+class MentionsLegalesView(views.APIView):
+    """
+    Serve mentions legales HTML entities
+    """
+    serializer_class = MentionsLegalesSerializer
+    permission_classes = ( permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request):
+        serializer = MentionsLegalesSerializer()
+        if serializer.data:
+          return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        
+class CGUView(views.APIView):
+    """
+    Serve mentions legales HTML entities
+    """
+    serializer_class = CGUSerializer
+    permission_classes = ( permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request):
+        serializer = CGUSerializer()
+        if serializer.data:
+          return Response(serializer.data, status=status.HTTP_200_OK)
+        
 
 class UserCreate(generics.CreateAPIView):
     """
@@ -43,9 +72,6 @@ class LoginView(views.APIView):
         login(request, user)
         return Response(UserSerializer(user).data)
 
-    # def post(self, request, *args, **kwargs):
-    #     login(request, request.user)
-    #     return Response(UserSerializer(request.user).data)
 
 class LogoutView(views.APIView):
     """
@@ -122,15 +148,12 @@ class EmailFeedback(views.APIView):
 
 def favorited_fanfic(request):
     fanfic_id = request.data.get('id')
-    # action = request.data.get('action')
     fanfic = Fanfic.objects.get(id=int(fanfic_id))
     try:
         if fanfic:
             likes = fanfic.likes + 1
         else:
             likes = fanfic.likes - 1
-        # elif action == 'love':
-            # fanfic.likes *= 2
         fanfic.likes = likes
         fanfic.save()
         return Response({'status': 'ok'}, status=status.HTTP_200_OK)
