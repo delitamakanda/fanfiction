@@ -3,7 +3,7 @@
 
         <Form
         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        :title="titre"
+        title="Nouvelle histoire"
         :operation="operation"
         :valid="valid">
         <div class="flex flex-wrap -mx-3 mb-6">
@@ -180,9 +180,6 @@ export default {
         }
     },
     computed: {
-        titre () {
-            return "Nouvelle histoire"
-        },
         valid () {
             return !!this.title && !!this.description && !!this.category && !!this.subcategory && !!this.status && !!this.genres && !!this.classement
         }
