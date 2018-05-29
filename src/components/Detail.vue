@@ -14,14 +14,15 @@
         <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.likes }} likes</a> /
         <span v-if="comment.results.length <= 1">{{ comment.results.length }} commentaire</span>
         <span v-else>{{ comment.results.length }} commentaires</span> /
-        <a @click="onPrint" class="link" href="#">Imprimer</a> /
+        <a @click="onPrint" class="link" href="#">Vue imprimable</a> /
         <button
            type="button"
            class="btn"
            @click="showModal"
          >
            Voir les commentaires
-         </button
+         </button> /
+         <a @click="followFanfic" class="link" href="#">Suivre l'histoire</a>
     </p>
 
     <router-link :to="{ name: 'NewComment', params: { id: fanfic.id } }">Ajouter un commentaire</router-link>
@@ -138,7 +139,7 @@ export default {
                     id: this.fanfic.id,
                 })
             })
-            this.fanfic.likes++;
+            this.fanfic.likes++
         },
 
         onPrint () {
@@ -146,11 +147,15 @@ export default {
         },
 
         showModal() {
-         this.isModalVisible = true;
+         this.isModalVisible = true
        },
 
        closeModal() {
-         this.isModalVisible = false;
+         this.isModalVisible = false
+       },
+       
+       followFanfic () {
+        console.log('follow')
        }
     }
 }
