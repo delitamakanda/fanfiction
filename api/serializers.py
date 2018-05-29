@@ -8,6 +8,21 @@ from api.models import Category
 from api.models import SubCategory
 from api.models import Post
 from api.models import Tag
+from api.models import StaticPage
+
+
+class CGUSerializer(serializers.ModelSerializer):
+  
+  class Meta:
+    model = StaticPage
+    fields = ('cgu_content')
+    
+
+class MentionsLegalesSerializer(serializers.ModelSerializer):
+  
+  class Meta:
+    model = StaticPage
+    fields = ('ml_content')
 
 class TagSerializer(serializers.ModelSerializer):
 
