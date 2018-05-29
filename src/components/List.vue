@@ -21,12 +21,14 @@
                 id: fanfic.id
               },
             }">
-            <h2 v-html="fanfic.title"></h2>
+            <h2>{{ fanfic.title }}</h2>
             </router-link>
             <p v-if="fanfic.synopsis" v-html="fanfic.synopsis"></p>
-            <p v-html="fanfic.author"></p>
-            <p v-html="fanfic.genres"></p>
-            <p v-html="fanfic.classement"></p>
+            <a @click="sortByCategory">{{ fanfic.category }}</a>
+            <a @click="sortBySubCategory">{{ fanfic.subcategory }}</a>
+            <p>{{ fanfic.author }}</p>
+            <p>{{ fanfic.genres }} </p>
+            <p>{{ fanfic.classement }}</p>
             <p> {{ fanfic.publish | date }}</p>
             <p>{{ fanfic.likes }} likes</p>
         </article>
@@ -60,6 +62,13 @@ export default {
             } catch (e) {
                 this.errorFetch = e
             }
+      },
+      async sortByCategory () {
+      
+      },
+      
+      async sortBySubCategory () {
+      
       },
     },
 }
