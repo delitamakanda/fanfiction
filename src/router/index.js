@@ -17,6 +17,7 @@ import NewChapter from '@/components/NewChapter'
 import NewComment from '@/components/NewComment'
 import Fanfic from '@/components/Fanfic'
 import ChangePassword from '@/components/ChangePassword'
+import CGU from '@/components/cgu'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -59,6 +60,7 @@ const router = new Router({
             ]
         },
         { path: '*', component: NotFound },
+        { path: '/conditions-generales-d-utilisation', component: CGU },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {
