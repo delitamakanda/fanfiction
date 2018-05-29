@@ -1,5 +1,13 @@
 from django.contrib import admin
-from api.models import Fanfic, Chapter, Category, SubCategory, Comment, Post, Tag
+from api.models import Fanfic
+from api.models import Chapter
+from api.models import Category
+from api.models import SubCategory
+from api.models import Comment
+from api.models import Post
+from api.models import Tag
+from api.models import StaticPage
+from api.models import Follow
 
 # Register your models here.
 @admin.register(Category)
@@ -43,3 +51,11 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ['title', 'user', 'created',]
     search_fields = ['created', 'content']
     prepopulated_fields = {'slug': ('title',)}
+    
+@admin.register(StaticPage)
+class StaticPageAdmin(admin.ModelAdmin):
+    pass
+    
+@admin.register(Follow)
+class FollowAdmin(admin.ModelAdmin):
+    pass
