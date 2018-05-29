@@ -179,3 +179,15 @@ class Post(models.Model):
 
     def __str__(self):
         return 'Blog post by {} on {}'.format(self.user, self.title)
+      
+
+class StaticPage(models.Model):
+  ml_content = models.TextField()
+  cgu_content = models.TextField()
+  
+  class Meta:
+        verbose_name = 'page'
+        verbose_name_plural = 'pages'
+  
+  def __str__(self):
+    pass
