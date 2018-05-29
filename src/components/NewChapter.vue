@@ -3,7 +3,7 @@
 
         <Form
         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        :title="titre"
+        title="Nouveau chapitre"
         :operation="operation"
         :valid="valid">
             <div class="mb-4">
@@ -91,9 +91,6 @@ export default {
         },
     },
     computed: {
-        titre () {
-            return "Nouveau chapitre"
-        },
         valid () {
             return !!this.title && !!this.description && !!this.text
         }
