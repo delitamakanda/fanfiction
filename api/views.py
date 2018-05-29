@@ -29,8 +29,7 @@ from api import custompermission
 """
 Liste des genres
 """
-//TODO refactor ListAPIView
-class GenresList(viewsets.ModelViewSet):
+class GenresList(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = GenresSerializer
     pagination_class = None
@@ -43,8 +42,7 @@ class GenresList(viewsets.ModelViewSet):
 """
 Liste de classement
 """
-//TODO refactor ListAPIView
-class ClassementList(viewsets.ModelViewSet):
+class ClassementList(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = ClassementSerializer
     pagination_class = None
@@ -57,8 +55,7 @@ class ClassementList(viewsets.ModelViewSet):
 """
 Liste des status
 """
-//TODO refactor ListAPIView
-class StatusList(viewsets.ModelViewSet):
+class StatusList(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = StatusSerializer
     pagination_class = None
