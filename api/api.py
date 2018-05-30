@@ -7,11 +7,13 @@ from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from api.models import Fanfic
-from api.models import Follow
+from api.models import FollowStory
+from api.models import FollowUser
 from api.models import StaticPage
 from api.serializers import CGUSerializer
 from api.serializers import FanficSerializer
-from api.serializers import FollowSerializer
+from api.serializers import FollowStorySerializer
+from api.serializers import FollowUserSerializer
 from api.serializers import ChangePasswordSerializer
 from api.serializers import MentionsLegalesSerializer
 from api.serializers import UserSerializer
