@@ -9,6 +9,14 @@ from api.models import SubCategory
 from api.models import Post
 from api.models import Tag
 from api.models import StaticPage
+from api.models import Follow
+
+
+class FollowSerializer(serializers.ModelSerializer):
+  
+  class Meta:
+    model = Follow
+    fields = ('from_user', 'to_user', 'created')
 
 
 class CGUSerializer(serializers.ModelSerializer):
