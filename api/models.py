@@ -112,9 +112,21 @@ class Fanfic(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class FollowUser(models.Model):
+    user_from = models.ForeignKey(User, related_name='rel_from_set')
+    user_to = models.ForeignKey(User, related_name='rel_to_set')
+    created= models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __str__(self):
+        return '{} follows {}'.format(self.user_from, self.user_to)
       
       
-class Follow(models.Model):
+class FollowStory(models.Model):
     from_user = models.ForeignKey(User, related_name='fanfic')
     to_fanfic = models.ForeignKey(Fanfic, related_name='users')
     created= models.DateTimeField(auto_now_add=True, db_index=True)
