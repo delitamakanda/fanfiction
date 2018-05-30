@@ -7,7 +7,8 @@ from api.models import Comment
 from api.models import Post
 from api.models import Tag
 from api.models import StaticPage
-from api.models import Follow
+from api.models import FollowStory
+from api.models import FollowUser
 
 # Register your models here.
 @admin.register(Category)
@@ -56,6 +57,10 @@ class PostAdmin(admin.ModelAdmin):
 class StaticPageAdmin(admin.ModelAdmin):
     pass
     
-@admin.register(Follow)
-class FollowAdmin(admin.ModelAdmin):
+@admin.register(FollowStory)
+class FollowStoryAdmin(admin.ModelAdmin):
+    pass
+  
+@admin.register(FollowUser)
+class FollowUserAdmin(admin.ModelAdmin):
     pass
