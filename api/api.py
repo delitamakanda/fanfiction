@@ -7,9 +7,11 @@ from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from api.models import Fanfic
+from api.models import Follow
 from api.models import StaticPage
 from api.serializers import CGUSerializer
 from api.serializers import FanficSerializer
+from api.serializers import FollowSerializer
 from api.serializers import ChangePasswordSerializer
 from api.serializers import MentionsLegalesSerializer
 from api.serializers import UserSerializer
@@ -173,3 +175,20 @@ class FavoritedFanfic(views.APIView):
     def post(self, request, *args, **kwargs):
         favorited_fanfic(request)
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
+      
+      
+def follow_stories(request):
+  pass
+
+class FollowStories(views.APIView):
+  """
+  Stories followed
+  """
+  serializer_class = FollowSerializer()
+  authentication_class = ()
+  permission_classes = ()
+  
+  def post(self, request, *args, **kwargs):
+    //TODO: work in progress reprendre modèle follow user bukkakegram
+    follow_stories(request)
+    return Response({"status": "ok"}, status=status.HTTP_200_OK)
