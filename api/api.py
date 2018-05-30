@@ -186,7 +186,7 @@ class FollowStories(views.APIView):
   """
   Stories followed
   """
-  serializer_class = FollowSerializer()
+  serializer_class = FollowStorySerializer()
   authentication_class = ()
   permission_classes = ()
   
