@@ -8,6 +8,8 @@ export async function $fetch(url, options) {
     const finalOptions = Object.assign({}, {
         headers: {
             'Content-Type': 'application/json',
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Accept": "application/json",
         },
         credentials: 'include',
     }, options)
