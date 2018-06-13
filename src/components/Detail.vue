@@ -63,6 +63,53 @@
     >
     <h3 slot="header">Voir les commentaires</h3>
     <div slot="body">
+        <Form
+        class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        title="Nouveau commentaire"
+        :operation="operation"
+        :valid="valid">
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="name">
+                  Nom ou Pseudo
+                </label>
+                <Input
+                    name="name"
+                    v-model="name"
+                    placeholder=""
+                    maxlength="255"
+                    required />
+            </div>
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="email">
+                  E-mail
+                </label>
+                <Input
+                    name="email"
+                    v-model="email"
+                    placeholder="Votre e-mail (seul l'auteur le verra)"
+                    maxlength="255" />
+            </div>
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="body">
+                  Commentaire
+                </label>
+                <Input
+                    type="textarea"
+                    name="body"
+                    v-model="body"
+                    placeholder=""
+                    rows="6"
+                    required />
+            </div>
+            <template slot="actions">
+                <button
+                    type="submit"
+                    class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
+                    :disabled="!valid">
+                    Ajouter un commentaire
+                </button>
+            </template>
+        </Form>
         <div v-for="com of comment.results" v-if="comment.results.length">
             <span>{{ com.name }}</span> <span v-if="com.email"> | {{ com.email }} </span> | Publié le : <span>{{ com.created | date }}</span>
             <div>{{ com.body }}</div>
@@ -76,8 +123,11 @@
 </template>
 
 <script>
-import modal from './Modal.vue';
+import modal from './Modal.vue'
 import '../compiled-icons/heart'
+
+import PersistantData from '../mixins/PersistantData'
+import RemoteData from '../mixins/RemoteData'
 
 export default {
   name: 'Detail',
@@ -90,6 +140,18 @@ export default {
   components: {
      modal,
    },
+  mixins: [
+      PersistantData('NewComment', [
+          'name',
+          'email',
+          'body',
+      ]),
+      RemoteData({
+          fanfic () {
+              return `fanfics/${this.$route.params.id}`
+          },
+      }),
+  ],
   data () {
     return {
         error: null,
@@ -99,6 +161,14 @@ export default {
         date: null,
         errorFetch: 'Il y a un problème avec la requète.',
         isModalVisible: false,
+        name: '',
+        email: '',
+        body: '',
+        }
+    },
+    computed: {
+        valid () {
+            return !!this.name && !!this.body
         }
     },
     async created () {
@@ -156,12 +226,27 @@ export default {
        
        followFanfic () {
         console.log('follow')
-       }
+       },
+       
+       async operation () {
+            const result = await this.$fetch('comments/new', {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: this.name,
+                    email: this.email,
+                    body: this.body,
+                    fanfic: this.$route.params.id,
+                }),
+            })
+            this.name = this.email = this.body = ''
+        },
     }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.w-full {
+    margin: 0 auto;
+}
 </style>
