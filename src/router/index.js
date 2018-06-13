@@ -14,10 +14,8 @@ import UpdateFanfic from '@/components/UpdateFanfic'
 import UpdateChapter from '@/components/UpdateChapter'
 import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
-import NewComment from '@/components/NewComment'
 import Fanfic from '@/components/Fanfic'
 import ChangePassword from '@/components/ChangePassword'
-import CGU from '@/components/cgu'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -46,7 +44,6 @@ const router = new Router({
         { path: '/login', name: 'Login', component: Login, meta: { guest: true } },
         { path: '/news', name: 'Posts', component: Posts },
         { path: '/news/:id', name: 'PostDetail', component: PostDetail, props: true },
-        { path: '/new-comment', name: 'NewComment', component: NewComment, props: true},
         { path: '/fanfics/:username/list', name: 'UserProfile', component: UserProfile },
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true },
             children: [
@@ -60,7 +57,6 @@ const router = new Router({
             ]
         },
         { path: '*', component: NotFound },
-        { path: '/conditions-generales-d-utilisation', component: CGU },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {
