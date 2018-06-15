@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import state from '../state'
-import NotFound from '@/components/NotFound'
 import List from '@/components/List'
 import Detail from '@/components/Detail'
 import Login from '@/components/Login'
@@ -56,7 +55,7 @@ const router = new Router({
                 { path: '/change-password', name: 'ChangePassword', component: ChangePassword },
             ]
         },
-        { path: '*', component: NotFound },
+        { path: '*', component: List },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {
