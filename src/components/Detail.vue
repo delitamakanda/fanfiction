@@ -11,11 +11,11 @@
 
     <p>
         {{ fanfic.genres }} /
-        <a href="#" v-if="$state.user && $state.user.id !== liked.id" @click.once="favorite">
+        <a href="#" v-if="$state.user && $state.user.id && $state.user.id !== liked.id" @click.once="favorite">
             <svgicon icon="mood-happy-solid" width="22" height="18" color="#000"></svgicon> +1 /
         </a>
 
-        <a href="#" v-if="$state.user && $state.user.id == liked.id" @click.once="unfavorite">
+        <a href="#" v-if="$state.user && $state.user.id && $state.user.id == liked.id" @click.once="unfavorite">
             <svgicon icon="mood-sad-solid" width="22" height="18" color="#000"></svgicon> -1 /
         </a>
 
@@ -45,7 +45,7 @@
 
         <div class="w-1/4">
             <affix class="sidebar-menu" relative-element-selector="#chapters-length">
-                <ul v-for="element of chapter" v-if="element.fanfic === fanfic.id">
+                <ul v-for="element in chapter" v-if="element.fanfic === fanfic.id">
                     <li><a v-bind:href="'#' + element.id">{{ element.title }}</a></li>
                 </ul>
             </affix>
@@ -53,7 +53,7 @@
 
         <div class="w-3/4" id="chapters-length">
 
-            <div v-for="chap of chapter" v-if="chap.fanfic === fanfic.id">
+            <div v-for="chap in chapter" v-if="chap.fanfic === fanfic.id">
                 <h3 v-html="chap.title" :id="chap.id"></h3>
 
                 <div v-if="chap.description !== ''" class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chap.description" role="alert">{{ chap.description }}</div>
@@ -70,7 +70,7 @@
     <h3 slot="header">Voir les commentaires</h3>
     <div slot="body">
         <Form
-        class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        class="bg-white"
         title="Nouveau commentaire"
         :operation="operation"
         :valid="valid">
@@ -116,8 +116,8 @@
                 </button>
             </template>
         </Form>
-        <div v-for="com of comment.results" v-if="comment.results">
-            <span>{{ com.name }}</span> <span v-if="com.email"> | {{ com.email }} </span> | Publié le : <span>{{ com.created | date }}</span>
+        <div v-for="com in comment.results" v-if="comment.results">
+            <span>{{ com.name }}</span> | Publié le : <span>{{ com.created | date }}</span>
             <div>{{ com.body }}</div>
             <hr/>
         </div>
@@ -264,7 +264,9 @@ export default {
                     fanfic: this.$route.params.id,
                 }),
             })
+
             this.name = this.email = this.body = ''
+
         },
     }
 }

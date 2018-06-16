@@ -9,14 +9,14 @@
     <section>
         <Loading v-if="remoteDataBusy" />
 
-        <div v-for="post of postList">
+        <div v-for="post in postList">
                 <router-link :to="{
                     name: 'PostDetail',
                     params: {
                       id: post.id
                     },
                 }">
-                    <h3 v-html="post.title"></h3>
+                    <h3>{{ post.title }}</h3>
                 </router-link>
                 <p> Par {{ post.user }}</p>
                 <p> Publiée le {{ post.created | date }}</p>

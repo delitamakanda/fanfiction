@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 v-html='post.title'></h1>
+    <h1> {{ post.title }}</h1>
 
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         {{ errorFetch }}
