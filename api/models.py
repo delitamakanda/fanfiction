@@ -115,8 +115,8 @@ class Fanfic(models.Model):
 
 
 class FollowUser(models.Model):
-    user_from = models.ForeignKey(User, related_name='rel_from_set')
-    user_to = models.ForeignKey(User, related_name='rel_to_set')
+    user_from = models.ForeignKey(User, related_name='rel_from_set', on_delete=models.CASCADE)
+    user_to = models.ForeignKey(User, related_name='rel_to_set', on_delete=models.CASCADE)
     created= models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
@@ -124,11 +124,11 @@ class FollowUser(models.Model):
 
     def __str__(self):
         return '{} follows {}'.format(self.user_from, self.user_to)
-      
-      
+
+
 class FollowStory(models.Model):
-    from_user = models.ForeignKey(User, related_name='fanfic')
-    to_fanfic = models.ForeignKey(Fanfic, related_name='users')
+    from_user = models.ForeignKey(User, related_name='fanfic', on_delete=models.CASCADE)
+    to_fanfic = models.ForeignKey(Fanfic, related_name='users', on_delete=models.CASCADE)
     created= models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
@@ -203,15 +203,15 @@ class Post(models.Model):
 
     def __str__(self):
         return 'Blog post by {} on {}'.format(self.user, self.title)
-      
+
 
 class StaticPage(models.Model):
   ml_content = models.TextField()
   cgu_content = models.TextField()
-  
+
   class Meta:
         verbose_name = 'page'
         verbose_name_plural = 'pages'
-  
+
   def __str__(self):
     pass

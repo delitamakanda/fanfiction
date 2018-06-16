@@ -31,8 +31,8 @@ class MentionsLegalesView(views.APIView):
         serializer = MentionsLegalesSerializer()
         if serializer.data:
           return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        
+
+
 class CGUView(views.APIView):
     """
     Serve mentions legales HTML entities
@@ -44,7 +44,7 @@ class CGUView(views.APIView):
         serializer = CGUSerializer()
         if serializer.data:
           return Response(serializer.data, status=status.HTTP_200_OK)
-        
+
 
 class UserCreate(generics.CreateAPIView):
     """
@@ -177,8 +177,8 @@ class FavoritedFanfic(views.APIView):
     def post(self, request, *args, **kwargs):
         favorited_fanfic(request)
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
-      
-      
+
+
 def follow_stories(request):
   pass
 
@@ -189,8 +189,8 @@ class FollowStories(views.APIView):
   serializer_class = FollowStorySerializer()
   authentication_class = ()
   permission_classes = ()
-  
+
   def post(self, request, *args, **kwargs):
-    //TODO: work in progress reprendre modèle follow user bukkakegram
+    # TODO: work in progress reprendre modèle follow user bukkakegram
     follow_stories(request)
     return Response({"status": "ok"}, status=status.HTTP_200_OK)

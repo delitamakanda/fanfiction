@@ -360,7 +360,6 @@ class ApiRoot(generics.GenericAPIView):
             'fanfics-list-remastered': reverse('fanfic-list-remastered', request=request),
             'chapters': reverse('chapter-list', request=request),
             'comments': reverse('comment-list', request=request),
-            'comment-list-by-fanfic': reverse('comment-list-by-fanfic', request=request),
             'category': reverse('category-list', request=request),
             'sub-category': reverse('subcategory-list', request=request),
             'users': reverse('user-list', request=request),

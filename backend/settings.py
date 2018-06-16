@@ -51,7 +51,6 @@ INSTALLED_APPS += [
     'rest_framework.authtoken',
     'webpack_loader',
     'api',
-    'accounts',
 ]
 
 SITE_ID = 1
@@ -163,9 +162,9 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'api.customauthentication.CsrfExemptSessionAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
+        # 'api.customauthentication.CsrfExemptSessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
