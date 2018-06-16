@@ -1,17 +1,17 @@
 <template>
     <footer>
-        <p>Copyright 2018 {{ title }} - <a href="#">Politique de confidentialité</a> - <a @click="showModal">Mentions légales</a></p>
+        <p>Copyright 2018 {{ title }} - <a href="">Politique de confidentialité</a> - <a @click="showModal">Mentions légales</a></p>
     </footer>
-    
-    <modal
+
+    <!--<modal
       v-show="isModalVisible"
       @close="closeModal"
     >
     <h3 slot="header">Mentions légales</h3>
     <div slot="body">
-        // TODO: 
+        // TODO:
     </div>
-    </modal>
+</modal>-->
 </template>
 
 <script>
@@ -36,7 +36,7 @@ export default {
       showModal () {
          this.isModalVisible = true;
       },
-      
+
       closeModal() {
          this.isModalVisible = false;
        },

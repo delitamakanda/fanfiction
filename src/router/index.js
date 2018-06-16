@@ -93,7 +93,7 @@ router.beforeEach((to, from, next) => {
     next()
 })
 
-const prod = pocess.env.NODE_ENV === 'production'
+const prod = process.env.NODE_ENV === 'production'
 const shouldSW = 'serviceWorker' in navigator && prod
 
 if (shouldSW) {

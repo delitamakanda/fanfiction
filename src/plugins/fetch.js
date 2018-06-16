@@ -3,12 +3,26 @@ import router from '../router/index'
 
 let baseUrl
 
+function get_cookie(name) {
+    var value;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(function (c) {
+            var m = c.trim().match(/(\w+)=(.*)/);
+
+            if(m !== undefined && m[1] == name) {
+                value = decodeURIComponent(m[2]);
+            }
+        });
+    }
+    return value;
+}
+
 export async function $fetch(url, options) {
 
     const finalOptions = Object.assign({}, {
         headers: {
             'Content-Type': 'application/json',
-            "X-CSRFToken": getCookie("csrftoken"),
+            "X-CSRFToken": get_cookie("csrftoken"),
             "Accept": "application/json",
         },
         credentials: 'include',
