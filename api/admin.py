@@ -7,7 +7,7 @@ from api.models import Comment
 from api.models import Post
 from api.models import Tag
 from api.models import StaticPage
-from api.models import FollowStory
+from api.models import FollowStories
 from api.models import FollowUser
 
 # Register your models here.
@@ -29,8 +29,8 @@ class ChapterInline(admin.StackedInline):
 
 @admin.register(Fanfic)
 class FanficAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'created']
-    list_filter = ['created', 'category']
+    list_display = ['title', 'category', 'subcategory', 'total_likes', 'created']
+    list_filter = ['created', 'category', 'subcategory', 'status']
     search_fields = ['title', 'synopsis']
     prepopulated_fields = {'slug': ('title',)}
     inlines = [ChapterInline, ]
@@ -40,6 +40,7 @@ class FanficAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['name', 'email', 'created']
     search_fields = ['created', 'body']
+    list_filter = ['created', 'active']
 
 
 @admin.register(Tag)
@@ -52,15 +53,16 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ['title', 'user', 'created',]
     search_fields = ['created', 'content']
     prepopulated_fields = {'slug': ('title',)}
-    
+    list_filter = ['created', 'tags']
+
 @admin.register(StaticPage)
 class StaticPageAdmin(admin.ModelAdmin):
     pass
-    
-@admin.register(FollowStory)
-class FollowStoryAdmin(admin.ModelAdmin):
+
+@admin.register(FollowStories)
+class FollowStoriesAdmin(admin.ModelAdmin):
     pass
-  
+
 @admin.register(FollowUser)
 class FollowUserAdmin(admin.ModelAdmin):
     pass

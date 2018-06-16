@@ -90,7 +90,8 @@ class Fanfic(models.Model):
     updated = models.DateTimeField(auto_now=True)
     was_featured_in_home = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='brouillon')
-    likes = models.PositiveIntegerField(default=0)
+    users_like = models.ManyToManyField(User, related_name='fanfics_liked', blank=True)
+    total_likes = models.PositiveIntegerField(db_index=True, default=0)
     objects = models.Manager()
     published = PublishedManager()
     category = models.ForeignKey(Category, related_name="categories", on_delete=models.CASCADE)
@@ -106,9 +107,9 @@ class Fanfic(models.Model):
         self.slug = slugify(self.title)
         super(Fanfic, self).save(*args, **kwargs)
 
-    @property
-    def total_likes(self):
-        return self.likes.count()
+    # @property
+    # def total_likes(self):
+        # return self.total_likes.count()
 
     def __str__(self):
         return self.title
@@ -121,18 +122,22 @@ class FollowUser(models.Model):
 
     class Meta:
         ordering = ('-created',)
+        verbose_name = 'follow user'
+        verbose_name_plural = 'follow users'
 
     def __str__(self):
         return '{} follows {}'.format(self.user_from, self.user_to)
 
 
-class FollowStory(models.Model):
+class FollowStories(models.Model):
     from_user = models.ForeignKey(User, related_name='fanfic', on_delete=models.CASCADE)
     to_fanfic = models.ForeignKey(Fanfic, related_name='users', on_delete=models.CASCADE)
     created= models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
         ordering = ('-created',)
+        verbose_name = 'follow story'
+        verbose_name_plural = 'follow stories'
 
     def __str__(self):
         return '{} follows {}'.format(self.from_user, self.to_fanfic)

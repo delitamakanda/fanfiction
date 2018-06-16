@@ -9,33 +9,33 @@ from api.models import SubCategory
 from api.models import Post
 from api.models import Tag
 from api.models import StaticPage
-from api.models import FollowStory
+from api.models import FollowStories
 from api.models import FollowUser
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
-  
+
   class Meta:
     model = FollowUser
     fields = ('user_from ', 'user_to ', 'created')
 
 
-class FollowStorySerializer(serializers.ModelSerializer):
-  
+class FollowStoriesSerializer(serializers.ModelSerializer):
+
   class Meta:
-    model = FollowStory
+    model = FollowStories
     fields = ('from_user', 'to_user', 'created')
 
 
 class CGUSerializer(serializers.ModelSerializer):
-  
+
   class Meta:
     model = StaticPage
     fields = ('cgu_content')
-    
+
 
 class MentionsLegalesSerializer(serializers.ModelSerializer):
-  
+
   class Meta:
     model = StaticPage
     fields = ('ml_content')
@@ -118,7 +118,8 @@ class FanficListSerializer(serializers.ModelSerializer):
           'updated',
           'was_featured_in_home',
           'status',
-          'likes',
+          'users_like',
+          'total_likes',
           'objects',
           'published',
           'category',
@@ -161,7 +162,8 @@ class FanficSerializer(serializers.ModelSerializer):
           'updated',
           'was_featured_in_home',
           'status',
-          'likes',
+          'users_like',
+          'total_likes',
           'objects',
           'published',
           'category',

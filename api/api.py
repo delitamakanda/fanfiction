@@ -7,12 +7,12 @@ from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from api.models import Fanfic
-from api.models import FollowStory
+from api.models import FollowStories
 from api.models import FollowUser
 from api.models import StaticPage
 from api.serializers import CGUSerializer
 from api.serializers import FanficSerializer
-from api.serializers import FollowStorySerializer
+from api.serializers import FollowStoriesSerializer
 from api.serializers import FollowUserSerializer
 from api.serializers import ChangePasswordSerializer
 from api.serializers import MentionsLegalesSerializer
@@ -152,17 +152,21 @@ class EmailFeedback(views.APIView):
 
 def favorited_fanfic(request):
     fanfic_id = request.data.get('id')
-    fanfic = Fanfic.objects.get(id=int(fanfic_id))
-    try:
-        if fanfic:
-            likes = fanfic.likes + 1
-        else:
-            likes = fanfic.likes - 1
-        fanfic.likes = likes
-        fanfic.save()
-        return Response({'status': 'ok'}, status=status.HTTP_200_OK)
-    except:
-        pass
+    user = request.data.get('user')
+    if fanfic_id:
+        try:
+            fanfic = Fanfic.objects.get(id=int(fanfic_id))
+            if fanfic:
+                # likes = fanfic.likes + 1
+                likes = fanfic.users_like.add(user)
+            else:
+                likes = fanfic.users_like.remove(user)
+                # likes = fanfic.likes - 1
+            fanfic.users_like = likes
+            fanfic.save()
+            return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+        except:
+            pass
     return Response({'status': 'ko'})
 
 
@@ -170,13 +174,15 @@ class FavoritedFanfic(views.APIView):
     """
     Favorite fanfic
     """
-    serializer_class = FanficSerializer()
+    serializer_class = FanficSerializer
     authentication_classes = ()
     permission_classes = ()
 
     def post(self, request, *args, **kwargs):
-        favorited_fanfic(request)
-        return Response({"status": "ok"}, status=status.HTTP_200_OK)
+        serializer = FanficSerializer()
+        if serializer.data:
+            favorited_fanfic(request)
+            return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
 def follow_stories(request):
@@ -186,7 +192,7 @@ class FollowStories(views.APIView):
   """
   Stories followed
   """
-  serializer_class = FollowStorySerializer()
+  serializer_class = FollowStoriesSerializer()
   authentication_class = ()
   permission_classes = ()
 
