@@ -42,15 +42,15 @@ INSTALLED_APPS = [
     'multiselectfield',
     'embed_video',
     'django_filters',
-    'allauth',
-    'allauth.account',
+    #'allauth',
+    #'allauth.account',
 ]
 
 INSTALLED_APPS += [
     'rest_framework',
     'rest_framework.authtoken',
     'webpack_loader',
-    'api',
+    'api.apps.ApiConfig',
 ]
 
 SITE_ID = 1
