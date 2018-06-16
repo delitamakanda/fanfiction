@@ -65,7 +65,7 @@ export default {
     methods: {
       async operation () {
         const result = await this.$fetch('change-password', {
-                method: 'POST',
+                method: 'PUT',
                 body: JSON.stringify({
                     old_password: this.old_password,
                     new_password: this.new_password

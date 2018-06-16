@@ -30,7 +30,7 @@
             <p>{{ fanfic.genres }} </p>
             <p>{{ fanfic.classement }}</p>
             <p> {{ fanfic.publish | date }}</p>
-            <p>{{ fanfic.likes }} likes</p>
+            <p>{{ fanfic.total_likes }} likes</p>
         </article>
     </section>
 
@@ -64,11 +64,11 @@ export default {
             }
       },
       async sortByCategory () {
-      
+
       },
-      
+
       async sortBySubCategory () {
-      
+
       },
     },
 }

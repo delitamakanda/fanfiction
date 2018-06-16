@@ -11,7 +11,7 @@
 
     <p>
         {{ fanfic.genres }} /
-        <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.likes }} likes</a> /
+        <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.total_likes }} likes</a> /
         <span v-if="comment.results.length <= 1">{{ comment.results.length }} commentaire</span>
         <span v-else>{{ comment.results.length }} commentaires</span> /
         <a @click="onPrint" class="link" href="#">Vue imprimable</a> /
@@ -24,8 +24,6 @@
          </button> /
          <a @click="followFanfic" class="link" href="#">Suivre l'histoire</a>
     </p>
-
-    <router-link :to="{ name: 'NewComment', params: { id: fanfic.id } }">Ajouter un commentaire</router-link>
 
     <p v-html="fanfic.description"></p>
     <p v-html="fanfic.synopsis"></p>
@@ -110,12 +108,12 @@
                 </button>
             </template>
         </Form>
-        <div v-for="com of comment.results" v-if="comment.results.length">
+        <div v-for="com of comment.results" v-if="comment.results">
             <span>{{ com.name }}</span> <span v-if="com.email"> | {{ com.email }} </span> | Publié le : <span>{{ com.created | date }}</span>
             <div>{{ com.body }}</div>
             <hr/>
         </div>
-        <div v-if="!comment.results.length">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+        <div v-if="!comment.results">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
     </div>
     </modal>
 
@@ -181,7 +179,6 @@ export default {
                 this.fanfic = await response.json()
                 this.chapter = await res.json()
                 this.comment = res_comment
-                console.log(this.comment.results)
             } else {
                 throw new Error('error')
             }
@@ -207,9 +204,10 @@ export default {
                 method: 'POST',
                 body: JSON.stringify({
                     id: this.fanfic.id,
+                    user: this.$state.user.id
                 })
             })
-            this.fanfic.likes++
+            this.fanfic.total_likes++
         },
 
         onPrint () {
@@ -223,11 +221,11 @@ export default {
        closeModal() {
          this.isModalVisible = false
        },
-       
+
        followFanfic () {
         console.log('follow')
        },
-       
+
        async operation () {
             const result = await this.$fetch('comments/new', {
                 method: 'POST',
