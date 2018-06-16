@@ -153,7 +153,7 @@ class EmailFeedback(views.APIView):
 def favorited_fanfic(request):
     fanfic_id = request.data.get('id')
     user = request.data.get('user')
-    if fanfic_id:
+    if fanfic_id and user:
         try:
             fanfic = Fanfic.objects.get(id=int(fanfic_id))
             if fanfic:

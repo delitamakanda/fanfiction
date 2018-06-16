@@ -89,6 +89,17 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
           'description',
         )
 
+
+class UserFanficSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+          'id',
+          'username',
+        )
+
+
 """
 Serializer for GET method
 """
@@ -100,6 +111,7 @@ class FanficListSerializer(serializers.ModelSerializer):
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
     author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+    users_like = UserFanficSerializer(read_only=True, many=True)
 
     class Meta:
         model = Fanfic
@@ -268,6 +280,7 @@ class GenresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fanfic
         fields = ('genres',)
+
 
 class ClassementSerializer(serializers.ModelSerializer):
     classement = serializers.SerializerMethodField()

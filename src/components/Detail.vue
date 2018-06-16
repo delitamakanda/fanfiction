@@ -11,7 +11,10 @@
 
     <p>
         {{ fanfic.genres }} /
-        <a href="#" @click="favorite"><svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>{{ fanfic.total_likes }} likes</a> /
+        <a href="#" v-if="$state.user && $state.user.id && liked.id !== $state.user.id" @click="favorite">
+            <svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>
+            {{ fanfic.total_likes }} likes /
+        </a>
         <span v-if="comment.results.length <= 1">{{ comment.results.length }} commentaire</span>
         <span v-else>{{ comment.results.length }} commentaires</span> /
         <a @click="onPrint" class="link" href="#">Vue imprimable</a> /
@@ -156,6 +159,7 @@ export default {
         fanfic: [],
         chapter: [],
         comment: [],
+        liked: [],
         date: null,
         errorFetch: 'Il y a un problème avec la requète.',
         isModalVisible: false,
@@ -171,14 +175,19 @@ export default {
     },
     async created () {
         try {
-            const response = await fetch('/api/fanfics/v1/' + this.$route.params.id)
-            const res = await fetch('api/chapters')
+            const response = await this.$fetch(`fanfics/v1/${this.$route.params.id}`)
+            const res = await this.$fetch('chapters')
             const res_comment = await this.$fetch(`comments/${this.$route.params.id}/fanfic`)
 
-            if (response.ok) {
-                this.fanfic = await response.json()
-                this.chapter = await res.json()
+            if (response && res && res_comment) {
+                this.fanfic = response
+                this.chapter = res
                 this.comment = res_comment
+
+                for (let liked_item of this.fanfic.users_like) {
+                    this.liked = liked_item
+                }
+
             } else {
                 throw new Error('error')
             }
