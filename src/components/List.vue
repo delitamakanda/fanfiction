@@ -6,10 +6,12 @@
         {{ errorFetch }}
     </div>
 
-    <div class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Rechercher des fanfictions..." v-model="search_term" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" @click.prevent="getSearchFanfics">Rechercher</button>
-    </div>
+    <form class="w-full max-w-sm">
+        <div class="flex items-center py-2">
+            <input class="appearance-none bg-transparent border-none w-full text-grey-darker mr-3 py-1 px-2 leading-tight" type="text" placeholder="Rechercher des fanfictions..." v-model="search_term" aria-label="Search">
+            <button class="bg-teal hover:bg-teal-dark text-white font-bold py-2 px-4 rounded" @click.prevent="getSearchFanfics">Rechercher</button>
+        </div>
+  </form>
 
     <section>
         <Loading v-if="remoteDataBusy" />

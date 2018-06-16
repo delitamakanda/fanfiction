@@ -153,13 +153,28 @@ class EmailFeedback(views.APIView):
 def favorited_fanfic(request):
     fanfic_id = request.data.get('id')
     user = request.data.get('user')
+
     if fanfic_id and user:
         try:
             fanfic = Fanfic.objects.get(id=int(fanfic_id))
             if fanfic:
                 # likes = fanfic.likes + 1
                 likes = fanfic.users_like.add(user)
-            else:
+            fanfic.users_like = likes
+            fanfic.save()
+            return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+        except:
+            pass
+    return Response({'status': 'ko'})
+
+def unfavorited_fanfic(request):
+    fanfic_id = request.data.get('id')
+    user = request.data.get('user')
+
+    if fanfic_id and user:
+        try:
+            fanfic = Fanfic.objects.get(id=int(fanfic_id))
+            if fanfic:
                 likes = fanfic.users_like.remove(user)
                 # likes = fanfic.likes - 1
             fanfic.users_like = likes
@@ -168,6 +183,7 @@ def favorited_fanfic(request):
         except:
             pass
     return Response({'status': 'ko'})
+
 
 
 class FavoritedFanfic(views.APIView):
@@ -182,6 +198,21 @@ class FavoritedFanfic(views.APIView):
         serializer = FanficSerializer()
         if serializer.data:
             favorited_fanfic(request)
+            return Response({"status": "ok"}, status=status.HTTP_200_OK)
+
+
+class UnfavoritedFanfic(views.APIView):
+    """
+    Unfavorite fanfic
+    """
+    serializer_class = FanficSerializer
+    authentication_classes = ()
+    permission_classes = ()
+
+    def post(self, request, *args, **kwargs):
+        serializer = FanficSerializer()
+        if serializer.data:
+            unfavorited_fanfic(request)
             return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 

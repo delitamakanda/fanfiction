@@ -35,6 +35,7 @@ urlpatterns = [
     path('logout', api.LogoutView.as_view(), name='logout'),
     path('feedback', api.EmailFeedback.as_view(), name='feedback'),
     path('favorite', api.FavoritedFanfic.as_view(), name='favorite'),
+    path('unfavorite', api.UnfavoritedFanfic.as_view(), name='unfavorite'),
     path('change-password', api.ChangePasswordView.as_view(), name='change-password'),
     path('mentions-legales', api.MentionsLegalesView.as_view(), name='mentions-legales'),
     path('cgu', api.CGUView.as_view(), name='cgu'),

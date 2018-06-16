@@ -7,14 +7,19 @@
     <p>{{ fanfic.classement }} <a @click="feedback" class="link" href="#">Signaler</a></p>
 
     <p>Auteur : {{ fanfic.author }}</p>
-    <p>[ Publiée le: {{fanfic.publish | date }} ][ Mise à Jour le:{{ fanfic.updated | date }} ]</p>
+    <p>[ Publiée le: {{fanfic.publish | date }} ]</p>
 
     <p>
         {{ fanfic.genres }} /
-        <a href="#" v-if="$state.user && $state.user.id && liked.id !== $state.user.id" @click="favorite">
-            <svgicon icon="heart" width="22" height="18" color="#ff33cc"></svgicon>
-            {{ fanfic.total_likes }} likes /
+        <a href="#" v-if="$state.user && $state.user.id !== liked.id" @click.once="favorite">
+            <svgicon icon="mood-happy-solid" width="22" height="18" color="#000"></svgicon> +1 /
         </a>
+
+        <a href="#" v-if="$state.user && $state.user.id == liked.id" @click.once="unfavorite">
+            <svgicon icon="mood-sad-solid" width="22" height="18" color="#000"></svgicon> -1 /
+        </a>
+
+        <span>{{ fanfic.total_likes }} likes</span> /
         <span v-if="comment.results.length <= 1">{{ comment.results.length }} commentaire</span>
         <span v-else>{{ comment.results.length }} commentaires</span> /
         <a @click="onPrint" class="link" href="#">Vue imprimable</a> /
@@ -125,7 +130,8 @@
 
 <script>
 import modal from './Modal.vue'
-import '../compiled-icons/heart'
+import '../compiled-icons/mood-happy-solid'
+import '../compiled-icons/mood-sad-solid'
 
 import PersistantData from '../mixins/PersistantData'
 import RemoteData from '../mixins/RemoteData'
@@ -216,7 +222,20 @@ export default {
                     user: this.$state.user.id
                 })
             })
+
             this.fanfic.total_likes++
+        },
+
+        async unfavorite () {
+            const result = await this.$fetch('unfavorite', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: this.fanfic.id,
+                    user: this.$state.user.id
+                })
+            })
+
+            this.fanfic.total_likes--
         },
 
         onPrint () {
@@ -255,5 +274,9 @@ export default {
 <style scoped>
 .w-full {
     margin: 0 auto;
+}
+
+.pointer {
+    cursor: pointer;
 }
 </style>
