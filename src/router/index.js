@@ -49,8 +49,8 @@ const router = new Router({
                 { path: '/fanfics', name: 'ListUserFanfic', component: ListUserFanfic },
                 { path: '/create', name: 'NewFanfic', component: NewFanfic },
                 { path: '/update/:id/edit', name: 'UpdateFanfic', component: UpdateFanfic, props: true },
-                { path: '/new/chapter', name: 'NewChapter', component: NewChapter, props: true },
-                { path: '/update/chapter/:chapter_id/edit', name: 'UpdateChapter', component: UpdateChapter, props: true },
+                { path: '/new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true },
+                { path: '/update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: UpdateChapter, props: true },
                 { path: '/fanfic/:id', name: 'Fanfic', component: Fanfic, props: true },
                 { path: '/change-password', name: 'ChangePassword', component: ChangePassword },
             ]

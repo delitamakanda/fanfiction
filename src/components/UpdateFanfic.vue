@@ -91,7 +91,7 @@
                       Classement
                     </label>
                     <div class="relative">
-                        <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="fanfic.classement">
+                        <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="fanfic.classement" v-if="loadingClassement">
                             <option value="">Sélectionner</option>
                             <option v-for="(option, index) in dataClassement[0].classement" :value="option[0]" :key="index" :selected="index == 1">{{ option[1] }}</option>
                         </select>
@@ -105,7 +105,7 @@
                   Genres
                 </label>
                 <div class="relative">
-                    <label :for="select[0]" v-for="select in dataGenresFormatted[0].genres">
+                    <label :for="select[0]" v-for="select in dataGenresFormatted">
                         <input :value="select[0]" v-model="fanfic.genres" :id="select[0]" type="checkbox">
                         {{ select[1] }}<br>
                     </label>
@@ -116,7 +116,7 @@
                     Status
                   </label>
                   <div class="relative">
-                    <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="fanfic.status">
+                    <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="fanfic.status" v-if="loadingStatus">
                         <option value="">Sélectionner</option>
                         <option v-for="(option, index) in dataStatus[0].status" :value="option[0]" :key="index" :selected="index == 1">{{ option[1] }}</option>
                     </select>
@@ -128,7 +128,7 @@
           </div>
             <router-link
                 tag="button"
-                :to="{name: 'Fanfic', params: {id: fanfic.id }}"
+                :to="{name: 'Fanfic', params: {id: this.$route.params.id }}"
                 class="secondary inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">
                 Retour à la l'histoire
             </router-link>
@@ -159,7 +159,7 @@ export default {
             fanfic: [],
             dataClassement: [],
             dataStatus: [],
-            dataGenresFormatted: [],
+            dataGenresFormatted: {},
             dataCategories: [],
             dataSubCategories: [],
             title: '',
@@ -172,6 +172,9 @@ export default {
             status: '',
             category: '',
             subcategory: '',
+            loadingClassement: false,
+            loadingGenres: false,
+            loadingStatus: false,
         }
     },
     props: {
@@ -202,8 +205,15 @@ export default {
     },
     async created () {
         this.dataGenresFormatted = await this.$fetch('fanfics/genres')
+        this.loadingGenres = true
+        this.dataGenresFormatted = this.dataGenresFormatted[0]['genres']
+
         this.dataClassement = await this.$fetch('fanfics/classement')
+        this.loadingClassement = true
+
         this.dataStatus = await this.$fetch('fanfics/status')
+        this.loadingStatus = true
+
         this.dataCategories = await this.$fetch('category')
         this.dataSubCategories = await this.$fetch('subcategory')
     }

@@ -1,6 +1,5 @@
 <template>
     <div class="w-full max-w-md">
-
         <Form
         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
         title="Nouveau chapitre"
@@ -43,7 +42,7 @@
             <template slot="actions">
                 <router-link
                     tag="button"
-                    :to="{name: 'Fanfic', params: { id: fanfic.id }}"
+                    :to="{name: 'Fanfic', params: { id: this.$route.params.id }}"
                     class="secondary inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">
                     Retour à l'histoire
                 </router-link>

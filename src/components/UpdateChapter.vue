@@ -49,7 +49,7 @@
                 v-model="chapter.fanfic" />
             <router-link
                 tag="button"
-                :to="{name: 'Fanfic', params: { id: chapter.fanfic }}"
+                :to="{name: 'Fanfic', params: { id: this.$route.params.id }}"
                 class="secondary inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">
                 Retour à la l'histoire
             </router-link>
@@ -88,6 +88,10 @@ export default {
             type: Number,
             required: true,
         },
+        id: {
+            type: Number,
+            required: true,
+        }
     },
     computed: {
 

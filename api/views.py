@@ -34,7 +34,7 @@ class GenresList(generics.ListAPIView):
     serializer_class = GenresSerializer
     pagination_class = None
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny,
     )
     name='genre-list'
 
@@ -47,7 +47,7 @@ class ClassementList(generics.ListAPIView):
     serializer_class = ClassementSerializer
     pagination_class = None
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny,
     )
     name='classement-list'
 
@@ -60,7 +60,7 @@ class StatusList(generics.ListAPIView):
     serializer_class = StatusSerializer
     pagination_class = None
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny,
     )
     name='status-list'
 

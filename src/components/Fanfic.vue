@@ -1,12 +1,12 @@
 <template>
     <div class="fanfic">
-        <h2>{{ fanfic.title }}</h2>
         <Loading v-if="remoteDataBusy" />
         <div class="empty" v-else-if="!fanfic">
             Fanfiction non trouvée.
         </div>
         <template v-else>
             <section class="infos">
+                <h2>{{ fanfic.title }}</h2>
                 <div class="info">
                     Crée le {{ fanfic.publish | date }}
                 </div>
@@ -26,7 +26,7 @@
             </section>
             <section class="content">
                 <div v-for="(chap, i) of chapter" v-if="chap.fanfic === fanfic.id">
-                    &bull; {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id }}">Editer le chapitre </router-link>
+                    &bull; {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }">Editer le chapitre </router-link>
                 </div>
             </section>
             <section class="action">
