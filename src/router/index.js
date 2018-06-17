@@ -93,14 +93,14 @@ router.beforeEach((to, from, next) => {
     next()
 })
 
-const prod = process.env.NODE_ENV === 'production'
-const shouldSW = 'serviceWorker' in navigator && prod
-
-if (shouldSW) {
-  navigator.serviceWorker.register('/sw.js').then(() => {
-    console.log('Sw registered')
-  })
-}
+// const prod = process.env.NODE_ENV === 'production'
+// const shouldSW = 'serviceWorker' in navigator && prod
+//
+// if (shouldSW) {
+//   navigator.serviceWorker.register('/sw.js').then(() => {
+//     console.log('Sw registered')
+//   })
+// }
 
 
 
