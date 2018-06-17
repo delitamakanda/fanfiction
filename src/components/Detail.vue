@@ -20,8 +20,7 @@
         </a>
 
         <span>{{ fanfic.total_likes }} likes</span> /
-        <span v-if="comment.results.length <= 1">{{ comment.results.length }} commentaire</span>
-        <span v-else>{{ comment.results.length }} commentaires</span> /
+        {{ total_comments }} commentaire(s)</span> /
         <a @click="onPrint" class="link" href="#">Vue imprimable</a> /
         <button
            type="button"
@@ -172,6 +171,7 @@ export default {
         name: '',
         email: '',
         body: '',
+        total_comments: '',
         }
     },
     computed: {
@@ -193,6 +193,8 @@ export default {
                 for (let liked_item of this.fanfic.users_like) {
                     this.liked = liked_item
                 }
+
+                this.total_comments = res_comment.results.length
 
             } else {
                 throw new Error('error')
