@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'multiselectfield',
     'embed_video',
     'django_filters',
+    'storages',
     #'allauth',
     #'allauth.account',
 ]
