@@ -10,6 +10,8 @@ from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 
+from markdownx.models import MarkdownxField
+
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super(PublishedManager, self).get_queryset().filter(status='publié')
@@ -106,10 +108,6 @@ class Fanfic(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super(Fanfic, self).save(*args, **kwargs)
-
-    # @property
-    # def total_likes(self):
-        # return self.total_likes.count()
 
     def __str__(self):
         return self.title
@@ -210,13 +208,29 @@ class Post(models.Model):
         return 'Blog post by {} on {}'.format(self.user, self.title)
 
 
-class StaticPage(models.Model):
-  ml_content = models.TextField()
-  cgu_content = models.TextField()
+class MentionsLegales(models.Model):
+    title = models.CharField(max_length=200)
+    content = MarkdownxField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
-  class Meta:
-        verbose_name = 'page'
-        verbose_name_plural = 'pages'
+    class Meta:
+        verbose_name = 'mention légale'
+        verbose_name_plural = 'mentions légales'
 
-  def __str__(self):
-    pass
+    def __str__(self):
+        return '{}'.format(self.title)
+
+
+class PolitiqueConfidentialite(models.Model):
+    title = models.CharField(max_length=200)
+    content = MarkdownxField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'politique de confidentialité'
+        verbose_name_plural = 'politiques de confidentialité'
+
+    def __str__(self):
+        return '{}'.format(self.title)

@@ -9,8 +9,9 @@ from rest_framework.response import Response
 from api.models import Fanfic
 from api.models import FollowStories
 from api.models import FollowUser
-from api.models import StaticPage
-from api.serializers import CGUSerializer
+from api.models import MentionsLegales
+from api.models import PolitiqueConfidentialite
+from api.serializers import PolitiqueConfidentialiteSerializer
 from api.serializers import FanficSerializer
 from api.serializers import FollowStoriesSerializer
 from api.serializers import FollowUserSerializer
@@ -20,30 +21,29 @@ from api.serializers import UserSerializer
 
 # Create your api views here.
 
-class MentionsLegalesView(views.APIView):
+class MentionsLegalesView(generics.ListAPIView):
     """
     Serve mentions legales HTML entities
     """
+    queryset = MentionsLegales.objects.all()
     serializer_class = MentionsLegalesSerializer
-    permission_classes = ( permissions.IsAuthenticatedOrReadOnly,)
-
-    def get(self, request):
-        serializer = MentionsLegalesSerializer()
-        if serializer.data:
-          return Response(serializer.data, status=status.HTTP_200_OK)
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
 
 
-class CGUView(views.APIView):
+
+class PolitiqueConfidentialiteView(generics.ListAPIView):
     """
-    Serve mentions legales HTML entities
+    Serve rgpd policies HTML entities
     """
-    serializer_class = CGUSerializer
-    permission_classes = ( permissions.IsAuthenticatedOrReadOnly,)
-
-    def get(self, request):
-        serializer = CGUSerializer()
-        if serializer.data:
-          return Response(serializer.data, status=status.HTTP_200_OK)
+    queryset = PolitiqueConfidentialite.objects.all()
+    serializer_class = PolitiqueConfidentialiteSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
 
 
 class UserCreate(generics.CreateAPIView):

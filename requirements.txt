@@ -30,3 +30,4 @@ gunicorn
 psycopg2-binary
 django-storages
 boto3
+django-markdownx==2.0.23

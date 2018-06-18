@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'embed_video',
     'django_filters',
     'storages',
+    'markdownx',
     #'allauth',
     #'allauth.account',
 ]

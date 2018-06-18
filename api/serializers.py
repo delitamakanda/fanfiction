@@ -8,37 +8,39 @@ from api.models import Category
 from api.models import SubCategory
 from api.models import Post
 from api.models import Tag
-from api.models import StaticPage
+from api.models import MentionsLegales
+from api.models import PolitiqueConfidentialite
 from api.models import FollowStories
 from api.models import FollowUser
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
 
-  class Meta:
-    model = FollowUser
-    fields = ('user_from ', 'user_to ', 'created')
+    class Meta:
+        model = FollowUser
+        fields = ('user_from ', 'user_to ', 'created')
 
 
 class FollowStoriesSerializer(serializers.ModelSerializer):
 
-  class Meta:
-    model = FollowStories
-    fields = ('from_user', 'to_user', 'created')
+    class Meta:
+        model = FollowStories
+        fields = ('from_user', 'to_user', 'created')
 
 
-class CGUSerializer(serializers.ModelSerializer):
+class PolitiqueConfidentialiteSerializer(serializers.ModelSerializer):
 
-  class Meta:
-    model = StaticPage
-    fields = ('cgu_content')
+    class Meta:
+        model = PolitiqueConfidentialite
+        fields = ('title', 'content', 'created', 'updated')
 
 
 class MentionsLegalesSerializer(serializers.ModelSerializer):
 
-  class Meta:
-    model = StaticPage
-    fields = ('ml_content')
+    class Meta:
+        model = MentionsLegales
+        fields = ('title', 'content', 'created', 'updated')
+
 
 class TagSerializer(serializers.ModelSerializer):
 
