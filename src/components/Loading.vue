@@ -1,5 +1,5 @@
 <template>
-    <div class="loading">
+    <div class="loading align-center w-full max-w-sm">
          <div class="spinner spinner-1"></div>
     </div>
  </template>

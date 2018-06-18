@@ -32,12 +32,13 @@
                 <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="text">
                   Chapitre
                 </label>
-                <Input
+                <trumbowyg v-model="text"></trumbowyg>
+                <!--<Input
                     type="textarea"
                     name="text"
                     v-model="text"
                     placeholder="Ecrire le chapitre"
-                    rows="20" />
+                    rows="20" />-->
             </div>
             <template slot="actions">
                 <router-link

@@ -23,6 +23,7 @@ import VueFetch from '../plugins/fetch'
 import VueAffix from 'vue-affix'
 import VeeValidate from 'vee-validate'
 import VueSVGIcon from 'vue-svgicon'
+import VueTrumbowyg from 'vue-trumbowyg';
 
 Vue.component('Loading', Loading)
 Vue.component('Form', Form)
@@ -35,6 +36,9 @@ Vue.use(VueFetch, {
 Vue.use(VueAffix)
 Vue.use(VeeValidate)
 Vue.use(VueSVGIcon)
+Vue.use(VueTrumbowyg)
+
+import 'trumbowyg/dist/ui/trumbowyg.css'
 
 const router = new Router({
     routes: [

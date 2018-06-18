@@ -10,7 +10,7 @@
             >
             <h3 slot="header">Mentions légales</h3>
             <div slot="body">
-                // TODO:
+                <vue-markdown>## this is the default slot 1</vue-markdown>
             </div>
         </modal>
 
@@ -20,7 +20,7 @@
             >
             <h3 slot="header">Politique de confidentialité</h3>
             <div slot="body">
-                // TODO:
+                <vue-markdown>## this is the default slot 2</vue-markdown>
             </div>
         </modal>
     </div>
@@ -28,6 +28,7 @@
 
 <script>
 import modal from './Modal.vue';
+import VueMarkdown from 'vue-markdown';
 
 export default {
     props: {
@@ -38,6 +39,7 @@ export default {
     },
     components: {
      modal,
+     VueMarkdown,
    },
     data(){
         return{

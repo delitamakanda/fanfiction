@@ -9,18 +9,18 @@
     <section>
         <Loading v-if="remoteDataBusy" />
 
-        <div v-for="post in postList">
+        <div v-for="item in postList">
                 <router-link :to="{
                     name: 'PostDetail',
                     params: {
-                      id: post.id
+                      id: item.id
                     },
                 }">
-                    <h3>{{ post.title }}</h3>
+                    <h3>{{ item.title }}</h3>
                 </router-link>
-                <p> Par {{ post.user }}</p>
-                <p> Publiée le {{ post.created | date }}</p>
-                <a v-for="tag of post.tags" class="tag">
+                <p> Par {{ item.user }}</p>
+                <p> Publiée le {{ item.created | date }}</p>
+                <a v-for="tag in item.tags" class="tag">
                     {{ tag.word }}
                 </a>
 
@@ -44,8 +44,6 @@ export default {
   data () {
     return {
       subtitle: 'News',
-      // error: null,
-      // loading: false,
       errorFetch: 'Il y a un problème avec la requète.'
     }
 }

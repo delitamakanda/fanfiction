@@ -36,12 +36,13 @@
                 <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="text">
                   Chapitre
                 </label>
-                <Input
+                <trumbowyg v-model="chapter.text"></trumbowyg>
+                <!--<Input
                     type="textarea"
                     name="text"
                     v-model="chapter.text"
                     placeholder="Ecrire le chapitre"
-                    rows="20" />
+                    rows="20" />-->
             </div>
             <Input
                 type="hidden"
