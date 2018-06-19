@@ -37,8 +37,8 @@ urlpatterns = [
     path('favorite', api.FavoritedFanfic.as_view(), name='favorite'),
     path('unfavorite', api.UnfavoritedFanfic.as_view(), name='unfavorite'),
     path('change-password', api.ChangePasswordView.as_view(), name='change-password'),
-    path('mentions', api.MentionsLegalesView.as_view(), name='mentions-legales'),
-    path('rgpd', api.PolitiqueConfidentialiteView.as_view(), name='rgpd'),
+    # path('mentions', api.MentionsLegalesView.as_view(), name='mentions-legales'),
+    # path('rgpd', api.PolitiqueConfidentialiteView.as_view(), name='rgpd'),
     path('follow-stories', api.FollowStories.as_view(), name='follow-stories'),
     path('', views.ApiRoot.as_view(), name=views.ApiRoot.name),
 ]

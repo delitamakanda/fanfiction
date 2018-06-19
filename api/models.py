@@ -191,7 +191,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
-    content = models.TextField()
+    content = MarkdownxField()
     created = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
 
@@ -208,29 +208,16 @@ class Post(models.Model):
         return 'Blog post by {} on {}'.format(self.user, self.title)
 
 
-class MentionsLegales(models.Model):
+class FlatPages(models.Model):
     title = models.CharField(max_length=200)
     content = MarkdownxField()
+    type = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'mention légale'
-        verbose_name_plural = 'mentions légales'
-
-    def __str__(self):
-        return '{}'.format(self.title)
-
-
-class PolitiqueConfidentialite(models.Model):
-    title = models.CharField(max_length=200)
-    content = MarkdownxField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = 'politique de confidentialité'
-        verbose_name_plural = 'politiques de confidentialité'
+        verbose_name = 'flat page'
+        verbose_name_plural = 'flat pages'
 
     def __str__(self):
         return '{}'.format(self.title)

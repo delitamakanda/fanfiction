@@ -13,6 +13,7 @@ from api.models import Chapter
 from api.models import Category
 from api.models import SubCategory
 from api.models import Post
+from api.models import FlatPages
 from api.serializers import PostSerializer
 from api.serializers import FanficSerializer, FanficListSerializer
 from api.serializers import ChapterSerializer
@@ -24,6 +25,7 @@ from api.serializers import UserSerializer
 from api.serializers import GenresSerializer
 from api.serializers import ClassementSerializer
 from api.serializers import StatusSerializer
+from api.serializers import FlatPagesSerializer
 from api import custompermission
 
 """

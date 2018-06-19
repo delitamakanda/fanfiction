@@ -6,9 +6,7 @@ from api.models import SubCategory
 from api.models import Comment
 from api.models import Post
 from api.models import Tag
-from api.models import MentionsLegales
-from api.models import PolitiqueConfidentialite
-from api.models import MentionsLegales
+from api.models import FlatPages
 from api.models import FollowStories
 from api.models import FollowUser
 
@@ -57,13 +55,13 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     list_filter = ['created', 'tags']
 
-@admin.register(PolitiqueConfidentialite)
-class PolitiqueConfidentialiteAdmin(admin.ModelAdmin):
-    pass
 
-@admin.register(MentionsLegales)
-class MentionsLegalesAdmin(admin.ModelAdmin):
-    pass
+class FlatPagesAdmin(admin.ModelAdmin):
+    list_display = ['title', 'type', 'created']
+    search_fields = ['content', 'title']
+    list_filter = ['created', 'type']
+
+
 
 @admin.register(FollowStories)
 class FollowStoriesAdmin(admin.ModelAdmin):
@@ -72,3 +70,5 @@ class FollowStoriesAdmin(admin.ModelAdmin):
 @admin.register(FollowUser)
 class FollowUserAdmin(admin.ModelAdmin):
     pass
+
+admin.site.register(FlatPages, FlatPagesAdmin)
