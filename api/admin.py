@@ -59,7 +59,7 @@ class PostAdmin(admin.ModelAdmin):
 class FlatPagesAdmin(admin.ModelAdmin):
     list_display = ['title', 'type', 'created']
     search_fields = ['content', 'title']
-    list_filter = ['created', 'type']
+    list_filter = ['updated', 'type']
 
 
 

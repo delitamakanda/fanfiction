@@ -90,6 +90,24 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 """
+FlatPages
+"""
+
+class FlatPagesView(generics.ListAPIView):
+    serializer_class = FlatPagesSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    name = 'pages'
+
+    """docstring for FlatPagesView."""
+    def get_queryset(self):
+        type = self.kwargs['type']
+        return FlatPages.objects.filter(type=type)
+
+
+"""
 Fanfics
 """
 
