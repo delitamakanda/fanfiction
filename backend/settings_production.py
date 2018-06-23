@@ -1,11 +1,10 @@
 from backend.settings import *
-import dj_database_url
-
-DATABASES['default'] = dj_database_url.config()
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 DEBUG = config('DEBUG', cast=bool)
+
+ALLOWED_HOSTS = ['*', '.elasticbeanstalk.com',]
 
 # email admin
 
@@ -17,7 +16,7 @@ ADMINS = [
 
 ALLOWED_HOSTS = ['*',]
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATIC_ROOT = 'static'
 
 # Media storages
 
@@ -30,3 +29,16 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 
 DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
+
+# Database RDS AWS
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+    }
+}
