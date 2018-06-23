@@ -121,7 +121,7 @@ class FanficListByCategory(generics.ListAPIView):
 
     def get_queryset(self):
         category = self.kwargs['category']
-        return Fanfic.objects.filter(category=category)
+        return Fanfic.objects.filter(category=category, status='publié')
 
 
 class FanficListBySubCategory(generics.ListAPIView):
@@ -134,7 +134,7 @@ class FanficListBySubCategory(generics.ListAPIView):
 
     def get_queryset(self):
         subcategory = self.kwargs['subcategory']
-        return Fanfic.objects.filter(subcategory=subcategory)
+        return Fanfic.objects.filter(subcategory=subcategory, status='publié')
 
 
 class FanficListByAuthor(generics.ListAPIView):
@@ -205,7 +205,7 @@ class FanficList(generics.ListCreateAPIView):
 class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
-    queryset = Fanfic.objects.all()
+    queryset = Fanfic.objects.all().filter(status='publié')
     serializer_class = FanficSerializer
     name='fanfic-detail'
     # authentication_classes = (
@@ -221,7 +221,7 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
 class FanficListDetail(generics.RetrieveAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
-    queryset = Fanfic.objects.all()
+    queryset = Fanfic.objects.all().filter(status='publié')
     serializer_class = FanficListSerializer
     name='fanfic-list-detail'
     # authentication_classes = (
