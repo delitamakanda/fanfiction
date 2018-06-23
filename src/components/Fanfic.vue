@@ -10,9 +10,6 @@
                 <div class="info">
                     Crée le {{ fanfic.publish | date }}
                 </div>
-                <div class="info">
-                    Mis à jour le {{ fanfic.updated | date }}
-                </div>
             </section>
             <section class="content">
                 <div>Synopsis : {{ fanfic.synopsis }}</div>

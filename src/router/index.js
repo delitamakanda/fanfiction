@@ -43,7 +43,7 @@ import 'trumbowyg/dist/ui/trumbowyg.css'
 const router = new Router({
     routes: [
         { path: '/', name: 'List', component: List },
-        { path: '/:id', name: 'Detail', component: Detail, props: true },
+        { path: '/fanfic/:id/detail', name: 'Detail', component: Detail, props: true },
         { path: '/login', name: 'Login', component: Login, meta: { guest: true } },
         { path: '/news', name: 'Posts', component: Posts },
         { path: '/news/:id', name: 'PostDetail', component: PostDetail, props: true },
