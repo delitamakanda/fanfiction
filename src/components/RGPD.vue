@@ -1,5 +1,11 @@
 <template>
     <div>
+        <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+            {{ errorFetch }}
+        </div>
+
+        <Loading v-if="remoteDataBusy" />
+
         <vue-markdown v-for="item in rgpd" :key="item.id">{{ item.content }}</vue-markdown>
     </div>
 </template>
@@ -23,6 +29,7 @@ export default {
     data(){
         return{
           rgpd: [],
+          errorFetch: 'Il y a un problème avec la requète.'
         }
     },
 }

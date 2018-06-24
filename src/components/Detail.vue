@@ -11,13 +11,13 @@
 
     <p>
         {{ fanfic.genres }} /
-        <a href="#" v-if="$state.user && $state.user.id && $state.user.id !== liked.id" @click.once="favorite">
+        <button type="button" v-if="!sad" @click="favorite">
             <svgicon icon="mood-happy-solid" width="22" height="18" color="#000"></svgicon> +1 /
-        </a>
+        </button>
 
-        <a href="#" v-if="$state.user && $state.user.id && $state.user.id == liked.id" @click.once="unfavorite">
+        <button type="button" v-if="!happy" @click="unfavorite">
             <svgicon icon="mood-sad-solid" width="22" height="18" color="#000"></svgicon> -1 /
-        </a>
+        </button>
 
         <span>{{ fanfic.total_likes }} likes</span> /
         {{ total_comments }} commentaire(s)</span> /
@@ -172,6 +172,8 @@ export default {
         email: '',
         body: '',
         total_comments: '',
+        happy: false,
+        sad: false,
         }
     },
     computed: {
@@ -226,6 +228,8 @@ export default {
             })
 
             this.fanfic.total_likes++
+            this.sad = true
+            this.happy = false
         },
 
         async unfavorite () {
@@ -238,6 +242,8 @@ export default {
             })
 
             this.fanfic.total_likes--
+            this.happy = true
+            this.sad = false
         },
 
         onPrint () {
