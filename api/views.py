@@ -115,7 +115,7 @@ class FanficListByCategory(generics.ListAPIView):
     serializer_class = FanficListSerializer
     pagination_class = None
     permission_classes = (
-        custompermission.IsCurrentAuthorOrReadOnly,
+        permissions.AllowAny,
     )
     name='fanfic-list-by-category'
 
@@ -128,7 +128,7 @@ class FanficListBySubCategory(generics.ListAPIView):
     serializer_class = FanficListSerializer
     pagination_class = None
     permission_classes = (
-        custompermission.IsCurrentAuthorOrReadOnly,
+        permissions.AllowAny,
     )
     name='fanfic-list-by-subcategory'
 
@@ -141,7 +141,7 @@ class FanficListByAuthor(generics.ListAPIView):
     serializer_class = FanficListSerializer
     pagination_class = None
     permission_classes = (
-        custompermission.IsCurrentAuthorOrReadOnly,
+        permissions.AllowAny,
     )
     name='fanfic-list-by-author'
 
@@ -157,8 +157,7 @@ class FanficListRemastered(generics.ListAPIView):
     serializer_class = FanficListSerializer
     pagination_class = None
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        custompermission.IsCurrentAuthorOrReadOnly
+        permissions.AllowAny,
     )
     name='fanfic-list-remastered'
     filter_fields = (
@@ -193,7 +192,7 @@ class FanficList(generics.ListCreateAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        return Fanfic.objects.all().filter(status='publié')
+        return Fanfic.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -205,7 +204,7 @@ class FanficList(generics.ListCreateAPIView):
 class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
-    queryset = Fanfic.objects.all().filter(status='publié')
+    queryset = Fanfic.objects.all()
     serializer_class = FanficSerializer
     name='fanfic-detail'
     # authentication_classes = (
