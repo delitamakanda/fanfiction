@@ -204,7 +204,7 @@ class FanficList(generics.ListCreateAPIView):
 class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
-    queryset = Fanfic.objects.all()
+    queryset = Fanfic.objects.all().filter(status='publié')
     serializer_class = FanficSerializer
     name='fanfic-detail'
     # authentication_classes = (
@@ -220,7 +220,7 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
 class FanficListDetail(generics.RetrieveAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
-    queryset = Fanfic.objects.all().filter(status='publié')
+    queryset = Fanfic.objects.all()
     serializer_class = FanficListSerializer
     name='fanfic-list-detail'
     # authentication_classes = (
