@@ -1,7 +1,7 @@
 <template>
     <div>
         <footer>
-            <p>Copyright 2018 {{ title }} - <button type="button" @click="showPDC">Politique de confidentialité</button> - <button type="button" @click="showModal">Mentions légales</button></p>
+            <p>Copyright 2018 {{ title }} - <router-link :to="{ name: 'RGPD'}"><button type="button">Politique de confidentialité</button></router-link> - <button type="button" @click="showModal">Mentions légales</button></p>
         </footer>
 
         <modal
@@ -11,16 +11,6 @@
             <h3 slot="header">Mentions légales</h3>
             <div slot="body">
                 <vue-markdown v-for="item in legal" :key="item.id">{{ item.content }}</vue-markdown>
-            </div>
-        </modal>
-
-        <modal
-          v-show="isModalPDCVisible"
-              @close="closeModal"
-            >
-            <h3 slot="header">Politique de confidentialité</h3>
-            <div slot="body">
-                <vue-markdown v-for="item in rgpd" :key="item.id">{{ item.content }}</vue-markdown>
             </div>
         </modal>
     </div>
@@ -44,9 +34,6 @@ export default {
    },
    mixins: [
        RemoteData({
-           rgpd () {
-               return 'pages/rgpd'
-           },
            legal () {
                return 'pages/legal'
            }
@@ -55,9 +42,7 @@ export default {
     data(){
         return{
           isModalVisible: false,
-          isModalPDCVisible: false,
           legal: [],
-          rgpd: [],
         }
     },
     methods: {
@@ -65,13 +50,8 @@ export default {
          this.isModalVisible = true;
       },
 
-      showPDC () {
-          this.isModalPDCVisible = true;
-      },
-
       closeModal() {
          this.isModalVisible = false;
-         this.isModalPDCVisible = false;
        },
     },
 }

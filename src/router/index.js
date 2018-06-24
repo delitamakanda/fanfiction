@@ -15,6 +15,7 @@ import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
 import ChangePassword from '@/components/ChangePassword'
+import RGPD from '@/components/RGPD'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -60,6 +61,7 @@ const router = new Router({
             ]
         },
         { path: '*', component: List },
+        { path: '/politique-de-confidentialite', name: 'RGPD', component: RGPD },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {
