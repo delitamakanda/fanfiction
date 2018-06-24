@@ -1,7 +1,7 @@
 <template>
     <div>
         <footer>
-            <p>Copyright 2018 {{ title }} - <a href="#" @click="showPDC">Politique de confidentialité</a> - <a  href="#" @click="showModal">Mentions légales</a></p>
+            <p>Copyright 2018 {{ title }} - <button type="button" @click="showPDC">Politique de confidentialité</button> - <button type="button" @click="showModal">Mentions légales</button></p>
         </footer>
 
         <modal
@@ -10,7 +10,7 @@
             >
             <h3 slot="header">Mentions légales</h3>
             <div slot="body">
-                <vue-markdown>## this is the default slot 1</vue-markdown>
+                <vue-markdown v-for="item in legal" :key="item.id">{{ item.content }}</vue-markdown>
             </div>
         </modal>
 
@@ -20,15 +20,16 @@
             >
             <h3 slot="header">Politique de confidentialité</h3>
             <div slot="body">
-                <vue-markdown>## this is the default slot 2</vue-markdown>
+                <vue-markdown v-for="item in rgpd" :key="item.id">{{ item.content }}</vue-markdown>
             </div>
         </modal>
     </div>
 </template>
 
 <script>
-import modal from './Modal.vue';
-import VueMarkdown from 'vue-markdown';
+import modal from './Modal.vue'
+import VueMarkdown from 'vue-markdown'
+import RemoteData from '../mixins/RemoteData'
 
 export default {
     props: {
@@ -41,10 +42,22 @@ export default {
      modal,
      VueMarkdown,
    },
+   mixins: [
+       RemoteData({
+           rgpd () {
+               return 'pages/rgpd'
+           },
+           legal () {
+               return 'pages/legal'
+           }
+       })
+   ],
     data(){
         return{
           isModalVisible: false,
           isModalPDCVisible: false,
+          legal: [],
+          rgpd: [],
         }
     },
     methods: {
