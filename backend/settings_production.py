@@ -43,10 +43,9 @@ DATABASES = {
     }
 }
 
-# EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('SMS_HOST')
-EMAIL_PORT = config('SMS_PORT')
-EMAIL_HOST_USER = config('SMS_USERNAME')
-EMAIL_HOST_PASSWORD = config('SMS_PASSWORD')
-EMAIL_USE_TLS = config('SMS_TLS')
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = config('SMS_HOST')
+# EMAIL_PORT = config('SMS_PORT')
+# EMAIL_HOST_USER = config('SMS_USERNAME')
+# EMAIL_HOST_PASSWORD = config('SMS_PASSWORD')
+# EMAIL_USE_TLS = config('SMS_TLS')
