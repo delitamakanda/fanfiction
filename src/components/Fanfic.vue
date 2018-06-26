@@ -42,7 +42,7 @@ export default {
     mixins: [
         RemoteData({
             fanfic () {
-                return `fanfics/v1/${this.id}`
+                return `fanfics/${this.id}`
             },
             chapter () {
                 return `chapters`
