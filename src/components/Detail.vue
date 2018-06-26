@@ -154,7 +154,7 @@ export default {
       ]),
       RemoteData({
           fanfic () {
-              return `fanfics/${this.$route.params.id}`
+              return `fanfics/v1/${this.$route.params.id}`
           },
       }),
   ],
