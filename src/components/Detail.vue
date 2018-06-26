@@ -6,7 +6,7 @@
 
     <p>{{ fanfic.classement }} <a @click="feedback" class="link" href="#">Signaler</a></p>
 
-    <p>Auteur : {{ fanfic.author }}</p>
+    <p>Auteur : {{ fanfic.author }} <button type="button" @click="followAuthor" class="link" href="#">Suivre l'auteur</button></p>
     <p>[ Publiée le: {{fanfic.publish | date }} ]</p>
 
     <p>
@@ -21,7 +21,6 @@
 
         <span>{{ fanfic.total_likes }} likes</span> /
         {{ total_comments }} commentaire(s)</span> /
-        <a @click="onPrint" class="link" href="#">Vue imprimable</a> /
         <button
            type="button"
            class="btn"
@@ -29,7 +28,7 @@
          >
            Voir les commentaires
          </button> /
-         <a @click="followFanfic" class="link" href="#">Suivre l'histoire</a>
+         <button type="button" @click="followFanfic" class="link" href="#">Suivre l'histoire</button>
     </p>
 
     <p v-html="fanfic.description"></p>
@@ -246,8 +245,8 @@ export default {
             this.sad = false
         },
 
-        onPrint () {
-          console.log('print')
+        followAuthor () {
+          // // TODO:
         },
 
         showModal() {
@@ -274,6 +273,10 @@ export default {
             })
 
             this.name = this.email = this.body = ''
+
+            this.closeModal()
+
+            this.total_comments++
 
         },
     }
