@@ -200,11 +200,14 @@ class FanficList(generics.ListCreateAPIView):
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)
 
+"""
+method put/delete/get for auth user only
+"""
 
 class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
-    queryset = Fanfic.objects.all().filter(status='publié')
+    queryset = Fanfic.objects.all()
     serializer_class = FanficSerializer
     name='fanfic-detail'
     # authentication_classes = (
@@ -216,11 +219,14 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
         custompermission.IsCurrentAuthorOrReadOnly,
     )
 
+"""
+method get for retreive and not update
+"""
 
 class FanficListDetail(generics.RetrieveAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
-    queryset = Fanfic.objects.all()
+    queryset = Fanfic.objects.all().filter(status='publié')
     serializer_class = FanficListSerializer
     name='fanfic-list-detail'
     # authentication_classes = (
