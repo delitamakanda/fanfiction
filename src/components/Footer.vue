@@ -1,11 +1,5 @@
 <template>
     <div>
-        <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
-            {{ errorFetch }}
-        </div>
-
-        <Loading v-if="remoteDataBusy" />
-        
         <footer>
             <p>Copyright 2018 {{ title }} - <button type="button" @click="showRgpdModal">Politique de confidentialité</button> - <button type="button" @click="showModal">Mentions légales</button></p>
         </footer>
@@ -16,6 +10,11 @@
             >
             <h3 slot="header">Mentions légales</h3>
             <div slot="body">
+                <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+                    {{ errorFetch }}
+                </div>
+
+                <Loading v-if="remoteDataBusy" />
                 <vue-markdown v-for="item in legal" :key="item.id">{{ item.content }}</vue-markdown>
             </div>
         </modal>
@@ -26,6 +25,11 @@
             >
             <h3 slot="header">Politique de confidentialité</h3>
             <div slot="body">
+                <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+                    {{ errorFetch }}
+                </div>
+
+                <Loading v-if="remoteDataBusy" />
                 <vue-markdown v-for="item in rgpd" :key="item.id">{{ item.content }}</vue-markdown>
             </div>
         </modal>
