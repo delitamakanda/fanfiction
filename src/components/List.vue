@@ -20,17 +20,18 @@
             <router-link :to="{
               name: 'Detail',
               params: {
+                slug: fanfic.slug,
                 id: fanfic.id
               },
             }"
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4"
+            class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker"
             >
             <h2>{{ fanfic.title }}</h2>
             </router-link>
             <p v-if="fanfic.synopsis" v-html="fanfic.synopsis"></p>
             <a @click="sortByCategory">{{ fanfic.category }}</a>
             <a @click="sortBySubCategory">{{ fanfic.subcategory }}</a>
-            <p>{{ fanfic.author }}</p>
+            <router-link :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
             <p>{{ fanfic.genres }} </p>
             <p>{{ fanfic.classement }}</p>
             <p> {{ fanfic.publish | date }}</p>

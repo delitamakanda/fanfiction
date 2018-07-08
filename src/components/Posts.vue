@@ -9,23 +9,27 @@
     <section>
         <Loading v-if="remoteDataBusy" />
 
-        <div v-for="item in postList">
-                <router-link :to="{
-                    name: 'PostDetail',
-                    params: {
-                      id: item.id
-                    },
-                }">
-                    <h3>{{ item.title }}</h3>
-                </router-link>
-                <p> Par {{ item.user }}</p>
-                <p> Publiée le {{ item.created | date }}</p>
-                <a v-for="tag in item.tags" class="tag">
+        <div class="overflow-hidden" v-for="item in postList">
+            <div class="px-6 py-4">
+                <div class="font-bold text-xl mb-2">
+                    <router-link :to="{
+                        name: 'PostDetail',
+                        params: {
+                          slug: item.slug
+                        },
+                    }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">
+                        <h3>{{ item.title }}</h3>
+                    </router-link>
+                </div>
+                <p class="text-grey-darker text-base"> Par {{ item.user }}</p>
+                <p class="text-grey-darker text-base"> Publiée le {{ item.created | date }}</p>
+            </div>
+            <div class="px-6 py-4">
+                <span v-for="tag in item.tags" class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">
                     {{ tag.word }}
-                </a>
-
+                </span>
+            </div>
         </div>
-
     </section>
 
   </div>

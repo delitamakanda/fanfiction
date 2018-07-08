@@ -6,26 +6,35 @@
 
     <Loading v-if="remoteDataBusy" />
 
-    <h1> {{ post.title }}</h1>
-    <p>Ecrit par {{ post.user }}</p>
-    <p>Publié le {{ post.created | date }}</p>
-    <p v-html='post.content'></p>
-
-    <a v-for="tag of post.tags" class="tag">
-        {{ tag.word }}
-    </a>
+    <div class="overflow-hidden">
+        <img v-if="post.header" :src="post.header" class="w-full" :alt="post.title" />
+        <div class="px-6 py-4">
+            <div class="font-bold text-xl mb-2"> {{ post.title }}</div>
+            <p class="text-grey-darker text-base">Publié le {{ post.created | date }}</p>
+            <vue-markdown v-html='post.content' class="text-grey-darker text-base">{{ post.content }}</vue-markdown>
+        </div>
+        <div class="px-6 py-4">
+            <span v-for="tag of post.tags" class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">
+                {{ tag.word }}
+            </span>
+        </div>
+    </div>
   </div>
 </template>
 
 <script>
 import RemoteData from '../mixins/RemoteData'
+import VueMarkdown from 'vue-markdown'
 
 export default {
   name: 'PostDetail',
+  components: {
+   VueMarkdown,
+ },
   mixins: [
       RemoteData({
           post () {
-              return`posts/${this.$route.params.id}`
+              return`posts/${this.$route.params.slug}`
           }
       })
   ],
@@ -36,8 +45,8 @@ export default {
     }
 },
 props: {
-    id: {
-        type: Number,
+    slug: {
+        type: String,
         required: true,
     },
 },

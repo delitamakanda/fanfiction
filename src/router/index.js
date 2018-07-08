@@ -15,7 +15,7 @@ import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
 import ChangePassword from '@/components/ChangePassword'
-import RGPD from '@/components/RGPD'
+import ShowUserFanfic from '@/components/ShowUserFanfic'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -44,10 +44,10 @@ import 'trumbowyg/dist/ui/trumbowyg.css'
 const router = new Router({
     routes: [
         { path: '/', name: 'List', component: List },
-        { path: '/fanfic/:id/detail', name: 'Detail', component: Detail, props: true },
+        { path: '/fanfic/:slug/detail', name: 'Detail', component: Detail, props: true },
         { path: '/login', name: 'Login', component: Login, meta: { guest: true } },
         { path: '/news', name: 'Posts', component: Posts },
-        { path: '/news/:id', name: 'PostDetail', component: PostDetail, props: true },
+        { path: '/news/:slug', name: 'PostDetail', component: PostDetail, props: true },
         { path: '/fanfics/:username/list', name: 'UserProfile', component: UserProfile },
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true },
             children: [
@@ -61,7 +61,7 @@ const router = new Router({
             ]
         },
         { path: '*', component: List },
-        { path: '/politique-de-confidentialite', name: 'RGPD', component: RGPD },
+        { path: '/fanfics/:username/show', name: 'ShowUserFanfic', component: ShowUserFanfic, props: true },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {

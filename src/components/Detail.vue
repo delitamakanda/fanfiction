@@ -26,7 +26,7 @@
         </div>
 
         <div>
-            Auteur : <a href="/" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker"> {{ fanfic.author }}</a> /
+            Auteur : <router-link v-if="fanfic.author" :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link> /
             <template v-if="$state.user && $state.user.id != null">
                 <button type="button" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full" v-if="!sad" @click="favorite">
                     <svgicon icon="mood-happy-solid" width="22" height="18" color="#fff"></svgicon> +1 /
@@ -101,7 +101,7 @@
 
     <div>
         <Form
-            class="bg-white"
+            class="bg-white w-full max-w-lg"
             title="Nouveau commentaire"
             :operation="operation"
             :valid="valid">
@@ -164,8 +164,12 @@ export default {
     props: {
         id: {
             type: Number,
+            required: false
+        },
+        slug: {
+            type: String,
             required: true
-        }
+        },
     },
     components: {
         modal,
@@ -178,7 +182,7 @@ export default {
         ]),
         RemoteData({
             fanfic () {
-                return `fanfics/v1/${this.$route.params.id}`
+                return `fanfics/v1/${this.$route.params.slug}`
             },
             chapter () {
                 return 'chapters'

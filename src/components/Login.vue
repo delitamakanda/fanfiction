@@ -68,7 +68,6 @@
                     </div>
                 </template>
                 <template v-else-if="mode === 'signup'">
-                    <router-link :to="{ name: 'RGPD'}" class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Lire notre Politique de Confidentialité</router-link>
                     <div class="flex items-center justify-between">
                         <button
                         class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker"
