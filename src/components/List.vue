@@ -22,7 +22,9 @@
               params: {
                 id: fanfic.id
               },
-            }">
+            }"
+            class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4"
+            >
             <h2>{{ fanfic.title }}</h2>
             </router-link>
             <p v-if="fanfic.synopsis" v-html="fanfic.synopsis"></p>
