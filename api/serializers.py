@@ -62,7 +62,7 @@ class TagSerializer(serializers.ModelSerializer):
         )
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     tags = TagSerializer(many=True)
 
@@ -71,14 +71,16 @@ class PostSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'user',
+            'header',
             'title',
             'slug',
             'content',
             'created',
             'tags',
         )
+        lookup_field = 'slug'
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Category
@@ -104,7 +106,9 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
           'description',
         )
 
-
+"""
+Display list of users who liked the fanfic
+"""
 class UserFanficSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -152,6 +156,7 @@ class FanficListSerializer(serializers.ModelSerializer):
           'category',
           'subcategory',
         )
+        lookup_field = 'slug'
 
 
     def get_genres(self, obj):

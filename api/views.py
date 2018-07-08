@@ -87,6 +87,7 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly,
     )
     name='post-detail'
+    lookup_field = 'slug'
 
 
 """
@@ -148,6 +149,19 @@ class FanficListByAuthor(generics.ListAPIView):
     def get_queryset(self):
         user = self.kwargs['username']
         return Fanfic.objects.filter(author__username=user)
+
+
+class FanficShowListByAuthor(generics.ListAPIView):
+    serializer_class = FanficListSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    name='fanfic-show-list-by-author'
+
+    def get_queryset(self):
+        user = self.kwargs['username']
+        return Fanfic.objects.filter(author__username=user, status='publié')
 
 
 class FanficListRemastered(generics.ListAPIView):
@@ -237,6 +251,7 @@ class FanficListDetail(generics.RetrieveAPIView):
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly,
     )
+    lookup_field = 'slug'
 
 
 class ChapterList(generics.ListCreateAPIView):

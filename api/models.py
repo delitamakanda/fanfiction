@@ -190,6 +190,7 @@ class Tag(models.Model):
 class Post(models.Model):
     user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
+    header = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
     content = MarkdownxField()
     created = models.DateTimeField(auto_now_add=True)
