@@ -280,6 +280,7 @@ class CommentListByFanfic(generics.ListAPIView):
         permissions.IsAuthenticatedOrReadOnly,
     )
     name='comment-list-by-fanfic'
+    pagination_class = None
 
     def get_queryset(self):
         fanfic = self.kwargs['fanfic']
