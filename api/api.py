@@ -135,7 +135,7 @@ def favorited_fanfic(request):
             return Response({'status': 'ok'}, status=status.HTTP_200_OK)
         except:
             pass
-    return Response({'status': 'ko'})
+    return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 def unfavorited_fanfic(request):
     fanfic_id = request.data.get('id')
@@ -177,7 +177,7 @@ class UnfavoritedFanfic(views.APIView):
     """
     serializer_class = FanficSerializer
     authentication_classes = ()
-    permission_classes = ()
+    permission_classes = (permissions.IsAuthenticated)
 
     def post(self, request, *args, **kwargs):
         serializer = FanficSerializer()
@@ -195,9 +195,26 @@ class FollowStories(views.APIView):
   """
   serializer_class = FollowStoriesSerializer()
   authentication_class = ()
-  permission_classes = ()
+  permission_classes = (permissions.IsAuthenticated)
 
   def post(self, request, *args, **kwargs):
     # TODO: work in progress reprendre modèle follow user bukkakegram
     follow_stories(request)
     return Response({"status": "ok"}, status=status.HTTP_200_OK)
+
+
+def delete_profile(request):
+    user = request.user
+    user.is_active = False
+    user.save()
+
+class DeleteAccountView(views.APIView):
+    """
+    Disable user account
+    """
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        delete_profile(request)
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
