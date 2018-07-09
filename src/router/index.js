@@ -8,7 +8,6 @@ import Posts from '@/components/Posts'
 import PostDetail from '@/components/PostDetail'
 import Dashboard from '@/components/Dashboard'
 import ListUserFanfic from '@/components/ListUserFanfic'
-import UserProfile from '@/components/UserProfile'
 import UpdateFanfic from '@/components/UpdateFanfic'
 import UpdateChapter from '@/components/UpdateChapter'
 import NewFanfic from '@/components/NewFanfic'
@@ -48,7 +47,6 @@ const router = new Router({
         { path: '/login', name: 'Login', component: Login, meta: { guest: true } },
         { path: '/news', name: 'Posts', component: Posts },
         { path: '/news/:slug', name: 'PostDetail', component: PostDetail, props: true },
-        { path: '/fanfics/:username/list', name: 'UserProfile', component: UserProfile },
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true },
             children: [
                 { path: '/fanfics', name: 'ListUserFanfic', component: ListUserFanfic },

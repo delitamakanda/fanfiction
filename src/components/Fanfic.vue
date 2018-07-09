@@ -22,13 +22,15 @@
                 <div>Description : {{ fanfic.description }}</div>
             </section>
             <section class="content">
-                <div v-for="(chap, i) of chapter" v-if="chap.fanfic === fanfic.id">
-                    &bull; {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }">Editer le chapitre </router-link>
-                </div>
+                <ul>
+                    <li v-for="(chap, i) of chapter" v-if="chap.fanfic === fanfic.id">
+                        {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Editer le chapitre </router-link>
+                    </li>
+                </ul>
             </section>
             <section class="action">
                 <div>
-                    <router-link :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <router-link :to="{name: 'UpdateFanfic', params: { id: fanfic.id }}">Editer l'histoire</router-link> - <button @click.prevent="deleteStory(fanfic.id)">Supprimer l'histoire</button></div>
+                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'UpdateFanfic', params: { id: fanfic.id }}">Editer l'histoire</router-link> - <button @click.prevent="deleteStory(fanfic.id)">Supprimer l'histoire</button></div>
             </section>
         </template>
     </div>

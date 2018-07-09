@@ -9,7 +9,7 @@
 
         <section v-else class="fanfictions-list">
             <div v-for="userFanfic of userFanfics">
-                <router-link :to="{name: 'Fanfic', params: { id: userFanfic.id }}"> <h3>{{ userFanfic.title }}</h3> </router-link>
+                <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'Fanfic', params: { id: userFanfic.id }}"> <h3>{{ userFanfic.title }}</h3> </router-link>
             </div>
         </section>
 
