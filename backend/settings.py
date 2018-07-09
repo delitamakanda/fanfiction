@@ -191,3 +191,12 @@ REST_FRAMEWORK = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+"""
+Authenticate with username or email
+"""
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'api.authentication.EmailAuthBackend',
+)
