@@ -152,7 +152,7 @@ def unfavorited_fanfic(request):
             return Response({'status': 'ok'}, status=status.HTTP_200_OK)
         except:
             pass
-    return Response({'status': 'ko'})
+    return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -177,7 +177,7 @@ class UnfavoritedFanfic(views.APIView):
     """
     serializer_class = FanficSerializer
     authentication_classes = ()
-    permission_classes = (permissions.IsAuthenticated)
+    permission_classes = ()
 
     def post(self, request, *args, **kwargs):
         serializer = FanficSerializer()
