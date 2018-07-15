@@ -43,6 +43,16 @@ DATABASES = {
     }
 }
 
+# Memcache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'TIMEOUT': None,
+        'LOCATION': config('MEMCACHIER_SERVERS')
+    }
+}
+
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = config('SMS_HOST')
 # EMAIL_PORT = config('SMS_PORT')
