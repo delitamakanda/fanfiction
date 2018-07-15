@@ -228,8 +228,8 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
         # TokenAuthentication,
     # )
     permission_classes = (
-        # permissions.IsAuthenticated,
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.IsAuthenticated,
+        # permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly,
     )
 
