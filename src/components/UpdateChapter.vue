@@ -37,12 +37,6 @@
                   Chapitre
                 </label>
                 <trumbowyg v-model="chapter.text"></trumbowyg>
-                <!--<Input
-                    type="textarea"
-                    name="text"
-                    v-model="chapter.text"
-                    placeholder="Ecrire le chapitre"
-                    rows="20" />-->
             </div>
             <Input
                 type="hidden"

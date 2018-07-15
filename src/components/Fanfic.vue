@@ -23,14 +23,15 @@
             </section>
             <section class="content">
                 <ul>
-                    <li v-for="(chap, i) of chapter" v-if="chap.fanfic === fanfic.id">
-                        {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Editer le chapitre </router-link>
+                    <li v-for="(chap, i) in chapter" v-if="chap.fanfic === fanfic.id" :key="i">
+                        {{ chap.id}} - {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Editer le chapitre </router-link> - <button type="button" @click="deleteChapter(chap.id)">Supprimer le chapitre</button>
                     </li>
                 </ul>
             </section>
             <section class="action">
                 <div>
-                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'UpdateFanfic', params: { id: fanfic.id }}">Editer l'histoire</router-link> - <button @click.prevent="deleteStory(fanfic.id)">Supprimer l'histoire</button></div>
+                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'UpdateFanfic', params: { id: fanfic.id }}">Editer l'histoire</router-link> - <button @click="deleteStory(fanfic.id)">Supprimer l'histoire</button>
+                </div>
             </section>
         </template>
     </div>
@@ -53,7 +54,8 @@ export default {
     ],
     data () {
         return {
-            data: null
+            fanfic: [],
+            chapter: [],
         }
     },
     props: {
@@ -63,19 +65,65 @@ export default {
         },
     },
     methods: {
+        get_cookie(name) {
+            var value;
+            if (document.cookie && document.cookie !== '') {
+                document.cookie.split(';').forEach(function (c) {
+                    var m = c.trim().match(/(\w+)=(.*)/);
+
+                    if(m !== undefined && m[1] == name) {
+                        value = decodeURIComponent(m[2]);
+                    }
+                });
+            }
+            return value;
+        },
+
         async deleteStory (id) {
-            let message = confirm('Etes vous certain de supprimer cette histoire ?')
+            let message = confirm('Etes vous certain de supprimer cette histoire ? id# ' + id)
 
             if (message == true) {
-                //console.log(id)
-                const result = await this.$fetch('fanfics/'+ id)
+                console.log(id);
 
-                if (result) {
-                    this.$fetch(`fanfics/${this.id}`, {method: 'DELETE', body: JSON.stringify(result)})
-                    this.$router.push({ name: 'Dashboard' })
-                }
+                $.ajax({
+                   url: '/api/fanfics/' + id,
+                   type: 'DELETE',
+                   data: { id: id },
+                   headers: {
+                       "X-CSRFToken": this.get_cookie("csrftoken"),
+                   },
+                   success: function() {
+                       this.$router.push({ name: 'Dashboard' })
+                   },
+                   error: function(error) {
+                       console.log(error);
+                   }
+                });
             }
 
+        },
+
+        async deleteChapter (chapterId) {
+            let message = confirm('Supprimer le chapitre ? id# ' + chapterId)
+
+            if (message == true) {
+                $.ajax({
+                   url: '/api/chapters/' + chapterId,
+                   type: 'DELETE',
+                   headers: {
+                       "X-CSRFToken": this.get_cookie("csrftoken"),
+                   },
+                   data: { id: chapterId },
+                   success: function() {
+                   },
+                   error: function(error) {
+                       console.log(error);
+                   }
+                });
+
+
+
+            }
         }
 
     }

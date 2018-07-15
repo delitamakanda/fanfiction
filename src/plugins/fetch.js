@@ -24,6 +24,7 @@ export async function $fetch(url, options) {
             'Content-Type': 'application/json',
             "X-CSRFToken": get_cookie("csrftoken"),
             "Accept": "application/json",
+            'Access-Control-Allow-Origin': '*'
         },
         credentials: 'include',
     }, options)
