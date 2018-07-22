@@ -43,14 +43,38 @@ import 'trumbowyg/dist/ui/trumbowyg.css'
 
 const router = new Router({
     routes: [
-        { path: '/', name: 'List', component: List },
+        { path: '/', name: 'List', component: List, meta: {
+            title: 'Toutes les fanfictions',
+            metaTags: [
+                {
+                    name: 'description',
+                    content: 'Fanfictions basées sur des Animés, mangas, films, romans, faits historiques, etc.'
+                },
+                {
+                    property: 'og:description',
+                    content: 'Fanfictions basées sur des Animés, mangas, films, romans, faits historiques, etc.'
+                }
+            ]
+        } },
         { path: '/fanfic/detail/:slug', name: 'Detail', component: Detail, props: true,
             children: [
                 { path: '/chapter/:id', name: 'Chapter', component: Chapter, props: true }
             ]
         },
         { path: '/login', name: 'Login', component: Login, meta: { guest: true } },
-        { path: '/news', name: 'Posts', component: Posts },
+        { path: '/news', name: 'Posts', component: Posts, meta: {
+            title: 'News du site Fanfiction',
+            metaTags: [
+                {
+                    name: 'description',
+                    content: 'Toutes les nouveautés et annonces du site.'
+                },
+                {
+                    property: 'og:description',
+                    content: 'Toutes les nouveautés et annonces du site.'
+                }
+            ]
+        } },
         { path: '/news/:slug', name: 'PostDetail', component: PostDetail, props: true },
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true },
             children: [
@@ -99,18 +123,29 @@ router.beforeEach((to, from, next) => {
         return
     }
 
+    const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
+    const nearestWithMeta = to.matched.slice().reverse().find(r => r.meta && r.meta.metaTags);
+    const previousNearestWithMeta = from.matched.slice().reverse().find(r => r.meta && r.meta.metaTags);
+
+    if(nearestWithTitle) document.title = nearestWithTitle.meta.title;
+
+    Array.from(document.querySelectorAll('[data-vue-router-controlled]')).map(el => el.parentNode.removeChild(el));
+
+    if(!nearestWithMeta) return next();
+
+    nearestWithMeta.meta.metaTags.map(tagDef => {
+        const tag = document.createElement('meta');
+        Object.keys(tagDef).forEach(key => {
+          tag.setAttribute(key, tagDef[key]);
+        });
+
+        tag.setAttribute('data-vue-router-controlled', '');
+
+        return tag;
+      })
+      .forEach(tag => document.head.appendChild(tag));
+
     next()
 })
-
-// const prod = process.env.NODE_ENV === 'production'
-// const shouldSW = 'serviceWorker' in navigator && prod
-//
-// if (shouldSW) {
-//   navigator.serviceWorker.register('/sw.js').then(() => {
-//     console.log('Sw registered')
-//   })
-// }
-
-
 
 export default router
