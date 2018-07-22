@@ -5,6 +5,7 @@
     <title>Fanfiction {% block title %}{% endblock %}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
     <link rel="stylesheet" href="{% static 'styles/base.css' %}">
     </head>
     <body id="page" class="container mx-auto">
@@ -38,5 +39,16 @@
         <footer>
             <p>Copyright 2018 Fanfiction</p>
         </footer>
+        <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker
+          .register("{% static 'sw.js' %}")
+          .then(function() {
+              console.log('Service Worker Registered');
+            }).catch(function(error){
+              console.log(error);
+            });
+        }
+        </script>
     </body>
 </html>
