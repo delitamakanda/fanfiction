@@ -97,4 +97,13 @@
           animation: anti-rotate-animation 0.85s linear 0s infinite;
 }
 
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    margin-top: -170px;
+    margin-left: -110px;
+}
+
  </style>

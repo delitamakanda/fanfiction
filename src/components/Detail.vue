@@ -6,102 +6,94 @@
 
         <Loading v-if="remoteDataBusy" />
 
-        <h1>{{ fanfic.title }}</h1>
 
-        <div class="flex mb-4">
-          <div class="w-3/4 h-12">
-              <template v-if="$state.user && $state.user.id != null">
-              <button type="button" @click="followAuthor" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'auteur</button>
+        <div class="px-6 py-4">
+            <h1>{{ fanfic.title }}</h1>
 
-              <button type="button" @click="followFanfic" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'histoire</button>
-              </template>
-          </div>
-          <div class="w-1/4 h-12 text-right">
-              <button type="button" @click.once="feedback" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Signaler</button>
-          </div>
+            Auteur : <router-link v-if="fanfic.author" :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
         </div>
 
-        <div>
-            {{ fanfic.category}} / {{ fanfic.subcategory }} / {{ fanfic.classement }} / Publiée le: {{fanfic.publish | date }} / {{ fanfic.genres }}
-        </div>
+        <div v-if="step === 1">
 
-        <div>
-            Auteur : <router-link v-if="fanfic.author" :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link> /
-            <template v-if="$state.user && $state.user.id != null">
-                <button type="button" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full" @click="favorite" v-if="fanfic_like == false">
-                    <svgicon icon="mood-happy-solid" width="22" height="18" color="#fff"></svgicon> +1 /
-                </button>
+            <div class="flex flex-wrap">
+              <div class="md:w-3/4 sm:w-1/2 h-12 mb-4">
+                  <template v-if="$state.user && $state.user.id != null">
+                      <button type="button" @click="followAuthor" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'auteur</button>
 
-                <button type="button" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full" @click="unfavorite" v-if="fanfic_like == true">
-                    <svgicon icon="mood-sad-solid" width="22" height="18" color="#fff"></svgicon> -1 /
-                </button>
-            </template>
+                      <button type="button" @click="followFanfic" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'histoire</button>
 
-            {{ fanfic.total_likes }} likes / {{ total_comments }} commentaire(s) (
-            <button
-            type="button"
-            class="btn"
-            @click="showModal"
-            >
-            Voir les commentaires )
-        </button>
-        </div>
+                      <button type="button" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full" @click="favorite" v-if="fanfic_like == false">
+                          <svgicon icon="mood-happy-solid" width="22" height="18" color="#fff"></svgicon> +1 /
+                      </button>
 
-    <div v-if="fanfic.description">
-        <h4>Description</h4>
-        <p v-html="fanfic.description"></p>
-    </div>
+                      <button type="button" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full" @click="unfavorite" v-if="fanfic_like == true">
+                          <svgicon icon="mood-sad-solid" width="22" height="18" color="#fff"></svgicon> -1 /
+                      </button>
+                  </template>
+              </div>
+              <div class="md:w-1/4 sm:w-1/2 mb-4 h-12">
+                  <button type="button" @click.once="feedback" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Signaler</button>
+              </div>
+            </div>
 
-    <div v-if="fanfic.synopsis">
-        <h4>Synopsis</h4>
-        <p>{{ fanfic.synopsis }}</p>
-    </div>
+            <div class="px-6 py-4">
+                <p>Publiée le: {{fanfic.publish | date }}</p>
+                <p>{{ fanfic.category}} / {{ fanfic.subcategory }} / {{ fanfic.classement }} / {{ fanfic.genres }} / {{ fanfic.total_likes }} likes / <span class="lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" @click="showModal"><u>{{ total_comments }} commentaire(s)</u> </span></p>
 
-    <div v-if="fanfic.credits">
-        <h4>Crédits</h4>
-        <p>{{ fanfic.credits }}</p>
-    </div>
 
-    <div class="flex mb-4">
+                <div v-if="fanfic.description">
+                    <h4>Description</h4>
+                    <p v-html="fanfic.description"></p>
+                </div>
 
-        <div class="w-1/4">
-            <affix class="sidebar-menu" relative-element-selector="#chapters-length">
-                <ul v-for="element in chapter" v-if="element.fanfic === fanfic.id">
-                    <li><a v-bind:href="'#' + element.id" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ element.title }}</a></li>
-                </ul>
-            </affix>
-        </div>
+                <div v-if="fanfic.synopsis">
+                    <h4>Synopsis</h4>
+                    <p>{{ fanfic.synopsis }}</p>
+                </div>
 
-        <div class="w-3/4" id="chapters-length">
+                <div v-if="fanfic.credits">
+                    <h4>Crédits</h4>
+                    <p>{{ fanfic.credits }}</p>
+                </div>
+            </div>
 
-            <div v-for="chap in chapter" v-if="chap.fanfic === fanfic.id">
-                <h3 v-html="chap.title" :id="chap.id"></h3>
+        <div class="flex flex-wrap">
 
-                <div v-if="chap.description !== ''" class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chap.description" role="alert">{{ chap.description }}</div>
+            <div class="md:w-1/4">
+                <affix class="sidebar-menu" relative-element-selector="#chapters-length">
+                    <ul v-for="element in chapter" v-if="element.fanfic === fanfic.id">
+                        <li>
+                            <router-link :to="{ name: 'Chapter', params: {id: element.id, slug: fanfic.slug } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ element.title }}</router-link>
+                        </li>
+                    </ul>
+                </affix>
+            </div>
 
-                <div v-html="chap.text"></div>
+            <div class="md:w-3/4 py-4 px-6" id="chapters-length">
+                <router-view />
             </div>
         </div>
-    </div>
 
-    <modal
-    v-show="isModalVisible"
-    @close="closeModal"
-    >
-    <h3 slot="header">Voir les commentaires</h3>
-    <div slot="body">
-        <div v-for="com in comment" v-if="comment">
-            <span>{{ com.name }}</span> | Publié le : <span>{{ com.created | date }}</span>
-            <div>{{ com.body }}</div>
-            <hr/>
+        <modal
+        v-show="isModalVisible"
+        @close="closeModal"
+        >
+        <h3 slot="header">Voir les commentaires</h3>
+        <div slot="body">
+            <a v-if="step === 1" @click="writeComment" class="block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Ecrire un commentaire</a>
+            <div v-for="com in comment" v-if="comment">
+                <span>{{ com.name }}</span> | Publié le : <span>{{ com.created | date }}</span>
+                <div>{{ com.body }}</div>
+                <hr/>
+            </div>
+            <div v-if="!comment.length">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
         </div>
-        <div v-if="!comment.length">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+        </modal>
     </div>
-    </modal>
 
-    <div>
+    <div v-if="step === 2">
         <Form
-            class="bg-white w-full max-w-lg"
+            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
             title="Nouveau commentaire"
             :operation="operation"
             :valid="valid">
@@ -145,8 +137,10 @@
                 :disabled="!valid">
                 Ajouter un commentaire
             </button>
+            <a v-if="step === 2" @click="goStepBack" class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Retour au chapitre</a>
         </template>
     </Form>
+
     </div>
 </div>
 </template>
@@ -207,6 +201,7 @@ export default {
             body: '',
             total_comments: '',
             happy: false,
+            step: 1,
         }
     },
     computed: {
@@ -250,7 +245,6 @@ export default {
                 })
             }
         },
-
         async favorite () {
             const result = await this.$fetch('favorite', {
                 method: 'POST',
@@ -263,7 +257,6 @@ export default {
             this.fanfic.total_likes++
             this.happy = true
         },
-
         async unfavorite () {
             const result = await this.$fetch('unfavorite', {
                 method: 'POST',
@@ -276,23 +269,21 @@ export default {
             this.fanfic.total_likes--
             this.happy = false
         },
-
         followAuthor () {
             console.log("followAuthor");
         },
-
         showModal() {
             this.isModalVisible = true
         },
-
         closeModal() {
             this.isModalVisible = false
         },
-
         followFanfic () {
             console.log('followFanfic')
         },
-
+        goStepBack () {
+            this.step--;
+        },
         async operation () {
             const result = await this.$fetch('comments/new', {
                 method: 'POST',
@@ -300,15 +291,17 @@ export default {
                     name: this.name,
                     email: this.email,
                     body: this.body,
-                    fanfic: this.$route.params.id,
+                    fanfic: this.fanfic.id,
                 }),
             })
-
-            this.name = this.email = this.body = ''
-
-            this.total_comments++
-
+            this.goStepBack();
+            this.name = this.email = this.body = '';
+            this.total_comments++;
+            this.comment.unshift(result);
         },
+        writeComment () {
+            this.step = 2;
+        }
     }
 }
 </script>

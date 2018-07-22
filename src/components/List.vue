@@ -1,7 +1,5 @@
 <template>
   <div>
-    <h1>{{ subtitle }}</h1>
-
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         {{ errorFetch }}
     </div>
@@ -16,26 +14,35 @@
     <section>
         <Loading v-if="remoteDataBusy" />
 
-        <article v-for="fanfic of fanficList">
-            <router-link :to="{
-              name: 'Detail',
-              params: {
-                slug: fanfic.slug,
-                id: fanfic.id
-              },
-            }"
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker"
-            >
-            <h2>{{ fanfic.title }}</h2>
-            </router-link>
-            <p v-if="fanfic.synopsis" v-html="fanfic.synopsis"></p>
-            <a @click="sortByCategory">{{ fanfic.category }}</a>
-            <a @click="sortBySubCategory">{{ fanfic.subcategory }}</a>
-            <router-link :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
-            <p>{{ fanfic.genres }} </p>
-            <p>{{ fanfic.classement }}</p>
-            <p> {{ fanfic.publish | date }}</p>
-            <p>{{ fanfic.total_likes }} likes</p>
+        <article class="rounded overflow-hidden" v-for="fanfic of fanficList">
+            <div class="px-6 py-4">
+                <div>
+                    Publié le : {{ fanfic.publish | date }}
+                </div>
+                <div>
+                    <span>{{ fanfic.category }}</span> /
+                    <span>{{ fanfic.subcategory }}</span>
+                </div>
+                <router-link :to="{
+                  name: 'Detail',
+                  params: {
+                    slug: fanfic.slug,
+                    id: fanfic.id
+                  },
+                }"
+                class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker"
+                >
+                <div class="font-bold text-xl mb-2">{{ fanfic.title }}</div>
+                </router-link>
+                <p v-if="fanfic.synopsis" v-html="fanfic.synopsis" class="text-grey-darker text-base"></p>
+                Auteur: <router-link :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
+                <div>
+                    <p>{{ fanfic.genres }} / {{ fanfic.classement }} / {{ fanfic.total_likes }} likes</p>
+                    <p></p>
+                    <p> </p>
+                    <p></p>
+                </div>
+            </div>
         </article>
     </section>
 
@@ -54,7 +61,6 @@ export default {
   ],
   data () {
     return {
-        subtitle: 'Lire des histoires',
         errorFetch: 'Il y a un problème avec la requète.',
         search_term: '',
         }
@@ -67,13 +73,6 @@ export default {
             } catch (e) {
                 this.errorFetch = e
             }
-      },
-      async sortByCategory () {
-
-      },
-
-      async sortBySubCategory () {
-
       },
     },
 }

@@ -13,6 +13,7 @@ import UpdateChapter from '@/components/UpdateChapter'
 import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
+import Chapter from '@/components/Chapter'
 import ChangePassword from '@/components/ChangePassword'
 import ShowUserFanfic from '@/components/ShowUserFanfic'
 import Loading from '@/components/Loading'
@@ -43,7 +44,11 @@ import 'trumbowyg/dist/ui/trumbowyg.css'
 const router = new Router({
     routes: [
         { path: '/', name: 'List', component: List },
-        { path: '/fanfic/:slug/detail', name: 'Detail', component: Detail, props: true },
+        { path: '/fanfic/detail/:slug', name: 'Detail', component: Detail, props: true,
+            children: [
+                { path: '/chapter/:id', name: 'Chapter', component: Chapter, props: true }
+            ]
+        },
         { path: '/login', name: 'Login', component: Login, meta: { guest: true } },
         { path: '/news', name: 'Posts', component: Posts },
         { path: '/news/:slug', name: 'PostDetail', component: PostDetail, props: true },

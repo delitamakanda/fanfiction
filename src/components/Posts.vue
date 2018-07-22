@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>{{ subtitle }}</h1>
 
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         {{ errorFetch }}
@@ -47,7 +46,6 @@ export default {
   ],
   data () {
     return {
-      subtitle: 'News',
       errorFetch: 'Il y a un problème avec la requète.'
     }
 }

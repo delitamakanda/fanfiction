@@ -1,9 +1,7 @@
 <template>
-    <div>
+    <div class="px-6 py-4">
         <Loading v-if="loading" />
 
-        <div class="flex mb-4">
-          <div class="w-3/4 h-12">
               <p>Vous êtes connecter en tant que {{ user.username }}.</p>
 
               <router-link v-if="$route.name !== 'ListUserFanfic'" tag="button" :to="{name: 'ListUserFanfic'}">
@@ -16,14 +14,10 @@
               <router-link v-if="$route.name !== 'ChangePassword'" tag="button" :to="{ name: 'ChangePassword' }">
                   Changer le mot de passe
               </router-link>
-          </div>
 
-          <div class="w-1/4 h-12">
               <button class="bg-red hover:bg-red-dark text-white font-bold py-2 px-4 rounded block" @click.prevent="disableAccount">
                 Supprimer le compte
               </button>
-          </div>
-        </div>
 
         <router-view />
     </div>

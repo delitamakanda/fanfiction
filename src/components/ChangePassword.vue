@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h2>Changer le mot de passe</h2>
         <Form
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
             :title="title"
