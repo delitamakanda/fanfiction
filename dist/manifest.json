@@ -1,13 +1,6 @@
 {
   "name": "Fanfiction",
   "short_name": "fanfiction",
-  "icons": [
-      {
-          "src": "static/img/icons/fanfiction-icon-512x512.png",
-          "sizes": "512x512",
-          "type": "image/png"
-      }
-  ],
   "start_url": ".",
   "display": "standalone",
   "orientation": "portrait-primary",
