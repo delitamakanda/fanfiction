@@ -7,16 +7,14 @@ from api import api
 
 urlpatterns = [
     path('fanfics', views.FanficList.as_view(), name='fanfic-list'),
-    # path('fanfics/v1', cache_page(60*15)(views.FanficListRemastered.as_view()), name='fanfic-list-remastered'),
-    path('fanfics/v1', views.FanficListRemastered.as_view(), name='fanfic-list-remastered'),
+    path('fanfics/v1', cache_page(60*15)(views.FanficListRemastered.as_view()), name='fanfic-list-remastered'),
     path('fanfics/<int:pk>', views.FanficDetail.as_view(), name='fanfic-detail'),
     path('fanfics/v1/<str:slug>', views.FanficListDetail.as_view(), name='fanfic-list-detail'),
     path('fanfics/author/<str:username>', views.FanficListByAuthor.as_view(), name='fanfic-by-user'),
     path('fanfics/v1/author/<str:username>', cache_page(60*15)(views.FanficShowListByAuthor.as_view()), name='fanfic-show-list-by-author'),
     path('fanfics/<str:category>/category', views.FanficListByCategory.as_view(), name='fanfic-list-by-category'),
     path('fanfics/<str:subcategory>/subcategory', views.FanficListBySubCategory.as_view(), name='fanfic-list-by-subcategory'),
-    # path('posts', cache_page(60*15)(views.PostList.as_view()), name='post-list'),
-    path('posts', views.PostList.as_view(), name='post-list'),
+    path('posts', cache_page(60*15)(views.PostList.as_view()), name='post-list'),
     path('posts/<str:slug>', views.PostDetail.as_view(), name='post-detail'),
     path('chapters', views.ChapterList.as_view(), name='chapter-list'),
     path('chapters/<int:pk>', views.ChapterDetail.as_view(), name='chapter-detail'),
