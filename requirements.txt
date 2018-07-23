@@ -32,5 +32,5 @@ django-storages
 boto3
 django-markdownx==2.0.23
 awsebcli==3.14.1
-python-memcached
-django-pylibmc
+python-binary-memcached
+django-bmemcached
