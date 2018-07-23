@@ -49,9 +49,33 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'TIMEOUT': None,
-        'LOCATION': config('MEMCACHIER_SERVERS')
+        'LOCATION': config('MEMCACHIER_SERVERS'),
+        'OPTIONS': {
+            'binary': True,
+            'username': config('MEMCACHIER_USERNAME'),
+            'password': config('MEMCACHIER_PASSWORD'),
+            'behaviors': {
+                # Enable faster IO
+                'no_block': True,
+                'tcp_nodelay': True,
+                # Keep connection alive
+                'tcp_keepalive': True,
+                # Timeout settings
+                'connect_timeout': 2000, # ms
+                'send_timeout': 750 * 1000, # us
+                'receive_timeout': 750 * 1000, # us
+                '_poll_timeout': 2000, # ms
+                # Better failover
+                'ketama': True,
+                'remove_failed': 1,
+                'retry_timeout': 2,
+                'dead_timeout': 30,
+            }
+        }
     }
 }
+
+# SMTP Email servier
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('SENDGRID_SERVER')
