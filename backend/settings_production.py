@@ -50,10 +50,10 @@ CACHES = {
         'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
         'TIMEOUT': 500,
         'BINARY': True,
-        'LOCATION': config('MEMCACHIER_SERVERS'),
+        'LOCATION': config('MEMCACHE_SERVERS'),
         'OPTIONS': {
-            'username': config('MEMCACHIER_USERNAME'),
-            'password': config('MEMCACHIER_PASSWORD')
+            'username': config('MEMCACHE_USERNAME'),
+            'password': config('MEMCACHE_PASSWORD')
         }
     }
 }
