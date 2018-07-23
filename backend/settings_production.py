@@ -47,9 +47,7 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-        'TIMEOUT': 500,
-        'BINARY': True,
+        'BACKEND': 'django_bmemcached.memcached.BMemcached',
         'LOCATION': config('MEMCACHE_SERVERS'),
         'OPTIONS': {
             'username': config('MEMCACHE_USERNAME'),
