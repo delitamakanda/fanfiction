@@ -51,7 +51,6 @@ CACHES = {
         'TIMEOUT': None,
         'LOCATION': config('MEMCACHIER_SERVERS'),
         'OPTIONS': {
-            'binary': False,
             'username': config('MEMCACHIER_USERNAME'),
             'password': config('MEMCACHIER_PASSWORD'),
             'behaviors': {
