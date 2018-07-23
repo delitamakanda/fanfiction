@@ -47,10 +47,11 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
         'TIMEOUT': None,
         'LOCATION': config('MEMCACHIER_SERVERS'),
         'OPTIONS': {
+            'binary': True,
             'username': config('MEMCACHIER_USERNAME'),
             'password': config('MEMCACHIER_PASSWORD'),
             'behaviors': {
