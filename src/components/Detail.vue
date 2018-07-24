@@ -22,11 +22,11 @@
 
                       <button type="button" @click="followFanfic" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'histoire</button>
 
-                      <button type="button" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full" @click="favorite" v-if="fanfic_like == false">
+                      <button type="button" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full" @click="favorite" v-if="like == false">
                           <svgicon icon="mood-happy-solid" width="22" height="18" color="#fff"></svgicon> +1 /
                       </button>
 
-                      <button type="button" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full" @click="unfavorite" v-if="fanfic_like == true">
+                      <button type="button" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full" @click="unfavorite" v-if="like == true">
                           <svgicon icon="mood-sad-solid" width="22" height="18" color="#fff"></svgicon> -1 /
                       </button>
                   </template>
@@ -189,7 +189,8 @@ export default {
     data () {
         return {
             error: null,
-            fanfic_like: false,
+            like: false,
+            users: [],
             fanfic: [],
             chapter: [],
             comment: [],
@@ -222,16 +223,24 @@ export default {
                 throw new Error('error')
             }
 
-            for (var i = 0; i < this.fanfic.users_like.length; i++) {
-                if (this.fanfic.users_like[i].username == this.$state.user.username) {
+            //this.users.push(this.fanfic.users_like);
+            //this.users.filter(function(value, key) {
+
+            //})
+
+            //for (let child of this.fanfic.users_like) {
+
+                /*if (this.fanfic.users_like[i].username == this.$state.user.username) {
                     this.fanfic_like = true;
                 } else {
                     this.fanfic_like = false;
-                }
-            }
+                }*/
+            //}
         } catch (e) {
             this.error = e
         }
+
+        this.step = 1;
     },
     methods: {
         async feedback () {
@@ -298,6 +307,8 @@ export default {
             this.name = this.email = this.body = '';
             this.total_comments++;
             this.comment.unshift(result);
+
+            this.closeModal();
         },
         writeComment () {
             this.step = 2;
