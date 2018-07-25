@@ -41,6 +41,7 @@ urlpatterns = [
     path('change-password', api.ChangePasswordView.as_view(), name='change-password'),
     path('pages/<str:type>', views.FlatPagesView.as_view(), name='pages'),
     path('follow-stories', api.FollowStories.as_view(), name='follow-stories'),
+    path('follow-user', api.FollowUser.as_view(), name='follow-user'),
     path('disable-account', api.DeleteAccountView.as_view(), name='disable-account'),
     path('', views.ApiRoot.as_view(), name=views.ApiRoot.name),
 ]
