@@ -186,8 +186,25 @@ class UnfavoritedFanfic(views.APIView):
             return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
+def follow_user(request):
+  pass
+
 def follow_stories(request):
   pass
+
+class FollowUser(views.APIView):
+  """
+  User followed
+  """
+  serializer_class = FollowUserSerializer()
+  authentication_class = ()
+  permission_classes = (permissions.IsAuthenticated)
+
+  def post(self, request, *args, **kwargs):
+    # TODO: work in progress reprendre modèle follow user bukkakegram
+    follow_user(request)
+    return Response({"status": "ok"}, status=status.HTTP_200_OK)
+  
 
 class FollowStories(views.APIView):
   """
