@@ -15,7 +15,7 @@
                   Changer le mot de passe
               </router-link>
 
-              <button class="bg-red hover:bg-red-dark text-white font-bold py-2 px-4 rounded block" @click.prevent="disableAccount">
+              <button class="text-red hover:text-red-darker" @click.prevent="disableAccount">
                 Supprimer le compte
               </button>
 

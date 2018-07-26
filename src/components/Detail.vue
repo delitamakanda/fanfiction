@@ -201,7 +201,6 @@ export default {
             email: '',
             body: '',
             total_comments: '',
-            happy: false,
             step: 1,
         }
     },
@@ -215,27 +214,18 @@ export default {
             const res_comment = await this.$fetch(`comments/${this.$route.params.id}/fanfic`)
 
             if (res_comment) {
-                this.comment = res_comment
-
                 this.total_comments = res_comment.length
-
             } else {
                 throw new Error('error')
             }
 
-            //this.users.push(this.fanfic.users_like);
-            //this.users.filter(function(value, key) {
+            let data = this.fanfic.users_like
 
-            //})
-
-            //for (let child of this.fanfic.users_like) {
-
-                /*if (this.fanfic.users_like[i].username == this.$state.user.username) {
-                    this.fanfic_like = true;
-                } else {
-                    this.fanfic_like = false;
-                }*/
-            //}
+            for(var i = 0 ; i < data.length; i++){
+                if(data[i].hasOwnProperty("username") && data[i].username === this.$state.user.username) {
+                    this.like = true;
+                }
+            }
         } catch (e) {
             this.error = e
         }
@@ -264,7 +254,6 @@ export default {
             })
 
             this.fanfic.total_likes++
-            this.happy = true
         },
         async unfavorite () {
             const result = await this.$fetch('unfavorite', {
@@ -276,7 +265,6 @@ export default {
             })
 
             this.fanfic.total_likes--
-            this.happy = false
         },
         followAuthor () {
             console.log("followAuthor");

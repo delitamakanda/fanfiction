@@ -23,14 +23,14 @@
             </section>
             <section class="content">
                 <ul>
-                    <li v-for="(chap, i) in chapter" v-if="chap.fanfic === fanfic.id" :key="i">
-                        {{ chap.id}} - {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Editer le chapitre </router-link> - <button type="button" @click="deleteChapter(chap.id)">Supprimer le chapitre</button>
+                    <li v-for="(chap, i) in chapter" v-if="chap.fanfic === fanfic.id" :key="chap.id">
+                        {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Editer le chapitre </router-link> - <button type="button" class="text-red hover:text-red-darker" @click="deleteChapter(chap.id)">Supprimer le chapitre</button>
                     </li>
                 </ul>
             </section>
             <section class="action">
                 <div>
-                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'UpdateFanfic', params: { id: fanfic.id }}">Editer l'histoire</router-link> - <button @click="deleteStory(fanfic.id)">Supprimer l'histoire</button>
+                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'UpdateFanfic', params: { id: fanfic.id }}">Editer l'histoire</router-link> - <button class="text-red hover:text-red-darker" @click="deleteStory(fanfic.id)">Supprimer l'histoire</button>
                 </div>
             </section>
         </template>
@@ -83,7 +83,6 @@ export default {
             let message = confirm('Etes vous certain de supprimer cette histoire ? id# ' + id)
 
             if (message == true) {
-                console.log(id);
 
                 $.ajax({
                    url: '/api/fanfics/' + id,
@@ -94,7 +93,7 @@ export default {
                    },
                    success: function() {
                        this.$router.push({ name: 'Dashboard' })
-                   },
+                   }.bind(this),
                    error: function(error) {
                        console.log(error);
                    }
@@ -115,7 +114,8 @@ export default {
                    },
                    data: { id: chapterId },
                    success: function() {
-                   },
+                       console.log("ok");
+                   }.bind(this),
                    error: function(error) {
                        console.log(error);
                    }
