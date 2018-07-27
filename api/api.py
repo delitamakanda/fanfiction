@@ -187,10 +187,34 @@ class UnfavoritedFanfic(views.APIView):
 
 
 def follow_user(request):
-  pass
+  to_user_id = request.data.get('id')
+  from_user_id = request.data.get('user')
+  
+  if to_user_id and from_user_id:
+    try:
+      follower = FollowUser.object.get(id=int(from_user_id))
+      follower.from_user = FollowUser.add(to_user_id)
+      follower.to_user = FollowUser.add(from_user_id)
+      follower.save()
+      return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+    except:
+      pass
+   return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 def follow_stories(request):
-  pass
+  fanfic_id = request.data.get('id')
+  user_id = request.data.get('user')
+  
+  if fanfic_id and user_id:
+    try:
+      follow = FollowStories.object.get(id=int(fanfic_id))
+      follow.from_user = FollowStories.add(user_id)
+      follow.to_fanfic = FollowStories.add(fanfic_id)
+      follow.save()
+      return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+    except:
+      pass
+   return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 class FollowUser(views.APIView):
   """
