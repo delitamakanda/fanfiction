@@ -199,7 +199,7 @@ def follow_user(request):
       return Response({'status': 'ok'}, status=status.HTTP_200_OK)
     except:
       pass
-   return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+  return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 def follow_stories(request):
   fanfic_id = request.data.get('id')
@@ -214,7 +214,7 @@ def follow_stories(request):
       return Response({'status': 'ok'}, status=status.HTTP_200_OK)
     except:
       pass
-   return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+  return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 class FollowUser(views.APIView):
   """
