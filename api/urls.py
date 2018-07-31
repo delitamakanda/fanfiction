@@ -2,6 +2,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.decorators.cache import cache_page
+from rest_framework.documentation import include_docs_urls
 from api import views
 from api import api
 
@@ -43,6 +44,7 @@ urlpatterns = [
     path('follow-stories', api.FollowStories.as_view(), name='follow-stories'),
     path('follow-user', api.FollowUser.as_view(), name='follow-user'),
     path('disable-account', api.DeleteAccountView.as_view(), name='disable-account'),
+    path('docs', include_docs_urls(title='Fanfiction API', public=False)),
     path('', views.ApiRoot.as_view(), name=views.ApiRoot.name),
 ]
 
