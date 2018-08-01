@@ -3,6 +3,7 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from django_filters import AllValuesFilter, DateTimeFilter, NumberFilter
@@ -392,7 +393,7 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
 
-
+@api_view(['GET'])
 class ApiRoot(generics.GenericAPIView):
     name = 'api-root'
     def get(self, request, *args, **kwargs):
