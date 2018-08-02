@@ -34,3 +34,4 @@ django-markdownx==2.0.23
 awsebcli==3.14.1
 python-binary-memcached
 django-bmemcached
+coreapi==2.3.3
