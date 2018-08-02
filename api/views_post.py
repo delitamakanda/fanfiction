@@ -1,0 +1,27 @@
+from rest_framework import generics, permissions
+from api.models import Post
+from api.serializers import PostSerializer
+from api import custompermission
+
+
+"""
+Liste des news
+"""
+class PostList(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
+    pagination_class = None
+    name='post-list'
+
+
+class PostDetail(generics.RetrieveAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
+    name='post-detail'
+    lookup_field = 'slug'
