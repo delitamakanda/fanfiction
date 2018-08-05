@@ -11,15 +11,15 @@ from api import api
 
 urlpatterns = [
     path('fanfics', views_fanfic.FanficList.as_view(), name='fanfic-list'),
-    path('fanfics/v1', cache_page(60*15)(views_fanfic.FanficListRemastered.as_view()), name='fanfic-list-remastered'),
+    path('fanfics/v1', views_fanfic.FanficListRemastered.as_view(), name='fanfic-list-remastered'),
     path('fanfics/<int:pk>', views_fanfic.FanficDetail.as_view(), name='fanfic-detail'),
-    path('fanfics/v1/<str:slug>', cache_page(60*15)(views_fanfic.FanficListDetail.as_view()), name='fanfic-list-detail'),
+    path('fanfics/v1/<str:slug>', views_fanfic.FanficListDetail.as_view(), name='fanfic-list-detail'),
     path('fanfics/author/<str:username>', views_fanfic.FanficListByAuthor.as_view(), name='fanfic-by-user'),
-    path('fanfics/v1/author/<str:username>', cache_page(60*15)(views_fanfic.FanficShowListByAuthor.as_view()), name='fanfic-show-list-by-author'),
+    path('fanfics/v1/author/<str:username>', views_fanfic.FanficShowListByAuthor.as_view(), name='fanfic-show-list-by-author'),
     path('fanfics/<str:category>/category', views_fanfic.FanficListByCategory.as_view(), name='fanfic-list-by-category'),
     path('fanfics/<str:subcategory>/subcategory', views_fanfic.FanficListBySubCategory.as_view(), name='fanfic-list-by-subcategory'),
-    path('posts', cache_page(60*15)(views_post.PostList.as_view()), name='post-list'),
-    path('posts/<str:slug>', cache_page(60*15)(views_post.PostDetail.as_view()), name='post-detail'),
+    path('posts', views_post.PostList.as_view(), name='post-list'),
+    path('posts/<str:slug>', views_post.PostDetail.as_view(), name='post-detail'),
     path('chapters', views.ChapterList.as_view(), name='chapter-list'),
     path('chapters/<int:pk>', views.ChapterDetail.as_view(), name='chapter-detail'),
     path('fanfics/genres', views.GenresList.as_view(), name='genre-list'),
@@ -47,7 +47,7 @@ urlpatterns = [
     path('follow-stories', api.FollowStories.as_view(), name='follow-stories'),
     path('follow-user', api.FollowUser.as_view(), name='follow-user'),
     path('disable-account', api.DeleteAccountView.as_view(), name='disable-account'),
-    path('docs', include_docs_urls(title='Fanfiction API', public=False)),
+    path('docs', include_docs_urls(title='Fanfiction API', public=True)),
     path('', views.ApiRoot.as_view(), name=views.ApiRoot.name),
 ]
 
