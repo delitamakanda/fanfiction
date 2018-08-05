@@ -23,8 +23,8 @@
             </section>
             <section class="content">
                 <ul>
-                    <li v-for="(chap, i) in chapter" v-if="chap.fanfic === fanfic.id" :key="chap.id">
-                        {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Editer le chapitre </router-link> - <button type="button" class="text-red hover:text-red-darker" @click="deleteChapter(chap.id)">Supprimer le chapitre</button>
+                    <li v-for="(chap, index) in chapter" v-if="chap.fanfic === fanfic.id" :key="chap.id" :index="index">
+                        {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Editer le chapitre </router-link> - <button type="button" class="text-red hover:text-red-darker" @click="deleteChapter(chap.id, index)">Supprimer le chapitre</button>
                     </li>
                 </ul>
             </section>
@@ -102,7 +102,7 @@ export default {
 
         },
 
-        async deleteChapter (chapterId) {
+        async deleteChapter (chapterId, index) {
             let message = confirm('Supprimer le chapitre ? id# ' + chapterId)
 
             if (message == true) {
@@ -115,6 +115,7 @@ export default {
                    data: { id: chapterId },
                    success: function() {
                        console.log("ok");
+                       this.chapter.splice(index, 1);
                    }.bind(this),
                    error: function(error) {
                        console.log(error);

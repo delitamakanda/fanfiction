@@ -59,19 +59,19 @@
 
         <div class="flex flex-wrap">
 
-            <div class="md:w-1/4">
-                <affix class="sidebar-menu" relative-element-selector="#chapters-length">
+            <aside class="md:w-1/4">
+                <div class="sidebar-menu">
                     <ul v-for="element in chapter" v-if="element.fanfic === fanfic.id">
                         <li>
                             <router-link :to="{ name: 'Chapter', params: {id: element.id, slug: fanfic.slug } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ element.title }}</router-link>
                         </li>
                     </ul>
-                </affix>
-            </div>
+                </div>
+            </aside>
 
-            <div class="md:w-3/4 py-4 px-6" id="chapters-length">
+            <section class="md:w-3/4 py-4 px-6">
                 <router-view />
-            </div>
+            </section>
         </div>
 
         <modal

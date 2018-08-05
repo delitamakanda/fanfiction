@@ -21,7 +21,6 @@ import Form from '@/components/Form'
 import Input from '@/components/Input'
 
 import VueFetch from '../plugins/fetch'
-import VueAffix from 'vue-affix'
 import VeeValidate from 'vee-validate'
 import VueSVGIcon from 'vue-svgicon'
 import VueTrumbowyg from 'vue-trumbowyg';
@@ -34,7 +33,6 @@ Vue.use(Router)
 Vue.use(VueFetch, {
     baseUrl: 'api/'
 })
-Vue.use(VueAffix)
 Vue.use(VeeValidate)
 Vue.use(VueSVGIcon)
 Vue.use(VueTrumbowyg)
@@ -61,7 +59,7 @@ const router = new Router({
                 { path: '/chapter/:id', name: 'Chapter', component: Chapter, props: true }
             ]
         },
-        { path: '/login', name: 'Login', component: Login, meta: { guest: true } },
+        { path: '/login', name: 'Login', component: Login, meta: { guest: true, title: 'Créer un compte ou se connecter à l\'espace membre' } },
         { path: '/news', name: 'Posts', component: Posts, meta: {
             title: 'News du site Fanfiction',
             metaTags: [
@@ -76,19 +74,19 @@ const router = new Router({
             ]
         } },
         { path: '/news/:slug', name: 'PostDetail', component: PostDetail, props: true },
-        { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true },
+        { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true, title: 'Tableau de bord' },
             children: [
-                { path: '/fanfics', name: 'ListUserFanfic', component: ListUserFanfic },
-                { path: '/create', name: 'NewFanfic', component: NewFanfic },
-                { path: '/update/:id/edit', name: 'UpdateFanfic', component: UpdateFanfic, props: true },
-                { path: '/new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true },
-                { path: '/update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: UpdateChapter, props: true },
-                { path: '/fanfic/:id', name: 'Fanfic', component: Fanfic, props: true },
-                { path: '/change-password', name: 'ChangePassword', component: ChangePassword },
+                { path: '/fanfics', name: 'ListUserFanfic', component: ListUserFanfic, title: 'Vos fanfictions' },
+                { path: '/create', name: 'NewFanfic', component: NewFanfic, title: 'Ecrire une fanfiction' },
+                { path: '/update/:id/edit', name: 'UpdateFanfic', component: UpdateFanfic, props: true, title: 'Editer une fanfiction' },
+                { path: '/new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, title: 'Ecrire un chapitre' },
+                { path: '/update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: UpdateChapter, props: true, title: 'Editer un chapitre' },
+                { path: '/fanfic/:id', name: 'Fanfic', component: Fanfic, props: true, title: 'Voir la fanfiction' },
+                { path: '/change-password', name: 'ChangePassword', component: ChangePassword, title: 'Changer le mot de passe' },
             ]
         },
         { path: '*', component: List },
-        { path: '/fanfics/:username/show', name: 'ShowUserFanfic', component: ShowUserFanfic, props: true },
+        { path: '/fanfics/:username/show', name: 'ShowUserFanfic', component: ShowUserFanfic, props: true, title: 'Voir les fanfictions d\'un utilisateur' },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {
