@@ -1,0 +1,3 @@
+La fanfiction #{{ fanfic.id }} {{ fanfic.title}} par {{ fanfic.author }} a été signalée.
+
+Connectez vous à l'interface d'administration
