@@ -96,14 +96,6 @@ class ChangePasswordView(views.APIView):
 
 
 
-def email_feedback(request):
-    id = request.data.get('id')
-    fanfic = Fanfic.objects.get(id=id)
-    msg_html = render_to_string('mail/feedback.html', {'fanfic': fanfic})
-    msg_text = ''
-    return send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com', ['delita.makanda@gmail.com'], html_message=msg_html, fail_silently=False)
-
-
 class EmailFeedback(views.APIView):
     """
     Feedback email
@@ -112,12 +104,19 @@ class EmailFeedback(views.APIView):
     authentication_classes = ()
     permission_classes = ()
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
     def post(self, request):
-        email_feedback(request)
+      id = request.data.get('id')
+      fanfic = Fanfic.objects.get(id=id)
+      msg_html = render_to_string('mail/feedback.html', {'fanfic': fanfic})
+
+      if id and fanfic:
+        try:
+          send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com', ['delita.makanda@gmail.com'], html_message=msg_html, fail_silently=False)
+        except BadHeaderError:
+          return Response({"status": "invalid header"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
+      else:
+        return Response({"status": "nok"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def favorited_fanfic(request):
