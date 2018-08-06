@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.core.mail import send_mail
 from django.core.management.base import BaseCommand 
 from django.contrib.auth.models import User
@@ -14,7 +15,7 @@ def email_tardy_users():
     print "Found " + str(len(tardy_users)) + " tardy users"
 
     for user in tardy_users:
-        template = get_template('login_reminder.txt') 
+        template = get_template('mail/login_reminder.txt') 
         context = Context({
             'username': user.username,
         })
@@ -23,7 +24,7 @@ def email_tardy_users():
         send_mail(
             'Il semble que vous n\'êtes pas connecté à votre compte depuis 2 semaines - De l\'aide ?',
             content,
-            'Fanfiction <no-reply@fanfiction.com>',
+            'Fanfiction <'+ config('ADMIN_EMAIL') +'>',
             [user.email],
         )
 
