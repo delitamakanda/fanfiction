@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.conf import settings
 from django.core.mail import send_mail
 from django.core.management.base import BaseCommand 
 from django.contrib.auth.models import User
@@ -24,7 +23,7 @@ def email_tardy_users():
         send_mail(
             'Il semble que vous n\'êtes pas connecté à votre compte depuis 2 semaines - De l\'aide ?',
             content,
-            'Fanfiction <'+ config('ADMIN_EMAIL') +'>',
+            'Fanfiction <no-reply@fanfiction.com>',
             [user.email],
         )
 
