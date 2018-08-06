@@ -14,11 +14,6 @@
             <section class="content">
                 <div>Synopsis : {{ fanfic.synopsis }}</div>
                 <div>Credits : {{ fanfic.credits }}</div>
-                <div>Status : {{ fanfic.status }}</div>
-                <div>Genres : {{ fanfic.genres }}</div>
-                <div>Classement : {{ fanfic.classement }}</div>
-                <div>Catégorie : {{ fanfic.category }}</div>
-                <div>Sous - Catégorie : {{ fanfic.subcategory }}</div>
                 <div>Description : {{ fanfic.description }}</div>
             </section>
             <section class="content">
@@ -30,7 +25,7 @@
             </section>
             <section class="action">
                 <div>
-                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'UpdateFanfic', params: { id: fanfic.id }}">Editer l'histoire</router-link> - <button class="text-red hover:text-red-darker" @click="deleteStory(fanfic.id)">Supprimer l'histoire</button>
+                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'UpdateFanfic', params: { id: fanfic.id }}">Editer l'histoire</router-link>
                 </div>
             </section>
         </template>
@@ -77,29 +72,6 @@ export default {
                 });
             }
             return value;
-        },
-
-        async deleteStory (id) {
-            let message = confirm('Etes vous certain de supprimer cette histoire ? id# ' + id)
-
-            if (message == true) {
-
-                $.ajax({
-                   url: '/api/fanfics/' + id,
-                   type: 'DELETE',
-                   data: { id: id },
-                   headers: {
-                       "X-CSRFToken": this.get_cookie("csrftoken"),
-                   },
-                   success: function() {
-                       this.$router.push({ name: 'Dashboard' })
-                   }.bind(this),
-                   error: function(error) {
-                       console.log(error);
-                   }
-                });
-            }
-
         },
 
         async deleteChapter (chapterId, index) {
