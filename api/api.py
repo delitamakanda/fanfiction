@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render, HttpResponse
 from django.template.loader import render_to_string
-from django.core.mail import send_mail
+from django.core.mail import BadHeaderError, send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
@@ -259,3 +259,13 @@ class DeleteAccountView(views.APIView):
     def get(self, request, *args, **kwargs):
         delete_profile(request)
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
+      
+      
+class ContactMail(views.APIView):
+  """
+  Send an email to webmaster
+  """
+  def post(self, request, *args, **kwargs):
+    from_email = request.data.get('from_email')
+    subject = request.data.get('subject')
+    message = request.data.get('message')
