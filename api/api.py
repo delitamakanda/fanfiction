@@ -106,7 +106,7 @@ class EmailFeedback(views.APIView):
     authentication_classes = ()
     permission_classes = ()
 
-    def post(self, request):
+    def post(self, request, *args,  **kwargs):
       id = request.data.get('id')
       fanfic = Fanfic.objects.get(id=id)
       
