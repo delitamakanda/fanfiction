@@ -116,7 +116,7 @@ class EmailFeedback(views.APIView):
       msg_text = template.render(context) 
       msg_html = render_to_string('mail/feedback.html', context)
 
-      if id and fanfic:
+      if fanfic:
         try:
           send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com', ['delita.makanda@gmail.com'], html_message=msg_html, fail_silently=False)
         except BadHeaderError:
