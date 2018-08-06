@@ -11,7 +11,7 @@ def email_tardy_users():
     two_weeks_ago = now() - timedelta(days=14)
     tardy_users = User.objects.filter(last_login__lt=two_weeks_ago)
 
-    print "Found " + str(len(tardy_users)) + " tardy users"
+    print("Found " + str(len(tardy_users)) + " tardy users")
 
     for user in tardy_users:
         template = get_template('mail/login_reminder.txt') 
@@ -29,5 +29,5 @@ def email_tardy_users():
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        print "Emailing tardy users"
+        print("Emailing tardy users")
         email_tardy_users()
