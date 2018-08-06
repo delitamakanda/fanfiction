@@ -108,11 +108,11 @@ class EmailFeedback(views.APIView):
     def post(self, request, *args,  **kwargs):
       id = request.data.get('id')
       fanfic = Fanfic.objects.get(id=id)
-      
+
       template = get_template('mail/feedback.txt')
       context = {'fanfic': fanfic}
 
-      msg_text = template.render(context) 
+      msg_text = template.render(context)
       msg_html = render_to_string('mail/feedback.html', context)
 
       if fanfic:
@@ -142,6 +142,24 @@ def favorited_fanfic(request):
             pass
     return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+class FavoritedFanfic(views.APIView):
+    """
+    Favorite fanfic
+    """
+    serializer_class = FanficSerializer
+    authentication_classes = ()
+    permission_classes = ()
+
+    def post(self, request, *args, **kwargs):
+        serializer = FanficSerializer()
+        if serializer.data:
+            favorited_fanfic(request)
+            return Response({"status": "ok"}, status=status.HTTP_200_OK)
+
+
+
 def unfavorited_fanfic(request):
     fanfic_id = request.data.get('id')
     user = request.data.get('user')
@@ -160,22 +178,6 @@ def unfavorited_fanfic(request):
     return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-class FavoritedFanfic(views.APIView):
-    """
-    Favorite fanfic
-    """
-    serializer_class = FanficSerializer
-    authentication_classes = ()
-    permission_classes = ()
-
-    def post(self, request, *args, **kwargs):
-        serializer = FanficSerializer()
-        if serializer.data:
-            favorited_fanfic(request)
-            return Response({"status": "ok"}, status=status.HTTP_200_OK)
-
-
 class UnfavoritedFanfic(views.APIView):
     """
     Unfavorite fanfic
@@ -191,68 +193,84 @@ class UnfavoritedFanfic(views.APIView):
             return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
-def follow_user(request):
-  to_user_id = request.data.get('id')
-  from_user_id = request.data.get('user')
-  
-  if to_user_id and from_user_id:
-    try:
-      follower = FollowUser.object.get(id=int(from_user_id))
-      follower.from_user = FollowUser.add(to_user_id)
-      follower.to_user = FollowUser.add(from_user_id)
-      follower.save()
-      return Response({'status': 'ok'}, status=status.HTTP_200_OK)
-    except:
-      pass
-  return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
-def follow_stories(request):
-  fanfic_id = request.data.get('id')
-  user_id = request.data.get('user')
-  
-  if fanfic_id and user_id:
-    try:
-      follow = FollowStories.object.get(id=int(fanfic_id))
-      follow.from_user = FollowStories.add(user_id)
-      follow.to_fanfic = FollowStories.add(fanfic_id)
-      follow.save()
-      return Response({'status': 'ok'}, status=status.HTTP_200_OK)
-    except:
-      pass
-  return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+class FollowUserView(views.APIView):
+    """
+    Users followed
+    """
+    authentication_class = ()
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = FollowUser.objects.all()
 
-class FollowUser(views.APIView):
-  """
-  User followed
-  """
-  serializer_class = FollowUserSerializer()
-  authentication_class = ()
-  permission_classes = (permissions.IsAuthenticated)
+    def get(self, request, format=None):
+        """
+        return list of all authors followed
+        """
+        try:
+            users = FollowUser.objects.all()
+            serializer = FollowUserSerializer(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
 
-  def post(self, request, *args, **kwargs):
-    # TODO: work in progress reprendre modèle follow user bukkakegram
-    follow_user(request)
-    return Response({"status": "ok"}, status=status.HTTP_200_OK)
-  
+    def post(self, request, *args, **kwargs):
+        serializer = FollowUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
-class FollowStories(views.APIView):
+
+    def delete(self, request):
+        follow_user_id = request.data.get('id')
+
+        if follow_user_id:
+            follow_user = FollowUser.objects.get(id=follow_user_id)
+            follow_user.delete()
+            return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FollowStoriesView(views.APIView):
   """
   Stories followed
   """
-  serializer_class = FollowStoriesSerializer()
   authentication_class = ()
-  permission_classes = (permissions.IsAuthenticated)
+  permission_classes = (permissions.IsAuthenticated,)
+  queryset = FollowStories.objects.all()
 
-  def post(self, request, *args, **kwargs):
-    # TODO: work in progress reprendre modèle follow user bukkakegram
-    follow_stories(request)
-    return Response({"status": "ok"}, status=status.HTTP_200_OK)
+  def get(self, request, format=None):
+      """
+      return list of all stories followed
+      """
+      try:
+          stories = FollowStories.objects.all()
+          serializer = FollowStoriesSerializer(stories, many=True)
+          return Response(serializer.data, status=status.HTTP_200_OK)
+      except:
+          return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
 
 
-def delete_profile(request):
-    user = request.user
-    user.is_active = False
-    user.save()
+  def post(self, request):
+      serializer = FollowStoriesSerializer(data=request.data)
+      if serializer.is_valid():
+          serializer.save()
+          return Response(serializer.data, status=status.HTTP_201_CREATED)
+      return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+
+  def delete(self, request):
+      follow_story_id = request.data.get('id')
+
+      if follow_story_id:
+          follow_story = FollowStories.objects.get(id=follow_story_id)
+          follow_story.delete()
+          return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+      else:
+          return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 class DeleteAccountView(views.APIView):
     """
@@ -262,10 +280,12 @@ class DeleteAccountView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        delete_profile(request)
+        user = request.user
+        user.is_active = False
+        user.save()
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
-      
-      
+
+
 class ContactMail(views.APIView):
   """
   Send an email to webmaster
@@ -274,7 +294,7 @@ class ContactMail(views.APIView):
     from_email = request.data.get('from_email')
     subject = request.data.get('subject')
     message = request.data.get('message')
-    
+
     if subject and message and from_email:
         try:
             send_mail(subject, message, from_email, ['no-reply@fanfiction.com'])

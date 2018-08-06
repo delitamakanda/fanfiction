@@ -18,8 +18,8 @@ class FollowUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowUser
         fields = (
-            'user_from ',
-            'user_to ',
+            'user_from',
+            'user_to',
             'created'
         )
 
@@ -30,7 +30,7 @@ class FollowStoriesSerializer(serializers.ModelSerializer):
         model = FollowStories
         fields = (
             'from_user',
-            'to_user',
+            'to_fanfic',
             'created'
         )
 
