@@ -5,7 +5,6 @@ from django.core.mail import BadHeaderError, send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.template.loader import get_template
-from django.template import Context
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from api.models import Fanfic
@@ -111,7 +110,7 @@ class EmailFeedback(views.APIView):
       fanfic = Fanfic.objects.get(id=id)
       
       template = get_template('mail/feedback.txt')
-      context = Context({'fanfic': fanfic})
+      context = {'fanfic': fanfic}
 
       msg_text = template.render(context) 
       msg_html = render_to_string('mail/feedback.html', context)
