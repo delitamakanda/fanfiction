@@ -269,3 +269,12 @@ class ContactMail(views.APIView):
     from_email = request.data.get('from_email')
     subject = request.data.get('subject')
     message = request.data.get('message')
+    
+    if subject and message and from_email:
+        try:
+            send_mail(subject, message, from_email, ['no-reply@fanfiction.com'])
+        except BadHeaderError:
+            return Response({"status": "invalid headers"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"status": "nok"}, status=status.HTTP_400_BAD_REQUEST)
