@@ -19,13 +19,17 @@
             <section class="content">
                 <ul>
                     <li v-for="(chap, index) in chapter" v-if="chap.fanfic === fanfic.id" :key="chap.id" :index="index">
-                        {{ chap.title }} - Publié le {{ chap.published | date }} - <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Editer le chapitre </router-link> - <button type="button" class="text-red hover:text-red-darker" @click="deleteChapter(chap.id, index)">Supprimer le chapitre</button>
+                        {{ chap.title }} - Publié le {{ chap.published | date }}
+
+                        <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" title="Editer un chapitre" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker"><svgicon icon="edit-pencil" width="22" height="18" color="#000"></svgicon> </router-link>
+
+                        <button type="button" title="Supprimer le chapitre" @click="deleteChapter(chap.id, index)"><svgicon icon="trash" width="22" height="18" color="#000"></svgicon></button>
                     </li>
                 </ul>
             </section>
             <section class="action">
                 <div>
-                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link> - <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'UpdateFanfic', params: { id: fanfic.id }}">Editer l'histoire</router-link>
+                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link>
                 </div>
             </section>
         </template>
@@ -34,6 +38,9 @@
 
 <script>
 import RemoteData from '../mixins/RemoteData'
+import get_cookie from '../cookie'
+import '../compiled-icons/trash'
+import '../compiled-icons/edit-pencil'
 
 export default {
     name: 'Fanfic',
@@ -60,20 +67,6 @@ export default {
         },
     },
     methods: {
-        get_cookie(name) {
-            var value;
-            if (document.cookie && document.cookie !== '') {
-                document.cookie.split(';').forEach(function (c) {
-                    var m = c.trim().match(/(\w+)=(.*)/);
-
-                    if(m !== undefined && m[1] == name) {
-                        value = decodeURIComponent(m[2]);
-                    }
-                });
-            }
-            return value;
-        },
-
         async deleteChapter (chapterId, index) {
             let message = confirm('Supprimer le chapitre ? id# ' + chapterId)
 
@@ -82,7 +75,7 @@ export default {
                    url: '/api/chapters/' + chapterId,
                    type: 'DELETE',
                    headers: {
-                       "X-CSRFToken": this.get_cookie("csrftoken"),
+                       "X-CSRFToken": get_cookie("csrftoken"),
                    },
                    data: { id: chapterId },
                    success: function() {

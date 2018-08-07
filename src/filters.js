@@ -8,6 +8,10 @@ export function uppercase (name) {
   if (typeof name !== "string") {
     throw TypeError("name must be a string")
   }
-  
+
   return name.toUpperCase()
+}
+
+export function removeLastComma(str) {
+   return str.replace(/,(\s+)?$/, '');
 }

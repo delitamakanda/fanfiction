@@ -52,7 +52,7 @@ export default {
         },
         slug: {
             type: String,
-            required: true
+            required: false
         },
         id: {
             type: Number,

@@ -128,7 +128,7 @@
           </div>
             <router-link
                 tag="button"
-                :to="{name: 'Fanfic', params: {id: this.$route.params.id }}"
+                :to="{name: 'ListUserFanfic'}"
                 class="secondary inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">
                 Retour à la l'histoire
             </router-link>
