@@ -84,7 +84,7 @@ class Fanfic(models.Model):
     slug = models.SlugField(max_length=200, db_index=True, unique=True, blank=True, null=True)
     synopsis = models.CharField(max_length=250, blank=True, default='')
     credits = models.CharField(max_length=250, blank=True, default='')
-    description = models.CharField(max_length=250, blank=True, default='')
+    description = models.CharField(max_length=500, blank=True, default='')
     classement = models.CharField(max_length=2, choices=CLASSEMENT_CHOICES, default='g')
     genres = MultiSelectField(choices=GENRES_CHOICES)
     publish = models.DateTimeField(default=timezone.now)
