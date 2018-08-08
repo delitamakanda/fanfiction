@@ -4,11 +4,14 @@ from django.core.mail import send_mail
 from django.core.management.base import BaseCommand 
 from django.contrib.auth.models import User
 from django.utils.timezone import now
-from django.template.loader import get_template 
+from django.template.loader import get_template
 
 def email_tardy_users():
     two_weeks_ago = now() - timedelta(days=14)
-    tardy_users = User.objects.filter(last_login__lt=two_weeks_ago)
+    tardy_users = User.objects.filter(
+      last_login__lt=two_weeks_ago,
+      is_active=True
+    )
 
     print("Found " + str(len(tardy_users)) + " tardy users")
 
