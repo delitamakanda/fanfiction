@@ -26,6 +26,7 @@ from api import custompermission
 """
 Liste des genres
 """
+
 class GenresList(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = GenresSerializer
@@ -39,6 +40,7 @@ class GenresList(generics.ListAPIView):
 """
 Liste de classement
 """
+
 class ClassementList(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = ClassementSerializer
@@ -52,6 +54,7 @@ class ClassementList(generics.ListAPIView):
 """
 Liste des status
 """
+
 class StatusList(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = StatusSerializer
@@ -67,26 +70,34 @@ FlatPages
 """
 
 class FlatPagesView(generics.ListAPIView):
+    """docstring for FlatPagesView."""
+    queryset = FlatPages.objects.all()
     serializer_class = FlatPagesSerializer
     pagination_class = None
     permission_classes = (
         permissions.AllowAny,
     )
+    name = 'all-pages'
+
+
+class FlatPagesByTypeView(generics.RetrieveAPIView):
+    """docstring for FlatPagesByTypeView."""
+    queryset = FlatPages.objects.all()
+    serializer_class = FlatPagesSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    lookup_field = 'type'
     name = 'pages'
 
-    """docstring for FlatPagesView."""
-    def get_queryset(self):
-        type = self.kwargs['type']
-        if type:
-          return FlatPages.objects.filter(type=type)
-        else:
-          return FlatPages.objects.all()
 
+
+"""
+Liste des chapitres
+"""
 
 class ChapterList(generics.ListCreateAPIView):
-    """
-    Liste des chapitres
-    """
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
     name='chapter-list'
@@ -105,11 +116,11 @@ class ChapterDetail(generics.RetrieveUpdateDestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly,
     )
 
+"""
+Liste des catégories
+"""
 
 class CategoryList(generics.ListCreateAPIView):
-    """
-    Liste des catégories
-    """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (
@@ -137,10 +148,11 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     name='category-detail'
 
 
+"""
+Liste des sous-catégories
+"""
+
 class SubCategoryList(generics.ListCreateAPIView):
-    """
-    Liste des sous-catégories
-    """
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
     permission_classes = (
