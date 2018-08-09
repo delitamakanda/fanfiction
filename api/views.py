@@ -77,7 +77,10 @@ class FlatPagesView(generics.ListAPIView):
     """docstring for FlatPagesView."""
     def get_queryset(self):
         type = self.kwargs['type']
-        return FlatPages.objects.filter(type=type)
+        if type:
+          return FlatPages.objects.filter(type=type)
+        else:
+          return FlatPages.objects.all()
 
 
 class ChapterList(generics.ListCreateAPIView):
