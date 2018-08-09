@@ -7,6 +7,7 @@ from api import views
 from api import views_fanfic
 from api import views_post
 from api import views_comment
+from api import views_user
 from api import api
 from api import api_auth
 
@@ -34,8 +35,8 @@ urlpatterns = [
     path('comments/new', views_comment.CommentCreate.as_view(), name='comment-create'),
     path('comments/<int:fanfic>/fanfic', views_comment.CommentListByFanfic.as_view(), name='comment-list-by-fanfic'),
     path('comments/<int:pk>', views_comment.CommentDetail.as_view(), name='comment-detail'),
-    path('users', views.UserList.as_view(), name='user-list'),
-    path('users/<int:pk>', views.UserDetail.as_view(), name='user-detail'),
+    path('users', views_user.UserList.as_view(), name='user-list'),
+    path('users/<int:pk>', views_user.UserDetail.as_view(), name='user-detail'),
     path('user', api_auth.CheckoutUserView.as_view(), name='user'),
     path('signup', api_auth.UserCreate.as_view(), name='signup'),
     path('login', api_auth.LoginView.as_view(), name='login'),
