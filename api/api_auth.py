@@ -7,3 +7,81 @@ from rest_framework.response import Response
 from api.serializers import ChangePasswordSerializer
 from api.serializers import UserSerializer
 
+# Create your api views here.
+class UserCreate(generics.CreateAPIView):
+    """
+    Create an user
+    """
+    serializer_class = UserSerializer
+    authentication_classes = ()
+    permission_classes = ()
+
+
+class LoginView(views.APIView):
+    """
+    Login user
+    """
+    serializer_class = UserSerializer
+    permission_classes = ( permissions.AllowAny,)
+
+    def post(self, request):
+        user = authenticate (
+            username=request.data.get("username"),
+            password=request.data.get("password"))
+
+        if user is None or not user.is_active:
+            return Response({
+                'status': 'Non autorisé',
+                'message': 'Pseudo ou mot de passe incorrect.'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+
+        login(request, user)
+        return Response(UserSerializer(user).data)
+
+
+class LogoutView(views.APIView):
+    """
+    Logout user
+    """
+    permission_classes = ( permissions.AllowAny,)
+
+    def get(self, request):
+        logout(request)
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
+
+
+class CheckoutUserView(views.APIView):
+    """
+    Checkout current user
+    """
+    serializer_class = UserSerializer
+    permission_classes = ( permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        if request.user:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ChangePasswordView(views.APIView):
+  """
+  Change password view
+  """
+  permission_classes = (permissions.IsAuthenticated,)
+
+  def get_object(self, queryset=None):
+      return self.request.user
+
+  def put(self, request, *args, **kwargs):
+      self.object = self.get_object()
+      serializer = ChangePasswordSerializer(data=request.data)
+
+      if serializer.is_valid():
+          old_password = serializer.data.get('old_password')
+          if not self.object.check_password(old_password):
+              return Response({'old_password': ['Mot de passe erroné.']}, status=status.HTTP_400_BAD_REQUEST)
+          self.object.set_password(serializer.data.get('new_password'))
+          self.object.save()
+          return Response(status=status.HTTP_204_NO_CONTENT)
+
+      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
