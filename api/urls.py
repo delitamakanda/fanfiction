@@ -8,6 +8,7 @@ from api import views_fanfic
 from api import views_post
 from api import views_comment
 from api import api
+from api import api_auth
 
 urlpatterns = [
     path('fanfics', views_fanfic.FanficList.as_view(), name='fanfic-list'),
@@ -35,14 +36,14 @@ urlpatterns = [
     path('comments/<int:pk>', views_comment.CommentDetail.as_view(), name='comment-detail'),
     path('users', views.UserList.as_view(), name='user-list'),
     path('users/<int:pk>', views.UserDetail.as_view(), name='user-detail'),
-    path('user', api.CheckoutUserView.as_view(), name='user'),
-    path('signup', api.UserCreate.as_view(), name='signup'),
-    path('login', api.LoginView.as_view(), name='login'),
-    path('logout', api.LogoutView.as_view(), name='logout'),
+    path('user', api_auth.CheckoutUserView.as_view(), name='user'),
+    path('signup', api_auth.UserCreate.as_view(), name='signup'),
+    path('login', api_auth.LoginView.as_view(), name='login'),
+    path('logout', api_auth.LogoutView.as_view(), name='logout'),
     path('feedback', api.EmailFeedback.as_view(), name='feedback'),
     path('favorite', api.FavoritedFanfic.as_view(), name='favorite'),
     path('unfavorite', api.UnfavoritedFanfic.as_view(), name='unfavorite'),
-    path('change-password', api.ChangePasswordView.as_view(), name='change-password'),
+    path('change-password', api_auth.ChangePasswordView.as_view(), name='change-password'),
     path('pages/<str:type>', views.FlatPagesView.as_view(), name='pages'),
     path('follow-stories', api.FollowStoriesView.as_view(), name='follow-stories'),
     path('follow-user', api.FollowUserView.as_view(), name='follow-user'),
