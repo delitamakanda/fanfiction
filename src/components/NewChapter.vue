@@ -33,12 +33,6 @@
                   Chapitre
                 </label>
                 <trumbowyg v-model="text"></trumbowyg>
-                <!--<Input
-                    type="textarea"
-                    name="text"
-                    v-model="text"
-                    placeholder="Ecrire le chapitre"
-                    rows="20" />-->
             </div>
             <template slot="actions">
                 <router-link
@@ -92,7 +86,7 @@ export default {
     },
     computed: {
         valid () {
-            return !!this.title && !!this.description && !!this.text
+            return !!this.title && !!this.text
         }
     },
     methods: {

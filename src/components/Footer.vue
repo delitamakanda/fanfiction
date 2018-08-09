@@ -1,21 +1,28 @@
 <template>
     <div>
+        <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+            {{ errorFetch }}
+        </div>
+
+        <Loading v-if="remoteDataBusy" />
+
         <footer>
-            <p>Copyright 2018 {{ title }} - <button type="button" @click="showRgpdModal">Politique de confidentialité</button> - <button type="button" @click="showModal">Mentions légales</button></p>
+            <ul class="list-horizontal">
+                <li>Copyright 2018 {{ title }}</li>
+                <li v-for="page in pages" :key="page.id">
+                    <button type="button" @click="openModal(page.type)">{{ page.title }}</button>
+                </li>
+            </ul>
         </footer>
 
         <modal
           v-show="isModalVisible"
               @close="closeModal"
             >
-            <h3 slot="header">Mentions légales</h3>
-            <div slot="body">
-                <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
-                    {{ errorFetch }}
-                </div>
 
-                <Loading v-if="remoteDataBusy" />
-                <vue-markdown v-for="item in legal" :key="item.id">{{ item.content }}</vue-markdown>
+            <h3 slot="header">{{ legal.title }}</h3>
+            <div slot="body">
+                <vue-markdown :source='legal.content'>{{legal.content}}</vue-markdown>
             </div>
         </modal>
 
@@ -23,14 +30,9 @@
           v-show="isRgpdModalVisible"
               @close="closeRgpdModal"
             >
-            <h3 slot="header">Politique de confidentialité</h3>
+            <h3 slot="header">{{ rgpd.title }}</h3>
             <div slot="body">
-                <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
-                    {{ errorFetch }}
-                </div>
-
-                <Loading v-if="remoteDataBusy" />
-                <vue-markdown v-for="item in rgpd" :key="item.id">{{ item.content }}</vue-markdown>
+                <vue-markdown :source='rgpd.content'>{{rgpd.content}}</vue-markdown>
             </div>
         </modal>
     </div>
@@ -60,6 +62,9 @@ export default {
            rgpd () {
                return 'pages/rgpd'
            },
+           pages () {
+               return 'pages'
+           }
        })
    ],
     data(){
@@ -68,24 +73,36 @@ export default {
           isRgpdModalVisible: false,
           legal: [],
           rgpd: [],
+          pages: [],
           errorFetch: 'Il y a un problème avec la requète.'
         }
     },
     methods: {
-      showModal () {
-         this.isModalVisible = true;
-      },
+        openModal (pageType) {
+            switch (pageType) {
+                case "legal":
+                    this.legalModal();
+                    break;
+                case "rgpd":
+                    this.rgpdModal();
+                    break;
+                default:
 
-      showRgpdModal () {
-          this.isRgpdModalVisible = true;
-      },
+            }
+        },
+        legalModal () {
+            this.isModalVisible = true;
+        },
 
-      closeModal() {
-         this.isModalVisible = false;
-       },
+        rgpdModal () {
+            this.isRgpdModalVisible = true;
+        },
+        closeModal() {
+            this.isModalVisible = false;
+        },
 
-       closeRgpdModal () {
-           this.isRgpdModalVisible = false;
+        closeRgpdModal () {
+            this.isRgpdModalVisible = false;
        }
     },
 }
@@ -99,4 +116,12 @@ footer {
     padding-bottom: 1rem;
 }
 
+ul.list-horizontal li {
+    display: inline;
+    padding: 0 0.5rem;
+}
+
+ul.list-horizontal {
+    list-style-type: none;
+}
 </style>

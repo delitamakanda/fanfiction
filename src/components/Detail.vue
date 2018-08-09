@@ -22,11 +22,11 @@
 
                       <button type="button" @click="followFanfic" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'histoire</button>
 
-                      <button type="button" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full" @click="favorite" v-if="like == false">
+                      <button type="button" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full" @click="favorite" v-if="!like">
                           <svgicon icon="mood-happy-solid" width="22" height="18" color="#fff"></svgicon> +1 /
                       </button>
 
-                      <button type="button" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full" @click="unfavorite" v-if="like == true">
+                      <button type="button" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full" @click="unfavorite" v-if="like">
                           <svgicon icon="mood-sad-solid" width="22" height="18" color="#fff"></svgicon> -1 /
                       </button>
                   </template>
@@ -38,7 +38,7 @@
 
             <div class="px-6 py-4">
                 <p>Publiée le: {{fanfic.publish | date }}</p>
-                <p>{{ fanfic.category}} / {{ fanfic.subcategory }} / {{ fanfic.classement }} / {{ fanfic.genres }} / {{ fanfic.total_likes }} likes / <span class="lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" @click="showModal"><u>{{ total_comments }} commentaire(s)</u> </span></p>
+                <p>{{ fanfic.category}} / {{ fanfic.subcategory }} / {{ fanfic.classement }} / {{ fanfic.genres }} / {{ fanfic.total_likes }} likes / <span class="lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer" @click="showModal"><u>{{ total_comments }} commentaire(s)</u> </span></p>
 
 
                 <div v-if="fanfic.description">
@@ -80,7 +80,7 @@
         >
         <h3 slot="header">Voir les commentaires</h3>
         <div slot="body">
-            <a v-if="step === 1" @click="writeComment" class="block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Ecrire un commentaire</a>
+            <p v-if="step === 1" @click="writeComment" class="pointer block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Ecrire un commentaire</p>
             <div v-for="com in comment" v-if="comment">
                 <span>{{ com.name }}</span> | Publié le : <span>{{ com.created | date }}</span>
                 <div>{{ com.body }}</div>
@@ -137,7 +137,7 @@
                 :disabled="!valid">
                 Ajouter un commentaire
             </button>
-            <a v-if="step === 2" @click="goStepBack" class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Retour au chapitre</a>
+            <p v-if="step === 2" @click="goStepBack" class="pointer inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Retour au chapitre</p>
         </template>
     </Form>
 
@@ -254,6 +254,7 @@ export default {
             })
 
             this.fanfic.total_likes++
+            this.like = true
         },
         async unfavorite () {
             const result = await this.$fetch('unfavorite', {
@@ -265,6 +266,7 @@ export default {
             })
 
             this.fanfic.total_likes--
+            this.like = false
         },
         followAuthor () {
             console.log("followAuthor");

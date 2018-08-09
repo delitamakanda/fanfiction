@@ -184,7 +184,7 @@ export default {
     },
     computed: {
         valid () {
-            return !!this.title && !!this.description && !!this.category && !!this.subcategory && !!this.status && !!this.genres && !!this.classement
+            return !!this.title && !!this.category && !!this.subcategory && !!this.status && !!this.genres && !!this.classement
         }
     },
 
