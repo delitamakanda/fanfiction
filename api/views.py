@@ -1,6 +1,5 @@
 import json
 from django.shortcuts import render, HttpResponse
-from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
@@ -18,7 +17,6 @@ from api.serializers import CommentSerializer
 from api.serializers import CommentCreateSerializer
 from api.serializers import CategorySerializer
 from api.serializers import SubCategorySerializer
-from api.serializers import UserSerializer
 from api.serializers import GenresSerializer
 from api.serializers import ClassementSerializer
 from api.serializers import StatusSerializer
@@ -156,22 +154,6 @@ class SubCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly,
     )
     name='subcategory-detail'
-
-
-class UserList(generics.ListAPIView):
-    """
-    List all users
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveAPIView):
-    """
-    Retrieve an user
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 
 class ApiRoot(generics.GenericAPIView):
