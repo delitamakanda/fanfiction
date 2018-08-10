@@ -268,8 +268,14 @@ export default {
             this.fanfic.total_likes--
             this.like = false
         },
-        followAuthor () {
-            console.log("followAuthor");
+        async followAuthor () {
+            const result = await this.$fetch('follow-user', {
+                method: 'POST',
+                body: JSON.stringify({
+                    user_from: this.$state.user.id,
+                    user_to: this.fanfic.author
+                })
+            })
         },
         showModal() {
             this.isModalVisible = true
@@ -277,8 +283,14 @@ export default {
         closeModal() {
             this.isModalVisible = false
         },
-        followFanfic () {
-            console.log('followFanfic')
+        async followFanfic () {
+            const result = await this.$fetch('follow-stories', {
+                method: 'POST',
+                body: JSON.stringify({
+                    from_user: this.$state.user.id,
+                    to_fanfic: this.fanfic.id
+                })
+            })
         },
         goStepBack () {
             this.step--;

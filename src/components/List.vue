@@ -56,7 +56,7 @@ export default {
   name: 'List',
   mixins: [
       RemoteData({
-          fanficList: 'fanfics/v1',
+          fanficList: 'fanfics/v1?category=&subcategory=&status=publié',
       }),
   ],
   data () {
@@ -69,7 +69,7 @@ export default {
       async getSearchFanfics () {
 
             try {
-                this.fanficList = await this.$fetch(`fanfics/v1?search=${this.search_term}`)
+                this.fanficList = await this.$fetch(`fanfics/v1?category=&subcategory=&status=publié&search=${this.search_term}`)
             } catch (e) {
                 this.errorFetch = e
             }
