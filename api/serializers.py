@@ -14,6 +14,7 @@ from api.models import FollowUser
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
+    user_to = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = FollowUser

@@ -175,7 +175,6 @@ class ApiRoot(generics.GenericAPIView):
     name = 'api-root'
     def get(self, request, *args, **kwargs):
         return Response({
-            'fanfics' : reverse('fanfic-list', request=request),
             'fanfics-list-remastered': reverse('fanfic-list-remastered', request=request),
             'chapters': reverse('chapter-list', request=request),
             'comments': reverse('comment-list', request=request),

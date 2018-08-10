@@ -54,7 +54,7 @@ class FanficListByAuthor(generics.ListAPIView):
         return Fanfic.objects.filter(author__username=user)
 
 
-class FanficShowListByAuthor(generics.ListAPIView):
+class FanficShowListByAuthorView(generics.ListAPIView):
     serializer_class = FanficListSerializer
     pagination_class = None
     permission_classes = (
@@ -67,7 +67,7 @@ class FanficShowListByAuthor(generics.ListAPIView):
         return Fanfic.objects.filter(author__username=user, status='publié')
 
 
-class FanficListRemastered(generics.ListAPIView):
+class FanficListRemasteredView(generics.ListAPIView):
     """
     Method GET ONLY
     """
@@ -78,8 +78,9 @@ class FanficListRemastered(generics.ListAPIView):
     )
     name='fanfic-list-remastered'
     filter_fields = (
-        'title',
-        'publish',
+        'category',
+        'subcategory',
+        'status',
     )
     search_fields = (
         '^title',
@@ -89,10 +90,10 @@ class FanficListRemastered(generics.ListAPIView):
     )
 
     def get_queryset(self):
-        return Fanfic.objects.all().filter(status='publié')
+        return Fanfic.objects.all()
 
 
-class FanficList(generics.ListCreateAPIView):
+class FanficCreateView(generics.CreateAPIView):
     """
     METHOD POST ONLY
     """
@@ -101,12 +102,7 @@ class FanficList(generics.ListCreateAPIView):
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly
     )
-    name='fanfic-list'
-    ordering_fields = (
-        'title',
-        'publish',
-    )
-    pagination_class = None
+    name='fanfic-create'
 
     def get_queryset(self):
         return Fanfic.objects.all()
@@ -114,14 +110,11 @@ class FanficList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    def perform_update(self, serializer):
-        serializer.save(author=self.request.user)
-
 """
 method put/delete/get for auth user only
 """
 
-class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
+class FanficDetailView(generics.RetrieveUpdateDestroyAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
     queryset = Fanfic.objects.all()
@@ -132,11 +125,14 @@ class FanficDetail(generics.RetrieveUpdateDestroyAPIView):
         custompermission.IsCurrentAuthorOrReadOnly,
     )
 
+    def perform_update(self, serializer):
+        serializer.save(author=self.request.user)
+
 """
 method get for retreive and not update
 """
 
-class FanficListDetail(generics.RetrieveAPIView):
+class FanficListDetailView(generics.RetrieveAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
     queryset = Fanfic.objects.all().filter(status='publié')
