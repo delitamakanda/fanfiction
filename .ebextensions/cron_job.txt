@@ -1,2 +1,4 @@
 # The newline at the end of this file is extremely important.  Cron won't run without it.
 0 8 * * mon source /opt/python/run/venv/bin/activate && cd /opt/python/current/app/ && django-admin.py email_reminder > $HOME/cron-sqs.log 2>&1
+@monthly source /opt/python/run/venv/bin/activate && cd /opt/python/current/app/ && django-admin.py deactivateuser > $HOME/cron-sqs.log 2>&1
+
