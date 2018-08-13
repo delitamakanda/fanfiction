@@ -21,18 +21,18 @@ class Command(BaseCommand):
 		else:
 			number_of_days = 30
 			
-	# self.stdout.write(self.style.SUCCESS('Number of days to delete "%s"' % number_of_days))
-	
-	today = timezone.now()
-	past_date = today - timedelta(days=number_of_days);
-	
-	# this ensures we don't bother running through already marked true
-	# objects as deleted.
-	to_delete = User.objects.filter(is_active=False, date_joined__lte=past_date)
-	
-	for item in to_delete:
-		item.deleted_at = timezone.now()
-		item.is_deleted = True # this assumes you're doing a soft delete on your model
-		item.save()
-		
-	self.stdout.write(self.style.SUCCESS('Removed "%s"' % to_delete))
+    # self.stdout.write(self.style.SUCCESS('Number of days to delete "%s"' % number_of_days))
+
+    today = timezone.now()
+    past_date = today - timedelta(days=number_of_days);
+
+    # this ensures we don't bother running through already marked true
+    # objects as deleted.
+    to_delete = User.objects.filter(is_active=False, date_joined__lte=past_date)
+
+    for item in to_delete:
+      item.deleted_at = timezone.now()
+      item.is_deleted = True # this assumes you're doing a soft delete on your model
+      item.save()
+
+    self.stdout.write(self.style.SUCCESS('Removed "%s"' % to_delete))
