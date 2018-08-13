@@ -28,11 +28,10 @@ class Command(BaseCommand):
 
     # this ensures we don't bother running through already marked true
     # objects as deleted.
-    to_delete = User.objects.filter(is_active=False, date_joined__lte=past_date)
+    to_delete = User.objects.filter(is_active=True, last_login__lte=past_date)
 
     for item in to_delete:
-      item.deleted_at = timezone.now()
-      item.is_deleted = True # this assumes you're doing a soft delete on your model
+      item.is_active = False # this assumes you're doing a soft delete on your model
       item.save()
 
     self.stdout.write(self.style.SUCCESS('Removed "%s"' % to_delete))
