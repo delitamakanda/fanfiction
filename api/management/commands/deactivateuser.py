@@ -5,10 +5,10 @@ from django.contrib.auth.models import User
 
 class Command(BaseCommand):
 	help = 'Clears user older than 365 days from today'
-	
+
 	def add_arguments(self, parser):
-    	parser.add_argument('duration')
-		
+		parser.add_argument('duration')
+
 	def handle(self, *args, **options):
 		if options['duration'] == 'month':
 			number_of_days = 30
@@ -20,18 +20,18 @@ class Command(BaseCommand):
 			number_of_days = 365
 		else:
 			number_of_days = 30
-			
-    # self.stdout.write(self.style.SUCCESS('Number of days to delete "%s"' % number_of_days))
 
-    today = timezone.now()
-    past_date = today - timedelta(days=number_of_days);
+		self.stdout.write(self.style.SUCCESS('Number of days to delete "%s"' % number_of_days))
 
-    # this ensures we don't bother running through already marked true
-    # objects as deleted.
-    to_delete = User.objects.filter(is_active=True, last_login__lte=past_date)
+		today = timezone.now()
+		past_date = today - timedelta(days=number_of_days);
 
-    for item in to_delete:
-      item.is_active = False # this assumes you're doing a soft delete on your model
-      item.save()
+		# this ensures we don't bother running through already marked true
+		# objects as deleted.
+		to_delete = User.objects.filter(is_active=True, last_login__lte=past_date)
 
-    self.stdout.write(self.style.SUCCESS('Removed "%s"' % to_delete))
+		for item in to_delete:
+			item.is_active = False # this assumes you're doing a soft delete on your model
+			item.save()
+
+		self.stdout.write(self.style.SUCCESS('Removed "%s"' % to_delete))
