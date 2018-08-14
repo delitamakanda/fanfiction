@@ -1,0 +1,1 @@
+@monthly source /opt/python/run/venv/bin/activate && cd /opt/python/current/app/ && django-admin.py deactivateuser 1year > $HOME/cron-sqs.log 2>&1
