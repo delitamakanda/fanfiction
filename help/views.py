@@ -1,5 +1,9 @@
 from django.shortcuts import render
 from help.models import Lexique
+from django.views.generic import View
+from django.template import loader
+from django.template.loader import get_template
+from django.http import HttpResponse
 
 # Create your views here.
 def browse_by_title(request, initial=None):
@@ -12,3 +16,22 @@ def browse_by_title(request, initial=None):
         'words': words,
         'initial': initial,
     })
+
+
+class SearchSubmitView(View):
+    template = 'help/search_submit.html'
+    response_message = 'Search'
+
+    def post(self, request):
+        template = loader.get_template(self.template)
+        query = request.POST.get('search', '')
+        words = Lexique.objects.all().order_by('title')
+        items = Lexique.objects.filter(title__icontains=query)
+        context = {'title': self.response_message, 'query': query, 'items': items, 'words': words}
+        rendered_template = template.render(context, request)
+        return HttpResponse(rendered_template, content_type='text/html')
+
+
+class SearchAjaxSubmitView(SearchSubmitView):
+    template = 'help/search_results.html'
+    response_message = ''

@@ -4,4 +4,6 @@ from help import views
 urlpatterns = [
     path('browse/title', views.browse_by_title, name='browse'),
     path('browse/title/<str:initial>', views.browse_by_title, name='browse_by_title'),
+    path('search', views.SearchSubmitView.as_view(), name='search'),
+    path('search-ajax-submit', views.SearchAjaxSubmitView.as_view(), name='search-ajax-submit'),
 ]

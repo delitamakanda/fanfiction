@@ -1,0 +1,17 @@
+{% if query %}
+	<p>Recherche: <strong>{{ query }}</strong></p>
+	<p>{{ title }}</p>
+
+	{% if items %}
+
+    	{% for item in items %}
+        <dl>
+            <dt>{{ item.title }}</dt>
+            <dd>{{ item.definition }}</dd>
+        </dl>
+    	{% endfor %}
+
+	{% endif %}
+{% else %}
+    {% include 'help/lexique.html' %}
+{% endif %}

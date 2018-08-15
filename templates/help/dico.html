@@ -2,22 +2,28 @@
 
 {% block content %}
 <h1>
-    Lexique : mot(s) commençant par {% if initial %} {{ initial|title }} {% endif %}
+    Lexique
 </h1>
 
-{% for letter in 'abcdefghijklmnopqrstuvwxyz' %}
-    <a href="{% url 'browse_by_title' initial=letter %}"
-    {% if initial == letter %}class="active"{% endif%}>
-        {{ letter|upper }}
-    </a>
-{% endfor %}
+<form id="form" role="form" action="{% url 'search' %}" method="post">
+    {% csrf_token %}
+    <input name="search"
+           id="search"
+           type="search"
+           class="w-full"
+           placeholder="Rechercher une définition"
+           ic-post-to="{% url 'search-ajax-submit' %}"
+           ic-trigger-on="keyup changed"
+           ic-trigger-delay="300ms"
+           ic-target="#search-result-container"/>
+</form>
 
- {% for word in words %}
-    <dl>
-        <dt>{{ word.title }}</dt>
-        <dd>{{ word.definition }}</dd>
-    </dl>
- {% empty %}
-    <p>Pas de définitions</p>
- {% endfor %}
+<div id="search-result-container">
+
+    {% include 'help/lexique.html' %}
+
+</div>
+
+
+
 {% endblock %}
