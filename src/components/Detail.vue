@@ -227,7 +227,7 @@ export default {
                 throw new Error('error')
             }
 
-            if (this.$state.user !== null) {
+            if (this.$state.user !== null && this.$state.user.id !== null) {
                 const res_followUser = await this.$fetch('follow-user')
                 const res_followStories = await this.$fetch('follow-stories')
 

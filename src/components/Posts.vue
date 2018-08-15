@@ -8,7 +8,7 @@
     <section>
         <Loading v-if="remoteDataBusy" />
 
-        <div class="overflow-hidden" v-for="item in postList">
+        <div class="overflow-hidden" v-for="item in postList" track-by="item.id">
             <div class="px-6 py-4">
                 <div class="font-bold text-xl mb-2">
                     <router-link :to="{
