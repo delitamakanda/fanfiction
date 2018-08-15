@@ -1,0 +1,23 @@
+{% extends "registration/base.html" %}
+
+{% block content %}
+<h1>
+    Lexique : mot(s) commençant par {% if initial %} {{ initial|title }} {% endif %}
+</h1>
+
+{% for letter in 'abcdefghijklmnopqrstuvwxyz' %}
+    <a href="{% url 'browse_by_title' initial=letter %}"
+    {% if initial == letter %}class="active"{% endif%}>
+        {{ letter|upper }}
+    </a>
+{% endfor %}
+
+ {% for word in words %}
+    <dl>
+        <dt>{{ word.title }}</dt>
+        <dd>{{ word.definition }}</dd>
+    </dl>
+ {% empty %}
+    <p>Pas de définitions</p>
+ {% endfor %}
+{% endblock %}
