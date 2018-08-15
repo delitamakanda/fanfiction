@@ -18,9 +18,13 @@
             <div class="flex flex-wrap">
               <div class="md:w-3/4 sm:w-1/2 h-12 mb-4">
                   <template v-if="$state.user && $state.user.id != null">
-                      <button type="button" @click="followAuthor" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'auteur</button>
+                      <button v-if="!followUser" type="button" @click="followAuthor" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'auteur</button>
 
-                      <button type="button" @click="followFanfic" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'histoire</button>
+                      <button v-if="followUser" type="button" @click="DisFollowAuthor" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full">Ne plus suivre l'auteur</button>
+
+                      <button v-if="!followStory" type="button" @click="followFanfic" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'histoire</button>
+
+                      <button v-if="followStory" type="button" @click="DisFollowFanfic" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full">Ne plus suivre l'histoire</button>
 
                       <button type="button" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full" @click="favorite" v-if="!like">
                           <svgicon icon="mood-happy-solid" width="22" height="18" color="#fff"></svgicon> +1 /
@@ -183,7 +187,7 @@ export default {
             },
             comment () {
                 return `comments/${this.$route.params.id}/fanfic`
-            }
+            },
         }),
     ],
     data () {
@@ -202,6 +206,10 @@ export default {
             body: '',
             total_comments: '',
             step: 1,
+            followStory: false,
+            followUser: false,
+            userFollow: [],
+            fanficFollow: [],
         }
     },
     computed: {
@@ -219,9 +227,32 @@ export default {
                 throw new Error('error')
             }
 
+            if (this.$state.user !== null) {
+                const res_followUser = await this.$fetch('follow-user')
+                const res_followStories = await this.$fetch('follow-stories')
+
+                if (res_followUser && res_followStories) {
+
+                    this.userFollow = res_followUser
+                    this.fanficFollow = res_followStories
+
+                    for (let x = 0; x < this.userFollow.length; x++) {
+                        if ((this.userFollow[x].hasOwnProperty("user_from") && this.userFollow[x].user_from === this.$state.user.id) && this.userFollow[x].hasOwnProperty("user_to") && this.userFollow[x].user_to === this.fanfic.author) {
+                            this.followUser = true;
+                        }
+                    }
+
+                    for (let y = 0; y < this.fanficFollow.length; y++) {
+                        if ((this.fanficFollow[y].hasOwnProperty("from_user") && this.fanficFollow[y].from_user === this.$state.user.id) && (this.fanficFollow[y].hasOwnProperty("to_fanfic") && this.fanficFollow[y].to_fanfic === this.fanfic.id)) {
+                            this.followStory = true;
+                        }
+                    }
+                }
+            }
+
             let data = this.fanfic.users_like
 
-            for(var i = 0 ; i < data.length; i++){
+            for(let i = 0 ; i < data.length; i++){
                 if(data[i].hasOwnProperty("username") && data[i].username === this.$state.user.username) {
                     this.like = true;
                 }
@@ -276,6 +307,11 @@ export default {
                     user_to: this.fanfic.author
                 })
             })
+
+            this.followUser = true
+        },
+        async DisFollowAuthor () {
+            this.followUser = false
         },
         showModal() {
             this.isModalVisible = true
@@ -291,6 +327,10 @@ export default {
                     to_fanfic: this.fanfic.id
                 })
             })
+            this.followStory = true
+        },
+        async DisFollowFanfic () {
+            this.followStory = false
         },
         goStepBack () {
             this.step--;

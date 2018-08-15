@@ -11,7 +11,7 @@
         <div class="px-6 py-4">
             <div class="font-bold text-xl mb-2"> {{ post.title }}</div>
             <p class="text-grey-darker text-base">Publié le {{ post.created | date }}</p>
-            <vue-markdown source='post.content' class="text-grey-darker text-base">{{ post.content }}</vue-markdown>
+            <vue-markdown :source="post.content" class="text-grey-darker text-base">{{ post.content }}</vue-markdown>
         </div>
         <div class="px-6 py-4">
             <span v-for="tag of post.tags" class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">
