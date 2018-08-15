@@ -143,7 +143,7 @@ class FollowStories(models.Model):
 
 class Chapter(models.Model):
     fanfic = models.ForeignKey(Fanfic, related_name="chapters", on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, db_index=True)
     description = models.TextField(blank=True, default='')
     text = models.TextField()
     order = OrderField(blank=True, for_fields=['fanfic'])
@@ -158,7 +158,7 @@ class Chapter(models.Model):
 
 class Comment(models.Model):
     fanfic = models.ForeignKey(Fanfic, related_name='comments', on_delete=models.CASCADE)
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=80, db_index=True)
     email = models.EmailField(blank=True, null=True)
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
@@ -175,7 +175,7 @@ class Comment(models.Model):
 
 
 class Tag(models.Model):
-    word = models.CharField(max_length=35)
+    word = models.CharField(max_length=35, db_index=True)
     slug = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=False)
 
@@ -189,7 +189,7 @@ class Tag(models.Model):
 
 class Post(models.Model):
     user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, db_index=True)
     header = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
     content = MarkdownxField()
@@ -210,7 +210,7 @@ class Post(models.Model):
 
 
 class FlatPages(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, db_index=True)
     content = MarkdownxField()
     type = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
