@@ -18,13 +18,14 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.decorators.cache import never_cache
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('accounts/', include('accounts.urls')),
-    path('help/', include('help.urls')),
-    path('', TemplateView.as_view(template_name='frontend/index.html'), name='index'),
+    path('accounts/', include('api.accounts.urls')),
+    path('help/', include('api.helpcenter.urls')),
+    path('', never_cache(TemplateView.as_view(template_name='frontend/index.html')), name='index'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
