@@ -95,7 +95,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    flex-direction: column;
+    flex-direction: row;
     background: #4dc0b5;
     color: #fff;
     padding: 1.250em;
@@ -122,6 +122,7 @@ export default {
     padding: 0.625em 3.125em;
     color: #4dc0b5;
     border-radius: 20px;
+    cursor: pointer;
 }
 .cookie__button:hover {
     background: #38a89d;
