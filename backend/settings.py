@@ -51,7 +51,6 @@ INSTALLED_APPS += [
     'rest_framework.authtoken',
     'webpack_loader',
     'api.apps.ApiConfig',
-    'help.apps.HelpConfig',
 ]
 
 SITE_ID = 1

@@ -9,6 +9,7 @@ from api.models import Tag
 from api.models import FlatPages
 from api.models import FollowStories
 from api.models import FollowUser
+from api.models import Lexique
 
 # Register your models here.
 @admin.register(Category)
@@ -72,3 +73,4 @@ class FollowUserAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(FlatPages, FlatPagesAdmin)
+admin.site.register(Lexique)
