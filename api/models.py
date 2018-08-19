@@ -12,11 +12,13 @@ from django.template.defaultfilters import slugify
 
 from markdownx.models import MarkdownxField
 
+# Create your models here.
+
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super(PublishedManager, self).get_queryset().filter(status='publié')
 
-# Create your models here.
+
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
@@ -98,6 +100,7 @@ class Fanfic(models.Model):
     published = PublishedManager()
     category = models.ForeignKey(Category, related_name="categories", on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategory, related_name="sub_categories", on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-publish',)
@@ -222,6 +225,23 @@ class FlatPages(models.Model):
 
     def __str__(self):
         return '{}'.format(self.title)
+
+
+class FoireAuxQuestions(models.Model):
+    LIBELLE_CHOICES = (
+        ('fan', 'Fanfictions'),
+        ('sit', 'Le site'),
+    )
+    libelle = models.CharField(max_length=3, choices=LIBELLE_CHOICES, default='fan')
+    question = models.CharField(max_length=64)
+    reponse = MarkdownxField()
+
+    class Meta:
+        verbose_name = 'Foire aux questions'
+        verbose_name_plural = 'Foires aux questions'
+
+    def __str__(self):
+        return '{}: {}'.format(self.libelle, self.question)
 
 
 """

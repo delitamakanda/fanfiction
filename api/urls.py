@@ -36,6 +36,7 @@ urlpatterns = [
     path('comments/<int:fanfic>/fanfic', views_comment.CommentListByFanfic.as_view(), name='comment-list-by-fanfic'),
     path('comments/<int:pk>', views_comment.CommentDetail.as_view(), name='comment-detail'),
     path('users', views_user.UserList.as_view(), name='user-list'),
+    path('faq', views.FoireAuxQuestionsList.as_view(), name='faq-list'),
     path('users/<int:pk>', views_user.UserDetail.as_view(), name='user-detail'),
     path('user', api_auth.CheckoutUserView.as_view(), name='user'),
     path('signup', api_auth.UserCreate.as_view(), name='signup'),

@@ -11,6 +11,7 @@ from api.models import Tag
 from api.models import FlatPages
 from api.models import FollowStories
 from api.models import FollowUser
+from api.models import FoireAuxQuestions
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
@@ -234,7 +235,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
-      
+
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError('Cette e-mail est déja utilisée.')
@@ -330,10 +331,11 @@ class StatusSerializer(serializers.ModelSerializer):
         fields = ('status',)
 
 
+"""
+Serializer for password change endpoint
+"""
 class ChangePasswordSerializer(serializers.Serializer):
-    """
-    Serializer for password change endpoint
-    """
+
 
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
@@ -341,3 +343,18 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate_new_password(self, value):
         validate_password(value)
         return value
+
+
+"""
+Serializer for FAQ
+"""
+class FoireAuxQuestionsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FoireAuxQuestions
+        fields = (
+            'id',
+            'libelle',
+            'question',
+            'reponse',
+        )
