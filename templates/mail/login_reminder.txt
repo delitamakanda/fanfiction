@@ -1,6 +1,9 @@
 Bonjour {{ username }}!
 
+Il semble que vous n'êtes pas connecté à votre compte depuis 2 semaines.
+
 Nous avons remarqué que cela faisait longtemps que vous vous êtes connecté. Y a-t-il quelque chose que nous pouvons faire pour vous aider? 
+
 N'hésitez pas à répondre à cet e-mail et dites-nous comment nous pouvons nous améliorer!
 
 À votre santé,
