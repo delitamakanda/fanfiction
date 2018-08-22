@@ -23,7 +23,7 @@ def email_tardy_users():
 
         content = template.render(context)
         send_mail(
-            'Il semble que vous n\'êtes pas connecté à votre compte depuis 2 semaines - De l\'aide ?',
+            'Vous nous manquez... :(',
             content,
             'Fanfiction <no-reply@fanfiction.com>',
             [user.email],
