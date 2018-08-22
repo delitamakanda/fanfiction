@@ -64,3 +64,10 @@ EMAIL_PORT = config('SENDGRID_PORT')
 EMAIL_HOST_USER = config('SENDGRID_USERNAME')
 EMAIL_HOST_PASSWORD = config('SENDGRID_PASSWORD')
 EMAIL_USE_TLS = True
+
+# Disable browsable API
+REST_FRAMEWORK = {
+  'DEFAULT_RENDERER_CLASSES': (
+    'rest_framework.renderers.JSONRenderer',
+  )
+}
