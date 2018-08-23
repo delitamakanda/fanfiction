@@ -23,6 +23,7 @@ class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
     description = models.TextField(blank=True, default='')
+    logic_value = models.CharField(max_length=60, blank=True, default='')
 
     class Meta:
         ordering = ('name',)

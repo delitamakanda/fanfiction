@@ -91,6 +91,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
           'name',
           'slug',
           'description',
+          'logic_value',
         )
 
 
