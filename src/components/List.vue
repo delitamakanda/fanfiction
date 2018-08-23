@@ -14,7 +14,7 @@
     <section>
         <div class="px-2">
             <ul class="flex flex-wrap list-reset -mx-2">
-                <li class="w-1/3 px-2 relative overflow mb-4" v-for="category in categories.slice(0,6)" :key="category.id"><a href="#">
+                <li class="md:w-1/3 sm:w-1/2 w-full px-2 relative overflow mb-4" v-for="category in categories.slice(0,6)" :key="category.id"><a href="#">
                     <div v-if="category.logic_value !== ''" :style="{backgroundImage: 'url(' + require('./../assets/img/categories/'+ category.logic_value + '.jpg') + ')' }" :alt="category.name" :title="category.name" class="img-thumbnail"></div>
                     <div v-else :style="{backgroundImage: 'url(' + require('./../assets/img/categories/empty.jpg') + ')' }" class="img-thumbnail"></div>
                     <span class="caption">{{ category.name }}</span>
