@@ -12,6 +12,16 @@
   </form>
 
     <section>
+        <div class="px-2">
+            <ul class="flex flex-wrap list-reset -mx-2">
+                <li class="w-1/3 px-2 relative overflow mb-4" v-for="category in categories.slice(0,6)" :key="category.id"><a href="#">
+                    <div v-if="category.logic_value !== ''" :style="{backgroundImage: 'url(' + require('./../assets/img/categories/'+ category.logic_value + '.jpg') + ')' }" :alt="category.name" :title="category.name" class="img-thumbnail"></div>
+                    <div v-else :style="{backgroundImage: 'url(' + require('./../assets/img/categories/empty.jpg') + ')' }" class="img-thumbnail"></div>
+                    <span class="caption">{{ category.name }}</span>
+                </a></li>
+            </ul>
+        </div>
+
         <Loading v-if="remoteDataBusy" />
 
         <article class="rounded overflow-hidden" v-for="fanfic of fanficList">
@@ -57,12 +67,16 @@ export default {
   mixins: [
       RemoteData({
           fanficList: 'fanfics/v1?category=&subcategory=&status=publié',
+          categories () {
+              return 'category'
+          }
       }),
   ],
   data () {
     return {
         errorFetch: 'Il y a un problème avec la requète.',
         search_term: '',
+        categories: []
         }
     },
     methods: {
@@ -80,5 +94,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.img-thumbnail {
+    height: 250px;
+    background-size: cover;
+}
 
+.caption {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    display: table;
+    position: absolute;
+    float: left;
+    text-transform: uppercase;
+    bottom: 15%;
+    padding: 5px;
+}
 </style>
