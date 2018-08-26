@@ -55,7 +55,10 @@
                             title=""
                             :operation="operation"
                             :valid="valid">
-                                <div class="mb-4" v-if="$state.user == null">
+                                <div v-if="$state.user && $state.user.id != null">
+                                    &nbsp;
+                                </div>
+                                <div class="mb-4" v-else>
                                     <label class="block text-grey-darker text-sm font-bold mb-2" for="from_email">
                                         E-mail
                                     </label>
