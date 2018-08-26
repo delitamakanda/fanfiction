@@ -22,7 +22,7 @@
             </a></li>
         </ul>
         <div class="flex">
-            <div @click="readMore(limitationList)" class="flex-1 mb-4 cursor-pointer bg-teal hover:bg-teal-dark text-center text-white font-bold py-2 px-4 rounded-full">Voir {{ limitationList == 5 ? 'plus': 'moins'}}</div>
+            <div @click="readMore(limitationList)" class="flex-1 mb-4 cursor-pointer bg-teal hover:bg-teal-dark text-center text-white font-bold py-2 px-4 rounded-full">Voir {{ limitationList == 2 ? 'plus': 'moins'}}</div>
         </div>
 
         <article class="flex flex-wrap -mx-2">
