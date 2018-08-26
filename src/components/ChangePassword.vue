@@ -58,9 +58,6 @@ export default {
         return !!this.old_password && !!this.new_password
       },
     },
-    async created () {
-
-    },
     methods: {
       async operation () {
         const result = await this.$fetch('change-password', {

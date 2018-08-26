@@ -1,5 +1,7 @@
 <template>
   <div>
+  <Loading v-if="remoteDataBusy" />
+
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         {{ errorFetch }}
     </div>
@@ -14,7 +16,7 @@
     <section>
         <div class="px-2">
             <ul class="flex flex-wrap list-reset -mx-2">
-                <li class="md:w-1/3 sm:w-1/2 w-full px-2 relative overflow mb-4" v-for="category in categories.slice(0,6)" :key="category.id"><a href="#">
+                <li class="md:w-1/3 sm:w-1/2 w-full px-2 relative overflow mb-4" v-for="category in categories" :key="category.id"><a href="#tsr" class="pointer" @click="sortByCategories(category.id)">
                     <div v-if="category.logic_value !== ''" :style="{backgroundImage: 'url(' + require('./../assets/img/categories/'+ category.logic_value + '.jpg') + ')' }" :alt="category.name" :title="category.name" class="img-thumbnail"></div>
                     <div v-else :style="{backgroundImage: 'url(' + require('./../assets/img/categories/empty.jpg') + ')' }" class="img-thumbnail"></div>
                     <span class="caption">{{ category.name }}</span>
@@ -22,38 +24,38 @@
             </ul>
         </div>
 
-        <Loading v-if="remoteDataBusy" />
-
-        <article class="rounded overflow-hidden" v-for="fanfic of fanficList">
-            <div class="px-6 py-4">
-                <div>
-                    Publié le : {{ fanfic.publish | date }}
+        <article id="tsr" class="rounded overflow-hidden" v-for="fanfic of fanficList">
+                <div class="px-6 py-4">
+                    <div>
+                        Publié le : {{ fanfic.publish | date }}
+                    </div>
+                    <div>
+                        <span>{{ fanfic.category }}</span> /
+                        <span>{{ fanfic.subcategory }}</span>
+                    </div>
+                    <router-link :to="{
+                      name: 'Detail',
+                      params: {
+                        slug: fanfic.slug,
+                        id: fanfic.id
+                      },
+                    }"
+                    class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker"
+                    >
+                    <div class="font-bold text-xl mb-2">{{ fanfic.title }}</div>
+                    </router-link>
+                    <p v-if="fanfic.synopsis" v-html="fanfic.synopsis" class="text-grey-darker text-base"></p>
+                    Auteur: <router-link :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
+                    <div>
+                        <p>{{ fanfic.genres }} / {{ fanfic.classement }} / {{ fanfic.total_likes }} likes</p>
+                    </div>
                 </div>
-                <div>
-                    <span>{{ fanfic.category }}</span> /
-                    <span>{{ fanfic.subcategory }}</span>
-                </div>
-                <router-link :to="{
-                  name: 'Detail',
-                  params: {
-                    slug: fanfic.slug,
-                    id: fanfic.id
-                  },
-                }"
-                class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker"
-                >
-                <div class="font-bold text-xl mb-2">{{ fanfic.title }}</div>
-                </router-link>
-                <p v-if="fanfic.synopsis" v-html="fanfic.synopsis" class="text-grey-darker text-base"></p>
-                Auteur: <router-link :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
-                <div>
-                    <p>{{ fanfic.genres }} / {{ fanfic.classement }} / {{ fanfic.total_likes }} likes</p>
-                    <p></p>
-                    <p> </p>
-                    <p></p>
-                </div>
-            </div>
         </article>
+
+        <div v-if="empty">Pas encore de fanfictions dans cette catégorie.
+            <router-link :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Créez la votre !</router-link>
+        </div>
+
     </section>
 
   </div>
@@ -66,7 +68,9 @@ export default {
   name: 'List',
   mixins: [
       RemoteData({
-          fanficList: 'fanfics/v1?category=&subcategory=&status=publié',
+          fanficList () {
+              return 'fanfics/v1?category=&subcategory=&status=publié';
+          },
           categories () {
               return 'category'
           }
@@ -76,7 +80,9 @@ export default {
     return {
         errorFetch: 'Il y a un problème avec la requète.',
         search_term: '',
-        categories: []
+        categories: [],
+        fanficList: [],
+        empty: false
         }
     },
     methods: {
@@ -88,6 +94,18 @@ export default {
                 this.errorFetch = e
             }
       },
+      async sortByCategories (categoryId) {
+          try {
+              this.fanficList = await this.$fetch(`fanfics/v1?category=${categoryId}&subcategory=&status=publié`)
+              if (this.fanficList.length === 0) {
+                  this.empty = true
+              } else {
+                  this.empty = false
+              }
+          } catch (e) {
+              this.errorFetch = e
+          }
+      }
     },
 }
 </script>

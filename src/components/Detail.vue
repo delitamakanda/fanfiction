@@ -62,19 +62,25 @@
             </div>
 
         <div class="flex flex-wrap">
-
-            <aside class="md:w-1/4">
+            <aside class="w-full md:w-1/4">
                 <div class="sidebar-menu">
-                    <ul v-for="element in chapter" v-if="element.fanfic === fanfic.id">
+                    <ul v-for="element in chapterList">
                         <li>
-                            <router-link :to="{ name: 'Chapter', params: {id: element.id, slug: fanfic.slug } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ element.title }}</router-link>
+                            <span @click="selectChapter($event)" :id="element.id" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">{{ element.title }}
+                            </span>
                         </li>
                     </ul>
                 </div>
             </aside>
 
-            <section class="md:w-3/4 py-4 px-6">
-                <router-view />
+            <section class="w-full md:w-3/4 py-4 px-6">
+                <div v-for="(chapter, index) in chapterList" :id="chapter.id" v-if="chapterIsVisible && chapter.id == target">
+                    <h3>{{ chapter.title }}</h3>
+
+                    <div v-if="chapter.description !== ''" class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chapter.description" role="alert">{{ chapter.description }}</div>
+
+                    <div v-html="chapter.text"></div>
+                </div>
             </section>
         </div>
 
@@ -172,6 +178,36 @@ export default {
     components: {
         modal,
     },
+    data () {
+        return {
+            error: null,
+            like: false,
+            users: [],
+            fanfic: [],
+            chapterList: [],
+            comment: [],
+            date: null,
+            errorFetch: 'Il y a un problème avec la requète.',
+            isModalVisible: false,
+            name: '',
+            email: '',
+            body: '',
+            total_comments: '',
+            chapter: [],
+            step: 1,
+            followStory: false,
+            followUser: false,
+            chapterIsVisible: false,
+            target: '',
+            userFollow: [],
+            fanficFollow: []
+        }
+    },
+    computed: {
+        valid () {
+            return !!this.name && !!this.body
+        }
+    },
     mixins: [
         PersistantData('NewComment', [
             'name',
@@ -182,41 +218,14 @@ export default {
             fanfic () {
                 return `fanfics/v1/${this.$route.params.slug}`
             },
-            chapter () {
-                return 'chapters'
+            chapterList () {
+                return `chapters/${this.$route.params.id}/list`
             },
             comment () {
                 return `comments/${this.$route.params.id}/fanfic`
             },
         }),
     ],
-    data () {
-        return {
-            error: null,
-            like: false,
-            users: [],
-            fanfic: [],
-            chapter: [],
-            comment: [],
-            date: null,
-            errorFetch: 'Il y a un problème avec la requète.',
-            isModalVisible: false,
-            name: '',
-            email: '',
-            body: '',
-            total_comments: '',
-            step: 1,
-            followStory: false,
-            followUser: false,
-            userFollow: [],
-            fanficFollow: [],
-        }
-    },
-    computed: {
-        valid () {
-            return !!this.name && !!this.body
-        }
-    },
     async created () {
         try {
             const res_comment = await this.$fetch(`comments/${this.$route.params.id}/fanfic`)
@@ -264,6 +273,11 @@ export default {
         this.step = 1;
     },
     methods: {
+        selectChapter (event) {
+            let targetId = event.currentTarget.id
+            this.target = targetId
+            this.chapterIsVisible = true
+        },
         async feedback () {
             let message = confirm("Seuls les fanfictions ne répondant pas à la charte de bonne conduite du site seront supprimées.");
             if (message === true) {

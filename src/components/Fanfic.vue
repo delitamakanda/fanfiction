@@ -1,6 +1,9 @@
 <template>
     <div class="fanfic">
         <Loading v-if="remoteDataBusy" />
+        <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+            {{ errorFetch }}
+        </div>
         <div class="empty" v-else-if="!fanfic">
             Fanfiction non trouvée.
         </div>
@@ -29,7 +32,7 @@
             </section>
             <section class="action">
                 <div>
-                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { id: fanfic.id }}">Ajouter un chapitre</router-link>
+                    <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { fanfic: fanfic.id }}">Ajouter un chapitre</router-link>
                 </div>
             </section>
         </template>
@@ -50,7 +53,7 @@ export default {
                 return `fanfics/${this.id}`
             },
             chapter () {
-                return `chapters`
+                return `chapters/${this.id}/list`
             }
         }),
     ],
@@ -58,6 +61,7 @@ export default {
         return {
             fanfic: [],
             chapter: [],
+            errorFetch: 'Il y a un problème avec la requète.'
         }
     },
     props: {

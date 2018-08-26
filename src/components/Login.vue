@@ -7,7 +7,7 @@
         :valid="valid">
             <div class="mb-4">
                 <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
-                    Username
+                    Username ou E-mail
                 </label>
                 <Input
                     :text="username"

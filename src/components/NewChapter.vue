@@ -91,7 +91,7 @@ export default {
     },
     methods: {
         async operation () {
-            const result = await this.$fetch('chapters', {
+            const result = await this.$fetch('chapters/create', {
                 method: 'POST',
                 body: JSON.stringify({
                     title: this.title,

@@ -38,19 +38,78 @@
                             <ul class="bg-white p-4 shadow " v-if="survol" @click="survol = false">
                                 <li><a class="text-teal hover:text-teal-darker" href="/help/browse/title">Lexique</a></li>
                                 <li><a class="text-teal hover:text-teal-darker" href="#">Foire aux questions (A venir)</a></li>
-                                <li><a class="text-teal hover:text-teal-darker" href="#">Contacter le webmestre (A venir)</a></li>
+                                <li><a href="#" class="text-teal hover:text-teal-darker" @click="openModalContact">Contacter le webmestre</a></li>
                             </ul>
                         </transition>
                     </li>
                 </ul>
+                <modal
+                  v-show="isModalContactVisible"
+                      @close="closeModalContact"
+                    >
+
+                    <h3 slot="header">Formulaire de contact</h3>
+                    <div slot="body">
+                        <Form
+                            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                            title=""
+                            :operation="operation"
+                            :valid="valid">
+                                <div class="mb-4" v-if="!$state.user">
+                                    <label class="block text-grey-darker text-sm font-bold mb-2" for="from_email">
+                                        E-mail
+                                    </label>
+                                    <Input
+                                        name="from_email"
+                                        type="email"
+                                        v-model="from_email"
+                                        placeholder="E-mail"
+                                        required />
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block text-grey-darker text-sm font-bold mb-2" for="subject">
+                                        Sujet du message
+                                    </label>
+                                    <Input
+                                        name="subject"
+                                        type="text"
+                                        v-model="subject"
+                                        placeholder="Sujet du message" />
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="message">
+                                      Message
+                                    </label>
+                                    <Input
+                                        type="textarea"
+                                        name="message"
+                                        v-model="message"
+                                        placeholder="Message"
+                                        maxlength="1000"
+                                        rows="4" />
+                                </div>
+                                <template slot="actions">
+                                    <div class="flex items-center justify-between">
+                                        <button
+                                        class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
+                                        type="submit"
+                                        :disabled="!valid">
+                                            Envoyer le message
+                                        </button>
+                                    </div>
+                                </template>
+
+                        </Form>
+                    </div>
+                </modal>
             </div>
         </div>
     </nav>
-
 </template>
 
 <script>
 import '../compiled-icons/question'
+import modal from './Modal.vue'
 
 export default {
     props: {
@@ -59,11 +118,23 @@ export default {
         required: true
       }
     },
+    components: {
+     modal
+   },
     data(){
         return{
+            isModalContactVisible: false,
             open: false,
             survol: false,
+            from_email: '',
+            subject: '',
+            message: ''
         }
+    },
+    computed: {
+      valid () {
+        return !!this.subject && !!this.message
+      },
     },
     methods: {
       toggle (){
@@ -77,6 +148,24 @@ export default {
                     this.$router.push({ name: 'Login' })
                 }
             }
+        },
+        openModalContact () {
+            this.isModalContactVisible = true;
+        },
+        closeModalContact() {
+            this.isModalContactVisible = false;
+        },
+        async operation () {
+          const result = await this.$fetch('contact-mail', {
+                  method: 'POST',
+                  body: JSON.stringify({
+                      from_email: (this.$state.user && this.$state.user.id !== null ? this.$state.user.email : this.from_email),
+                      subject: this.subject,
+                      message: this.message
+                  }),
+              })
+              this.from_email = this.subject = this.message = ''
+              this.isModalContactVisible = false
         },
     },
 }

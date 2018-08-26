@@ -1,25 +1,31 @@
 <template>
-    <div class="px-6 py-4">
+    <div class="flex flex-wrap">
         <Loading v-if="loading" />
+        <div class="w-full sm:w-1/2 md:w-1/4 mb-4">
 
               <p>Vous êtes connecter en tant que {{ user.username }}.</p>
+              <ul class="list-reset">
+                 <li> <router-link v-if="$route.name !== 'ListUserFanfic'" tag="button" :to="{name: 'ListUserFanfic'}">
+                      Voir mes fanfictions
+                  </router-link></li>
+                  <li><router-link v-if="$route.name !== 'NewFanfic'" tag="button" :to="{name: 'NewFanfic'}">
+                      Ecrire une fanfiction
+                  </router-link></li>
 
-              <router-link v-if="$route.name !== 'ListUserFanfic'" tag="button" :to="{name: 'ListUserFanfic'}">
-                  Voir mes fanfictions
-              </router-link>
-              <router-link v-if="$route.name !== 'NewFanfic'" tag="button" :to="{name: 'NewFanfic'}">
-                  Ecrire une fanfiction
-              </router-link>
+                  <li><router-link v-if="$route.name !== 'ChangePassword'" tag="button" :to="{ name: 'ChangePassword' }">
+                      Changer le mot de passe
+                  </router-link></li>
 
-              <router-link v-if="$route.name !== 'ChangePassword'" tag="button" :to="{ name: 'ChangePassword' }">
-                  Changer le mot de passe
-              </router-link>
+                  <li><button class="text-red hover:text-red-darker" @click.prevent="disableAccount">
+                    Supprimer le compte
+                </button></li>
+              </ul>
+          </div>
+          <div class="w-full sm:w-1/2 md:w-3/4 mb-4">
 
-              <button class="text-red hover:text-red-darker" @click.prevent="disableAccount">
-                Supprimer le compte
-              </button>
+              <router-view />
 
-        <router-view />
+          </div>
     </div>
 </template>
 
