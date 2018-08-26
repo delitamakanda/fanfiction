@@ -216,7 +216,7 @@ class ContactMail(views.APIView):
 
     if subject and message and from_email:
         try:
-            send_mail(subject, message, from_email, ['no-reply@fanfiction.com'])
+            send_mail(subject, message, from_email, ['delita.makanda@gmail.com'])
         except BadHeaderError:
             return Response({"status": "invalid headers"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
