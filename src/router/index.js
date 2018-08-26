@@ -13,7 +13,6 @@ import UpdateChapter from '@/components/UpdateChapter'
 import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
-import Chapter from '@/components/Chapter'
 import ChangePassword from '@/components/ChangePassword'
 import ShowUserFanfic from '@/components/ShowUserFanfic'
 import Loading from '@/components/Loading'
@@ -54,11 +53,7 @@ const router = new Router({
                 }
             ]
         } },
-        { path: '/fanfic/detail/:slug', name: 'Detail', component: Detail, props: true,
-            children: [
-                { path: '/chapter/:id', name: 'Chapter', component: Chapter, props: true }
-            ]
-        },
+        { path: '/fanfic/detail/:slug', name: 'Detail', component: Detail, props: true},
         { path: '/login', name: 'Login', component: Login, meta: { guest: true, title: 'Créer un compte ou se connecter à l\'espace membre' } },
         { path: '/news', name: 'Posts', component: Posts, meta: {
             title: 'News du site Fanfiction',
