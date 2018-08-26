@@ -99,18 +99,32 @@ class FlatPagesByTypeView(generics.RetrieveAPIView):
 Liste des chapitres
 """
 
-class ChapterList(generics.ListCreateAPIView):
-    queryset = Chapter.objects.all()
+class ChapterListView(generics.ListAPIView):
     serializer_class = ChapterSerializer
     name='chapter-list'
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny,
+    )
+    pagination_class = None
+
+    def get_queryset(self):
+        fanfic = self.kwargs['fanfic']
+        return Chapter.objects.filter(fanfic=fanfic)
+
+
+
+class ChapterCreateView(generics.CreateAPIView):
+    queryset = Chapter.objects.all()
+    serializer_class = ChapterSerializer
+    name='chapter-create'
+    permission_classes = (
+        permissions.IsAuthenticated,
     )
     pagination_class = None
 
 
 
-class ChapterDetail(generics.RetrieveUpdateDestroyAPIView):
+class ChapterDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
     name='chapter-detail'
@@ -192,7 +206,7 @@ class ApiRoot(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         return Response({
             'fanfics-list-remastered': reverse('fanfic-list-remastered', request=request),
-            'chapters': reverse('chapter-list', request=request),
+            'chapters': reverse('chapter-create', request=request),
             'comments': reverse('comment-list', request=request),
             'category': reverse('category-list', request=request),
             'sub-category': reverse('subcategory-list', request=request),
