@@ -6,6 +6,8 @@ from django.template import loader
 from django.template.loader import get_template
 from django.http import HttpResponse
 
+from markdownx.utils import markdownify
+
 # Create your views here.
 def browse_by_title(request, initial=None):
     if initial:
@@ -36,8 +38,10 @@ class SearchSubmitView(View):
 class SearchAjaxSubmitView(SearchSubmitView):
     template = 'help/search_results.html'
     response_message = ''
-    
-    
+
+
+questions = FoireAuxQuestions.objects.all().order_by('libelle')
 def foire_aux_questions_view(request):
-    questions = FoireAuxQuestions.objects.all().order_by('libelle')
+    for question in questions:
+        question.reponse = markdownify(question.reponse)
     return render(request, 'help/faq.html', {'questions': questions})
