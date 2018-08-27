@@ -35,3 +35,7 @@ class SearchSubmitView(View):
 class SearchAjaxSubmitView(SearchSubmitView):
     template = 'help/search_results.html'
     response_message = ''
+    
+    
+def foire_aux_questions_view(request):
+    return render(request, 'help/faq.html', {})
