@@ -39,5 +39,5 @@ class SearchAjaxSubmitView(SearchSubmitView):
     
     
 def foire_aux_questions_view(request):
-    questions = FoireAuxQuestions.objects.all()
+    questions = FoireAuxQuestions.objects.all().order_by('libelle')
     return render(request, 'help/faq.html', {'questions': questions})
