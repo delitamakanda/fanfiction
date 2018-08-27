@@ -228,6 +228,10 @@ class FlatPages(models.Model):
         return '{}'.format(self.title)
 
 
+"""
+Models for html pages
+"""
+
 class FoireAuxQuestions(models.Model):
     LIBELLE_CHOICES = (
         ('fan', 'Fanfictions'),
@@ -245,9 +249,7 @@ class FoireAuxQuestions(models.Model):
         return '{}: {}'.format(self.libelle, self.question)
 
 
-"""
-Models for html pages
-"""
+
 
 class Lexique(models.Model):
     title = models.CharField(max_length=30, db_index=True)
