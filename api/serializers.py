@@ -11,7 +11,6 @@ from api.models import Tag
 from api.models import FlatPages
 from api.models import FollowStories
 from api.models import FollowUser
-from api.models import FoireAuxQuestions
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
@@ -346,16 +345,3 @@ class ChangePasswordSerializer(serializers.Serializer):
         return value
 
 
-"""
-Serializer for FAQ
-"""
-class FoireAuxQuestionsSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = FoireAuxQuestions
-        fields = (
-            'id',
-            'libelle',
-            'question',
-            'reponse',
-        )
