@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from api.models import Lexique
+from api.models import FoireAuxQuestions
 from django.views.generic import View
 from django.template import loader
 from django.template.loader import get_template
@@ -38,4 +39,5 @@ class SearchAjaxSubmitView(SearchSubmitView):
     
     
 def foire_aux_questions_view(request):
-    return render(request, 'help/faq.html', {})
+    questions = FoireAuxQuestions.objects.all()
+    return render(request, 'help/faq.html', {'questions': questions})
