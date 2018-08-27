@@ -37,7 +37,7 @@
                         <transition name="fade" mode="out-in">
                             <ul class="bg-white p-4 shadow " v-if="survol" @click="survol = false">
                                 <li><a class="text-teal hover:text-teal-darker" href="/help/browse/title">Lexique</a></li>
-                                <li><a class="text-teal hover:text-teal-darker" href="#">Foire aux questions (A venir)</a></li>
+                                <li><a class="text-teal hover:text-teal-darker" href="/help/faq">Foire aux questions</a></li>
                                 <li><a href="#" class="text-teal hover:text-teal-darker" @click="openModalContact">Contacter le webmestre</a></li>
                             </ul>
                         </transition>

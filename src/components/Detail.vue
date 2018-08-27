@@ -64,9 +64,9 @@
         <div class="flex flex-wrap">
             <aside class="w-full md:w-1/4">
                 <div class="sidebar-menu">
-                    <ul v-for="element in chapterList">
-                        <li>
-                            <span @click="selectChapter($event)" :id="element.id" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">{{ element.title }}
+                    <ul v-for="(element, index) in chapterList">
+                        <li :key="index">
+                            <span @click="selectChapter($event)" :id="element.id" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">{{ index + 1 }} - {{ element.title }}
                             </span>
                         </li>
                     </ul>
