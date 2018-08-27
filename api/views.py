@@ -12,7 +12,7 @@ from api.models import Chapter
 from api.models import Category
 from api.models import SubCategory
 from api.models import FlatPages
-from api.models import FoireAuxQuestions
+
 from api.serializers import ChapterSerializer
 from api.serializers import CommentSerializer
 from api.serializers import CommentCreateSerializer
@@ -22,7 +22,7 @@ from api.serializers import GenresSerializer
 from api.serializers import ClassementSerializer
 from api.serializers import StatusSerializer
 from api.serializers import FlatPagesSerializer
-from api.serializers import FoireAuxQuestionsSerializer
+
 from api import custompermission
 
 """
@@ -185,20 +185,8 @@ class SubCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly,
     )
     name='subcategory-detail'
+    
 
-
-"""
-Liste des questions/réponses pour la FAQ
-"""
-
-class FoireAuxQuestionsList(generics.ListAPIView):
-    queryset = FoireAuxQuestions.objects.all()
-    serializer_class = FoireAuxQuestionsSerializer
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    name = 'faq-list'
-    pagination_class = None
 
 
 class ApiRoot(generics.GenericAPIView):
