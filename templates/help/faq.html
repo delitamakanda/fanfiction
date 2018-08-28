@@ -7,6 +7,7 @@
 
 <div>
 {% for question in questions %}
+    {% ifchanged question.libelle %}<h3>{{ question.get_libelle_display }}</h3>{% endifchanged %}
     <button class="accordion">{{ question.question }}</button>
     <div class="panel">
         {{ question.reponse|safe }}
