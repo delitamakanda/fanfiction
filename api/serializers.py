@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from api.models import Fanfic
 from api.models import Comment
+from api.models import CommentByChapter
 from api.models import Chapter
 from api.models import Category
 from api.models import SubCategory
@@ -278,6 +279,42 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
+class CommentByChapterSerializer(serializers.HyperlinkedModelSerializer):
+    fanfic = FanficSerializer()
+    chapter = ChapterSerializer()
+
+    class Meta:
+        model = CommentByChapter
+        fields = (
+            'id',
+            'fanfic',
+            'chapter',
+            'name',
+            'email',
+            'body',
+            'created',
+            'active',
+            'in_reply_to',
+        )
+
+
+class CommentByChapterCreateSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = CommentByChapter
+        fields = (
+            'id',
+            'fanfic',
+            'chapter',
+            'name',
+            'email',
+            'body',
+            'created',
+            'active',
+            'in_reply_to',
+        )
+
+
 class CommentCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -343,5 +380,3 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate_new_password(self, value):
         validate_password(value)
         return value
-
-

@@ -178,6 +178,18 @@ class Comment(models.Model):
         return 'Comment by {} on {}'.format(self.name, self.fanfic)
 
 
+class CommentByChapter(Comment):
+    chapter = models.ForeignKey(Chapter, related_name='comments_by_chapters', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('created',)
+        verbose_name = 'comment by chapter'
+        verbose_name_plural = 'comments by chapters'
+
+    def __str__(self):
+        return 'Comment by {} on {}'.format(self.name, self.chapter)
+
+
 class Tag(models.Model):
     word = models.CharField(max_length=35, db_index=True)
     slug = models.CharField(max_length=250)

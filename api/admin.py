@@ -4,6 +4,7 @@ from api.models import Chapter
 from api.models import Category
 from api.models import SubCategory
 from api.models import Comment
+from api.models import CommentByChapter
 from api.models import Post
 from api.models import Tag
 from api.models import FlatPages
@@ -76,3 +77,4 @@ class FollowUserAdmin(admin.ModelAdmin):
 admin.site.register(FlatPages, FlatPagesAdmin)
 admin.site.register(Lexique)
 admin.site.register(FoireAuxQuestions)
+admin.site.register(CommentByChapter)

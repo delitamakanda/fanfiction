@@ -185,7 +185,7 @@ class SubCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly,
     )
     name='subcategory-detail'
-    
+
 
 
 
@@ -203,6 +203,6 @@ class ApiRoot(generics.GenericAPIView):
             'genres': reverse('genre-list', request=request),
             'status': reverse('status-list', request=request),
             'classements': reverse('classement-list', request=request),
-            'faq': reverse('faq-list', request=request),
+            'comments-by-chapter-create': reverse('comment-by-chapter-create', request=request),
 
         })
