@@ -6,11 +6,13 @@
 
         <Loading v-if="remoteDataBusy" />
 
-
-        <div class="px-6 py-4">
-            <h1>{{ fanfic.title }}</h1>
-
-            Auteur : <router-link v-if="fanfic.author" :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
+        <div class="w-full">
+          <div class="px-6 py-4">
+            <div class="font-bold text-xl mb-2">{{ fanfic.title }}</div>
+            <p class="text-grey-darker text-base">
+              Par <router-link v-if="fanfic.author" :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
+            </p>
+          </div>
         </div>
 
         <div v-if="step === 1">
@@ -40,30 +42,36 @@
               </div>
             </div>
 
-            <div class="px-6 py-4">
-                <p>Publiée le: {{fanfic.publish | date }}</p>
-                <p>{{ fanfic.category}} / {{ fanfic.subcategory }} / {{ fanfic.classement }} / {{ fanfic.genres }} / {{ fanfic.total_likes }} likes / <span class="lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer" @click="showModal"><u>{{ total_comments }} commentaire(s)</u> </span></p>
-
-
-                <div v-if="fanfic.description">
-                    <h4>Description</h4>
-                    <p v-html="fanfic.description"></p>
+            <div class="w-full rounded overflow-hidden shadow">
+                <div class="px-6 py-4">
+                    <p class="text-grey-darker text-base">Publiée le: {{fanfic.publish | date }}</p>
+                    <p class="text-grey-darker text-base">Mise à jour : {{ fanfic.updated | date }}</p>
+                    <div class="text-grey-darker text-base" v-if="fanfic.description">
+                        <h4>Description</h4>
+                        <p v-html="fanfic.description"></p>
+                    </div>
+                    <div class="text-grey-darker text-base"  v-if="fanfic.synopsis">
+                        <h4>Synopsis</h4>
+                        <p>{{ fanfic.synopsis }}</p>
+                    </div>
+                    <div class="text-grey-darker text-base"  v-if="fanfic.credits">
+                        <h4>Crédits</h4>
+                        <p>{{ fanfic.credits }}</p>
+                    </div>
                 </div>
-
-                <div v-if="fanfic.synopsis">
-                    <h4>Synopsis</h4>
-                    <p>{{ fanfic.synopsis }}</p>
-                </div>
-
-                <div v-if="fanfic.credits">
-                    <h4>Crédits</h4>
-                    <p>{{ fanfic.credits }}</p>
-                </div>
+                <div class="px-6 py-4">
+                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.category}}</span>
+                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.subcategory }}</span>
+                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.classement }} </span>
+                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.genres }} </span>
+                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">{{ fanfic.total_likes }} likes</span>
+                    <span class="lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer" @click="showModal"><u>{{ total_comments }} commentaire(s)</u> </span>
+                  </div>
             </div>
 
-        <div class="flex flex-wrap">
-            <aside class="w-full md:w-1/4">
-                <div class="sidebar-menu">
+        <div class="flex flex-wrap mt-4">
+            <aside class="w-full md:w-1/4 ">
+                <div class="sidebar-menu ">
                     <ul v-for="(element, index) in chapterList">
                         <li :key="index">
                             <span @click="selectChapter($event)" :id="element.id" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">{{ index + 1 }} - {{ element.title }}
@@ -73,8 +81,8 @@
                 </div>
             </aside>
 
-            <section class="w-full md:w-3/4 py-4 px-6">
-                <div v-for="(chapter, index) in chapterList" :id="chapter.id" v-if="chapterIsVisible && chapter.id == target">
+            <section class="w-full md:w-3/4 ">
+                <div v-for="(chapter, index) in chapterList" :id="chapter.id" v-if="chapterIsVisible && chapter.id == target" class="shadow-md p-4 rounded bg-white">
                     <h3>{{ chapter.title }}</h3>
 
                     <div v-if="chapter.description !== ''" class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chapter.description" role="alert">{{ chapter.description }}</div>

@@ -25,6 +25,8 @@
             <div @click="readMore(limitationList)" class="flex-1 mb-4 cursor-pointer bg-teal hover:bg-teal-dark text-center text-white font-bold py-2 px-4 rounded-full">Voir {{ limitationList == 2 ? 'plus': 'moins'}}</div>
         </div>
 
+        <div class="text-xl mb-4 font-bold" v-if="selected !== ''">{{ categoryName }}</div>
+
         <article class="flex flex-wrap -mx-2">
             <div id="tsr" class="mb-4 w-full px-2 md:w-1/2" v-for="fanfic of fanficList">
                 <router-link class="no-underline" :to="{
@@ -88,7 +90,13 @@ export default {
         fanficList: [],
         empty: false,
         moreStr: 'Voir plus',
-        limitationList: 2
+        limitationList: 2,
+        selected: ''
+        }
+    },
+    computed: {
+        categoryName: function () {
+            return this.selected;
         }
     },
     methods: {
@@ -103,6 +111,13 @@ export default {
       async sortByCategories (categoryId) {
           try {
               this.fanficList = await this.$fetch(`fanfics/v1?category=${categoryId}&subcategory=&status=publié`)
+
+              for (let i = 0; i < this.categories.length; i++) {
+                  if (this.categories[i].id == categoryId) {
+                      this.selected = this.categories[i].name
+                  }
+              }
+
               if (this.fanficList.length === 0) {
                   this.empty = true
               } else {
