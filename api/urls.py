@@ -38,6 +38,7 @@ urlpatterns = [
     path('comments/<int:pk>', views_comment.CommentDetailView.as_view(), name='comment-detail'),
     path('comments-by-chapter/new', views_comment.CommentByChapterCreateView.as_view(), name='comment-by-chapter-create'),
     path('comments/fanfic/<int:fanfic>/chapter/<int:chapter>/list', views_comment.CommentByChapterListByFanficAndChapterView.as_view(), name='comment-list-by-fanfic-and-chapter'),
+    path('comments/fanfic/<int:fanfic>/list', views_comment.CommentByChapterListByFanficView.as_view(), name='comment-list-by-chapter'),
     path('users', views_user.UserList.as_view(), name='user-list'),
     path('users/<int:pk>', views_user.UserDetail.as_view(), name='user-detail'),
     path('user', api_auth.CheckoutUserView.as_view(), name='user'),

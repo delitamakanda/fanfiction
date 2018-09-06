@@ -84,3 +84,19 @@ class CommentByChapterListByFanficAndChapterView(generics.ListAPIView):
         fanfic = self.kwargs['fanfic']
         chapter = self.kwargs['chapter']
         return CommentByChapter.objects.filter(fanfic=fanfic, chapter=chapter).order_by('-created')
+
+
+class CommentByChapterListByFanficView(generics.ListAPIView):
+    """
+    List all comments by fanfic
+    """
+    serializer_class = CommentByChapterSerializer
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    name='comment-list-by-chapter'
+    pagination_class = None
+
+    def get_queryset(self):
+        fanfic = self.kwargs['fanfic']
+        return CommentByChapter.objects.filter(fanfic=fanfic).order_by('-created')
