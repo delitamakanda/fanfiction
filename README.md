@@ -33,3 +33,5 @@ python3 manage.py migrate
 
 python3 manage.py runserver
 ```
+
+https://simedia.tech/blog/show-hide-password-input-values-with-vue-js/
