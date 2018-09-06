@@ -20,6 +20,7 @@ class FollowUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowUser
         fields = (
+            'id',
             'user_from',
             'user_to',
             'created'
@@ -31,6 +32,7 @@ class FollowStoriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowStories
         fields = (
+            'id',
             'from_user',
             'to_fanfic',
             'created'
@@ -43,6 +45,7 @@ class FlatPagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = FlatPages
         fields = (
+            'id',
             'title',
             'content',
             'type',
@@ -58,6 +61,7 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = (
+            'id',
             'word',
             'slug',
             'created_at',
@@ -298,7 +302,7 @@ class CommentByChapterSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
-class CommentByChapterCreateSerializer(serializers.HyperlinkedModelSerializer):
+class CommentByChapterCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CommentByChapter

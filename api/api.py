@@ -117,7 +117,6 @@ class FollowUserView(views.APIView):
     """
     authentication_class = ()
     permission_classes = (permissions.IsAuthenticated,)
-    queryset = FollowUser.objects.all()
 
     def get(self, request, format=None):
         """
@@ -138,14 +137,14 @@ class FollowUserView(views.APIView):
         return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def delete(self, request):
+    def delete(self, request, pk=None):
         follow_user_id = request.data.get('id')
 
-        if follow_user_id:
+        try:
             follow_user = FollowUser.objects.get(id=follow_user_id)
             follow_user.delete()
             return Response({'status': 'ok'}, status=status.HTTP_200_OK)
-        else:
+        except:
             return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -155,7 +154,6 @@ class FollowStoriesView(views.APIView):
   """
   authentication_class = ()
   permission_classes = (permissions.IsAuthenticated,)
-  queryset = FollowStories.objects.all()
 
   def get(self, request, format=None):
       """
@@ -176,14 +174,14 @@ class FollowStoriesView(views.APIView):
           return Response(serializer.data, status=status.HTTP_201_CREATED)
       return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
-  def delete(self, request):
+  def delete(self, request, pk=None):
       follow_story_id = request.data.get('id')
 
-      if follow_story_id:
+      try:
           follow_story = FollowStories.objects.get(id=follow_story_id)
           follow_story.delete()
           return Response({'status': 'ok'}, status=status.HTTP_200_OK)
-      else:
+      except:
           return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 
