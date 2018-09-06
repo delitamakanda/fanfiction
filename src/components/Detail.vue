@@ -82,12 +82,65 @@
             </aside>
 
             <section class="w-full md:w-3/4 ">
-                <div v-for="(chapter, index) in chapterList" :id="chapter.id" v-if="chapterIsVisible && chapter.id == target" class="shadow-md p-4 rounded bg-white">
+                <div v-for="(chapter, index) in chapterList" :key="chapter.id" :id="chapter.id" v-if="chapterIsVisible && chapter.id == target" class="shadow-md p-4 rounded bg-white">
                     <h3>{{ chapter.title }}</h3>
 
                     <div v-if="chapter.description !== ''" class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chapter.description" role="alert">{{ chapter.description }}</div>
 
                     <div v-html="chapter.text"></div>
+
+                    <div v-show="!writeToChapterComment" class="text-center"><p @click="writeCommentToChapter(chapter.id)" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">Commentez le chapitre</p></div>
+
+                    <div v-if="writeToChapterComment">
+                        <Form
+                            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                            title="Nouveau commentaire"
+                            :operation="writeComChapter"
+                            :valid="valid">
+                            <div class="mb-4">
+                                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="name">
+                                    Nom ou Pseudo
+                                </label>
+                                <Input
+                                name="name"
+                                v-model="name"
+                                placeholder=""
+                                maxlength="255"
+                                required />
+                            </div>
+                            <div class="mb-4">
+                                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="email">
+                                    E-mail
+                                </label>
+                                <Input
+                                name="email"
+                                v-model="email"
+                                placeholder="Votre e-mail (seul l'auteur le verra)"
+                                maxlength="255" />
+                            </div>
+                            <div class="mb-4">
+                                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="body">
+                                    Commentaire
+                                </label>
+                                <Input
+                                type="textarea"
+                                name="body"
+                                v-model="body"
+                                placeholder=""
+                                rows="6"
+                                required />
+                            </div>
+                            <input type="hidden" name="chapter" id="chapter" v-model="chapter.id" />
+                            <template slot="actions">
+                                <button
+                                    type="submit"
+                                    class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
+                                    :disabled="!valid">
+                                    Ajouter un commentaire
+                                </button>
+                            </template>
+                        </Form>
+                    </div>
                 </div>
             </section>
         </div>
@@ -194,21 +247,27 @@ export default {
             fanfic: [],
             chapterList: [],
             comment: [],
+            CommentByChapter: [],
             date: null,
             errorFetch: 'Il y a un problème avec la requète.',
             isModalVisible: false,
             name: '',
             email: '',
             body: '',
+            chapter: '',
             total_comments: '',
-            chapter: [],
             step: 1,
             followStory: false,
             followUser: false,
+            followStoryText: '',
+            followUserText: '',
             chapterIsVisible: false,
             target: '',
             userFollow: [],
-            fanficFollow: []
+            fanficFollow: [],
+            followUserId: '',
+            followStoryId: '',
+            writeToChapterComment: false
         }
     },
     computed: {
@@ -232,6 +291,9 @@ export default {
             comment () {
                 return `comments/${this.$route.params.id}/fanfic`
             },
+            /*CommentByChapter () {
+                return `comments/fanfic/${this.$route.params.id}/chapter/1/list`
+            }*/
         }),
     ],
     async created () {
@@ -256,12 +318,14 @@ export default {
                     for (let x = 0; x < this.userFollow.length; x++) {
                         if ((this.userFollow[x].hasOwnProperty("user_from") && this.userFollow[x].user_from === this.$state.user.id) && this.userFollow[x].hasOwnProperty("user_to") && this.userFollow[x].user_to === this.fanfic.author) {
                             this.followUser = true;
+                            this.followUserId = this.userFollow[x].id;
                         }
                     }
 
                     for (let y = 0; y < this.fanficFollow.length; y++) {
                         if ((this.fanficFollow[y].hasOwnProperty("from_user") && this.fanficFollow[y].from_user === this.$state.user.id) && (this.fanficFollow[y].hasOwnProperty("to_fanfic") && this.fanficFollow[y].to_fanfic === this.fanfic.id)) {
                             this.followStory = true;
+                            this.followStoryId = this.fanficFollow[y].id;
                         }
                     }
                 }
@@ -330,9 +394,16 @@ export default {
                 })
             })
 
-            this.followUser = true
+            this.followUser = true;
         },
         async DisFollowAuthor () {
+            const result = await this.$fetch('follow-user', {
+                method: 'DELETE',
+                body: JSON.stringify({
+                    id: this.followUserId
+                })
+            })
+
             this.followUser = false
         },
         showModal() {
@@ -352,10 +423,37 @@ export default {
             this.followStory = true
         },
         async DisFollowFanfic () {
+            const result = await this.$fetch('follow-stories', {
+                method: 'DELETE',
+                body: JSON.stringify({
+                    id: this.followStoryId
+                })
+            })
+
             this.followStory = false
         },
         goStepBack () {
-            this.step--;
+            this.step = 1;
+        },
+        writeCommentToChapter (chapterId) {
+            this.writeToChapterComment = true;
+        },
+        async writeComChapter () {
+            const result = await this.$fetch('comments-by-chapter/new', {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: this.name,
+                    email: this.email,
+                    body: this.body,
+                    fanfic: this.fanfic.id,
+                    chapter: $('input[name="chapter"]').val()
+                }),
+            })
+
+            this.name = this.email = this.body = '';
+            this.total_comments++;
+
+            this.writeToChapterComment = false;
         },
         async operation () {
             const result = await this.$fetch('comments/new', {
