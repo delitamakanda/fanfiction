@@ -1,5 +1,5 @@
 <template>
-    <div class="loading align-center w-full max-w-sm">
+    <div class="loading">
          <div class="spinner spinner-1"></div>
     </div>
  </template>
@@ -101,9 +101,9 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 100%;
-    margin-top: -170px;
-    margin-left: -110px;
+    width: auto;
+    transform: translate(-50%, -50%);
+    z-index: 88;
 }
 
  </style>

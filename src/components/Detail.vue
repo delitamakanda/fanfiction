@@ -89,7 +89,7 @@
 
                     <div v-html="chapter.text"></div>
 
-                    <div v-show="!writeToChapterComment" class="text-center"><p @click="writeCommentToChapter(chapter.id)" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">Commentez le chapitre</p></div>
+                    <div v-show="!writeToChapterComment" class="text-center"><p @click="writeCommentToChapter" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">Commentez le chapitre</p></div>
 
                     <div v-if="writeToChapterComment">
                         <Form
@@ -131,6 +131,8 @@
                                 required />
                             </div>
                             <input type="hidden" name="chapter" id="chapter" v-model="chapter.id" />
+                            <input type="hidden" name="title" id="title" v-model="chapter.title" />
+                            <input type="hidden" name="order" id="order" v-model="chapter.order" />
                             <template slot="actions">
                                 <button
                                     type="submit"
@@ -154,24 +156,24 @@
             <p v-if="step === 1" @click="writeComment" class="pointer block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Donnez votre avis sur cette histoire.</p>
             <div class="tabs comment-tabs">
                 <ul class="list-reset flex">
-                    <li :class="[ fic === 'story' ? 'is-active' : ''] + ' mr-6'"><a @click="fic='story'" class="text-teal hover:text-teal-darker pointer">L'histoire</a>
+                    <li :class="[ fic === 'story' ? 'is-active' : ''] + ' mr-6'"><a @click="fic='story'" class="text-teal hover:text-teal-darker pointer">Tous</a>
                     </li>
                     <li :class="[ fic === 'chapters' ? 'is-active' : ''] + ' mr-6'"><a @click="fic='chapters'" class="text-teal hover:text-teal-darker pointer">Par chapitre</a></li>
                 </ul>
             </div>
             <div class="box comment-content">
-                <div v-for="com in comment" v-if="comment && fic === 'story'">
+                <div v-for="(com, index) in comment" v-if="comment && fic === 'story'" :key="com.id">
                     <span>{{ com.name }}</span> | Publié le : <span>{{ com.created | date }}</span>
                     <div>{{ com.body }}</div>
                     <hr/>
                 </div>
-                <div v-if="!comment.length && fic === 'story'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
-                <div v-for="com_by_chapter in CommentByChapter" v-if="CommentByChapter && fic === 'chapters'">
-                    <span>{{ com_by_chapter.name }}</span> | Publié le : <span>{{ com_by_chapter.created | date }} sur chapitre {{ com_by_chapter.chapter.order + 1}} - {{ com_by_chapter.chapter.title }}</span>
-                    <div>{{ com_by_chapter.body }}</div>
+                <div v-else-if="!comment.length && fic === 'story'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+                <div v-for="(com_chapter, index) in CommentByChapter" v-if="CommentByChapter && fic === 'chapters'" :key="com_chapter.id">
+                    <span>{{ com_chapter.name }}</span> | Publié le : <span>{{ com_chapter.created | date }} sur le chapitre {{com_chapter.chapter.title }}</span>
+                    <div>{{ com_chapter.body }}</div>
                     <hr/>
                 </div>
-                <div v-if="!CommentByChapter.length && fic === 'chapters'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+                <div v-else-if="!CommentByChapter.length && fic === 'chapters'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
             </div>
         </div>
         </modal>
@@ -270,6 +272,8 @@ export default {
             email: '',
             body: '',
             chapter: '',
+            order: '',
+            title: '',
             total_comments: '',
             step: 1,
             followStory: false,
@@ -289,7 +293,7 @@ export default {
     computed: {
         valid () {
             return !!this.name && !!this.body
-        }
+        },
     },
     mixins: [
         PersistantData('NewComment', [
@@ -314,7 +318,7 @@ export default {
     ],
     async created () {
         try {
-            const res_comment = await this.$fetch(`comments/${this.$route.params.id}/fanfic`)
+            const res_comment = await this.$fetch(`comments/${this.$route.params.id}/fanfic`);
 
             if (res_comment) {
                 this.total_comments = res_comment.length
@@ -452,7 +456,7 @@ export default {
         goStepBack () {
             this.step = 1;
         },
-        writeCommentToChapter (chapterId) {
+        writeCommentToChapter () {
             this.writeToChapterComment = true;
         },
         async writeComChapter () {
@@ -469,6 +473,10 @@ export default {
 
             this.name = this.email = this.body = '';
             this.total_comments++;
+
+            this.CommentByChapter.unshift(result);
+            this.CommentByChapter[0].chapter = Object.assign({}, this.CommentByChapter[0].chapter, {title: $('input[name="title"]').val(), order: $('input[name="order"]').val()})
+            console.log(this.CommentByChapter[0].chapter);
 
             this.writeToChapterComment = false;
         },
