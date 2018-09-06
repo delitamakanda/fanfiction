@@ -151,13 +151,28 @@
         >
         <h3 slot="header">Voir les commentaires</h3>
         <div slot="body">
-            <p v-if="step === 1" @click="writeComment" class="pointer block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Ecrire un commentaire</p>
-            <div v-for="com in comment" v-if="comment">
-                <span>{{ com.name }}</span> | Publié le : <span>{{ com.created | date }}</span>
-                <div>{{ com.body }}</div>
-                <hr/>
+            <p v-if="step === 1" @click="writeComment" class="pointer block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Donnez votre avis sur cette histoire.</p>
+            <div class="tabs comment-tabs">
+                <ul class="list-reset flex">
+                    <li :class="[ fic === 'story' ? 'is-active' : ''] + ' mr-6'"><a @click="fic='story'" class="text-teal hover:text-teal-darker pointer">L'histoire</a>
+                    </li>
+                    <li :class="[ fic === 'chapters' ? 'is-active' : ''] + ' mr-6'"><a @click="fic='chapters'" class="text-teal hover:text-teal-darker pointer">Par chapitre</a></li>
+                </ul>
             </div>
-            <div v-if="!comment.length">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+            <div class="box comment-content">
+                <div v-for="com in comment" v-if="comment && fic === 'story'">
+                    <span>{{ com.name }}</span> | Publié le : <span>{{ com.created | date }}</span>
+                    <div>{{ com.body }}</div>
+                    <hr/>
+                </div>
+                <div v-if="!comment.length && fic === 'story'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+                <div v-for="com_by_chapter in CommentByChapter" v-if="CommentByChapter && fic === 'chapters'">
+                    <span>{{ com_by_chapter.name }}</span> | Publié le : <span>{{ com_by_chapter.created | date }} sur chapitre {{ com_by_chapter.chapter.order + 1}} - {{ com_by_chapter.chapter.title }}</span>
+                    <div>{{ com_by_chapter.body }}</div>
+                    <hr/>
+                </div>
+                <div v-if="!CommentByChapter.length && fic === 'chapters'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+            </div>
         </div>
         </modal>
     </div>
@@ -267,7 +282,8 @@ export default {
             fanficFollow: [],
             followUserId: '',
             followStoryId: '',
-            writeToChapterComment: false
+            writeToChapterComment: false,
+            fic: 'story'
         }
     },
     computed: {
@@ -291,9 +307,9 @@ export default {
             comment () {
                 return `comments/${this.$route.params.id}/fanfic`
             },
-            /*CommentByChapter () {
-                return `comments/fanfic/${this.$route.params.id}/chapter/1/list`
-            }*/
+            CommentByChapter () {
+                return `comments/fanfic/${this.$route.params.id}/list`
+            }
         }),
     ],
     async created () {
@@ -349,6 +365,7 @@ export default {
             let targetId = event.currentTarget.id
             this.target = targetId
             this.chapterIsVisible = true
+            this.writeToChapterComment = false
         },
         async feedback () {
             let message = confirm("Seuls les fanfictions ne répondant pas à la charte de bonne conduite du site seront supprimées.");
@@ -487,5 +504,18 @@ export default {
 
 .pointer {
     cursor: pointer;
+}
+
+.comment-content {
+    background: white;
+}
+
+.comment-tabs {
+    margin-bottom: 10px;
+}
+
+.tabs li.is-active a {
+    border-bottom: 1px solid;
+    font-weight: bold;
 }
 </style>
