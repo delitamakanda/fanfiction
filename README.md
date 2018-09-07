@@ -29,9 +29,9 @@ virtualenv venv -p python3
 
 source venv/bin/activate
 
+pip install -r requirements-dev.txt
+
 python3 manage.py migrate
 
 python3 manage.py runserver
 ```
-
-https://simedia.tech/blog/show-hide-password-input-values-with-vue-js/
