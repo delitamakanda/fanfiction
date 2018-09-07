@@ -52,7 +52,7 @@
                             <div class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white p-4 leading-normal mb-4" v-if="comment.in_reply_to !== null">Réponse à {{ comment.in_reply_to.name }} le {{ comment.in_reply_to.created | date }} sur le chapitre {{ comment.chapter.title }}
                                 <div>{{ comment.in_reply_to.body }}</div>
                             </div>
-                            <span v-if="comment.in_reply_to === null" class="cursor-pointer lg:inline-block text-teal hover:text-teal-darker italic underline" @click="showModalChapter(comment.id, comment.name, comment.chapter.id)">Répondre</span>
+                            <span v-if="comment.in_reply_to === null" class="cursor-pointer lg:inline-block text-teal hover:text-teal-darker italic underline" @click="showModalChapter(comment.id, comment.name, comment.chapter.id, comment.chapter.title, comment.body)">Répondre</span>
                             <hr />
                         </div>
                         <div v-for="(comment, index) in allComments" v-if="allComments && fic === 'story'" :key="index">
@@ -192,8 +192,10 @@ export default {
             email: '',
             body: '',
             chapter: '',
+            chapterTitle: '',
             in_reply_to: '',
             nameOfuser: '',
+            bodyText: '',
             idComment: ''
         }
     },
@@ -230,11 +232,13 @@ export default {
             this.nameOfuser = commentName
             this.idComment = commentId
         },
-        showModalChapter(commentId, commentName, commentChapterId) {
+        showModalChapter(commentId, commentName, commentChapterId, commentChapterTitle, commentBody) {
             this.isModalChapterVisible = true
             this.nameOfuser = commentName
             this.chapter = commentChapterId
             this.idComment = commentId
+            this.chapterTitle = commentChapterTitle
+            this.bodyText = commentBody
         },
         closeModal() {
             this.isModalVisible = false
@@ -273,10 +277,12 @@ export default {
                 }),
             })
 
-            this.body = '';
-
             this.allComments.unshift(result);
             this.comments.unshift(result);
+            this.comments[0].chapter = Object.assign({}, this.comments[0].chapter, {title: this.chapterTitle })
+            this.comments[0].in_reply_to = Object.assign({}, this.comments[0].in_reply_to, {name: this.nameOfuser, created: Date.now(), body: this.bodyText })
+
+            this.body = '';
 
             this.closeModalChapter();
         }
