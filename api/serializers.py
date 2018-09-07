@@ -266,8 +266,7 @@ class ChapterSerializer(serializers.ModelSerializer):
         return Chapter.objects.create(**validated_data)
 
 
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
-    fanfic = FanficSerializer()
+class SectionCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
@@ -283,9 +282,28 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
-class CommentByChapterSerializer(serializers.HyperlinkedModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
+    fanfic = FanficSerializer()
+    in_reply_to = SectionCommentSerializer()
+
+    class Meta:
+        model = Comment
+        fields = (
+          'id',
+          'fanfic',
+          'name',
+          'email',
+          'body',
+          'created',
+          'active',
+          'in_reply_to',
+        )
+
+
+class CommentByChapterSerializer(serializers.ModelSerializer):
     fanfic = FanficSerializer()
     chapter = ChapterSerializer()
+    in_reply_to = SectionCommentSerializer()
 
     class Meta:
         model = CommentByChapter

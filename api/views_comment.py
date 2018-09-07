@@ -20,7 +20,7 @@ class CommentListView(generics.ListAPIView):
 
 
 class CommentListByFanficView(generics.ListAPIView):
-    serializer_class = CommentCreateSerializer
+    serializer_class = CommentSerializer
     permission_classes = (
         permissions.AllowAny,
     )
