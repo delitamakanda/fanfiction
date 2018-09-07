@@ -29,6 +29,10 @@
                             {{ userFanfic.status}}
                         </p>
 
+                        <p v-if="userFanfic.description" class="text-grey-darker text-base">
+                            {{ userFanfic.description | readMore(15, '...') }}
+                        </p>
+
                         <div class="flex items-center">
                             <div class="text-sm" v-if="userFanfic.users_like.length > 0">
                                 Utilisateurs qui aime votre fanfiction :
@@ -104,9 +108,6 @@ export default {
                 });
             }
         },
-        toggle(userFanfic) {
-            return this.isActive === userFanfic;
-        }
     }
 }
 </script>

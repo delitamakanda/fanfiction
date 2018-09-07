@@ -162,18 +162,24 @@
                 </ul>
             </div>
             <div class="box comment-content">
-                <div v-for="(com, index) in comment" v-if="comment && fic === 'story'" :key="com.id">
+                <div v-for="(com, index) in comment" v-if="comment && fic === 'story'" :key="index">
                     <span>{{ com.name }}</span> | Publié le : <span>{{ com.created | date }}</span>
                     <div>{{ com.body }}</div>
+                    <div class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white p-4 leading-normal mb-4" v-if="com.in_reply_to !== null">Réponse à {{ com.in_reply_to.name }} le {{ com.in_reply_to.created | date }}
+                        <div>{{ com.in_reply_to.body }}</div>
+                    </div>
                     <hr/>
                 </div>
-                <div v-else-if="!comment.length && fic === 'story'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
-                <div v-for="(com_chapter, index) in CommentByChapter" v-if="CommentByChapter && fic === 'chapters'" :key="com_chapter.id">
+                <div v-if="!comment.length && fic === 'story'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+                <div v-for="(com_chapter, index) in CommentByChapter" v-if="CommentByChapter && fic === 'chapters'" :key="index">
                     <span>{{ com_chapter.name }}</span> | Publié le : <span>{{ com_chapter.created | date }} sur le chapitre {{com_chapter.chapter.title }}</span>
                     <div>{{ com_chapter.body }}</div>
+                    <div class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white p-4 leading-normal mb-4" v-if="com_chapter.in_reply_to !== null">Réponse à {{ com_chapter.in_reply_to.name }} le {{ com_chapter.in_reply_to.created | date }} sur le chapitre {{ com_chapter.chapter.title }}
+                        <div>{{ com_chapter.in_reply_to.body }}</div>
+                    </div>
                     <hr/>
                 </div>
-                <div v-else-if="!CommentByChapter.length && fic === 'chapters'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
+                <div v-if="!CommentByChapter.length && fic === 'chapters'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
             </div>
         </div>
         </modal>
@@ -475,8 +481,8 @@ export default {
             this.total_comments++;
 
             this.CommentByChapter.unshift(result);
+            this.comment.unshift(result);
             this.CommentByChapter[0].chapter = Object.assign({}, this.CommentByChapter[0].chapter, {title: $('input[name="title"]').val(), order: $('input[name="order"]').val()})
-            console.log(this.CommentByChapter[0].chapter);
 
             this.writeToChapterComment = false;
         },

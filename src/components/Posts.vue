@@ -19,10 +19,9 @@
                                 </span>
                             </p>
                             <div class="text-black font-bold text-xl mb-2">{{ item.title }}</div>
-                            <vue-markdown :source="item.content" class="text-grey-darker text-base">{{ item.content.length > 25 ? item.content.substring(0, 25) + '...': '' }}</vue-markdown>
+                            <vue-markdown :source="item.content" class="text-grey-darker text-base">{{ item.content.length > 10 ? item.content.substring(0, 10) + '...': '' }}</vue-markdown>
                         </div>
                         <div class="flex items-center">
-                            <!--<img class="w-10 h-10 rounded-full mr-4" src="https://pbs.twimg.com/profile_images/885868801232961537/b1F6H4KC_400x400.jpg" alt="Avatar of Jonathan Reinink">-->
                             <div class="text-sm">
                                 <p class="text-black leading-none">Par {{ item.user }}</p>
                                 <p class="text-grey-dark">Publiée le {{ item.created | date }}</p>

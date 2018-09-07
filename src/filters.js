@@ -12,6 +12,70 @@ export function uppercase (name) {
   return name.toUpperCase()
 }
 
-export function removeLastComma(str) {
+export function lowercase (name) {
+  if (typeof name !== "string") {
+    throw TypeError("name must be a string")
+  }
+
+  return name.toLowerCase()
+}
+
+export function removeLastComma (str) {
    return str.replace(/,(\s+)?$/, '');
+}
+
+export function readMore(text, length, suffix) {
+    return text.substring(0, length) + suffix;
+}
+
+export function toFixed(price, limit) {
+    return price.toFixed(limit);
+}
+
+export function toEuro(price) {
+    return `$${price}`;
+}
+
+export function json(value) {
+    return JSON.stringify(value);
+}
+
+// extract a list of property values
+export function pluck (objects, key) {
+    return objects.map(function(object) {
+        return object[key];
+    });
+}
+
+// return the index
+export function at (value, index) {
+    return value[index];
+}
+
+export function min (values) {
+    return Math.min(...values);
+}
+
+export function max (values) {
+    return Math.max(...values);
+}
+
+export function shuffle (values) {
+    for (var i = values.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = values[i];
+        values[i] = values[j];
+        values[j] = temp;
+    }
+    return values;
+}
+
+export function unique (values, unique) {
+    return values.filter(function(element, index, self) {
+        return index = self.indexOf(element);
+    });
+}
+
+export function prepend (string, prepend) {
+    return `${string}${prepend}`;
 }
