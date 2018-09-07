@@ -22,9 +22,13 @@
                 </label>
                 <Input
                     name="password"
-                    type="password"
+                    :type="passwordFieldType"
                     v-model="password"
                     placeholder="Mot de passe" />
+                <button type="button" @click="switchVisibility">
+                    <svgicon icon="view-show" v-if="!iconVisibility" width="22" height="18" color="#000"></svgicon>
+                    <svgicon icon="view-hide" v-if="iconVisibility" width="22" height="18" color="#000"></svgicon>
+                </button>
             </div>
             <template v-if="mode === 'signup'">
                 <div class="mb-6">
@@ -91,6 +95,9 @@
 </template>
 
 <script>
+import '../compiled-icons/view-show'
+import '../compiled-icons/view-hide'
+
 export default {
   name: 'Login',
   data () {
@@ -99,7 +106,9 @@ export default {
       mode: 'login',
       password: '',
       password2: '',
+      passwordFieldType: 'password',
       email: '',
+      iconVisibility: false
     }
 },
 computed: {
@@ -148,6 +157,10 @@ methods: {
         })
         this.mode = 'login'
     },
+    switchVisibility () {
+        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+        this.iconVisibility = this.iconVisibility === false ? true : false;
+    }
 
 },
 
