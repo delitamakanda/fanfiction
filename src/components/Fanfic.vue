@@ -140,10 +140,11 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import modal from './Modal.vue'
 
 import RemoteData from '../mixins/RemoteData'
+import confirm from '../mixins/confirm'
+
 import get_cookie from '../cookie'
 import '../compiled-icons/trash'
 import '../compiled-icons/edit-pencil'
@@ -165,6 +166,7 @@ export default {
                 return `comments/${this.id}/fanfic`;
             }
         }),
+        confirm
     ],
     components: {
         modal,
@@ -207,9 +209,9 @@ export default {
     },
     methods: {
         async deleteChapter (chapterId, index) {
-            let message = confirm('Supprimer le chapitre ? id# ' + chapterId)
+            const message = `Supprimer le chapitre id #${chapterId} ?`
 
-            if (message == true) {
+            this.confirm(message, () => {
                 $.ajax({
                    url: '/api/chapters/' + chapterId,
                    type: 'DELETE',
@@ -225,7 +227,7 @@ export default {
                        console.log(error);
                    }
                 });
-            }
+            });
         },
         showModal(commentId, commentName) {
             this.isModalVisible = true
