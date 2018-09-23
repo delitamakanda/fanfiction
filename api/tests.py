@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.test import APIRequestFactory
+from rest_framework.test import APIClient
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
@@ -18,6 +19,7 @@ from api.models import Comment
 
 from api import views
 from api import views_fanfic
+from api import views_post
 
 # Create your tests here.
 
@@ -30,7 +32,7 @@ class TestFanficList(APITestCase):
         self.user = self.setup_user()
         self.factory = APIRequestFactory()
         self.view = views_fanfic.FanficListRemasteredView.as_view()
-        self.uri = '/api/fanfics/v1/'
+        self.uri = '/api/fanfics/v1'
 
     @staticmethod
     def setup_user():
@@ -44,6 +46,23 @@ class TestFanficList(APITestCase):
     def test_fanfic_list(self):
         request = self.factory.get(self.uri)
         response = self.view(request)
+        self.assertEqual(response.status_code, 200,
+                        'Expected Response Code 200, received {0} instead.'
+                        .format(response.status_code))
+
+
+class TestPost(APITestCase):
+    """
+    Tests for posts
+    """
+
+    def setUp(self):
+        self.client = APIClient()
+        self.view = views_post.PostList.as_view()
+        self.uri = '/api/posts'
+
+    def test_post_list(self):
+        response = self.client.get(self.uri)
         self.assertEqual(response.status_code, 200,
                         'Expected Response Code 200, received {0} instead.'
                         .format(response.status_code))
