@@ -8,7 +8,7 @@
 
         <footer>
             <ul class="list-horizontal">
-                <li>Copyright 2018 {{ title }}</li>
+                <li>{{ fullYear }} {{ title }}</li>
                 <li v-for="page in pages" :key="page.id">
                     <button type="button" @click="openModal(page.type)">{{ page.title }}</button>
                 </li>
@@ -53,6 +53,11 @@ export default {
     components: {
      modal,
      VueMarkdown,
+   },
+   computed: {
+       fullYear () {
+           return `Copyright © ${new Date().getFullYear()}`;
+       }
    },
    mixins: [
        RemoteData({

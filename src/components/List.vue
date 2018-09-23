@@ -25,7 +25,12 @@
             <div @click="readMore(limitationList)" class="flex-1 mb-4 cursor-pointer bg-teal hover:bg-teal-dark text-center text-white font-bold py-2 px-4 rounded-full">Voir {{ limitationList == 2 ? 'plus': 'moins'}}</div>
         </div>
 
-        <div class="text-xl mb-4 font-bold" v-if="selected !== ''">{{ categoryName }}</div>
+        <div class="text-xl mb-4 font-bold" v-if="selected !== ''">
+            {{ categoryName }}
+        </div>
+        <div class="text-xl mb-4 font-bold" v-else>
+            Toutes les fanfictions
+        </div>
 
         <article class="flex flex-wrap -mx-2">
             <div id="tsr" class="mb-4 w-full px-2 md:w-1/2" v-for="fanfic of fanficList">
