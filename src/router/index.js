@@ -8,8 +8,6 @@ import Posts from '@/components/Posts'
 import PostDetail from '@/components/PostDetail'
 import Dashboard from '@/components/Dashboard'
 import ListUserFanfic from '@/components/ListUserFanfic'
-import UpdateFanfic from '@/components/UpdateFanfic'
-import UpdateChapter from '@/components/UpdateChapter'
 import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
@@ -73,9 +71,9 @@ const router = new Router({
             children: [
                 { path: '/fanfics', name: 'ListUserFanfic', component: ListUserFanfic, title: 'Vos fanfictions' },
                 { path: '/create', name: 'NewFanfic', component: NewFanfic, title: 'Ecrire une fanfiction' },
-                { path: '/update/:id/edit', name: 'UpdateFanfic', component: UpdateFanfic, props: true, title: 'Editer une fanfiction' },
+                { path: '/update/:id/edit', name: 'UpdateFanfic', component: NewFanfic, props: true, title: 'Editer une fanfiction' },
                 { path: '/new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, title: 'Ecrire un chapitre' },
-                { path: '/update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: UpdateChapter, props: true, title: 'Editer un chapitre' },
+                { path: '/update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: NewChapter, props: true, title: 'Editer un chapitre' },
                 { path: '/fanfic/:id', name: 'Fanfic', component: Fanfic, props: true, title: 'Voir la fanfiction' },
                 { path: '/change-password', name: 'ChangePassword', component: ChangePassword, title: 'Changer le mot de passe' },
             ]

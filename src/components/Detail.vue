@@ -89,12 +89,12 @@
 
                     <div v-html="chapter.text"></div>
 
-                    <div v-show="!writeToChapterComment" class="text-center"><p @click="writeCommentToChapter" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">Commentez le chapitre</p></div>
+                    <div v-show="!writeToChapterComment" class="text-center"><p @click="writeCommentToChapter" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">Commentez le chapitre &laquo; {{ chapter.title }} &raquo;</p></div>
 
                     <div v-if="writeToChapterComment">
                         <Form
                             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                            title="Nouveau commentaire"
+                            :title="'Nouveau commentaire sur ' + chapter.title"
                             :operation="writeComChapter"
                             :valid="valid">
                             <div class="mb-4">
