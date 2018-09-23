@@ -42,6 +42,9 @@
 </template>
 
 <script>
+import confirm from '../mixins/confirm'
+import get_cookie from '../cookie'
+
 export default {
     name: 'ChangePassword',
     data(){
@@ -50,6 +53,7 @@ export default {
             new_password: ''
         }
     },
+    mixins: [confirm],
     computed: {
       title () {
         return "Changer le mot de passe"
@@ -60,14 +64,27 @@ export default {
     },
     methods: {
       async operation () {
-        const result = await this.$fetch('change-password', {
-                method: 'PUT',
-                body: JSON.stringify({
-                    old_password: this.old_password,
-                    new_password: this.new_password
-                }),
-            })
-            this.old_password = this.new_password = ''
+          const message = "Votre mot de passe a été changer.";
+
+          this.confirm(message, () => {
+              $.ajax({
+                  url: '/api/change-password',
+                  type: 'PUT',
+                  headers: {
+                      "X-CSRFToken": get_cookie("csrftoken"),
+                  },
+                  data: {
+                      old_password: this.old_password,
+                      new_password: this.new_password
+                  },
+                  success: function() {
+                      this.old_password = this.new_password = ''
+                  }.bind(this),
+                  error: function (error) {
+                      console.log(error);
+                  }.bind(this)
+              })
+          });
       }
     }
 }
