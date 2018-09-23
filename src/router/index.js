@@ -12,7 +12,6 @@ import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
 import ChangePassword from '@/components/ChangePassword'
-import ShowUserFanfic from '@/components/ShowUserFanfic'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -79,7 +78,7 @@ const router = new Router({
             ]
         },
         { path: '*', component: List },
-        { path: '/fanfics/:username/show', name: 'ShowUserFanfic', component: ShowUserFanfic, props: true, title: 'Voir les fanfictions d\'un utilisateur' },
+        { path: '/fanfics/:username/show', name: 'ShowUserFanfic', component: ListUserFanfic, props: true, title: 'Voir les fanfictions d\'un utilisateur' },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {
