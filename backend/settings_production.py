@@ -65,7 +65,7 @@ EMAIL_HOST_USER = config('SENDGRID_USERNAME')
 EMAIL_HOST_PASSWORD = config('SENDGRID_PASSWORD')
 EMAIL_USE_TLS = True
 
-# Settings REST Framework for production 
+# Settings REST Framework for production
 # Disable browsable API
 
 REST_FRAMEWORK = {
@@ -85,7 +85,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
