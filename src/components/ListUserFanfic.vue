@@ -114,7 +114,7 @@ export default {
     mixins: [
         RemoteData({
             userFanfics () {
-                return `fanfics/author/${this.$state.user.username}`
+                return this.$state.user !== null ? `fanfics/author/${this.$state.user.username}` : ``
             },
             fanfic () {
                return this.username ? `fanfics/v1/author/${this.$route.params.username}` : ``

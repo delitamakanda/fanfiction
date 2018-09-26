@@ -6,7 +6,7 @@
         </div>
 
         <section>
-            <div class="max-w-md w-full lg:flex mb-4" v-for="item in postList" track-by="item.id">
+            <div class="w-full lg:flex mb-4" v-for="item in postList" track-by="item.id">
                 <div v-if="item.header" class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" :style="{backgroundImage: 'url(' + item.header + ')' }" :title="item.title">
                 </div>
                 <div v-else class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" :style="{backgroundColor: '#ddd' }" :title="item.title"></div>
@@ -19,7 +19,7 @@
                                 </span>
                             </p>
                             <div class="text-black font-bold text-xl mb-2">{{ item.title }}</div>
-                            <vue-markdown :source="item.content" class="text-grey-darker text-base">{{ item.content.length > 10 ? item.content.substring(0, 10) + '...': '' }}</vue-markdown>
+                            <vue-markdown :source="item.content" class="text-grey-darker text-base">{{ item.content.length > 100 ? item.content.substring(0, 100) + '...': '' }}</vue-markdown>
                         </div>
                         <div class="flex items-center">
                             <div class="text-sm">
