@@ -48,7 +48,7 @@ class CommentDetailView(generics.RetrieveAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (
-        permissions.AllowAny,
+        permissions.IsAuthenticatedOrReadOnly,
     )
     name='comment-detail'
 

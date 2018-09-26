@@ -93,13 +93,13 @@ class FanficListRemasteredView(generics.ListAPIView):
         return Fanfic.objects.all()
 
 
-class FanficCreateView(generics.CreateAPIView):
+class FanficCreateView(generics.ListCreateAPIView):
     """
     METHOD POST ONLY
     """
     serializer_class = FanficSerializer
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.IsAuthenticated,
         custompermission.IsCurrentAuthorOrReadOnly
     )
     name='fanfic-create'

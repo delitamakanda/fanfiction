@@ -16,6 +16,8 @@ from api.serializers import FanficSerializer
 
 from api.models import Fanfic
 from api.models import Comment
+from api.models import Category
+from api.models import SubCategory
 
 from api import views
 from api import views_fanfic
@@ -23,16 +25,16 @@ from api import views_post
 
 # Create your tests here.
 
-class TestFanficList(APITestCase):
+class TestPost(APITestCase):
     """
-    Tests for fanfics
+    Tests for post
     """
 
     def setUp(self):
         self.user = self.setup_user()
         self.factory = APIRequestFactory()
-        self.view = views_fanfic.FanficListRemasteredView.as_view()
-        self.uri = '/api/fanfics/v1'
+        self.view = views_post.PostList.as_view()
+        self.uri = '/api/posts'
 
     @staticmethod
     def setup_user():
@@ -43,26 +45,70 @@ class TestFanficList(APITestCase):
             password='test'
         )
 
-    def test_fanfic_list(self):
+    def test_post_list(self):
         request = self.factory.get(self.uri)
+        request.user = self.user
         response = self.view(request)
         self.assertEqual(response.status_code, 200,
                         'Expected Response Code 200, received {0} instead.'
                         .format(response.status_code))
 
 
-class TestPost(APITestCase):
+class TestFanfic(APITestCase):
     """
-    Tests for posts
+    Tests for fanfics
     """
 
     def setUp(self):
+        self.user = self.setup_user()
         self.client = APIClient()
-        self.view = views_post.PostList.as_view()
-        self.uri = '/api/posts'
+        self.view = views_fanfic.FanficCreateView.as_view()
+        self.uri = '/api/fanfics'
 
-    def test_post_list(self):
+    @staticmethod
+    def setup_user():
+        User = get_user_model()
+        return User.objects.create_user(
+            'test',
+            email='test@email.com',
+            password='test'
+        )
+
+    def test_list(self):
+        self.client.login(username='test', password='test')
         response = self.client.get(self.uri)
         self.assertEqual(response.status_code, 200,
                         'Expected Response Code 200, received {0} instead.'
+                        .format(response.status_code))
+
+
+class TestCategory(APITestCase):
+    """
+    Tests for categories
+    """
+
+    def setUp(self):
+        self.user = self.setup_user()
+        self.client = APIClient()
+        self.view = views.CategoryList.as_view()
+        self.uri = '/api/category'
+
+    @staticmethod
+    def setup_user():
+        User = get_user_model()
+        return User.objects.create_user(
+            'test',
+            email='test@email.com',
+            password='test'
+        )
+
+    def test_create(self):
+        self.client.login(username='test', password='test')
+        params = {
+            "name": "Animes-Mangas",
+            "slug": "animers-mangas"
+        }
+        response = self.client.post(self.uri, params)
+        self.assertEqual(response.status_code, 201,
+                        'Expected Response Code 201, received {0} instead.'
                         .format(response.status_code))

@@ -13,7 +13,7 @@ class PostList(generics.ListAPIView):
     queryset = Post.objects.order_by('-created').all()
     serializer_class = PostSerializer
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny,
     )
     pagination_class = None
     name='post-list'
@@ -23,7 +23,7 @@ class PostDetail(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny,
     )
     name='post-detail'
     lookup_field = 'slug'
