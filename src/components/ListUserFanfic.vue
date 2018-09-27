@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="username">
+        <template v-if="this.$route.params.username">
             <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
                 {{ errorFetch }}
             </div>
@@ -41,7 +41,7 @@
                 </div>
             </article>
         </template>
-        <template v-else>
+        <template v-else-if="$state.user !== null && $state.user.username !== null">
             <h1>{{ subtitle }}</h1>
 
             <Loading v-if="remoteDataBusy" />
@@ -114,10 +114,10 @@ export default {
     mixins: [
         RemoteData({
             userFanfics () {
-                return this.$state.user !== null ? `fanfics/author/${this.$state.user.username}` : ``
+                return this.$route.params.username ? `fanfics/author/${this.$route.params.username}`: `fanfics/author/${this.$state.user.username}`
             },
             fanfic () {
-               return this.username ? `fanfics/v1/author/${this.$route.params.username}` : ``
+               return `fanfics/v1/author/${this.$route.params.username}`
            },
         }),
     ],

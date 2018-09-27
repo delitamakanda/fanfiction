@@ -21,7 +21,7 @@
             </section>
             <section class="content">
                 <ul>
-                    <li v-for="(chap, index) in chapter" v-if="chap.fanfic === fanfic.id" :key="index" :index="index">
+                    <li v-for="(chap, index) in chapters" v-if="chap.fanfic === fanfic.id" :key="chap.id">
                         {{ chap.title }} - Publié le {{ chap.published | date }}
 
                         <router-link :to="{name: 'UpdateChapter', params: { chapter_id: chap.id, id: fanfic.id } }" title="Editer un chapitre" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker"><svgicon icon="edit-pencil" width="22" height="18" color="#000"></svgicon> </router-link>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="box comment-content">
                     <div>
-                        <div v-for="(comment, index) in comments" v-if="comments && fic === 'chapters'" :key="index">
+                        <div v-for="(comment, index) in comments" v-if="comments && fic === 'chapters'" :key="comment.id">
                             Ecrit par : {{ comment.name }} le {{ comment.created | date }} sur le chapitre {{ comment.chapter.title }}
                             <div>{{ comment.body }}</div>
                             <div class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white p-4 leading-normal mb-4" v-if="comment.in_reply_to !== null">Réponse à {{ comment.in_reply_to.name }} le {{ comment.in_reply_to.created | date }} sur le chapitre {{ comment.chapter.title }}
@@ -55,13 +55,13 @@
                             <span v-if="comment.in_reply_to === null" class="cursor-pointer lg:inline-block text-teal hover:text-teal-darker italic underline" @click="showModalChapter(comment.id, comment.name, comment.chapter.id, comment.chapter.title, comment.body)">Répondre</span>
                             <hr />
                         </div>
-                        <div v-for="(comment, index) in allComments" v-if="allComments && fic === 'story'" :key="index">
+                        <div v-for="(comment, index) in allComments" v-if="allComments && fic === 'story'" :key="comment.id">
                                 Ecrit par : {{ comment.name }} le {{ comment.created | date }}
                                 <div>{{ comment.body }}</div>
                                 <div class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white p-4 leading-normal mb-4" v-if="comment.in_reply_to !== null">Réponse à {{ comment.in_reply_to.name }} le {{ comment.in_reply_to.created | date }}
                                     <div>{{ comment.in_reply_to.body }}</div>
                                 </div>
-                                <span v-if="comment.in_reply_to === null" class="cursor-pointer lg:inline-block text-teal hover:text-teal-darker italic underline" @click="showModal(comment.id, comment.name)">Répondre</span>
+                                <span v-if="comment.in_reply_to === null" class="cursor-pointer lg:inline-block text-teal hover:text-teal-darker italic underline" @click="showModal(comment.id, comment.name, comment.body)">Répondre</span>
                                 <hr />
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                             </label>
                             <Input
                             type="textarea"
-                            name="body"
+                            name="bodyText"
                             v-model="body"
                             placeholder=""
                             rows="6"
@@ -156,7 +156,7 @@ export default {
             fanfic () {
                 return `fanfics/${this.id}`
             },
-            chapter () {
+            chapters () {
                 return `chapters/${this.id}/list`
             },
             comments () {
@@ -182,7 +182,7 @@ export default {
     data () {
         return {
             fanfic: [],
-            chapter: [],
+            chapters: [],
             comments: [],
             comment: {},
             allComments: [],
@@ -229,10 +229,11 @@ export default {
                 });
             });
         },
-        showModal(commentId, commentName) {
+        showModal(commentId, commentName, commentBody) {
             this.isModalVisible = true
             this.nameOfuser = commentName
             this.idComment = commentId
+            this.bodyText = commentBody
         },
         showModalChapter(commentId, commentName, commentChapterId, commentChapterTitle, commentBody) {
             this.isModalChapterVisible = true
@@ -260,9 +261,10 @@ export default {
                 }),
             })
 
-            this.body = '';
-
             this.allComments.unshift(result);
+            this.allComments[0].in_reply_to = Object.assign({}, this.allComments[0].in_reply_to, {name: this.nameOfuser, created: Date.now(), body: this.bodyText })
+
+            this.body = '';
 
             this.closeModal();
         },
