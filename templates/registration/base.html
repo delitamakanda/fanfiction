@@ -58,10 +58,17 @@
         </nav>
         {% block content %}
         {% endblock %}
-        <footer>
-            <p>Copyright 2018 Fanfiction</p>
+        <footer id="copyright">
         </footer>
         <script>
+        var copyrightDate = new Date().getFullYear();
+        var textCopyrightFormatted = "Copyright "+ copyrightDate + " Fanfiction";
+        var p = document.createElement('p');
+        p.innerHTML = textCopyrightFormatted;
+
+        var footerDiv = document.getElementById("copyright");
+
+        footerDiv.appendChild(p)
         /*if ('serviceWorker' in navigator) {
           navigator.serviceWorker
           .register("{% static 'sw.js' %}")
@@ -71,6 +78,7 @@
               console.log(error);
             });
         }*/
+
         </script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="//intercoolerreleases-leaddynocom.netdna-ssl.com/intercooler-1.1.1.min.js"></script>
