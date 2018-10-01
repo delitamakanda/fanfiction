@@ -12,7 +12,7 @@
             </div>
 
             <article class="flex flex-wrap -mx-2">
-                <div class="mb-4 w-full px-2 md:w-1/2" v-for="fic of fanfic" :key="fic.id">
+                <div class="mb-4 w-full px-2 md:w-1/2" v-for="fic of userFanfics" :key="fic.id">
                     <router-link :to="{
                       name: 'Detail',
                       params: {
@@ -114,11 +114,8 @@ export default {
     mixins: [
         RemoteData({
             userFanfics () {
-                return this.$route.params.username ? `fanfics/author/${this.$route.params.username}`: `fanfics/author/${this.$state.user.username}`
+                return this.$route.params.username ? `fanfics/v1/author/${this.$route.params.username}`: `fanfics/author/${this.$state.user.username}`
             },
-            fanfic () {
-               return `fanfics/v1/author/${this.$route.params.username}`
-           },
         }),
     ],
     props: {

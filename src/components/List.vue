@@ -67,6 +67,13 @@
             <router-link :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Créez la votre !</router-link>
         </div>
 
+        <!--<Pagination
+           :total-pages="8"
+           :total="8"
+           :per-page="4"
+           :current-page="currentPage"
+           @pagechanged="onPageChange"
+         />-->
     </section>
 
   </div>
@@ -80,7 +87,7 @@ export default {
   mixins: [
       RemoteData({
           fanficList () {
-              return 'fanfics/v1?category=&subcategory=&status=publié';
+              return 'fanfics/v1?category=&status=publié&subcategory=';
           },
           categories () {
               return 'category'
@@ -96,7 +103,8 @@ export default {
         empty: false,
         moreStr: 'Voir plus',
         limitationList: 2,
-        selected: ''
+        selected: '',
+        currentPage: 1
         }
     },
     computed: {
@@ -138,8 +146,11 @@ export default {
           } else {
               this.limitationList = this.categories.length
           }
-      }
-    },
+      },
+      onPageChange(page) {
+          this.currentPage = page;
+        }
+    }
 }
 </script>
 

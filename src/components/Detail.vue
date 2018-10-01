@@ -65,7 +65,7 @@
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.classement }} </span>
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.genres }} </span>
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">{{ fanfic.total_likes }} likes</span>
-                    <span class="lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer" @click="showModal"><u>{{ total_comments }} commentaire(s)</u> </span>
+                    <span class="lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer" @click="showModal"><u>{{ total_comments }} commentaire(s)</u> </span>
                   </div>
             </div>
 
@@ -74,7 +74,7 @@
                 <div class="sidebar-menu ">
                     <ul v-for="(element, index) in chapterList">
                         <li :key="index">
-                            <span @click="selectChapter($event)" :id="element.id" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">{{ index + 1 }} - {{ element.title }}
+                            <span @click="selectChapter($event)" :id="element.id" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer underline">{{ index + 1 }} - {{ element.title }}
                             </span>
                         </li>
                     </ul>
@@ -89,7 +89,7 @@
 
                     <div v-html="chapter.text"></div>
 
-                    <div v-show="!writeToChapterComment" class="text-center"><p @click="writeCommentToChapter" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker pointer underline">Commentez le chapitre &laquo; {{ chapter.title }} &raquo;</p></div>
+                    <div v-show="!writeToChapterComment" class="text-center"><p @click="writeCommentToChapter" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer underline">Commentez le chapitre &laquo; {{ chapter.title }} &raquo;</p></div>
 
                     <div v-if="writeToChapterComment">
                         <Form
@@ -153,12 +153,12 @@
         >
         <h3 slot="header">Voir les commentaires</h3>
         <div slot="body">
-            <p v-if="step === 1" @click="writeComment" class="pointer block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Donnez votre avis sur cette histoire.</p>
+            <p v-if="step === 1" @click="writeComment" class="cursor-pointer block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Donnez votre avis sur cette histoire.</p>
             <div class="tabs comment-tabs">
-                <ul class="list-reset flex">
-                    <li :class="[ fic === 'story' ? 'is-active' : ''] + ' mr-6'"><a @click="fic='story'" class="text-teal hover:text-teal-darker pointer">Tous</a>
+                <ul class="list-reset flex border-b">
+                    <li :class="[ fic === 'story' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="fic='story'" class="cursor-pointer bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold">Tous</a>
                     </li>
-                    <li :class="[ fic === 'chapters' ? 'is-active' : ''] + ' mr-6'"><a @click="fic='chapters'" class="text-teal hover:text-teal-darker pointer">Par chapitre</a></li>
+                    <li :class="[ fic === 'chapters' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="fic='chapters'" class="cursor-pointer bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold">Par chapitre</a></li>
                 </ul>
             </div>
             <div class="box comment-content">
@@ -231,7 +231,7 @@
                 :disabled="!valid">
                 Ajouter un commentaire
             </button>
-            <p v-if="step === 2" @click="goStepBack" class="pointer inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Retour au chapitre</p>
+            <p v-if="step === 2" @click="goStepBack" class="cursor-pointer inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Retour au chapitre</p>
         </template>
     </Form>
 
@@ -514,10 +514,6 @@ export default {
 <style scoped>
 .w-full {
     margin: 0 auto;
-}
-
-.pointer {
-    cursor: pointer;
 }
 
 .comment-content {

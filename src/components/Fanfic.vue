@@ -38,10 +38,10 @@
             <section class="action">
                 <h3>Commentaire(s)</h3>
                 <div class="tabs comment-tabs">
-                    <ul class="list-reset flex">
-                        <li :class="[ fic === 'story' ? 'is-active' : ''] + ' mr-6'"><a @click="fic='story'" class="text-teal hover:text-teal-darker cursor-pointer">Tous</a>
+                    <ul class="list-reset flex border-b">
+                        <li :class="[ fic === 'story' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="fic='story'" class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold cursor-pointer">Tous</a>
                         </li>
-                        <li :class="[ fic === 'chapters' ? 'is-active' : ''] + ' mr-6'"><a @click="fic='chapters'" class="text-teal hover:text-teal-darker cursor-pointer">Par chapitre</a></li>
+                        <li :class="[ fic === 'chapters' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="fic='chapters'" class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold cursor-pointer">Par chapitre</a></li>
                     </ul>
                 </div>
                 <div class="box comment-content">
