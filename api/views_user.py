@@ -4,10 +4,15 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 
+from api.models import AccountProfile
+
 from api.serializers import UserSerializer
+from api.serializers import AccountProfileSerializer
+
+from api import custompermission
 
 
-class UserList(generics.ListAPIView):
+class UserListView(generics.ListAPIView):
     """
     List all users
     """
@@ -18,7 +23,7 @@ class UserList(generics.ListAPIView):
     )
 
 
-class UserDetail(generics.RetrieveAPIView):
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve an user
     """
@@ -26,4 +31,18 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = (
         permissions.IsAuthenticated,
+        custompermission.IsCurrentUserOrReadonly,
     )
+
+
+class AccountProfileListView(generics.RetrieveAPIView):
+    """
+    Retrieve a profile account
+    """
+    queryset = AccountProfile.objects.all()
+    serializer_class = AccountProfileSerializer
+    permissions_classes = (
+        permissions.AllowAny,
+    )
+    
+    lookup_field = 'user'

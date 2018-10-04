@@ -1,4 +1,5 @@
 import json
+
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -7,8 +8,10 @@ from rest_framework.response import Response
 from api.serializers import ChangePasswordSerializer
 from api.serializers import UserSerializer
 
+from api.models import AccountProfile
+
 # Create your api views here.
-class UserCreate(generics.CreateAPIView):
+class UserCreateView(generics.CreateAPIView):
     """
     Create an user
     """
@@ -25,6 +28,8 @@ class LoginView(views.APIView):
     permission_classes = ( permissions.AllowAny,)
 
     def post(self, request):
+        profile = AccountProfile.objects.all()
+
         user = authenticate (
             username=request.data.get("username"),
             password=request.data.get("password"))
@@ -34,6 +39,9 @@ class LoginView(views.APIView):
                 'status': 'Non autorisé',
                 'message': 'Pseudo ou mot de passe incorrect.'
             }, status=status.HTTP_401_UNAUTHORIZED)
+
+        if not profile.filter(user=user).exists():
+            AccountProfile.objects.create(user=user)
 
         login(request, user)
         return Response(UserSerializer(user).data)

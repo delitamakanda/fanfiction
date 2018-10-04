@@ -19,7 +19,7 @@ from api.serializers import ChangePasswordSerializer
 from api.serializers import UserSerializer
 
 # Create your api views here.
-class EmailFeedback(views.APIView):
+class EmailFeedbackView(views.APIView):
     """
     Feedback email
     """
@@ -64,7 +64,7 @@ def liked_fanfic(request):
             return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FavoritedFanfic(views.APIView):
+class FavoritedFanficView(views.APIView):
     """
     Favorite fanfic
     """
@@ -96,7 +96,7 @@ def unliked_fanfic(request):
             return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UnfavoritedFanfic(views.APIView):
+class UnfavoritedFanficView(views.APIView):
     """
     Unfavorite fanfic
     """
@@ -201,7 +201,7 @@ class DeleteAccountView(views.APIView):
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
-class ContactMail(views.APIView):
+class ContactMailView(views.APIView):
   """
   Send an email to webmaster
   """

@@ -7,3 +7,15 @@ class IsCurrentAuthorOrReadOnly(permissions.BasePermission):
             return True
         else:
             return obj.author == request.user
+
+
+class IsCurrentUserOrReadonly(permissions.BasePermission):
+    """
+    Handles permissions for users.  The basic rules are
+
+     - owner may GET, PUT, POST, DELETE
+     - nobody else can access
+     """
+
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj

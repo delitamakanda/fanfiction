@@ -12,6 +12,7 @@ from api.models import Tag
 from api.models import FlatPages
 from api.models import FollowStories
 from api.models import FollowUser
+from api.models import AccountProfile
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
@@ -245,6 +246,22 @@ class UserSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError('Cette e-mail est déja utilisée.')
         return value
+
+
+class AccountProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AccountProfile
+        fields = (
+            'id',
+            'user',
+            'date_of_birth',
+            'photo',
+            'bio',
+        )
+
+    def create(self, validated_data):
+        return AccountProfile.objects.create(**validated_data)
 
 
 class ChapterSerializer(serializers.ModelSerializer):
