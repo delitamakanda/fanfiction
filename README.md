@@ -35,3 +35,13 @@ python3 manage.py migrate
 
 python3 manage.py runserver
 ```
+
+## Tests
+
+``` bash
+coverage run --source=api ---omit=*/migrations/*  manage.py test
+
+coverage report -m
+```
+
+
