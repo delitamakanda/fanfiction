@@ -119,8 +119,12 @@ class ChapterCreateView(generics.CreateAPIView):
     name='chapter-create'
     permission_classes = (
         permissions.IsAuthenticated,
+        custompermission.IsCurrentAuthorOrReadOnly
     )
     pagination_class = None
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 
@@ -130,6 +134,7 @@ class ChapterDetailView(generics.RetrieveUpdateDestroyAPIView):
     name='chapter-detail'
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
+        custompermission.IsCurrentAuthorOrReadOnly
     )
 
 """

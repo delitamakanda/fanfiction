@@ -146,6 +146,7 @@ class FollowStories(models.Model):
 
 
 class Chapter(models.Model):
+    author = models.ForeignKey(User, related_name="chapter", on_delete=models.CASCADE)
     fanfic = models.ForeignKey(Fanfic, related_name="chapters", on_delete=models.CASCADE)
     title = models.CharField(max_length=200, db_index=True)
     description = models.TextField(blank=True, default='')

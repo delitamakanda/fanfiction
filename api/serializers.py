@@ -253,6 +253,7 @@ class ChapterSerializer(serializers.ModelSerializer):
         model = Chapter
         fields = (
           'id',
+          'author',
           'fanfic',
           'title',
           'description',
