@@ -46,7 +46,7 @@ import confirm from '../mixins/confirm'
 import get_cookie from '../cookie'
 
 export default {
-    name: 'ChangePassword',
+    name: 'EditAccount',
     data(){
         return{
             old_password: '',

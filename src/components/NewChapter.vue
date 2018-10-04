@@ -165,6 +165,7 @@ export default {
                     description: this.description,
                     text: this.text,
                     fanfic: this.$route.params.id,
+                    author: this.$state.user.id
                 }),
             })
             this.title = this.description = this.text = ''
@@ -177,6 +178,7 @@ export default {
                     description: this.chapter.description,
                     text: this.chapter.text,
                     fanfic: this.chapter.fanfic,
+                    author: this.$state.user.id
                 }),
             })
             this.$router.push({name: 'Fanfic', params: { id: this.chapter.fanfic }})

@@ -12,8 +12,8 @@
                       Ecrire une fanfiction
                   </router-link></li>
 
-                  <li><router-link v-if="$route.name !== 'ChangePassword'" tag="button" :to="{ name: 'ChangePassword' }">
-                      Changer le mot de passe
+                  <li><router-link v-if="$route.name !== 'EditAccount'" tag="button" :to="{ name: 'EditAccount' }">
+                      Editer le compte
                   </router-link></li>
 
                   <li><button class="text-red hover:text-red-darker" @click.prevent="disableAccount">

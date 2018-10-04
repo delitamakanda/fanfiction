@@ -11,7 +11,7 @@ import ListUserFanfic from '@/components/ListUserFanfic'
 import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
-import ChangePassword from '@/components/ChangePassword'
+import EditAccount from '@/components/EditAccount'
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
@@ -76,7 +76,7 @@ const router = new Router({
                 { path: '/new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, title: 'Ecrire un chapitre' },
                 { path: '/update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: NewChapter, props: true, title: 'Editer un chapitre' },
                 { path: '/fanfic/:id', name: 'Fanfic', component: Fanfic, props: true, title: 'Voir la fanfiction' },
-                { path: '/change-password', name: 'ChangePassword', component: ChangePassword, title: 'Changer le mot de passe' },
+                { path: '/edit-account', name: 'EditAccount', component: EditAccount, title: 'Edition du compte personnel' },
             ]
         },
         { path: '*', component: List },

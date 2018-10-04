@@ -22,7 +22,7 @@
             </a></li>
         </ul>
         <div class="flex">
-            <div @click="readMore(limitationList)" class="flex-1 mb-4 cursor-pointer bg-teal hover:bg-teal-dark text-center text-white font-bold py-2 px-4 rounded-full">Voir {{ limitationList == 2 ? 'plus': 'moins'}}</div>
+            <div @click="readMore(limitationList)" class="flex-1 mb-4 cursor-pointer bg-teal hover:bg-teal-dark text-center text-white font-bold py-2 px-4 rounded-full">Voir {{ limitationList == 5 ? 'plus': 'moins'}}</div>
         </div>
 
         <div class="text-xl mb-4 font-bold" v-if="selected !== ''">
@@ -102,7 +102,7 @@ export default {
         fanficList: [],
         empty: false,
         moreStr: 'Voir plus',
-        limitationList: 2,
+        limitationList: 5,
         selected: '',
         currentPage: 1
         }
@@ -142,7 +142,7 @@ export default {
       },
       readMore (limitationList) {
           if (this.limitationList == this.categories.length) {
-              this.limitationList = 2
+              this.limitationList = 5
           } else {
               this.limitationList = this.categories.length
           }
