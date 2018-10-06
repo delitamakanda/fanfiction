@@ -15,6 +15,7 @@
                   <div class="mb-4">
                     <p class="text-xl leading-tight">Fanfictions de {{ this.$route.params.username }}</p>
                     <p v-if="userProfile.bio" class="text-sm leading-tight text-grey-dark">{{ userProfile.bio }}</p>
+                    <a v-for="social in socialAccount" v-if="socialAccount.length > 0" class="hover:text-teal-dark text-teal font-bold mr-4" :href="'https://' + social.network + '.com/' + social.nichandle" target="_blank">{{ social.nichandle }}</a>
                   </div>
                   <div>
                     <!--<button type="button" class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-teal text-teal hover:bg-teal hover:text-white">Message</button>-->
@@ -152,6 +153,7 @@ export default {
             isActive: false,
             loadingEmail: false,
             fanfic: [],
+            socialAccount: [],
             errorFetch: 'Il y a un problème avec la requète.'
         }
     },
@@ -187,7 +189,8 @@ export default {
         async getProfileUser () {
             this.userProfile = await this.$fetch(`users/${this.$route.params.username}/profile`)
             this.loadingEmail = true
-        }
+            this.socialAccount = await this.$fetch(`users/${this.userProfile.id}/socialaccount`)
+        },
     }
 }
 </script>
