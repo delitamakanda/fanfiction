@@ -19,3 +19,4 @@ db.sqlite3
 webpack-stats.json
 /svg-icons/
 /staticfiles/
+/media/
