@@ -7,8 +7,20 @@
 
             <Loading v-if="remoteDataBusy" />
 
-            <div class="px-6 py-4">
-                <h2>Fanfictions de {{ this.$route.params.username }}</h2>
+            <div class="mb-4 bg-white max-w-sm overflow-hidden">
+              <div class="sm:flex sm:items-center px-6 py-4">
+                <img v-if="userProfile.photo" class="block h-16 sm:h-24 rounded-full mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" :src="userProfile.photo" alt="">
+                <avatar v-else-if="loadingEmail" :email="userProfile.user.email" />
+                <div class="text-center sm:text-left sm:flex-grow">
+                  <div class="mb-4">
+                    <p class="text-xl leading-tight">Fanfictions de {{ this.$route.params.username }}</p>
+                    <p v-if="userProfile.bio" class="text-sm leading-tight text-grey-dark">{{ userProfile.bio }}</p>
+                  </div>
+                  <div>
+                    <!--<button type="button" class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-teal text-teal hover:bg-teal hover:text-white">Message</button>-->
+                </div>
+                </div>
+              </div>
             </div>
 
             <article class="flex flex-wrap -mx-2">
@@ -115,7 +127,7 @@ export default {
         RemoteData({
             userFanfics () {
                 return this.$route.params.username ? `fanfics/v1/author/${this.$route.params.username}`: `fanfics/author/${this.$state.user.username}`
-            },
+            }
         }),
     ],
     props: {
@@ -136,13 +148,18 @@ export default {
         return{
             subtitle: 'Vos fanfictions',
             userFanfics: [],
+            userProfile: [],
             isActive: false,
+            loadingEmail: false,
             fanfic: [],
             errorFetch: 'Il y a un problème avec la requète.'
         }
     },
     components: {
         Fanfic,
+    },
+    mounted () {
+        this.getProfileUser()
     },
     methods: {
         async deleteStory (userFanficId, index) {
@@ -167,6 +184,10 @@ export default {
                 });
             }
         },
+        async getProfileUser () {
+            this.userProfile = await this.$fetch(`users/${this.$route.params.username}/profile`)
+            this.loadingEmail = true
+        }
     }
 }
 </script>

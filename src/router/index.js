@@ -12,10 +12,12 @@ import NewFanfic from '@/components/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
 import EditAccount from '@/components/EditAccount'
+
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
 import Input from '@/components/Input'
 import Pagination from '@/components/Pagination'
+import Avatar from '@/components/Avatar'
 
 import VueFetch from '../plugins/fetch'
 import VeeValidate from 'vee-validate'
@@ -26,6 +28,7 @@ Vue.component('Loading', Loading)
 Vue.component('Form', Form)
 Vue.component('Input', Input)
 Vue.component('Pagination', Pagination)
+Vue.component('Avatar', Avatar)
 
 Vue.use(Router)
 Vue.use(VueFetch, {
