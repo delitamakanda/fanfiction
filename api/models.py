@@ -1,3 +1,5 @@
+from PIL import Image
+
 from django.db import models
 from django.conf import settings
 
@@ -25,6 +27,18 @@ class AccountProfile(models.Model):
         ordering = ('user',)
         verbose_name = 'Account profile'
         verbose_name_plural = 'Accounts profiles'
+
+    def save(self, *args, **kwargs):
+        super(AccountProfile, self).save(*args, **kwargs)
+
+        if self.photo:
+            photo = Image.open(self.photo)
+            p_width, p_height = photo.size
+            max_size = (1000,1000)
+
+            if p_width > 1000:
+                photo.thumbnail(max_size, Image.ANTIALIAS)
+                photo.save(self.photo.path)
 
 
     def __str__(self):
