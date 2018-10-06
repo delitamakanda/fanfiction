@@ -42,6 +42,7 @@ urlpatterns = [
     path('users', views_user.UserListView.as_view(), name='user-list'),
     path('users/<int:pk>', views_user.UserDetailView.as_view(), name='user-detail'),
     path('users/<str:user__username>/profile', views_user.AccountProfileListView.as_view(), name='user-account-profile'),
+    path('users/<int:account>/socialaccount', views_user.SocialListView.as_view(), name='socialaccount-view'),
     path('user', api_auth.CheckoutUserView.as_view(), name='user'),
     path('signup', api_auth.UserCreateView.as_view(), name='signup'),
     path('login', api_auth.LoginView.as_view(), name='login'),

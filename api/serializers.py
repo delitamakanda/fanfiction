@@ -13,6 +13,7 @@ from api.models import FlatPages
 from api.models import FollowStories
 from api.models import FollowUser
 from api.models import AccountProfile
+from api.models import Social
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
@@ -263,6 +264,21 @@ class AccountProfileSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return AccountProfile.objects.create(**validated_data)
+
+
+class SocialSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = Social
+        fields = (
+            'id',
+            'account',
+            'network',
+            'nichandle',
+            'user',
+        )
+
 
 
 class ChapterSerializer(serializers.ModelSerializer):

@@ -5,9 +5,11 @@ from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 
 from api.models import AccountProfile
+from api.models import Social
 
 from api.serializers import UserSerializer
 from api.serializers import AccountProfileSerializer
+from api.serializers import SocialSerializer
 
 from api import custompermission
 
@@ -46,3 +48,18 @@ class AccountProfileListView(generics.RetrieveAPIView):
     )
 
     lookup_field = ('user__username')
+
+
+class SocialListView(generics.ListAPIView):
+    """
+    Retrieve a profile account
+    """
+    serializer_class = SocialSerializer
+    pagination_class = None
+    permissions_classes = (
+        permissions.AllowAny,
+    )
+
+    def get_queryset(self):
+        account = self.kwargs['account']
+        return Social.objects.filter(account=account)

@@ -21,8 +21,36 @@ class AccountProfile(models.Model):
     photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True)
     bio = models.TextField(blank=True)
 
+    class Meta:
+        ordering = ('user',)
+        verbose_name = 'Account profile'
+        verbose_name_plural = 'Accounts profiles'
+
+
     def __str__(self):
         return 'Profile for user {}'.format(self.user.username)
+
+
+class Social(models.Model):
+    SOCIAL_TYPES = (
+        ('twitter', 'Twitter'),
+        ('facebook', 'Facebook'),
+        ('pinterest', 'Pinterest'),
+        ('instagram', 'Instagram'),
+    )
+    network = models.CharField(max_length=255, choices=SOCIAL_TYPES)
+    nichandle = models.CharField(max_length=255)
+    account = models.ForeignKey(AccountProfile, related_name="social_network", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('network',)
+        verbose_name = 'Social account'
+        verbose_name_plural = 'Social accounts'
+
+
+    def __str__(self):
+        return 'Social network {} for user {}'.format(self.network, self.user.username)
 
 
 class PublishedManager(models.Manager):

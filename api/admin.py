@@ -13,6 +13,7 @@ from api.models import FollowUser
 from api.models import Lexique
 from api.models import FoireAuxQuestions
 from api.models import AccountProfile
+from api.models import Social
 
 # Register your models here.
 @admin.register(Category)
@@ -52,6 +53,7 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ['word', 'created_at']
     prepopulated_fields = {'slug': ('word',)}
 
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ['title', 'user', 'created',]
@@ -71,12 +73,24 @@ class FlatPagesAdmin(admin.ModelAdmin):
 class FollowStoriesAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(FollowUser)
 class FollowUserAdmin(admin.ModelAdmin):
     pass
+
+
+class SocialInline(admin.StackedInline):
+    model = Social
+
+
+class AccountProfileAdmin(admin.ModelAdmin):
+    model = AccountProfile
+    list_display = ('user',)
+    inlines = [SocialInline, ]
+
 
 admin.site.register(FlatPages, FlatPagesAdmin)
 admin.site.register(Lexique)
 admin.site.register(FoireAuxQuestions)
 admin.site.register(CommentByChapter)
-admin.site.register(AccountProfile)
+admin.site.register(AccountProfile, AccountProfileAdmin)
