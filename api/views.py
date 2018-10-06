@@ -29,7 +29,7 @@ from api import custompermission
 Liste des genres
 """
 
-class GenresList(generics.ListAPIView):
+class GenresListView(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = GenresSerializer
     pagination_class = None
@@ -43,7 +43,7 @@ class GenresList(generics.ListAPIView):
 Liste de classement
 """
 
-class ClassementList(generics.ListAPIView):
+class ClassementListView(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = ClassementSerializer
     pagination_class = None
@@ -57,7 +57,7 @@ class ClassementList(generics.ListAPIView):
 Liste des status
 """
 
-class StatusList(generics.ListAPIView):
+class StatusListView(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = StatusSerializer
     pagination_class = None
@@ -141,7 +141,7 @@ class ChapterDetailView(generics.RetrieveUpdateDestroyAPIView):
 Liste des catégories
 """
 
-class CategoryList(generics.ListCreateAPIView):
+class CategoryListView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (
@@ -160,11 +160,11 @@ class CategoryList(generics.ListCreateAPIView):
     pagination_class = None
 
 
-class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+class CategoryDetailView(generics.RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny,
     )
     name='category-detail'
 
@@ -173,28 +173,28 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 Liste des sous-catégories
 """
 
-class SubCategoryList(generics.ListCreateAPIView):
+class SubCategoryListView(generics.ListAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny,
     )
     name='subcategory-list'
     pagination_class = None
 
 
-class SubCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+class SubCategoryDetailView(generics.RetrieveAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
+        permissions.AllowAny,
     )
     name='subcategory-detail'
 
 
 
 
-class ApiRoot(generics.GenericAPIView):
+class ApiRootView(generics.GenericAPIView):
     name = 'api-root'
     def get(self, request, *args, **kwargs):
         return Response({

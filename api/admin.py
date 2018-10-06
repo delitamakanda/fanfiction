@@ -12,6 +12,7 @@ from api.models import FollowStories
 from api.models import FollowUser
 from api.models import Lexique
 from api.models import FoireAuxQuestions
+from api.models import AccountProfile
 
 # Register your models here.
 @admin.register(Category)
@@ -78,3 +79,4 @@ admin.site.register(FlatPages, FlatPagesAdmin)
 admin.site.register(Lexique)
 admin.site.register(FoireAuxQuestions)
 admin.site.register(CommentByChapter)
+admin.site.register(AccountProfile)

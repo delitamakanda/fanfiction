@@ -19,7 +19,7 @@ class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (
-        permissions.IsAuthenticated,
+        permissions.IsAdminUser,
     )
 
 
@@ -44,5 +44,5 @@ class AccountProfileListView(generics.RetrieveAPIView):
     permissions_classes = (
         permissions.AllowAny,
     )
-    
-    lookup_field = 'user'
+
+    lookup_field = ('user__username')
