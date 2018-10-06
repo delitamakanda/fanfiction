@@ -90,7 +90,7 @@ class TestCategory(APITestCase):
     def setUp(self):
         self.user = self.setup_user()
         self.client = APIClient()
-        self.view = views.CategoryList.as_view()
+        self.view = views.CategoryListView.as_view()
         self.uri = '/api/category'
 
     @staticmethod
