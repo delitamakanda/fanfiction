@@ -249,6 +249,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class AccountProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = AccountProfile
