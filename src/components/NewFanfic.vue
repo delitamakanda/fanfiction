@@ -337,6 +337,10 @@ export default {
             type: Number,
             required: false,
         },
+        fanfic_id: {
+            type: Number,
+            required: false,
+        },
     },
     computed: {
         valid () {

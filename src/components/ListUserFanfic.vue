@@ -98,11 +98,6 @@
                                 </div>
 
                                 <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" title="Voir" :to="{name: 'Fanfic', params: { id: userFanfic.id }}"> <svgicon icon="view-show" width="22" height="18" color="#000"></svgicon> </router-link>
-
-                                <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" title="Editer l'histoire" :to="{name: 'UpdateFanfic', params: { id: userFanfic.id }}"><svgicon icon="edit-pencil" width="22" height="18" color="#000"></svgicon> </router-link>
-
-                                <button @click="deleteStory(userFanfic.id, index)" title="Supprimer l'histoire"><svgicon icon="trash" width="22" height="18" color="#000"></svgicon></button>
-
                             </div>
                         </div>
                     </div>
@@ -161,31 +156,9 @@ export default {
         Fanfic,
     },
     mounted () {
-        this.getProfileUser()
+        if ( this.$route.params.username) { this.getProfileUser() }
     },
     methods: {
-        async deleteStory (userFanficId, index) {
-            let message = confirm('Etes vous certain de supprimer cette histoire ? id# ' + userFanficId);
-
-            if (message == true) {
-
-                $.ajax({
-                   url: '/api/fanfics/' + userFanficId,
-                   type: 'DELETE',
-                   data: { id: userFanficId },
-                   headers: {
-                       "X-CSRFToken": get_cookie("csrftoken"),
-                   },
-                   success: function() {
-                       console.log("ok");
-                       this.userFanfics.splice(index, 1);
-                   }.bind(this),
-                   error: function(error) {
-                       console.log(error);
-                   }
-                });
-            }
-        },
         async getProfileUser () {
             this.userProfile = await this.$fetch(`users/${this.$route.params.username}/profile`)
             this.loadingEmail = true

@@ -18,6 +18,10 @@
                 <div>Synopsis : {{ fanfic.synopsis }}</div>
                 <div>Credits : {{ fanfic.credits }}</div>
                 <div>Description : {{ fanfic.description }}</div>
+
+                <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" title="Editer l'histoire" :to="{name: 'UpdateFanfic', params: { fanfic_id: fanfic.id }}"><svgicon icon="edit-pencil" width="22" height="18" color="#000"></svgicon> </router-link>
+
+                <button @click="deleteStory(fanfic.id)" title="Supprimer l'histoire"><svgicon icon="trash" width="22" height="18" color="#000"></svgicon></button>
             </section>
             <section class="content">
                 <ul>
@@ -205,7 +209,7 @@ export default {
         id: {
             type: Number,
             required: true,
-        },
+        }
     },
     methods: {
         async deleteChapter (chapterId, index) {
@@ -289,8 +293,27 @@ export default {
             this.body = '';
 
             this.closeModalChapter();
-        }
+        },
+        async deleteStory (userFanficId) {
+            const message = `Etes vous certain de supprimer cette histoire ? id# ${userFanficId} ?`
 
+            this.confirm(message, () => {
+                $.ajax({
+                   url: '/api/fanfics/' + userFanficId,
+                   type: 'DELETE',
+                   data: { id: userFanficId },
+                   headers: {
+                       "X-CSRFToken": get_cookie("csrftoken"),
+                   },
+                   success: function() {
+                       this.$router.replace(this.$route.params.wantedRoute || { name: 'ListUserFanfic'})
+                   }.bind(this),
+                   error: function(error) {
+                       console.log(error);
+                   }
+                });
+            })
+        }
     }
 }
 </script>

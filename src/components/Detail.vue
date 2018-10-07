@@ -84,7 +84,7 @@
             <section class="w-full md:w-3/4 ">
                 <div v-for="(chapter, index) in chapterList" :key="chapter.id" :id="chapter.id" v-if="chapterIsVisible && chapter.id == target" class="shadow-md p-4 rounded bg-white">
                     <small>Publié le : {{ chapter.published | date }}</small>
-                    
+
                     <h3>{{ chapter.title }}</h3>
 
                     <div v-if="chapter.description !== ''" class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chapter.description" role="alert">{{ chapter.description }}</div>
@@ -422,7 +422,7 @@ export default {
                     user_to: this.fanfic.author
                 })
             })
-
+            this.followUserId = result.id
             this.followUser = true;
         },
         async DisFollowAuthor () {
@@ -449,6 +449,7 @@ export default {
                     to_fanfic: this.fanfic.id
                 })
             })
+            this.followStoryId = result.id
             this.followStory = true
         },
         async DisFollowFanfic () {
