@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from django.core.mail import mail_admins
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from api.models import Fanfic
@@ -241,6 +243,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data["password"])
         user.save()
+        mail_admins("Account creation", "An user has created an account.")
         return user
 
     def validate_email(self, value):

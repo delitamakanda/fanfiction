@@ -1,7 +1,7 @@
 import json
 
 from django.shortcuts import render, HttpResponse
-from django.core.mail import mail_admins
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
@@ -20,9 +20,6 @@ class UserCreateView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
 
-    def post(self, request):
-        mail_admins("Account creation", "An user has created an account.")
-        return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
 
 class LoginView(views.APIView):
