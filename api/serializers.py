@@ -285,6 +285,7 @@ class SocialSerializer(serializers.ModelSerializer):
 
 
 class ChapterSerializer(serializers.ModelSerializer):
+    status = serializers.ChoiceField(choices=Fanfic.STATUS_CHOICES, default='publié')
 
     class Meta:
         model = Chapter
@@ -296,6 +297,7 @@ class ChapterSerializer(serializers.ModelSerializer):
           'description',
           'text',
           'order',
+          'status',
           'published',
         )
 

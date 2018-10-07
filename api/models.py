@@ -199,12 +199,17 @@ class FollowStories(models.Model):
 
 
 class Chapter(models.Model):
+    STATUS_CHOICES = (
+        ('brouillon', 'Brouillon'),
+        ('publié', 'Publié'),
+    )
     author = models.ForeignKey(User, related_name="chapter", on_delete=models.CASCADE)
     fanfic = models.ForeignKey(Fanfic, related_name="chapters", on_delete=models.CASCADE)
     title = models.CharField(max_length=200, db_index=True)
     description = models.TextField(blank=True, default='')
     text = models.TextField()
     order = OrderField(blank=True, for_fields=['fanfic'])
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='publié')
     published = models.DateTimeField(auto_now_add=True)
 
     class Meta:

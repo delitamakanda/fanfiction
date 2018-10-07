@@ -106,6 +106,9 @@ class ChapterListView(generics.ListAPIView):
         permissions.AllowAny,
     )
     pagination_class = None
+    filter_fields = (
+        'status',
+    )
 
     def get_queryset(self):
         fanfic = self.kwargs['fanfic']
