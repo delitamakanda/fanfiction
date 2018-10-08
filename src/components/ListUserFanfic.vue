@@ -67,21 +67,13 @@
                 <div class="max-w-md w-full">
                     <div v-for="(userFanfic, index) in userFanfics" :key="userFanfic.id" :index="index" class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal mb-4">
                         <div class="mb-8">
-                            <div class="text-black font-bold text-xl mb-2">{{ userFanfic.title }}</div>
+                            <div class="text-black font-bold text-xl mb-2">{{ userFanfic.title }} <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" title="Voir" :to="{name: 'Fanfic', params: { id: userFanfic.id }}"> <svgicon icon="view-show" width="22" height="18" color="#000"></svgicon> </router-link></div>
                             <p class="text-grey-darker text-base">
-                                {{ userFanfic.category }}
+                                {{ userFanfic.category }} / {{ userFanfic.subcategory }}
                             </p>
+
                             <p class="text-grey-darker text-base">
-                                {{ userFanfic.subcategory }}
-                            </p>
-                            <p class="text-grey-darker text-base">
-                                {{ userFanfic.genres }}
-                            </p>
-                            <p class="text-grey-darker text-base">
-                                {{ userFanfic.classement }}
-                            </p>
-                            <p class="text-grey-darker text-base">
-                                {{ userFanfic.status}}
+                                {{ userFanfic.genres }} / {{ userFanfic.classement }} / {{ userFanfic.status}}
                             </p>
 
                             <p v-if="userFanfic.description" class="text-grey-darker text-base">
@@ -89,15 +81,13 @@
                             </p>
 
                             <div class="flex items-center">
-                                <div class="text-sm" v-if="userFanfic.users_like.length > 0">
+                                <div class="text-grey-darker text-base" v-if="userFanfic.users_like.length > 0">
                                     Utilisateurs qui aime votre fanfiction :
                                         <span class="mr-4" v-for="user in userFanfic.users_like">
 
                                             <router-link :to="{ name: 'ShowUserFanfic', params: { username: user.username, id: user.id } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ user.username }} </router-link>
                                         </span>
                                 </div>
-
-                                <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" title="Voir" :to="{name: 'Fanfic', params: { id: userFanfic.id }}"> <svgicon icon="view-show" width="22" height="18" color="#000"></svgicon> </router-link>
                             </div>
                         </div>
                     </div>
