@@ -7,4 +7,5 @@ urlpatterns = [
     path('search', views.SearchSubmitView.as_view(), name='search'),
     path('search-ajax-submit', views.SearchAjaxSubmitView.as_view(), name='search-ajax-submit'),
     path('faq', views.foire_aux_questions_view, name='foire_aux_questions'),
+    path('forum', views.communities_view, name='communities_view'),
 ]
