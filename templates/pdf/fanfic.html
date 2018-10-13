@@ -1,0 +1,18 @@
+<html>
+<body>
+    <h2>
+        {{ fanfic.title }}
+    </h2>
+    <span>
+        Publié le : {{ fanfic.created|date:"d F Y" }}
+    </span>
+    {% for item in chapters.all %}
+        <h4>{{ item.title }}</h4>
+        <div>
+            {% autoescape on %}
+                {{ item.text | safe }}
+            {% endautoescape %}
+        </div>
+    {% endfor %}
+</body>
+</html>

@@ -1,17 +1,22 @@
 import json
+import weasyprint
 
+from django.conf import settings
 from django.shortcuts import render, HttpResponse
 from django.template.loader import render_to_string
 from django.core.mail import BadHeaderError, send_mail
 from django.template.loader import get_template
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 
 from api.models import Fanfic
+from api.models import Chapter
 from api.models import FollowStories
 from api.models import FollowUser
 
+from api.serializers import ChapterSerializer
 from api.serializers import FanficSerializer
 from api.serializers import FollowStoriesSerializer
 from api.serializers import FollowUserSerializer
@@ -39,7 +44,7 @@ class EmailFeedbackView(views.APIView):
 
       if fanfic:
         try:
-          send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com', ['delita.makanda@gmail.com'], html_message=msg_html, fail_silently=False)
+          send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com', [settings.SERVER_EMAIL], html_message=msg_html, fail_silently=False)
         except BadHeaderError:
           return Response({"status": "invalid header"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
@@ -214,9 +219,29 @@ class ContactMailView(views.APIView):
 
     if subject and message and from_email:
         try:
-            send_mail(subject, message, from_email, ['delita.makanda@gmail.com'])
+            send_mail(subject, message, from_email, [settings.SERVER_EMAIL])
         except BadHeaderError:
             return Response({"status": "invalid headers"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
     else:
         return Response({"status": "nok"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PrintFanficToPDFView(views.APIView):
+    """
+    Generate a pdf output of fanfic current fanfic
+    """
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, pk=None):
+        try:
+            fanfic = Fanfic.objects.get(id=pk)
+            chapters = Chapter.objects.filter(fanfic=fanfic)
+            html = render_to_string('pdf/fanfic.html', {'fanfic': fanfic, 'chapters': chapters})
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'filename="fanfic_{}.pdf"'.format(fanfic.id)
+            weasyprint.HTML(string=html).write_pdf(response, stylesheets=[weasyprint.CSS(settings.STATIC_ROOT + '/styles/base.css')])
+            return response
+            return Response({"status": "ok"}, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response({"status": "not found"}, status=status.HTTP_404_NOT_FOUND)
