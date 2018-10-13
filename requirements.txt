@@ -35,4 +35,4 @@ awsebcli==3.14.1
 python-binary-memcached
 django-bmemcached
 coreapi==2.3.3
-WeasyPrint==0.42
+WeasyPrint==0.24
