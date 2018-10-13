@@ -35,6 +35,4 @@ awsebcli==3.14.1
 python-binary-memcached
 django-bmemcached
 coreapi==2.3.3
-cairocffi==0.8.0
-CairoSVG==2.1.3
 WeasyPrint==0.42
