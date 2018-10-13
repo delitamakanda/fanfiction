@@ -44,4 +44,8 @@ coverage run --source=api ---omit=*/migrations/*  manage.py test
 coverage report -m
 ```
 
+## Asynchronous tasks
 
+``` bash
+celery -A backend worker -l info
+```
