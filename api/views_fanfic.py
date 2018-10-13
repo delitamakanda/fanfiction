@@ -11,6 +11,8 @@ from api.serializers import FanficSerializer
 from api.serializers import FanficListSerializer
 from api import custompermission
 
+from .tasks import fanfic_created
+
 """
 Fanfics
 """
@@ -109,6 +111,9 @@ class FanficCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+        # launch asynchronous tasks
+        fanfic_created.delay(serializer.data['id'])
+        
 
 """
 method put/delete/get for auth user only
