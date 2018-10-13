@@ -31,3 +31,4 @@ boto3
 django-markdownx==2.0.23
 coreapi==2.3.3
 coverage
+WeasyPrint==0.42
