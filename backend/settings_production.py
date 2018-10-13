@@ -4,7 +4,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['*', '.elasticbeanstalk.com',]
+ALLOWED_HOSTS = ['*',]
 
 # email admin
 
@@ -13,8 +13,6 @@ SERVER_EMAIL = config('ADMIN_EMAIL')
 ADMINS = [
   (config('ADMIN_NAME'), config('ADMIN_EMAIL')),
 ]
-
-ALLOWED_HOSTS = ['*',]
 
 STATIC_ROOT = 'static'
 
@@ -64,6 +62,7 @@ EMAIL_PORT = config('SENDGRID_PORT')
 EMAIL_HOST_USER = config('SENDGRID_USERNAME')
 EMAIL_HOST_PASSWORD = config('SENDGRID_PASSWORD')
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
 # Settings REST Framework for production
 # Disable browsable API
@@ -99,3 +98,8 @@ REST_FRAMEWORK = {
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
     # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
+
+# Broker settings
+
+BROKER_POOL_LIMIT = 3
+BROKER_URL  = config('CLOUDAMQP_URL')
