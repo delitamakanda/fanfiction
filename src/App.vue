@@ -96,9 +96,10 @@ export default {
     justify-content: space-between;
     align-items: baseline;
     flex-direction: row;
-    background: #4dc0b5;
-    color: #fff;
+    background: #fff;
+    color: #4dc0b5;
     padding: 1.250em;
+    border-top: 1px solid #4dc0b5;
 }
 
 .cookie > * {
@@ -118,9 +119,9 @@ export default {
 }
 
 .cookie__button {
-    background: #fff;
+    background: #4dc0b5;
     padding: 0.625em 3.125em;
-    color: #4dc0b5;
+    color: #fff;
     border-radius: 20px;
     cursor: pointer;
 }
