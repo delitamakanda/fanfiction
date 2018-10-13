@@ -10,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
+from rest_framework.renderers import TemplateHTMLRenderer
 
 from api.models import Fanfic
 from api.models import Chapter
@@ -232,6 +233,7 @@ class PrintFanficToPDFView(views.APIView):
     Generate a pdf output of fanfic current fanfic
     """
     permission_classes = (permissions.AllowAny,)
+    renderer_classes = [TemplateHTMLRenderer]
 
     def get(self, request, pk=None):
         try:
