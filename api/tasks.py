@@ -10,7 +10,7 @@ from api.models import Comment
 @task
 def fanfic_created(fanfic_id):
     """
-    Task to send an e-mail notification when an order is successfully created.
+    Task to send an e-mail notification when a fanfic is successfully created.
     """
     fanfic = Fanfic.objects.get(id=fanfic_id)
     subject = 'Fanfiction id# {} - {}'.format(fanfic.id, fanfic.title)
