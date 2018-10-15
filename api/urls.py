@@ -20,7 +20,6 @@ urlpatterns = [
     path('fanfics/v1/author/<str:username>', views_fanfic.FanficShowListByAuthorView.as_view(), name='fanfic-show-list-by-author'),
     path('fanfics/<str:category>/category', views_fanfic.FanficListByCategory.as_view(), name='fanfic-list-by-category'),
     path('fanfics/<str:subcategory>/subcategory', views_fanfic.FanficListBySubCategory.as_view(), name='fanfic-list-by-subcategory'),
-    path('fanfics/<int:pk>/pdf', api.PrintFanficToPDFView.as_view(), name='fanfic-pdf-output'),
     path('posts', views_post.PostList.as_view(), name='post-list'),
     path('posts/<str:slug>', views_post.PostDetail.as_view(), name='post-detail'),
     path('chapters/<int:fanfic>/list', views.ChapterListView.as_view(), name='chapter-list'),
