@@ -39,7 +39,7 @@
               </div>
               <div class="md:w-1/4 sm:w-1/2 mb-4 h-12">
                   <button type="button" @click.once="feedback" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Signaler</button>
-                  <a role="button" :href="'/api/fanfics/'+ fanfic.id + '/pdf'" target="_blank" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Export PDF</a>
+                  <a role="button" :href="'/help/fanfic/'+ fanfic.id + '/pdf'" target="_blank" class="no-underline bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Export PDF</a>
               </div>
             </div>
 
