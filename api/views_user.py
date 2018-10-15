@@ -59,6 +59,7 @@ class AccountProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AccountProfileSerializer
     permissions_classes = (
         permissions.IsAuthenticated,
+        custompermission.IsCurrentUserOrReadonly,
     )
     lookup_field = ('user__id')
     
@@ -86,4 +87,5 @@ class SocialCreateView(generics.CreateAPIView):
     pagination_class = None
     permissions_classes = (
         permissions.IsAuthenticated,
+        custompermission.IsCurrentUserOrReadonly,
     )
