@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from django.views.generic import View
 from django.template import loader
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.http import HttpResponse
 
 from api.models import Lexique
