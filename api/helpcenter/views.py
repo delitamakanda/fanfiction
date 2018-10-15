@@ -55,11 +55,19 @@ def foire_aux_questions_view(request):
   
   
 def communities_view(request):
+	"""
+	Communities
+	"""
+	
 	context = {}
 	return render(request, 'help/communities.html', context)
 
 
 def fanfic_pdf(request, fanfic_id):
+	"""
+	Generate pdf output
+	"""
+	
 	try:
 		fanfic = Fanfic.objects.filter(status="publié").get(id=fanfic_id)
 		chapters = Chapter.objects.filter(fanfic=fanfic, status="publié")
