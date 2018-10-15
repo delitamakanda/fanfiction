@@ -305,10 +305,10 @@ class ChapterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Chapter.objects.create(**validated_data)
 	
-	def update(self, instance, validated_data):
-		instance.fanfic = validated_data.get('fanfic', instance.fanfic.updated)
-		instance.save()
-		return instance
+		def update(self, instance, validated_data):
+			instance.fanfic = validated_data.get('fanfic', instance.fanfic.updated)
+			instance.save()
+			return instance
 	
 
 
