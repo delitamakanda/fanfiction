@@ -321,7 +321,9 @@ class FoireAuxQuestions(models.Model):
 
 
 
-
+"""
+Lexique models
+"""
 class Lexique(models.Model):
     title = models.CharField(max_length=30, db_index=True)
     definition = models.TextField(max_length=500)
@@ -330,3 +332,36 @@ class Lexique(models.Model):
 
     def __str__(self):
         return self.title
+
+
+"""
+Models for communities views
+"""
+class Board(models.Model):
+    name = models.CharField(max_length=30, unique=True)
+    description = models.CharField(max_length=400)
+
+    def __str__(self):
+        return self.name
+
+
+class Topic(models.Model):
+    subject = models.CharField(max_length=255)
+    last_updated = models.DateTimeField(auto_now_add=True)
+    board = models.ForeignKey(Board, related_name='topics', on_delete=models.CASCADE)
+    starter = models.ForeignKey(User, related_name='topics', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.subject
+
+
+class Message(models.Model):
+    text = models.TextField(max_length=4000)
+    topic = models.ForeignKey(Topic, related_name='messages', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True)
+    created_by = models.ForeignKey(User, related_name='messages', on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(User, null=True, related_name='+', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text

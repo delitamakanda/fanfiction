@@ -20,6 +20,10 @@ from api.models import FoireAuxQuestions
 from api.models import AccountProfile
 from api.models import Social
 
+from api.models import Board
+from api.models import Topic
+from api.models import Message
+
 # Register your models here.
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -109,3 +113,6 @@ admin.site.register(Lexique)
 admin.site.register(FoireAuxQuestions)
 admin.site.register(CommentByChapter)
 admin.site.register(AccountProfile, AccountProfileAdmin)
+admin.site.register(Board)
+admin.site.register(Topic)
+admin.site.register(Message)

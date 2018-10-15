@@ -13,6 +13,9 @@ from api.models import Lexique
 from api.models import FoireAuxQuestions
 from api.models import Fanfic
 from api.models import Chapter
+from api.models import Board
+from api.models import Topic
+from api.models import Message
 
 from markdownx.utils import markdownify
 
@@ -59,7 +62,9 @@ def communities_view(request):
     """
     Communities
     """
-    context = {}
+    boards = Board.objects.all()
+
+    context = {'boards': boards}
     return render(request, 'help/communities.html', context)
 
 
