@@ -1,10 +1,17 @@
+import weasyprint
+
+from django.conf import settings
 from django.shortcuts import render
-from api.models import Lexique
-from api.models import FoireAuxQuestions
+
 from django.views.generic import View
 from django.template import loader
 from django.template.loader import get_template
 from django.http import HttpResponse
+
+from api.models import Lexique
+from api.models import FoireAuxQuestions
+from api.models import Fanfic
+from api.models import Chapter
 
 from markdownx.utils import markdownify
 
@@ -51,3 +58,14 @@ def communities_view(request):
 	context = {}
 	return render(request, 'help/communities.html', context)
 
+
+def fanfic_pdf(request, fanfic_id):
+	try:
+		fanfic = Fanfic.objects.filter(status="publié").get(id=fanfic_id)
+		chapters = Chapter.objects.filter(fanfic=fanfic, status="publié")
+		html = render_to_string('pdf/fanfic.html', {'fanfic': fanfic, 'chapters': chapters})
+		response = HttpResponse(content_type='application/pdf')
+		response['Content-Disposition'] = 'filename="fanfic_{}.pdf"'.format(fanfic.id)
+		weasyprint.HTML(string=html).write_pdf(response, stylesheets=[weasyprint.CSS(settings.STATIC_ROOT + '/styles/base.css')])
+		return response
+		
