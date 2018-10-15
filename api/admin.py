@@ -49,8 +49,8 @@ fanfic_pdf.allow_tags = True
 
 @admin.register(Fanfic)
 class FanficAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'category', 'subcategory', 'created', 'updated', fanfic_pdf]
-    list_filter = ['created', 'updated', 'status', 'total_likes']
+    list_display = ['id', 'title', 'category', 'subcategory', 'created', 'total_likes', fanfic_pdf]
+    list_filter = ['created', 'updated', 'status']
     search_fields = ['title', 'synopsis']
     prepopulated_fields = {'slug': ('title',)}
     inlines = [ChapterInline, ]
