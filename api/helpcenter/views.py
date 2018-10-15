@@ -76,4 +76,3 @@ def fanfic_pdf(request, fanfic_id):
 		  response['Content-Disposition'] = 'filename="fanfic_{}.pdf"'.format(fanfic.id)
 		  weasyprint.HTML(string=html).write_pdf(response, stylesheets=[weasyprint.CSS(settings.STATIC_ROOT + '/styles/base.css')])
 		  return response
-		
