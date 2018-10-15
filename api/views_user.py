@@ -48,11 +48,23 @@ class AccountProfileListView(generics.RetrieveAPIView):
     )
 
     lookup_field = ('user__username')
-
+    
+    
+    
+class AccountProfileUpdateView(generics.RetrieveUpdateAPIView):
+    """
+    Retrieve and update a profile account
+    """
+    queryset = AccountProfile.objects.all()
+    serializer_class = AccountProfileSerializer
+    permissions_classes = (
+        permissions.IsAuthenticated,
+    )
+    
 
 class SocialListView(generics.ListAPIView):
     """
-    Retrieve a profile account
+    Retrieve a social account
     """
     serializer_class = SocialSerializer
     pagination_class = None
@@ -63,3 +75,14 @@ class SocialListView(generics.ListAPIView):
     def get_queryset(self):
         account = self.kwargs['account']
         return Social.objects.filter(account=account)
+      
+      
+class SocialCreateView(generics.CreateAPIView):
+    """
+    Create a social account
+    """
+    serializer_class = SocialSerializer
+    pagination_class = None
+    permissions_classes = (
+        permissions.IsAuthenticated,
+    )
