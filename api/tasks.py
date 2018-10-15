@@ -13,7 +13,7 @@ def fanfic_created(fanfic_id):
     """
     fanfic = Fanfic.objects.get(id=fanfic_id)
     subject = 'Fanfic id# {}'.format(fanfic.id)
-    message = 'Cher {},\n\nVotre fanfiction a été créer avec succès. Son identifiant est le numéro {}.'.format(fanfic.author.username, fanfic.id)
+    message = 'Cher {},\n\nVotre fanfiction {} a été créer avec succès. Son identifiant est le numéro #{}.'.format(fanfic.author.username, fanfic.title, fanfic.id)
     mail_sent = send_mail(subject, message, "no-reply@fanfiction.com", [fanfic.author.email])
 
     return mail_sent
