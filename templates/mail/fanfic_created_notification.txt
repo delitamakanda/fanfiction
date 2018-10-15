@@ -1,0 +1,5 @@
+Cher {{ fanfic.author.username }},
+
+Votre fanfiction {{ fanfic.title }} a été créer avec succès. Son identifiant est le numéro #{{ fanfic.id }}
+
+L'équipe Fanfiction
