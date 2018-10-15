@@ -308,7 +308,7 @@ class ChapterSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 		instance.fanfic = validated_data.get('fanfic', instance.fanfic.updated)
 		instance.save()
-        return instance
+		return instance
 	
 
 
