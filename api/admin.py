@@ -40,7 +40,7 @@ class ChapterInline(admin.StackedInline):
 @mark_safe
 def fanfic_pdf(obj):
     if obj.status == "publié":
-        return '<a href="{}" target="_blank">PDF</a>'.format(reverse('fanfic-pdf-output', args=[obj.id]))
+        return '<a href="{}" target="_blank">PDF</a>'.format(reverse('fanfic_pdf', args=[obj.id]))
     else:
         return ''
 
