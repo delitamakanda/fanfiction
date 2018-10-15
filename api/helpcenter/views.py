@@ -52,15 +52,15 @@ def foire_aux_questions_view(request):
     for question in questions:
         question.reponse = markdownify(question.reponse)
     return render(request, 'help/faq.html', {'questions': questions})
-  
-  
+
+
 def communities_view(request):
     """
 	  Communities
 	  """
-	
-	  context = {}
-	  return render(request, 'help/communities.html', context)
+    
+    context = {}
+    return render(request, 'help/communities.html', context)
 
 
 def fanfic_pdf(request, fanfic_id):
