@@ -51,7 +51,7 @@ class AccountProfileListView(generics.RetrieveAPIView):
     
     
     
-class AccountProfileUpdateView(generics.RetrieveUpdateAPIView):
+class AccountProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve and update a profile account
     """
@@ -60,6 +60,7 @@ class AccountProfileUpdateView(generics.RetrieveUpdateAPIView):
     permissions_classes = (
         permissions.IsAuthenticated,
     )
+    lookup_field = ('user__id')
     
 
 class SocialListView(generics.ListAPIView):
