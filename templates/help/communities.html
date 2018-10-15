@@ -6,7 +6,11 @@
 </h1>
 
 <div>
-
+{% for board in boards %}
+    {{ board.name }}
+{% empty %}
+    No boards...
+{% endfor %}
 </div>
 
 {% endblock %}
