@@ -304,7 +304,7 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Chapter.objects.create(**validated_data)
-	
+
 
 
 class SectionCommentSerializer(serializers.ModelSerializer):
@@ -407,28 +407,6 @@ class GenresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fanfic
         fields = ('genres',)
-
-
-class ClassementSerializer(serializers.ModelSerializer):
-    classement = serializers.SerializerMethodField()
-
-    def get_classement(self, obj):
-        return Fanfic.CLASSEMENT_CHOICES
-
-    class Meta:
-        model = Fanfic
-        fields = ('classement',)
-
-
-class StatusSerializer(serializers.ModelSerializer):
-    status = serializers.SerializerMethodField()
-
-    def get_status(self, obj):
-        return Fanfic.STATUS_CHOICES
-
-    class Meta:
-        model = Fanfic
-        fields = ('status',)
 
 
 """

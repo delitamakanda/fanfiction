@@ -19,8 +19,6 @@ from api.serializers import CommentCreateSerializer
 from api.serializers import CategorySerializer
 from api.serializers import SubCategorySerializer
 from api.serializers import GenresSerializer
-from api.serializers import ClassementSerializer
-from api.serializers import StatusSerializer
 from api.serializers import FlatPagesSerializer
 
 from api import custompermission
@@ -37,34 +35,6 @@ class GenresListView(generics.ListAPIView):
         permissions.AllowAny,
     )
     name='genre-list'
-
-
-"""
-Liste de classement
-"""
-
-class ClassementListView(generics.ListAPIView):
-    queryset = Fanfic.objects.all()[:1]
-    serializer_class = ClassementSerializer
-    pagination_class = None
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    name='classement-list'
-
-
-"""
-Liste des status
-"""
-
-class StatusListView(generics.ListAPIView):
-    queryset = Fanfic.objects.all()[:1]
-    serializer_class = StatusSerializer
-    pagination_class = None
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    name='status-list'
 
 
 """
@@ -209,8 +179,6 @@ class ApiRootView(generics.GenericAPIView):
             'users': reverse('user-list', request=request),
             'posts' : reverse('post-list', request=request),
             'genres': reverse('genre-list', request=request),
-            'status': reverse('status-list', request=request),
-            'classements': reverse('classement-list', request=request),
             'comments-by-chapter-create': reverse('comment-by-chapter-create', request=request),
 
         })
