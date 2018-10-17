@@ -198,3 +198,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'api.authentication.EmailAuthBackend',
 )
+
+if DEBUG:
+    BROKER_URL = config('REDIS_URL')

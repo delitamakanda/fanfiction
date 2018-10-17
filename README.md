@@ -47,7 +47,5 @@ coverage report -m
 ## Asynchronous tasks
 
 ``` bash
-brew services start rabbitmq
-
 celery -A backend worker -l info
 ```
