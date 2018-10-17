@@ -34,6 +34,21 @@
                 </label>
                 <trumbowyg v-model="text"></trumbowyg>
             </div>
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
+                  Status
+                </label>
+                <div class="relative">
+                  <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="status">
+                      <option value="">Sélectionner</option>
+                      <option value="brouillon">Brouillon</option>
+                      <option value="publié">Publié</option>
+                  </select>
+                  <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  </div>
+                </div>
+            </div>
             <template slot="actions">
                 <router-link
                     tag="button"
@@ -76,6 +91,7 @@ export default {
             title: '',
             description: '',
             text: '',
+            status: '',
             errorFetch: 'Il y a un problème avec la requète.'
         }
     },
@@ -87,7 +103,7 @@ export default {
     },
     computed: {
         valid () {
-            return !!this.title && !!this.text
+            return !!this.title && !!this.text && !!this.status
         }
     },
     methods: {
@@ -99,10 +115,11 @@ export default {
                     description: this.description,
                     text: this.text,
                     fanfic: this.$route.params.id,
-                    author: this.$state.user.id
+                    author: this.$state.user.id,
+                    status: this.status
                 }),
             })
-            this.title = this.description = this.text = ''
+            this.title = this.description = this.text = this.status = ''
             this.$router.replace(this.$route.params.wantedRoute || { name: 'Fanfic', params: { id: this.$route.params.id }})
         }
     }

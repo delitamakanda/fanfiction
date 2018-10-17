@@ -96,9 +96,12 @@
                               Classement
                             </label>
                             <div class="relative">
-                                <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="fanfic.classement" v-if="loadingClassement">
+                                <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="fanfic.classement">
                                     <option value="">Sélectionner</option>
-                                    <option v-for="(option, index) in dataClassement[0].classement" :value="option[0]" :key="index" :selected="index == 1">{{ option[1] }}</option>
+                                    <option value="g">G</option>
+                                    <option value="13">13+</option>
+                                    <option value="r">R</option>
+                                    <option value="18">18+</option>
                                 </select>
                                 <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -121,9 +124,10 @@
                             Status
                           </label>
                           <div class="relative">
-                            <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="fanfic.status" v-if="loadingStatus">
+                            <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="fanfic.status">
                                 <option value="">Sélectionner</option>
-                                <option v-for="(option, index) in dataStatus[0].status" :value="option[0]" :key="index" :selected="index == 1">{{ option[1] }}</option>
+                                <option value="brouillon">Brouillon</option>
+                                <option value="publié">Publié</option>
                             </select>
                             <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                               <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -193,6 +197,21 @@
                         </label>
                         <trumbowyg v-model="chapters.text"></trumbowyg>
                     </div>
+                    <div class="mb-4">
+                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status_chapter">
+                          Status
+                        </label>
+                        <div class="relative">
+                          <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status_chapter" v-model="chapters.status">
+                              <option value="">Sélectionner</option>
+                              <option value="brouillon">Brouillon</option>
+                              <option value="publié">Publié</option>
+                          </select>
+                          <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                          </div>
+                        </div>
+                    </div>
                     <Input
                         type="hidden"
                         name="fanfic"
@@ -226,7 +245,7 @@
                     <router-link class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" :to="{name: 'NewChapter', params: { fanfic: fanfic.id }}">Ajouter un chapitre</router-link>
                 </div>
             </section>
-            <section class="action" v-if="allComments.length > 0 && comments.length > 0">
+            <section class="action" v-if="anwserByComments.length > 0 && comments.length > 0">
                 <h3>Commentaire(s)</h3>
                 <div class="tabs comment-tabs">
                     <ul class="list-reset flex border-b">
@@ -246,7 +265,7 @@
                             <span v-if="comment.in_reply_to === null" class="cursor-pointer lg:inline-block text-teal hover:text-teal-darker italic underline" @click="showModalChapter(comment.id, comment.name, comment.chapter.id, comment.chapter.title, comment.body)">Répondre</span>
                             <hr />
                         </div>
-                        <div v-for="(comment, index) in allComments" v-if="allComments && fic === 'story'" :key="comment.id">
+                        <div v-for="(comment, index) in anwserByComments" v-if="anwserByComments && fic === 'story'" :key="comment.id">
                                 Ecrit par : {{ comment.name }} le {{ comment.created | date }}
                                 <div>{{ comment.body }}</div>
                                 <div class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white p-4 leading-normal mb-4" v-if="comment.in_reply_to !== null">Réponse à {{ comment.in_reply_to.name }} le {{ comment.in_reply_to.created | date }}
@@ -350,7 +369,7 @@ export default {
             comments () {
                 return `comments/fanfic/${this.id}/list`
             },
-            allComments () {
+            anwserByComments () {
                 return `comments/${this.id}/fanfic`;
             }
         }),
@@ -360,12 +379,6 @@ export default {
         modal,
     },
     computed: {
-        validChapter () {
-            return !!this.title && !!this.text
-        },
-        validFanfic () {
-            return !!this.title && !!this.category && !!this.subcategory && !!this.status && !!this.genres && !!this.classement
-        },
         validComment () {
             return !!this.body
         },
@@ -379,7 +392,7 @@ export default {
             chapters: [],
             comments: [],
             comment: {},
-            allComments: [],
+            anwserByComments: [],
             errorFetch: 'Il y a un problème avec la requète.',
             fic: 'story',
             isModalVisible: false,
@@ -396,8 +409,6 @@ export default {
             isEditingFanfic: false,
             isEditingChapter: false,
             error: null,
-            dataClassement: [],
-            dataStatus: [],
             dataCategories: [],
             dataSubCategories: [],
             dataGenres: {},
@@ -411,9 +422,7 @@ export default {
             status: '',
             category: '',
             subcategory: '',
-            loadingClassement: false,
             loadingGenres: false,
-            loadingStatus: false,
             dataGenresFormatted: {},
             text: '',
             chapter_id: ''
@@ -429,12 +438,6 @@ export default {
         this.dataGenresFormatted = await this.$fetch('fanfics/genres')
         this.loadingGenres = true
         this.dataGenresFormatted = this.dataGenresFormatted[0]['genres']
-
-        this.dataClassement = await this.$fetch('fanfics/classement')
-        this.loadingClassement = true
-
-        this.dataStatus = await this.$fetch('fanfics/status')
-        this.loadingStatus = true
 
         this.dataCategories = await this.$fetch('category')
         this.dataSubCategories = await this.$fetch('subcategory')
@@ -498,8 +501,8 @@ export default {
                 }),
             })
 
-            this.allComments.unshift(result);
-            this.allComments[0].in_reply_to = Object.assign({}, this.allComments[0].in_reply_to, {name: this.nameOfuser, created: Date.now(), body: this.bodyText })
+            this.anwserByComments.unshift(result);
+            this.anwserByComments[0].in_reply_to = Object.assign({}, this.anwserByComments[0].in_reply_to, {name: this.nameOfuser, created: Date.now(), body: this.bodyText })
 
             this.body = '';
 
@@ -518,7 +521,7 @@ export default {
                 }),
             })
 
-            this.allComments.unshift(result);
+            this.anwserByComments.unshift(result);
             this.comments.unshift(result);
             this.comments[0].chapter = Object.assign({}, this.comments[0].chapter, {title: this.chapterTitle })
             this.comments[0].in_reply_to = Object.assign({}, this.comments[0].in_reply_to, {name: this.nameOfuser, created: Date.now(), body: this.bodyText })
@@ -585,7 +588,8 @@ export default {
                     description: this.chapters.description,
                     text: this.chapters.text,
                     fanfic: this.chapters.fanfic,
-                    author: this.$state.user.id
+                    author: this.$state.user.id,
+                    status: this.chapters.status
                 }),
             })
             this.closeChapterEditing()

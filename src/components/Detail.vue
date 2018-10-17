@@ -315,7 +315,7 @@ export default {
                 return `fanfics/v1/${this.$route.params.slug}`
             },
             chapterList () {
-                return `chapters/${this.$route.params.id}/list`
+                return `chapters/${this.$route.params.id}/list?status=publié`
             },
             comment () {
                 return `comments/${this.$route.params.id}/fanfic`

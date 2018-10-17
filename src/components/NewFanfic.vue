@@ -87,9 +87,12 @@
                           Classement
                         </label>
                         <div class="relative">
-                            <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="classement" v-if="loadingClassement">
+                            <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="classement">
                                 <option value="">Sélectionner</option>
-                                <option v-for="(option, index) in dataClassement[0]['classement']" v-bind:value="option[0]">{{ option[1] }}</option>
+                                <option value="g">G</option>
+                                <option value="13">13+</option>
+                                <option value="r">R</option>
+                                <option value="18">18+</option>
                             </select>
                             <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -112,9 +115,10 @@
                           Status
                         </label>
                         <div class="relative">
-                            <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" name="status" v-model="status" v-if="loadingStatus">
+                            <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" name="status" v-model="status">
                                 <option value="">Sélectionner</option>
-                                <option v-for="(option, index) in dataStatus[0]['status']"  v-bind:value="option[0]">{{ option[1] }}</option>
+                                <option value="brouillon">Brouillon</option>
+                                <option value="publié">Publié</option>
                             </select>
                             <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -163,8 +167,6 @@ export default {
             errorFetch: 'Il y a un problème avec la requète.',
             fanfic: [],
             error: null,
-            dataClassement: [],
-            dataStatus: [],
             dataCategories: [],
             dataSubCategories: [],
             dataGenres: {},
@@ -174,13 +176,11 @@ export default {
             credits: '',
             author: '',
             genres: [],
-            classement: '',
+            classement: ['g', '13', 'r', '18'],
             status: '',
             category: '',
             subcategory: '',
-            loadingClassement: false,
-            loadingGenres: false,
-            loadingStatus: false,
+            loadingGenres: false
         }
     },
     computed: {
@@ -188,11 +188,9 @@ export default {
             return !!this.title && !!this.category && !!this.subcategory && !!this.status && !!this.genres && !!this.classement
         }
     },
-    mounted () {
-        this.getClassement ()
+    created () {
         this.getCategories ()
         this.getSubcategories ()
-        this.getStatus ()
         this.getGenres ()
     },
     methods: {
@@ -219,14 +217,6 @@ export default {
             this.dataGenres = await this.$fetch('fanfics/genres')
             this.loadingGenres = true
             this.dataGenres = this.dataGenres[0]['genres']
-        },
-        async getClassement() {
-            this.dataClassement = await this.$fetch('fanfics/classement')
-            this.loadingClassement = true
-        },
-        async getStatus() {
-            this.dataStatus = await this.$fetch('fanfics/status')
-            this.loadingStatus = true
         },
         async getCategories() {
             this.dataCategories = await this.$fetch('category')
