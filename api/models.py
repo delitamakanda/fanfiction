@@ -182,6 +182,9 @@ class FollowUser(models.Model):
 
     def __str__(self):
         return '{} follows {}'.format(self.user_from, self.user_to)
+	
+# add to User models dynamically
+User.add_to_class('following', models.ManyToManyField('self', through=FollowUser, related_name='followers', symmetrical=False))
 
 
 class FollowStories(models.Model):
