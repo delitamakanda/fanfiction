@@ -30,7 +30,7 @@ class LoginView(views.APIView):
     permission_classes = ( permissions.AllowAny,)
 
     def post(self, request):
-        profile = AccountProfile.objects.all()
+        # profile = AccountProfile.objects.all()
 
         user = authenticate (
             username=request.data.get("username"),
@@ -42,8 +42,8 @@ class LoginView(views.APIView):
                 'message': 'Pseudo ou mot de passe incorrect.'
             }, status=status.HTTP_401_UNAUTHORIZED)
 
-        if not profile.filter(user=user).exists():
-            AccountProfile.objects.create(user=user)
+        # if not profile.filter(user=user).exists():
+            # AccountProfile.objects.create(user=user)
 
         login(request, user)
         return Response(UserSerializer(user).data)
