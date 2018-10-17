@@ -1,6 +1,8 @@
+html {line-height: 1.15;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;}
 nav {margin-bottom: 14px;}
 .shadow {-webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);}
 .p-6 {padding: 1.5rem;}
+.p-4 {padding: 1rem;}
 .justify-between {-webkit-box-pack: justify;-ms-flex-pack: justify;justify-content: space-between;}
 .items-center {-webkit-box-align: center;-ms-flex-align: center;align-items: center;}
 .flex-wrap {-ms-flex-wrap: wrap;flex-wrap: wrap;}
@@ -56,3 +58,11 @@ box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);padding-left: .75rem; padding-right: .
 .accordion:after {content: '\002B';color: #FFF;font-weight: bold;float: right;margin-left: 5px;}
 .active:after {content: "\2212";}
 .panel {padding: 0 18px;background-color: white;max-height: 0;overflow: hidden;transition: max-height 0.2s ease-out;}
+.list-reset { list-style: none;padding: 0;}
+.lg\:inline-block {display: inline-block;}
+.submenu { display: none; }
+.submenu.is-active {display: inline-block;}
+.menu li {position: relative;min-width: 180px;}
+.menu li ul {position: absolute;left: 0;top: 1.5rem;list-style-type: disc;list-style-position: inside;}
+.hover\:text-teal-darker:hover {color: #20504f;}
+.cursor-pointer { cursor: pointer; }

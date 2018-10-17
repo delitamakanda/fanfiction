@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="{% static 'styles/base.css' %}">
     </head>
     <body id="page" class="container mx-auto">
-        <nav class="flex items-center justify-between flex-wrap bg-white p-6 shadow">
+        <nav class="flex items-center justify-between flex-wrap bg-white p-4 shadow">
             <div class="flex items-center flex-no-shrink text-teal mr-6">
                 <svg width="23.999999999999996" height="23.999999999999996" xmlns="http://www.w3.org/2000/svg">
                  <g>
@@ -50,10 +50,20 @@
             </div>
             <div class="block flex-grow lg:flex lg:items-center lg:w-auto">
                 <div class="text-sm lg:flex-grow">
-                    <a href="{% url 'foire_aux_questions' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{% trans 'F.A.Q' %}</a>
-                    <a href="{% url 'browse' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{% trans 'Lexique' %}</a>
-                    <a href="{% url 'communities_view' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{% trans 'Forum' %}</a>
-                    <a href="/" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{% trans 'Fanfiction'%}</a>
+                    {% if user.is_authenticated %}
+                    <li class="block mt-4 lg:inline-block lg:mt-0 text-teal mr-6">{% trans 'Bonjour'%}, {{ user.username }}</li>
+                    <a href="{% url 'logout' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-6">{% trans 'Se déconnecter'%}</a>
+                    {% endif %}
+                    <ul class="menu list-reset block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">
+                        <li> Aide
+                            <ul class="bg-white p-4 shadow submenu">
+                                <li><a class="text-teal hover:text-teal-darker" href="{% url 'foire_aux_questions' %}">{% trans 'F.A.Q' %}</a></li>
+                                <li><a class="text-teal hover:text-teal-darker" href="{% url 'browse' %}">{% trans 'Lexique' %}</a></li>
+                                <li><a class="text-teal hover:text-teal-darker" href="{% url 'communities_view' %}">{% trans 'Forum' %}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <a href="/" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{% trans 'Retourner sur Fanfiction'%}</a>
                 </div>
             </div>
         </nav>
@@ -70,6 +80,14 @@
         var footerDiv = document.getElementById("copyright");
 
         footerDiv.appendChild(p)
+
+        var submenu = document.querySelector('.submenu');
+        var el = document.querySelector('.menu');
+
+        el.onclick = function () {
+            submenu.classList.toggle('is-active');
+        }
+
         /*if ('serviceWorker' in navigator) {
           navigator.serviceWorker
           .register("{% static 'sw.js' %}")
