@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from django.utils.safestring import mark_safe
 
-from rest_framework.reverse import reverse
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 
 from api.models import Fanfic
 from api.models import Chapter
@@ -102,17 +103,24 @@ class SocialInline(admin.StackedInline):
     model = Social
 
 
-class AccountProfileAdmin(admin.ModelAdmin):
-    model = AccountProfile
-    list_display = ('user',)
-    inlines = [SocialInline, ]
+class AccountProfileInline(admin.StackedInline):
+	model = AccountProfile
+	can_delete = False
+	verbose_name_plural = 'account profile'
+
+	
+class UserAdmin(BaseUserAdmin):
+	inlines = (AccountProfileInline, SocialInline,)
 
 
 admin.site.register(FlatPages, FlatPagesAdmin)
 admin.site.register(Lexique)
 admin.site.register(FoireAuxQuestions)
 admin.site.register(CommentByChapter)
-admin.site.register(AccountProfile, AccountProfileAdmin)
+# admin.site.register(AccountProfile, AccountProfileAdmin)
 admin.site.register(Board)
 admin.site.register(Topic)
 admin.site.register(Message)
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
