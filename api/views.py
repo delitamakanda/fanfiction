@@ -12,6 +12,7 @@ from api.models import Chapter
 from api.models import Category
 from api.models import SubCategory
 from api.models import FlatPages
+from api.models import Notification
 
 from api.serializers import ChapterSerializer
 from api.serializers import CommentSerializer
@@ -20,6 +21,7 @@ from api.serializers import CategorySerializer
 from api.serializers import SubCategorySerializer
 from api.serializers import GenresSerializer
 from api.serializers import FlatPagesSerializer
+from api.serializers import NotificationSerializer
 
 from api import custompermission
 
@@ -165,6 +167,29 @@ class SubCategoryDetailView(generics.RetrieveAPIView):
     name='subcategory-detail'
 
 
+"""
+Notification generics views
+"""
+
+class NotificationListView(generics.ListAPIView):
+    # queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )
+    def get_queryset(self):
+        notifications = Notification.objects.exclude(user=self.request.user)
+        following_ids = self.request.user.following.values_list('id', flat=True)
+
+        if following_ids:
+            notifications = notifications.filter(user_id__in=following_ids).select_related('user', 'user__accountprofile').prefetch_related('target')
+
+        notifications = notifications[:20]
+        print(notifications)
+
+        return notifications
+
+
 
 
 class ApiRootView(generics.GenericAPIView):
@@ -180,5 +205,6 @@ class ApiRootView(generics.GenericAPIView):
             'posts' : reverse('post-list', request=request),
             'genres': reverse('genre-list', request=request),
             'comments-by-chapter-create': reverse('comment-by-chapter-create', request=request),
+            'notifications': reverse('notifications', request=request)
 
         })

@@ -3,6 +3,9 @@ from rest_framework import serializers
 from django.core.mail import mail_admins
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+
+from rest_framework.fields import CurrentUserDefault
+
 from api.models import Fanfic
 from api.models import Comment
 from api.models import CommentByChapter
@@ -16,7 +19,9 @@ from api.models import FollowStories
 from api.models import FollowUser
 from api.models import AccountProfile
 from api.models import Social
+from api.models import Notification
 
+from api.utils import create_notification
 
 class FollowUserSerializer(serializers.ModelSerializer):
     user_to = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
@@ -30,6 +35,10 @@ class FollowUserSerializer(serializers.ModelSerializer):
             'created'
         )
 
+    def create(self, validated_data):
+        create_notification(validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
+        return FollowUser.objects.create(**validated_data)
+
 
 class FollowStoriesSerializer(serializers.ModelSerializer):
 
@@ -41,6 +50,10 @@ class FollowStoriesSerializer(serializers.ModelSerializer):
             'to_fanfic',
             'created'
         )
+
+    def create(self, validated_data):
+        create_notification(validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
+        return FollowStories.objects.create(**validated_data)
 
 
 
@@ -243,6 +256,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data["password"])
         user.save()
+        create_notification(user, 'a créé un compte')
         mail_admins("Account creation", "An user has created an account.")
         return user
 
@@ -421,3 +435,22 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate_new_password(self, value):
         validate_password(value)
         return value
+
+
+"""
+Notification serializer
+"""
+
+class NotificationSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = Notification
+        fields = (
+            'user',
+            'verb',
+            'target_ct',
+            'target_id',
+            'target',
+            'created',
+        )

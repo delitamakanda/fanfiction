@@ -48,9 +48,9 @@ class AccountProfileListView(generics.RetrieveAPIView):
     )
 
     lookup_field = ('user__username')
-    
-    
-    
+
+
+
 class AccountProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve and update a profile account
@@ -62,7 +62,7 @@ class AccountProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
         custompermission.IsCurrentUserOrReadonly,
     )
     lookup_field = ('user__id')
-    
+
 
 class SocialListView(generics.ListAPIView):
     """
@@ -77,8 +77,8 @@ class SocialListView(generics.ListAPIView):
     def get_queryset(self):
         account = self.kwargs['account']
         return Social.objects.filter(account=account)
-      
-      
+
+
 class SocialCreateView(generics.CreateAPIView):
     """
     Create a social account

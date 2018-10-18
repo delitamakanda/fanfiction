@@ -25,6 +25,8 @@ from api.models import Board
 from api.models import Topic
 from api.models import Message
 
+from api.models import Notification
+
 # Register your models here.
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -108,9 +110,15 @@ class AccountProfileInline(admin.StackedInline):
 	can_delete = False
 	verbose_name_plural = 'account profile'
 
-	
+
 class UserAdmin(BaseUserAdmin):
 	inlines = (AccountProfileInline, SocialInline,)
+
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'verb', 'target', 'created',)
+    list_filter = ('created',)
+    search_fields = ('verb',)
 
 
 admin.site.register(FlatPages, FlatPagesAdmin)
@@ -124,3 +132,5 @@ admin.site.register(Message)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+admin.site.register(Notification, NotificationAdmin)

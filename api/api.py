@@ -21,6 +21,8 @@ from api.serializers import FollowUserSerializer
 from api.serializers import ChangePasswordSerializer
 from api.serializers import UserSerializer
 
+from api.utils import create_notification
+
 # Create your api views here.
 class EmailFeedbackView(views.APIView):
     """
@@ -62,6 +64,7 @@ def liked_fanfic(request):
                 likes = fanfic.users_like.add(user)
             fanfic.users_like = likes
             fanfic.save()
+            create_notification(request.user, 'a aimé', fanfic.title)
             return Response({'status': 'ok'}, status=status.HTTP_201_CREATED)
         except:
             return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)

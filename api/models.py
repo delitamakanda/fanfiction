@@ -16,6 +16,9 @@ from django.template.defaultfilters import slugify
 
 from markdownx.models import MarkdownxField
 
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
 # Create your models here.
 class AccountProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -182,7 +185,7 @@ class FollowUser(models.Model):
 
     def __str__(self):
         return '{} follows {}'.format(self.user_from, self.user_to)
-	
+
 # add to User models dynamically
 User.add_to_class('following', models.ManyToManyField('self', through=FollowUser, related_name='followers', symmetrical=False))
 
@@ -368,3 +371,19 @@ class Message(models.Model):
 
     def __str__(self):
         return self.text
+
+
+"""
+Notification account
+"""
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, related_name='notifications', db_index=True, on_delete=models.CASCADE)
+    verb = models.CharField(max_length=255)
+    target_ct = models.ForeignKey(ContentType, blank=True, null=True, related_name='target_obj', on_delete=models.CASCADE)
+    target_id = models.PositiveIntegerField(blank=True, null=True, db_index=True)
+    target = GenericForeignKey('target_ct', 'target_id')
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ('-created',)
