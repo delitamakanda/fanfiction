@@ -84,7 +84,7 @@ const router = new Router({
                 { path: '/edit-account', name: 'EditAccount', component: EditAccount, title: 'Edition du compte personnel' },
             ]
         },
-        { path: '*', component: List },
+        { path: '*', component: List, redirect: '/' },
         { path: '/fanfics/:username/show', name: 'ShowUserFanfic', component: ListUserFanfic, props: true, title: 'Voir les fanfictions d\'un utilisateur' },
     ],
     mode: 'hash',
