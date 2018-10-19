@@ -153,6 +153,7 @@ class FanficListSerializer(serializers.ModelSerializer):
     genres = serializers.CharField()
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
+	# wip author = UserFanficSerializer(read_only=True, many=True)
     author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
     users_like = UserFanficSerializer(read_only=True, many=True)
 
