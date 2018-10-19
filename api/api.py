@@ -81,8 +81,8 @@ class FavoritedFanficView(views.APIView):
     def post(self, request, *args, **kwargs):
         serializer = FanficSerializer()
         if serializer.data:
-			create_notification(self.request.user, 'a aimé', serializer.data['title'])
             liked_fanfic(request)
+			create_notification(self.request.user, 'a aimé', serializer.data['title'])
         return Response({'status': 'ok'}, status=status.HTTP_200_OK)
 
 
