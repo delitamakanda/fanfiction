@@ -64,7 +64,7 @@ def liked_fanfic(request):
                 likes = fanfic.users_like.add(user)
             fanfic.users_like = likes
             fanfic.save()
-            create_notification(request.user, 'a aimé', fanfic.title)
+            create_notification(user, 'a aimé', fanfic.title)
             return Response({'status': 'ok'}, status=status.HTTP_201_CREATED)
         except:
             return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
@@ -79,7 +79,7 @@ class FavoritedFanficView(views.APIView):
     permission_classes = ()
 
     def post(self, request, *args, **kwargs):
-        serializer = FanficSerializer()
+        serializer = FanficSerializer(data=request.data)
         if serializer.data:
             liked_fanfic(request)
         return Response({'status': 'ok'}, status=status.HTTP_200_OK)
