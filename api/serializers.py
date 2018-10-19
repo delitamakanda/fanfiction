@@ -21,10 +21,13 @@ from api.models import AccountProfile
 from api.models import Social
 from api.models import Notification
 
+from django.contrib.contenttypes.models import ContentType
+
 from api.utils import create_notification
+from api.fields import GenericRelatedField
 
 class FollowUserSerializer(serializers.ModelSerializer):
-    user_to = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+    # user_to = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 
     class Meta:
         model = FollowUser
@@ -153,8 +156,8 @@ class FanficListSerializer(serializers.ModelSerializer):
     genres = serializers.CharField()
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
-	# wip author = UserFanficSerializer(read_only=True, many=True)
-    author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
+    author = UserFanficSerializer(read_only=True)
+    # author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
     users_like = UserFanficSerializer(read_only=True, many=True)
 
     class Meta:
@@ -442,12 +445,34 @@ class ChangePasswordSerializer(serializers.Serializer):
 Notification serializer
 """
 
-class NotificationSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')
+class ContentTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ContentType
+        fields = '__all__'
+
+
+class NotificationObjectRelatedField(serializers.RelatedField):
+
+    def to_representation(self, value):
+        if isinstance(value, User):
+            return value.username
+        elif isinstance(value, Chapter):
+            return value.title
+        elif isinstance(value, Fanfic):
+            return value.title
+        raise Exception('Unexpected type of object')
+
+
+class NotificationSerializer(serializers.HyperlinkedModelSerializer):
+    # target = GenericRelatedField(related_models=(Fanfic, User, Chapter))
+    user = UserFanficSerializer(read_only=True)
+    target = NotificationObjectRelatedField(read_only=True)
 
     class Meta:
         model = Notification
         fields = (
+            'id',
             'user',
             'verb',
             'target_ct',
@@ -455,3 +480,6 @@ class NotificationSerializer(serializers.ModelSerializer):
             'target',
             'created',
         )
+
+    def get_target_ct(self, obj):
+        return Fanfic.objects.all()

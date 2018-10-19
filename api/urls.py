@@ -44,6 +44,7 @@ urlpatterns = [
     path('users/<int:user__id>/edit/profile', views_user.AccountProfileUpdateView.as_view(), name='user-edit-account-profile'),
     path('users/social-account', views_user.SocialCreateView.as_view(), name='socialaccount-createview'),
     path('notifications', views.NotificationListView.as_view(), name='notifications'),
+    path('contenttype/<int:pk>', views.ContentTypeView.as_view(), name='contenttype-detail'),
     path('user', api_auth.CheckoutUserView.as_view(), name='user'),
     path('signup', api_auth.UserCreateView.as_view(), name='signup'),
     path('login', api_auth.LoginView.as_view(), name='login'),

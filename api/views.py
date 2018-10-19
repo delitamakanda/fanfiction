@@ -1,4 +1,7 @@
 import json
+
+from django.core import serializers
+
 from django.shortcuts import render, HttpResponse
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.authentication import TokenAuthentication
@@ -14,6 +17,8 @@ from api.models import SubCategory
 from api.models import FlatPages
 from api.models import Notification
 
+from django.contrib.contenttypes.models import ContentType
+
 from api.serializers import ChapterSerializer
 from api.serializers import CommentSerializer
 from api.serializers import CommentCreateSerializer
@@ -22,6 +27,8 @@ from api.serializers import SubCategorySerializer
 from api.serializers import GenresSerializer
 from api.serializers import FlatPagesSerializer
 from api.serializers import NotificationSerializer
+from api.serializers import UserSerializer
+from api.serializers import ContentTypeSerializer
 
 from api import custompermission
 
@@ -171,21 +178,29 @@ class SubCategoryDetailView(generics.RetrieveAPIView):
 Notification generics views
 """
 
+class ContentTypeView(generics.RetrieveAPIView):
+    queryset = ContentType.objects.all()
+    serializer_class = ContentTypeSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )
+
+
 class NotificationListView(generics.ListAPIView):
-    # queryset = Notification.objects.all()
+    queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = (
         permissions.IsAuthenticated,
     )
     def get_queryset(self):
         notifications = Notification.objects.exclude(user=self.request.user)
+        # print(notifications)
         following_ids = self.request.user.following.values_list('id', flat=True)
 
         if following_ids:
             notifications = notifications.filter(user_id__in=following_ids).select_related('user', 'user__accountprofile').prefetch_related('target')
 
         notifications = notifications[:20]
-        print(notifications)
 
         return notifications
 
