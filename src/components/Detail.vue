@@ -10,7 +10,7 @@
           <div class="px-6 py-4">
             <div class="font-bold text-xl mb-2">{{ fanfic.title }}</div>
             <p class="text-grey-darker text-base">
-              Par <router-link v-if="fanfic.author" :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
+              Par <router-link v-if="fanfic.author" :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author.username, slug: fanfic.slug, id: fanfic.id } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author.username }}</router-link>
             </p>
           </div>
         </div>
@@ -344,13 +344,14 @@ export default {
                     this.userFollow = res_followUser
                     this.fanficFollow = res_followStories
 
+                    // following author
                     for (let x = 0; x < this.userFollow.length; x++) {
-                        if ((this.userFollow[x].hasOwnProperty("user_from") && this.userFollow[x].user_from === this.$state.user.id) && this.userFollow[x].hasOwnProperty("user_to") && this.userFollow[x].user_to === this.fanfic.author) {
+                        if ((this.userFollow[x].hasOwnProperty("user_from") && this.userFollow[x].user_from === this.$state.user.id) && this.userFollow[x].hasOwnProperty("user_to") && this.userFollow[x].user_to === this.fanfic.author.id) {
                             this.followUser = true;
                             this.followUserId = this.userFollow[x].id;
                         }
                     }
-
+                    // following fanfiction
                     for (let y = 0; y < this.fanficFollow.length; y++) {
                         if ((this.fanficFollow[y].hasOwnProperty("from_user") && this.fanficFollow[y].from_user === this.$state.user.id) && (this.fanficFollow[y].hasOwnProperty("to_fanfic") && this.fanficFollow[y].to_fanfic === this.fanfic.id)) {
                             this.followStory = true;
@@ -360,6 +361,7 @@ export default {
                 }
             }
 
+            // users like fanfic
             let data = this.fanfic.users_like
 
             for(let i = 0 ; i < data.length; i++){
@@ -420,7 +422,7 @@ export default {
                 method: 'POST',
                 body: JSON.stringify({
                     user_from: this.$state.user.id,
-                    user_to: this.fanfic.author
+                    user_to: this.fanfic.author.id
                 })
             })
             this.followUserId = result.id

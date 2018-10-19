@@ -52,7 +52,7 @@
                         <div class="flex items-center">
                             <div class="text-sm">
                                 <p class="text-black leading-none">
-                                    Auteur: <router-link :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author }}</router-link>
+                                    Auteur: <router-link :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author.username, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author.username }}</router-link>
                                 </p>
                                 <p class="text-grey-dark">Publié le : {{ fanfic.publish | date }}</p>
                                 <p class="text-grey-dark">{{ fanfic.genres }} / {{ fanfic.classement }} / {{ fanfic.total_likes }} likes</p>
