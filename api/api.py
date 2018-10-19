@@ -71,19 +71,19 @@ def liked_fanfic(request):
 
 
 class FavoritedFanficView(views.APIView):
-    """
-    Favorite fanfic
-    """
-    serializer_class = FanficSerializer()
-    authentication_classes = ()
-    permission_classes = ()
-
-    def post(self, request, *args, **kwargs):
-        serializer = FanficSerializer()
-        if serializer.data:
-            liked_fanfic(request)
+	"""
+	Favorite fanfic
+	"""
+	serializer_class = FanficSerializer()
+	authentication_classes = ()
+	permission_classes = ()
+	
+	def post(self, request, *args, **kwargs):
+		serializer = FanficSerializer()
+		if serializer.data:
+			liked_fanfic(request)
 			create_notification(self.request.user, 'a aimé', serializer.data['title'])
-        return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+		return Response({'status': 'ok'}, status=status.HTTP_200_OK)
 
 
 def unliked_fanfic(request):
