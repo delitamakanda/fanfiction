@@ -54,20 +54,21 @@ class EmailFeedbackView(views.APIView):
 
 
 def liked_fanfic(request):
-    fanfic_id = request.data.get('id')
-    user = request.data.get('user')
-
-    if fanfic_id and user:
-        try:
-            fanfic = Fanfic.objects.get(id=int(fanfic_id))
-
-            if fanfic:
-                likes = fanfic.users_like.add(user)
-            fanfic.users_like = likes
-            fanfic.save()
-            return Response({'status': 'ok'}, status=status.HTTP_201_CREATED)
-        except:
-            return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
+	fanfic_id = request.data.get('id')
+	user = request.data.get('user')
+	
+	if fanfic_id and user:
+		try:
+			fanfic = Fanfic.objects.get(id=int(fanfic_id))
+			
+			if fanfic:
+				likes = fanfic.users_like.add(user)
+			fanfic.users_like = likes
+			fanfic.save()
+			create_notification(request.user, 'a aimé', fanfic.title)
+			return Response({'status': 'ok'}, status=status.HTTP_201_CREATED)
+		except:
+			return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class FavoritedFanficView(views.APIView):
@@ -82,7 +83,6 @@ class FavoritedFanficView(views.APIView):
 		serializer = FanficSerializer()
 		if serializer.data:
 			liked_fanfic(request)
-			create_notification(request.user, 'a aimé', serializer.data['title'])
 		return Response({'status': 'ok'}, status=status.HTTP_200_OK)
 	
 
