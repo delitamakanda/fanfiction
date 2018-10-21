@@ -43,7 +43,7 @@ class AccountProfile(models.Model):
 
 
     def __str__(self):
-        return 'Profile for user {}'.format(self.user.username)
+        return 'Profile for user {} {}'.format(self.user.username, self.photo.url)
 
 
 class Social(models.Model):

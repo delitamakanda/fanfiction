@@ -25,6 +25,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from api.utils import create_notification
 from api.fields import GenericRelatedField
+from api.customserializer import Base64ImageField
 
 class FollowUserSerializer(serializers.ModelSerializer):
     # user_to = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
@@ -105,6 +106,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
             'tags',
         )
         lookup_field = 'slug'
+
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
@@ -235,6 +237,28 @@ class FanficSerializer(serializers.ModelSerializer):
         return Fanfic.objects.create(**validated_data)
 
 
+class UserEditSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'is_active',
+            'is_staff',
+            'is_superuser',
+            'date_joined',
+        )
+
+    def create(self, validated_data):
+        return User.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.save()
+        return instance
+
+
 class UserSerializer(serializers.ModelSerializer):
     fanfics = FanficSerializer(many=True, read_only=True)
 
@@ -270,8 +294,10 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
 
-class AccountProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+
+class AccountProfileCreateSerializer(serializers.ModelSerializer):
+    # photo =  serializers.ImageField(max_length=None, use_url=True)
+    photo =  Base64ImageField(max_length=None, use_url=True)
 
     class Meta:
         model = AccountProfile
@@ -287,8 +313,23 @@ class AccountProfileSerializer(serializers.ModelSerializer):
         return AccountProfile.objects.create(**validated_data)
 
 
+class AccountProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = AccountProfile
+        fields = (
+            'id',
+            'user',
+            'date_of_birth',
+            'photo',
+            'bio',
+        )
+
+
+
 class SocialSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Social
@@ -300,6 +341,21 @@ class SocialSerializer(serializers.ModelSerializer):
             'user',
         )
 
+
+class SocialCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Social
+        fields = (
+            'id',
+            'account',
+            'network',
+            'nichandle',
+            'user',
+        )
+
+    def create(self, validated_data):
+        return Social.objects.create(**validated_data)
 
 
 class ChapterSerializer(serializers.ModelSerializer):
