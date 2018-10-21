@@ -9,9 +9,8 @@
         <footer>
             <ul class="list-horizontal">
                 <li>{{ fullYear }} {{ title }}</li>
-                <li v-for="page in pages" :key="page.id">
-                    <button type="button" @click="openModal(page.type)">{{ page.title }}</button>
-                </li>
+                <li><button type="button" @click="openModal('legal')">{{ legal.title }}</button></li>
+                <li><button type="button" @click="openModal('rgpd')">{{ rgpd.title }}</button></li>
             </ul>
         </footer>
 
@@ -67,9 +66,6 @@ export default {
            rgpd () {
                return 'pages/rgpd'
            },
-           pages () {
-               return 'pages'
-           }
        })
    ],
     data(){
@@ -78,7 +74,6 @@ export default {
           isRgpdModalVisible: false,
           legal: [],
           rgpd: [],
-          pages: [],
           errorFetch: 'Il y a un problème avec la requète.'
         }
     },
