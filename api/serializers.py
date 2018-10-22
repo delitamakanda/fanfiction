@@ -297,7 +297,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class AccountProfileCreateSerializer(serializers.ModelSerializer):
     # photo =  serializers.ImageField(max_length=None, use_url=True)
-    photo =  Base64ImageField(max_length=None, use_url=True)
+    photo =  Base64ImageField(max_length=None, use_url=True, allow_empty_file=True, allow_null=True, required=False)
 
     class Meta:
         model = AccountProfile
