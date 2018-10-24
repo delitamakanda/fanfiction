@@ -20,7 +20,15 @@ export const messages = {
             dateJoined: 'User since {0}',
             username: 'Username',
             isStaff: 'Staff',
-            infosUpdated: 'Personal informations will be updated.'
+            infosUpdated: 'Personal informations will be updated.',
+            textPublish: 'Publish',
+            textDraft: 'Draft',
+            textRating: 'Rating',
+            textStatus: 'Status',
+            textGenres: 'Genres',
+            textCategory: 'Category',
+            textSubcategory: 'Subcategory',
+            textTitleStoy: 'Title of the story'
         }
     },
     fr: {
@@ -44,7 +52,15 @@ export const messages = {
             dateJoined: 'Utilisateur depuis le',
             username: 'Pseudo',
             isStaff: 'Staff',
-            infosUpdated: 'Les infos vont être mise à jour.'
+            infosUpdated: 'Les infos vont être mise à jour.',
+            textPublish: 'Publié',
+            textDraft: 'Brouillon',
+            textRating: 'Classement',
+            textStatus: 'Status',
+            textGenres: 'Genres',
+            textCategory: 'Categorie',
+            textSubcategory: 'Subcategorie',
+            textTitleStoy: 'Titre de l\'histoire'
         }
     }
 }

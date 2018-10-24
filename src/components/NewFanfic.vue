@@ -3,12 +3,12 @@
         <Form
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
             title="Nouvelle histoire"
-            :operation="create"
+            :operation="operation"
             :valid="valid">
             <div class="flex flex-wrap -mx-3 mb-6">
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                   <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="category">
-                    Catégorie
+                    {{ $t('message.textCategory') }}
                   </label>
                   <div class="relative">
                       <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="category" name="category" v-model="category">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="w-full md:w-1/2 px-3">
                   <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="subcategory">
-                      Sous - Catégories
+                      {{ $t('message.textSubcategory') }}
                   </label>
                   <div class="relative">
                       <select :disabled="category.length == 0" class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="subcategory" name="subcategory" v-model="subcategory">
@@ -37,7 +37,7 @@
               </div>
                 <div class="mb-4">
                     <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="title">
-                      Titre de l'histoire
+                      {{ $t('message.textTitleStoy') }}
                     </label>
                     <Input
                         name="title"
@@ -84,7 +84,7 @@
                 <div class="flex flex-wrap -mx-3 mb-2">
                     <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                         <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="classement">
-                          Classement
+                          {{ $t('message.textRating') }}
                         </label>
                         <div class="relative">
                             <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="classement">
@@ -112,7 +112,7 @@
                     </div>
                     <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                         <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
-                          Status
+                          {{ $t('message.textStatus') }}
                         </label>
                         <div class="relative">
                             <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" name="status" v-model="status">
@@ -162,7 +162,7 @@ export default {
             'subcategory',
         ]),
     ],
-    data(){
+    data (){
         return{
             errorFetch: 'Il y a un problème avec la requète.',
             fanfic: [],
@@ -176,7 +176,8 @@ export default {
             credits: '',
             author: '',
             genres: [],
-            classement: ['g', '13', 'r', '18'],
+            classement: '',
+            //classement: ['g', '13', 'r', '18'],
             status: '',
             category: '',
             subcategory: '',
@@ -194,7 +195,7 @@ export default {
         this.getGenres ()
     },
     methods: {
-        async create () {
+        async operation () {
             const result = await this.$fetch('fanfics', {
                 method: 'POST',
                 body: JSON.stringify({
