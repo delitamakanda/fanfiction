@@ -1,7 +1,8 @@
 import weasyprint
 
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 
 from django.views.generic import View
 from django.template import loader
@@ -18,6 +19,8 @@ from api.models import Topic
 from api.models import Message
 
 from markdownx.utils import markdownify
+
+from api.helpcenter.forms import NewTopicForm
 
 # Create your views here.
 def browse_by_title(request, initial=None):
@@ -65,7 +68,42 @@ def communities_view(request):
     boards = Board.objects.all()
 
     context = {'boards': boards}
-    return render(request, 'help/communities.html', context)
+    return render(request, 'help/forum/communities.html', context)
+
+
+def communities_view_board_topics(request, pk):
+    try:
+        board = Board.objects.get(pk=pk)
+    except Board.DoesNotExist:
+        raise Http404
+    return render(request, 'help/forum/topics.html', {'board': board})
+
+
+@login_required
+def communities_view_new_topic(request, pk):
+    board = get_object_or_404(Board, pk=pk)
+    user = request.user
+    if request.method == 'POST':
+        form = NewTopicForm(request.POST)
+        if form.is_valid():
+            topic = form.save(commit=False)
+            topic.board = board
+            topic.starter = user
+            topic.save()
+            message = Message.objects.create(
+                text=form.cleaned_data.get('text'),
+                topic=topic,
+                created_by=user
+            )
+            return redirect('board_topics', pk=board.pk) # TODO: redirect to newly created topic
+    else:
+        form = NewTopicForm()
+    return render(request, 'help/forum/new_topic.html', {'board': board, 'form': form})
+
+
+def communities_view_topic_messages(request, pk, topic_pk):
+    topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
+    return render(request, 'help/forum/messages.html', {'topic': topic})
 
 
 def fanfic_pdf(request, fanfic_id):
