@@ -1,9 +1,12 @@
 {% extends "registration/base.html" %}
+{% load i18n %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item actif">{% trans 'Lexique' %}</li>
+{% endblock %}
+
 
 {% block content %}
-<h1>
-    Lexique
-</h1>
 
 <form id="form" role="form" action="{% url 'search' %}" method="post">
     {% csrf_token %}

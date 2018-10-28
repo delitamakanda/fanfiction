@@ -1,9 +1,11 @@
 {% extends "registration/base.html" %}
+{% load i18n %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item actif">{% trans 'Foire aux questions' %}</li>
+{% endblock %}
 
 {% block content %}
-<h1>
-    Foire aux questions
-</h1>
 
 <div>
 {% for question in questions %}

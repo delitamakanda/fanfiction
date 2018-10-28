@@ -67,8 +67,14 @@
                 </div>
             </div>
         </nav>
-        {% block content %}
-        {% endblock %}
+        <div class="container">
+            <ol class="breadcrumb my-4">
+                {% block breadcrumb %}
+                {% endblock %}
+            </ol>
+            {% block content %}
+            {% endblock %}
+        </div>
         <footer id="copyright">
         </footer>
         <script>
