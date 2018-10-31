@@ -5,7 +5,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 
-from django.views.generic import View
+from django.views.generic import View, UpdateView
+from django.utils import timezone
 from django.template import loader
 from django.template.loader import get_template, render_to_string
 from django.http import HttpResponse, Http404
@@ -124,6 +125,25 @@ def communities_view_topic_messages_reply(request, pk, topic_pk):
     else:
         form = ReplyMessageForm()
     return render(request, 'help/forum/reply_topic.html', {'topic': topic, 'form': form})
+
+
+class MessageUpdateView(UpdateView):
+    model = Message
+    fields = ('text',)
+    template_name = 'help/forum/edit_message.html'
+    pk_url_kwarg = 'message_pk'
+    context_object_name = 'message'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(created_by=self.request.user)
+
+    def form_valid(self, form):
+        message = form.save(commit=False)
+        message.updated_by = self.request.user
+        message.updated_at = timezone.now()
+        message.save()
+        return redirect('board_topic_message', pk=message.topic.board.pk, topic_pk=message.topic.pk)
 
 
 
