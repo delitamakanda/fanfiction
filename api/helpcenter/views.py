@@ -3,6 +3,7 @@ import weasyprint
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 
 from django.views.generic import View
 from django.template import loader
@@ -20,7 +21,7 @@ from api.models import Message
 
 from markdownx.utils import markdownify
 
-from api.helpcenter.forms import NewTopicForm
+from api.helpcenter.forms import NewTopicForm, ReplyMessageForm
 
 # Create your views here.
 def browse_by_title(request, initial=None):
@@ -74,9 +75,10 @@ def communities_view(request):
 def communities_view_board_topics(request, pk):
     try:
         board = Board.objects.get(pk=pk)
+        topics = board.topics.order_by('-last_updated').annotate(replies=Count('messages') - 1)
     except Board.DoesNotExist:
         raise Http404
-    return render(request, 'help/forum/topics.html', {'board': board})
+    return render(request, 'help/forum/topics.html', {'board': board, 'topics': topics})
 
 
 @login_required
@@ -90,12 +92,12 @@ def communities_view_new_topic(request, pk):
             topic.board = board
             topic.starter = user
             topic.save()
-            message = Message.objects.create(
+            Message.objects.create(
                 text=form.cleaned_data.get('text'),
                 topic=topic,
                 created_by=user
             )
-            return redirect('board_topics', pk=board.pk) # TODO: redirect to newly created topic
+            return redirect('board_topic_message', pk=pk, topic_pk=topic.pk)
     else:
         form = NewTopicForm()
     return render(request, 'help/forum/new_topic.html', {'board': board, 'form': form})
@@ -103,7 +105,26 @@ def communities_view_new_topic(request, pk):
 
 def communities_view_topic_messages(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
+    topic.views += 1
+    topic.save()
     return render(request, 'help/forum/messages.html', {'topic': topic})
+
+
+@login_required
+def communities_view_topic_messages_reply(request, pk, topic_pk):
+    topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
+    if request.method == 'POST':
+        form = ReplyMessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.topic = topic
+            message.created_by = request.user
+            message.save()
+            return redirect('board_topic_message', pk=pk,topic_pk=topic_pk)
+    else:
+        form = ReplyMessageForm()
+    return render(request, 'help/forum/reply_topic.html', {'topic': topic, 'form': form})
+
 
 
 def fanfic_pdf(request, fanfic_id):

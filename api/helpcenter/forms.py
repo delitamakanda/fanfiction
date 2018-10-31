@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 from api.models import Topic
+from api.models import Message
 
 class NewTopicForm(forms.ModelForm):
     text = forms.CharField(
@@ -14,3 +15,10 @@ class NewTopicForm(forms.ModelForm):
     class Meta:
         model = Topic
         fields = ['subject', 'text']
+
+
+class ReplyMessageForm(forms.ModelForm):
+
+    class Meta:
+        model = Message
+        fields = ('text',)

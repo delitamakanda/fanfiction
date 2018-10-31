@@ -2,6 +2,7 @@ from PIL import Image
 
 from django.db import models
 from django.conf import settings
+from django.utils.text import Truncator
 
 from django.core.validators import URLValidator
 from django.contrib.auth.models import User
@@ -348,13 +349,20 @@ class Board(models.Model):
     def __str__(self):
         return self.name
 
+    def get_messages_count(self):
+        return Message.objects.filter(topic__board=self).count()
+
+    def get_last_message(self):
+        return Message.objects.filter(topic__board=self).order_by('-created_by').first()
+
 
 class Topic(models.Model):
     subject = models.CharField(max_length=255)
     last_updated = models.DateTimeField(auto_now_add=True)
     board = models.ForeignKey(Board, related_name='topics', on_delete=models.CASCADE)
     starter = models.ForeignKey(User, related_name='topics', on_delete=models.CASCADE)
-
+    views = models.PositiveIntegerField(default=0)
+    
     def __str__(self):
         return self.subject
 
@@ -368,7 +376,8 @@ class Message(models.Model):
     updated_by = models.ForeignKey(User, null=True, related_name='+', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.text
+        truncated_text = Truncator(self.text)
+        return truncated_text.chars(30)
 
 
 """

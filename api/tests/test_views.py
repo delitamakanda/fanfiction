@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
-from api.helpcenter.views import communities_view, communities_view_board_topics, communities_view_new_topic
-from api.models import Board
+from api.helpcenter.views import communities_view, communities_view_board_topics, communities_view_new_topic, communities_view_topic_messages
+from api.models import Board, Topic, Message
 
 class HomeTests(TestCase):
     """
@@ -111,3 +111,20 @@ class NewTopicTests(TestCase):
         board_topics_url = reverse('board_topics', kwargs={'pk': 1})
         response = self.client.get(new_topics_url)
         self.assertContains(response, 'href="{0}"'.format(board_topics_url))
+
+
+class TopicMessagesTests(TestCase):
+    def setUp(self):
+        Board.objects.create(name='Anime-Mangas', description='bla bla bla.')
+        user = User.objects.create_user(username='test', email='doe@example.com', password='test')
+        topic = Topic.objects.create(text='lorem ipsum', board=board, starter=user)
+        Message.objects.create(text='lorem ipsum sit dolor amet', topic=topic, created_by=user)
+        url = reverse('board_topic_message', kwargs={'pk': board.pk, 'topic_pk': topic.pk})
+        self.response = self.client.get(url)
+
+        def test_status_code(self):
+            self.assertEquals(self.response.status_code, 200)
+
+        def test_view_function(self):
+            view = resolve('/forum/1/topics/1')
+            self.assertEquals(view.func, board_topic_message)
