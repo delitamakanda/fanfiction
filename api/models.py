@@ -1,3 +1,4 @@
+import math
 from PIL import Image
 
 from django.db import models
@@ -16,6 +17,7 @@ from django.utils import timezone
 from django.template.defaultfilters import slugify
 
 from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 
 
 # Create your models here.
@@ -353,7 +355,7 @@ class Board(models.Model):
         return Message.objects.filter(topic__board=self).count()
 
     def get_last_message(self):
-        return Message.objects.filter(topic__board=self).order_by('-created_by').first()
+        return Message.objects.filter(topic__board=self).order_by('-created_at').first()
 
 
 class Topic(models.Model):
@@ -362,9 +364,28 @@ class Topic(models.Model):
     board = models.ForeignKey(Board, related_name='topics', on_delete=models.CASCADE)
     starter = models.ForeignKey(User, related_name='topics', on_delete=models.CASCADE)
     views = models.PositiveIntegerField(default=0)
-    
+
     def __str__(self):
         return self.subject
+
+    def get_page_count(self):
+        count = self.messages.count()
+        pages = count / 2
+        return math.ceil(pages)
+
+    def has_many_pages(self, count=None):
+        if count is None:
+            count = self.get_page_count()
+        return count > 6
+
+    def get_page_range(self):
+        count = self.get_page_count()
+        if self.has_many_pages(count):
+            return range(1,5)
+        return range(1, count + 1)
+
+    def get_last_ten_messages(self):
+        return self.messages.order_by('-created_at')[:10]
 
 
 class Message(models.Model):
@@ -378,6 +399,9 @@ class Message(models.Model):
     def __str__(self):
         truncated_text = Truncator(self.text)
         return truncated_text.chars(30)
+
+    def get_text_as_markdownify(self):
+        return mark_safe(markdownify(self.text))
 
 
 """
