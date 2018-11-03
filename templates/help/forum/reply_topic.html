@@ -1,5 +1,10 @@
 {% extends "registration/base.html" %}
 {% load i18n %}
+{% load gravatar %}
+
+{% block styles %}
+<link rel="stylesheet" href="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'communities_view' %}">{% trans 'Communautés' %}</a></li>
@@ -22,7 +27,7 @@
     </section>
 </form>
 
-{% for post in topic.messages.all %}
+{% for post in topic.get_last_ten_messages %}
 <div class="bg-white mx-auto max-w-sm shadow-lg rounded-lg overflow-hidden">
   <div class="sm:flex sm:items-center px-6 py-4">
     <div class="text-center sm:text-left sm:flex-grow">
@@ -31,7 +36,7 @@
         <p class="text-sm leading-tight text-grey-dark">{{ post.created_at }}</p>
       </div>
       <div>
-          {{ post.text }}
+          {{ post.get_text_as_markdownify }}
       </div>
     </div>
   </div>
@@ -41,7 +46,8 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-
+<script src="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script type="text/javascript">
+    var simplemde = new SimpleMDE();
 </script>
 {% endblock %}
