@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'multiselectfield',
     'embed_video',
     'django_filters',
@@ -199,5 +200,17 @@ AUTHENTICATION_BACKENDS = (
     'api.authentication.EmailAuthBackend',
 )
 
+# Asynchronous tasks
+
 if DEBUG:
-    BROKER_URL = config('REDIS_URL')
+    CELERY_BROKER_URL = config('REDIS_URL')
+    CELERY_RESULT_BACKEND = config('REDIS_URL')
+else:
+    # BROKER_POOL_LIMIT = 3
+    # CELERY_BROKER_URL  = config('CLOUDAMQP_URL')
+    CELERY_BROKER_URL = config('REDISTOGO_URL')
+    CELERY_RESULT_BACKEND = config('REDISTOGO_URL')
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'

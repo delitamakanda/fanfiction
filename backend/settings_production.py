@@ -98,9 +98,3 @@ REST_FRAMEWORK = {
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
     # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
-
-# Broker settings
-
-BROKER_POOL_LIMIT = 3
-# BROKER_URL  = config('CLOUDAMQP_URL')
-BROKER_URL = config('REDISTOGO_URL')
