@@ -2,7 +2,7 @@ import weasyprint
 
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
@@ -87,7 +87,7 @@ def communities_view_board_topics(request, pk):
     return render(request, 'help/forum/topics.html', {'board': board, 'topics': topics})
 
 
-@login_required
+@login_required(login_url=reverse_lazy('index'))
 def communities_view_new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
     user = request.user
@@ -131,7 +131,7 @@ class MessageListView(ListView):
         return queryset
 
 
-@login_required
+@login_required(login_url=reverse_lazy('index'))
 def communities_view_topic_messages_reply(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
     if request.method == 'POST':
