@@ -55,7 +55,7 @@ export default {
             if (message === true) {
                 const result = await this.$fetch('disable-account')
                 if (result.status === 'ok') {
-                    this.$state.user = null
+                    this.$state.user.id = null
                     if (this.$route.matched.some(m => m.meta.private)) {
                         this.$router.push({ name: 'List' })
                     }
