@@ -3,19 +3,21 @@
 {% load gravatar %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item"><a href="{% url 'communities_view' %}">{% trans 'Communautés' %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'board_topics' topic.board.pk %}">{{ topic.board.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'communities_view' %}" class="text-teal hover:text-teal-darker">{% trans 'Communautés' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'board_topics' topic.board.pk %}" class="text-teal hover:text-teal-darker">{{ topic.board.name }}</a></li>
     <li class="breadcrumb-item actif">{{ topic.subject }}</li>
 {% endblock %}
 
 {% block content %}
 
+{% if user.is_authenticated %}
 <div class="mb-4">
     <a href="{% url 'board_topic_message_reply' topic.board.pk topic.pk %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{% trans 'Répondre' %}</a>
 </div>
+{% endif %}
 
 {% for post in messages %}
-<div id="{{ post.pk }}" class="bg-white mx-auto max-w-sm shadow-lg rounded-lg overflow-hidden {% if forloop.first %}border-dark{% endif %}">
+<div id="{{ post.pk }}" class="bg-white mx-auto overflow-hidden {% if forloop.first %}border-dark{% endif %}">
     {% if forloop.first %}
         <div class="sm:flex sm:items-center px-6 py-4">
             <p class="text-xl leading-tight">{{ topic.subject }}</p>
@@ -23,10 +25,10 @@
     {% endif %}
   <div class="sm:flex sm:items-center px-6 py-4">
     <img class="block h-16 sm:h-24 rounded-full mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" src="{{ post.created_by|gravatar }}" alt="{{ post.created_by.username }}">
-    <small>{% trans 'Messages' %}: {{ post.created_by.messages.count }}</small>
     <div class="text-center sm:text-left sm:flex-grow">
       <div class="mb-4">
         <p class="text-xl leading-tight">{{ post.created_by.username }}</p>
+        <small>{% trans 'Messages' %}: {{ post.created_by.messages.count }}</small>
         <p class="text-sm leading-tight text-grey-dark">{{ post.created_at }}</p>
       </div>
       <div>
