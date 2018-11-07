@@ -75,13 +75,15 @@ const router = new Router({
         { path: '/news/:slug', name: 'PostDetail', component: PostDetail, props: true },
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true, title: 'Tableau de bord' },
             children: [
-                { path: '/fanfics', name: 'ListUserFanfic', component: ListUserFanfic, title: 'Vos fanfictions' },
-                { path: '/create', name: 'NewFanfic', component: NewFanfic, title: 'Ecrire une fanfiction' },
-                { path: '/update/:id/edit', name: 'UpdateFanfic', component: NewFanfic, props: true, title: 'Editer une fanfiction' },
-                { path: '/new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, title: 'Ecrire un chapitre' },
-                { path: '/update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: NewChapter, props: true, title: 'Editer un chapitre' },
-                { path: '/fanfic/:id', name: 'Fanfic', component: Fanfic, props: true, title: 'Voir la fanfiction' },
-                { path: '/edit-account', name: 'EditAccount', component: EditAccount, title: 'Edition du compte personnel' },
+                { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic, meta: { title: 'Vos fanfictions', private: true } },
+                { path: 'create', name: 'NewFanfic', component: NewFanfic, meta: { title: 'Ecrire une fanfiction', private: true } },
+                { path: 'update/:id/edit', name: 'UpdateFanfic', component: NewFanfic, props: true, meta: { title: 'Editer une fanfiction', private: true } },
+                { path: 'new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, meta: { title: 'Ecrire un chapitre', private: true } },
+                { path: 'update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: NewChapter, props: true, meta: { title: 'Editer un chapitre', private: true } },
+                { path: 'fanfic/:id', name: 'Fanfic', component: Fanfic, props: true, meta: { title: 'Voir la fanfiction', private: true } },
+                { path: 'edit-account', name: 'EditAccount', component: EditAccount, meta: { title: 'Edition du compte personnel', private: true } },
+                // TODO: ajout d'une news
+                //{ path: 'edit-news', name: 'EditAccount', component: EditAccount, meta: { title: 'Ajout/Edition de news', private: true, is_admin: true } },
             ]
         },
         { path: '*', component: List, redirect: '/' },
@@ -100,12 +102,10 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+    const user = state.user
 
-    if (to.meta.private) {
-        // TODO:  redirect to login
-    }
+    if (to.matched.some(r => r.meta.private) && user.id == null) {
 
-    if (to.matched.some(r => r.meta.private) && !state.user && state.user.id == null) {
         next({
             name: 'Login',
             params: {
@@ -115,7 +115,7 @@ router.beforeEach((to, from, next) => {
         return
     }
 
-    if ( to.matched.some(r => r.meta.guest) && state.user && state.user.id != null) {
+    if ( to.matched.some(r => r.meta.guest) && user.id != null) {
         next({name: 'Dashboard'})
         return
     }
