@@ -17,7 +17,7 @@ class Command(BaseCommand):
         fanfic = Fanfic.objects.filter(title="dummy fanfic")
 
         if not fanfic.exists():
-            fanfic.objects.create(
+            Fanfic.objects.create(
                 author=user,
                 title="dummy fanfic",
                 genres="RO",
