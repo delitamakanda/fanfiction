@@ -1,4 +1,5 @@
 import math
+from datetime import datetime, timedelta
 from PIL import Image
 
 from django.db import models
@@ -14,7 +15,7 @@ from multiselectfield import MultiSelectField
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils import timezone
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import slugify, pluralize
 
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
@@ -87,6 +88,11 @@ class Category(models.Model):
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -102,6 +108,11 @@ class SubCategory(models.Model):
         ordering = ('name',)
         verbose_name = 'sous-categorie'
         verbose_name_plural = 'sous-categories'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(SubCategory, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -167,7 +178,8 @@ class Fanfic(models.Model):
 
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        if not self.slug:
+            self.slug = slugify(self.title)
         super(Fanfic, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -284,7 +296,8 @@ class Post(models.Model):
         verbose_name_plural = 'posts'
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        if not self.slug:
+            self.slug = slugify(self.title)
         super(Post, self).save(*args, **kwargs)
 
     def __str__(self):
