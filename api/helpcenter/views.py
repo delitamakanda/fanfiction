@@ -22,6 +22,7 @@ from api.models import Chapter
 from api.models import Board
 from api.models import Topic
 from api.models import Message
+from api.models import AccountProfile
 
 from markdownx.utils import markdownify
 
