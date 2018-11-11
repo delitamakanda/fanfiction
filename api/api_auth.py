@@ -45,7 +45,7 @@ class LoginView(views.APIView):
         # if not profile.filter(user=user).exists():
             # AccountProfile.objects.create(user=user)
 
-        request.session.set_expiry(300)
+        request.session.set_expiry(3600)
         login(request, user)
         return Response(UserSerializer(user).data)
 
