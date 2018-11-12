@@ -66,3 +66,4 @@ box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1);padding-left: .75rem; padding-right: .
 .menu li ul {position: absolute;left: 0;top: 1.5rem;list-style-type: disc;list-style-position: inside;}
 .hover\:text-teal-darker:hover {color: #20504f;}
 .cursor-pointer { cursor: pointer; }
+.overflow-hidden { overflow: hidden; }
