@@ -31,24 +31,24 @@ class Command(BaseCommand):
             SubCategory.objects.create(name="C-POP", category=category_musique, description="Fanfictions basées sur la musique pop chinoise.")
 
         if not SubCategory.objects.filter(name="Divers %s" % category_animes).exists():
-            SubCategory.objects.create(name="Divers %s" % category_animes, category=category_animes)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_animes, category=category_animes)
         if not SubCategory.objects.filter(name="Divers %s" % category_comics).exists():
-            SubCategory.objects.create(name="Divers %s" % category_comics, category=category_comics)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_comics, category=category_comics)
         if not SubCategory.objects.filter(name="Divers %s" % category_dramas).exists():
-            SubCategory.objects.create(name="Divers %s" % category_dramas, category=category_dramas)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_dramas, category=category_dramas)
         if not SubCategory.objects.filter(name="Divers %s" % category_originales).exists():
-            SubCategory.objects.create(name="Divers %s" % category_originales, category=category_originales)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_originales, category=category_originales)
         if not SubCategory.objects.filter(name="Divers %s" % category_series_tv).exists():
-            SubCategory.objects.create(name="Divers %s" % category_series_tv, category=category_series_tv)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_series_tv, category=category_series_tv)
         if not SubCategory.objects.filter(name="Divers %s" % category_historique).exists():
-            SubCategory.objects.create(name="Divers %s" % category_historique, category=category_historique)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_historique, category=category_historique)
         if not SubCategory.objects.filter(name="Divers %s" % category_jeux_videos).exists():
-            SubCategory.objects.create(name="Divers %s" % category_jeux_videos, category=category_jeux_videos)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_jeux_videos, category=category_jeux_videos)
         if not SubCategory.objects.filter(name="Divers %s" % category_jeux_role).exists():
-            SubCategory.objects.create(name="Divers %s" % category_jeux_role, category=category_jeux_role)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_jeux_role, category=category_jeux_role)
         if not SubCategory.objects.filter(name="Divers %s" % category_musique).exists():
-            SubCategory.objects.create(name="Divers %s" % category_musique, category=category_musique)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_musique, category=category_musique)
         if not SubCategory.objects.filter(name="Divers %s" % category_books).exists():
-            SubCategory.objects.create(name="Divers %s" % category_books, category=category_books)
+            SubCategory.objects.get_or_create(name="Divers %s" % category_books, category=category_books)
 
             self.stdout.write(self.style.SUCCESS('Created subcategories'))
