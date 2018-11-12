@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from django.utils import timezone
 from django.core.mail import mail_admins
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
@@ -378,6 +379,11 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Chapter.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.fanfic.updated = timezone.now()
+        instance.save()
+        return instance
 
 
 
