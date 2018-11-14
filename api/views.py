@@ -2,6 +2,7 @@ import json
 
 from django.core import serializers
 
+from django.utils import timezone
 from django.shortcuts import render, HttpResponse
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.authentication import TokenAuthentication
@@ -118,6 +119,9 @@ class ChapterDetailView(generics.RetrieveUpdateDestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly
     )
+
+    def perform_update(self, serializer):
+        serializer.save(author=self.request.user)
 
 """
 Liste des catégories

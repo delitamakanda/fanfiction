@@ -153,6 +153,9 @@
                 <div class="info">
                     Crée le {{ fanfic.publish | date }}
                 </div>
+                <div class="info">
+                    Mis à jour le {{ fanfic.updated | date }}
+                </div>
 
                 <div v-if="fanfic.synopsis">Synopsis : {{ fanfic.synopsis }}</div>
                 <div>Credits : {{ fanfic.credits }}</div>
