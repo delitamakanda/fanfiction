@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from api.models import Fanfic
 from api.models import Category
 from api.models import SubCategory
-from api.models import Board
 
 class Command(BaseCommand):
     help = 'create dummy data to initialize fanfiction'
