@@ -15,18 +15,18 @@ from django.template.loader import get_template, render_to_string
 from django.http import HttpResponse, Http404
 from django.core.exceptions import ObjectDoesNotExist
 
-from api.models import Lexique
-from api.models import FoireAuxQuestions
+from helpcenter.models import Lexique
+from helpcenter.models import FoireAuxQuestions
 from api.models import Fanfic
 from api.models import Chapter
-from api.models import Board
-from api.models import Topic
-from api.models import Message
+from helpcenter.models import Board
+from helpcenter.models import Topic
+from helpcenter.models import Message
 from api.models import AccountProfile
 
 from markdownx.utils import markdownify
 
-from api.helpcenter.forms import NewTopicForm, ReplyMessageForm
+from helpcenter.forms import NewTopicForm, ReplyMessageForm
 
 # Create your views here.
 def browse_by_title(request, initial=None):

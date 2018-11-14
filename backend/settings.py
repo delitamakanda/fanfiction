@@ -53,6 +53,8 @@ INSTALLED_APPS += [
     'rest_framework',
     'rest_framework.authtoken',
     'webpack_loader',
+    'helpcenter',
+    'accounts',
     'api.apps.ApiConfig',
 ]
 

@@ -23,8 +23,8 @@ from django.views.decorators.cache import never_cache
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('accounts/', include('api.accounts.urls')),
-    path('help/', include('api.helpcenter.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('help/', include('helpcenter.urls')),
     path('', never_cache(TemplateView.as_view(template_name='frontend/index.html')), name='index'),
 ]
 

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from api.helpcenter import views
+from helpcenter import views
 
 urlpatterns = [
     path('browse/title', views.browse_by_title, name='browse'),

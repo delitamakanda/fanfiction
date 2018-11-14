@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
-from api.models import Topic
-from api.models import Message
+from helpcenter.models import Topic
+from helpcenter.models import Message
 
 class NewTopicForm(forms.ModelForm):
     text = forms.CharField(

@@ -17,14 +17,9 @@ from api.models import Tag
 from api.models import FlatPages
 from api.models import FollowStories
 from api.models import FollowUser
-from api.models import Lexique
-from api.models import FoireAuxQuestions
+
 from api.models import AccountProfile
 from api.models import Social
-
-from api.models import Board
-from api.models import Topic
-from api.models import Message
 
 from api.models import Notification
 
@@ -123,13 +118,8 @@ class NotificationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(FlatPages, FlatPagesAdmin)
-admin.site.register(Lexique)
-admin.site.register(FoireAuxQuestions)
 admin.site.register(CommentByChapter)
 # admin.site.register(AccountProfile, AccountProfileAdmin)
-admin.site.register(Board)
-admin.site.register(Topic)
-admin.site.register(Message)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
