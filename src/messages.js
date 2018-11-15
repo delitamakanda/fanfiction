@@ -28,7 +28,9 @@ export const messages = {
             textGenres: 'Genres',
             textCategory: 'Category',
             textSubcategory: 'Subcategory',
-            textTitleStoy: 'Title of the story'
+            textTitleStoy: 'Title of the story',
+            removePhotoText: 'Remove photo',
+            warningRemovePhoto: 'Warning! There is a no way back with this operation :-)'
         }
     },
     fr: {
@@ -60,7 +62,9 @@ export const messages = {
             textGenres: 'Genres',
             textCategory: 'Categorie',
             textSubcategory: 'Subcategorie',
-            textTitleStoy: 'Titre de l\'histoire'
+            textTitleStoy: 'Titre de l\'histoire',
+            removePhotoText: 'Supprimer la photo',
+            warningRemovePhoto: 'Attention! Cette opération est non réversible :-)'
         }
     }
 }

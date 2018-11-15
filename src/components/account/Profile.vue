@@ -22,11 +22,13 @@
                         :placeholder="$t('message.dateOfBirth')"/>
                     </div>
                 <div class="mb-6">
+                    <avatar v-if="!account.photo && !photo" :email="this.$state.user.email" class="block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <img v-if="!photo" :src="account.photo" class="block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <img v-else :src="photo" class="block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="photo">
                         {{ $t('message.Photo') }}
                     </label>
+                    <a class="text-teal hover:text-teal-darker cursor-pointer" @click="removePhoto">{{ $t('message.removePhotoText' )}}</a>
                     <input
                         name="photo"
                         type="file"
@@ -75,7 +77,7 @@ export default {
             account: {},
             date_of_birth: '',
             photo: '',
-            bio: ''
+            bio: '',
         }
     },
     mixins: [
@@ -113,6 +115,7 @@ export default {
                   },
                   success: function(response) {
                       console.log(response);
+
                   }.bind(this),
                   error: function (error) {
                       console.log(error);
@@ -138,6 +141,27 @@ export default {
 
           reader.readAsDataURL(file);
       },
+      removePhoto () {
+          const message = this.$t('message.warningRemovePhoto');
+
+          this.confirm(message, () => {
+              $.ajax({
+                  url: `/api/remove-photo/${this.account.id}`,
+                  type: 'PUT',
+                  headers: {
+                      "X-CSRFToken": get_cookie("csrftoken")
+                  },
+                  success: function(response) {
+                      console.log(response);
+                      this.photo = ''
+                      this.account.photo = ''
+                  }.bind(this),
+                  error: function (error) {
+                      console.log(error);
+                  }.bind(this)
+              })
+          });
+      }
     }
 }
 </script>

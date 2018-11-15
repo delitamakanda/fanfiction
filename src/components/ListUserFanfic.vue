@@ -7,7 +7,7 @@
 
             <Loading v-if="remoteDataBusy" />
 
-            <div class="mb-4 bg-white max-w-sm overflow-hidden">
+            <div class="mb-4 bg-white max-w-sm">
               <div class="sm:flex sm:items-center px-6 py-4">
                 <img v-if="userProfile.photo" class="block h-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" :src="userProfile.photo" alt="">
                 <avatar v-else-if="loadingEmail" :email="userProfile.user.email" />
