@@ -1,6 +1,7 @@
 import json
 
 from django.shortcuts import render, HttpResponse
+from django.http import Http404
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -8,6 +9,7 @@ from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from api.serializers import ChangePasswordSerializer
 from api.serializers import UserSerializer
+from api.serializers import DeleteProfilePhotoSerializer
 
 from api.models import AccountProfile
 
@@ -96,3 +98,25 @@ class ChangePasswordView(views.APIView):
           return Response(status=status.HTTP_204_NO_CONTENT)
 
       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class RemovePhotoFromAccount(views.APIView):
+    """
+    Photo Profile
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self, pk):
+        try:
+            return AccountProfile.objects.get(pk=pk)
+        except AccountProfile.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk, format=None):
+        photo = self.get_object(pk)
+        serializer = DeleteProfilePhotoSerializer(photo, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

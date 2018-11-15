@@ -59,6 +59,7 @@ urlpatterns = [
     path('follow-user', api.FollowUserView.as_view(), name='follow-user'),
     path('disable-account', api.DeleteAccountView.as_view(), name='disable-account'),
     path('contact-mail', api.ContactMailView.as_view(), name='contact-mail'),
+    path('remove-photo/<int:pk>', api_auth.RemovePhotoFromAccount.as_view(), name='remove-photo'),
     path('docs', include_docs_urls(title='Fanfiction API', public=True)),
     path('', views.ApiRootView.as_view(), name=views.ApiRootView.name),
 ]

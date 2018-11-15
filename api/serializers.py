@@ -328,6 +328,17 @@ class AccountProfileSerializer(serializers.ModelSerializer):
         )
 
 
+class DeleteProfilePhotoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AccountProfile
+        fields = ('photo',)
+
+    def update(self, instance, validated_data):
+        instance.photo = None
+        instance.save()
+        return instance
+
 
 class SocialSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
