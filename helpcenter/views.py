@@ -24,6 +24,8 @@ from helpcenter.models import Topic
 from helpcenter.models import Message
 from api.models import AccountProfile
 
+from api.decorators import login_check
+
 from markdownx.utils import markdownify
 
 from helpcenter.forms import NewTopicForm, ReplyMessageForm
