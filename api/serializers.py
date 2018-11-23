@@ -295,6 +295,31 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
 
+class FollowUserListSerializer(serializers.ModelSerializer):
+    user_to = UserSerializer(read_only=True)
+
+    class Meta:
+        model = FollowUser
+        fields = (
+            'id',
+            'user_from',
+            'user_to',
+            'created'
+        )
+
+
+class FollowStoriesListSerializer(serializers.ModelSerializer):
+    to_fanfic = FanficSerializer(read_only=True)
+
+    class Meta:
+        model = FollowStories
+        fields = (
+            'id',
+            'from_user',
+            'to_fanfic',
+            'created'
+        )
+
 
 class AccountProfileCreateSerializer(serializers.ModelSerializer):
     # photo =  serializers.ImageField(max_length=None, use_url=True)
