@@ -30,7 +30,12 @@ export const messages = {
             textSubcategory: 'Subcategory',
             textTitleStoy: 'Title of the story',
             removePhotoText: 'Remove photo',
-            warningRemovePhoto: 'Warning! There is a no way back with this operation :-)'
+            warningRemovePhoto: 'Warning! There is a no way back with this operation :-)',
+            myStoriesLabel: 'My fanfictions',
+            favoriteAuthorsLabel: 'Starred authors',
+            favoriteStoriesLabel: 'Starred fanfictions',
+            NotificationsLabel: 'My notifications',
+            notConnectedLabel: 'Your are logged out.'
         }
     },
     fr: {
@@ -64,7 +69,12 @@ export const messages = {
             textSubcategory: 'Subcategorie',
             textTitleStoy: 'Titre de l\'histoire',
             removePhotoText: 'Supprimer la photo',
-            warningRemovePhoto: 'Attention! Cette opération est non réversible :-)'
+            warningRemovePhoto: 'Attention! Cette opération est non réversible :-)',
+            myStoriesLabel: 'Mes fanfictions',
+            favoriteAuthorsLabel: 'Auteurs favoris',
+            favoriteStoriesLabel: 'Fanfictions favorites',
+            NotificationsLabel: 'Mes notifications',
+            notConnectedLabel: 'Vous n\'êtes pas authentifier.'
         }
     }
 }

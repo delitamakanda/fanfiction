@@ -1,5 +1,5 @@
 <template>
-  <img :src="url" :alt="alt" @load="onLoad" @error="onError" class="block h-16 sm:h-24 rounded-full mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
+  <img :src="url" :alt="alt" @load="onLoad" @error="onError" class="block sm:w-24 rounded-full mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
 </template>
 
 <script>

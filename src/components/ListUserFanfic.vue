@@ -24,7 +24,16 @@
               </div>
             </div>
 
-            <article class="flex flex-wrap -mx-2">
+            <div class="tabs fanfic-tabs">
+                <ul class="list-reset flex border-b">
+                    <li :class="[ tabs === 'fanfic' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="tabs='fanfic'" class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold cursor-pointer">{{ $t('message.myStoriesLabel') }}</a>
+                    </li>
+                    <li :class="[ tabs === 'authors' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="tabs='authors'" class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold cursor-pointer">{{ $t('message.favoriteAuthorsLabel') }}</a></li>
+                    <li :class="[ tabs === 'fanfictions' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="tabs='fanfictions'" class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold cursor-pointer">{{ $t('message.favoriteStoriesLabel') }}</a>
+                    </li>
+                </ul>
+            </div>
+            <article class="flex flex-wrap -mx-2 fanfic-content" v-if="tabs === 'fanfic'">
                 <div class="mb-4 w-full px-2 md:w-1/2" v-for="fic of userFanfics" :key="fic.id">
                     <router-link :to="{
                       name: 'Detail',
@@ -52,6 +61,16 @@
                     </div>
                     </router-link>
                 </div>
+            </article>
+            <article class="-mx-2 fanfic-content" v-if="tabs === 'authors'">
+                <ul v-for="author in starredAuthor">
+                    <li>{{ author.user_to.username }}</li>
+                </ul>
+            </article>
+            <article class="-mx-2 fanfic-content" v-if="tabs === 'fanfictions'">
+                <ul v-for="fanfic in starredFanfic">
+                    <li>{{ fanfic.to_fanfic.title }}</li>
+                </ul>
             </article>
         </template>
         <template v-else-if="$state.user !== null && $state.user.username !== null">
@@ -113,6 +132,12 @@ export default {
         RemoteData({
             userFanfics () {
                 return this.$route.params.username ? `fanfics/v1/author/${this.$route.params.username}`: `fanfics/author/${this.$state.user.username}`
+            },
+            starredFanfic () {
+                return 'follow-stories';
+            },
+            starredAuthor () {
+                return 'follow-user'
             }
         }),
     ],
@@ -135,17 +160,21 @@ export default {
             subtitle: 'Vos fanfictions',
             userFanfics: [],
             userProfile: [],
+            tabs: 'fanfic',
             isActive: false,
             loadingEmail: false,
             fanfic: [],
             socialAccount: [],
-            errorFetch: 'Il y a un problème avec la requète.'
+            errorFetch: 'Il y a un problème avec la requète.',
+            notifications: [],
+            starredFanfic: [],
+            starredAuthor: []
         }
     },
     components: {
         Fanfic,
     },
-    mounted () {
+    created () {
         if ( this.$route.params.username) { this.getProfileUser() }
     },
     methods: {
@@ -153,10 +182,22 @@ export default {
             this.userProfile = await this.$fetch(`users/${this.$route.params.username}/profile`)
             this.loadingEmail = true
             this.socialAccount = await this.$fetch(`users/${this.userProfile.id}/socialaccount`)
-        },
+        }
     }
 }
 </script>
 
 <style scoped>
+.tabs li.is-active a {
+    border-bottom: 1px solid;
+    font-weight: bold;
+}
+
+.fanfic-content {
+    background: white;
+}
+
+.fanfic-tabs {
+    margin-bottom: 10px;
+}
 </style>

@@ -22,7 +22,7 @@
                         :placeholder="$t('message.dateOfBirth')"/>
                     </div>
                 <div class="mb-6">
-                    <avatar v-if="!account.photo && !photo" :email="this.$state.user.email" class="block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
+                    <avatar v-if="!account.photo && !photo" :email="this.$state.user.email" />
                     <img v-if="!photo" :src="account.photo" class="block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <img v-else :src="photo" class="block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="photo">
