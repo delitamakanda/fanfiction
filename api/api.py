@@ -16,8 +16,8 @@ from api.models import FollowUser
 
 from api.serializers import ChapterSerializer
 from api.serializers import FanficSerializer
-from api.serializers import FollowStoriesSerializer, FollowStoriesListSerializer
-from api.serializers import FollowUserSerializer, FollowUserListSerializer
+from api.serializers import FollowStoriesSerializer
+from api.serializers import FollowUserSerializer
 from api.serializers import ChangePasswordSerializer
 from api.serializers import UserSerializer
 
@@ -128,8 +128,8 @@ class FollowUserView(views.APIView):
         return list of all authors followed
         """
         try:
-            users = FollowUser.objects.all()
-            serializer = FollowUserListSerializer(users, many=True)
+            follow_users = FollowUser.objects.all()
+            serializer = FollowUserSerializer(follow_users, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
@@ -165,8 +165,8 @@ class FollowStoriesView(views.APIView):
       return list of all stories followed
       """
       try:
-          stories = FollowStories.objects.filter(from_user=self.request.user)
-          serializer = FollowStoriesListSerializer(stories, many=True)
+          stories = FollowStories.objects.all()
+          serializer = FollowStoriesSerializer(stories, many=True)
           return Response(serializer.data, status=status.HTTP_200_OK)
       except:
           return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)

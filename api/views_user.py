@@ -11,6 +11,8 @@ from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
 from api.models import AccountProfile
 from api.models import Social
+from api.models import FollowUser
+from api.models import FollowStories
 
 from api.serializers import UserSerializer
 from api.serializers import AccountProfileSerializer
@@ -18,6 +20,8 @@ from api.serializers import AccountProfileCreateSerializer
 from api.serializers import SocialSerializer
 from api.serializers import SocialCreateSerializer
 from api.serializers import UserEditSerializer
+from api.serializers import FollowUserListSerializer
+from api.serializers import FollowStoriesListSerializer
 
 from api import custompermission
 
@@ -99,3 +103,35 @@ class SocialCreateView(generics.CreateAPIView):
     permission_classes = (
         permissions.IsAuthenticated,
     )
+
+
+class FollowingUserListView(generics.ListAPIView):
+    """
+    Retrieve a profile account
+    """
+    queryset = FollowUser.objects.all()
+    serializer_class = FollowUserListSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
+
+    def get_queryset(self):
+        user = self.kwargs['user']
+        return FollowUser.objects.filter(user_from__username=user)
+
+
+class FollowingStoriesListView(generics.ListAPIView):
+    """
+    Retrieve a profile account
+    """
+    queryset = FollowStories.objects.all()
+    serializer_class = FollowStoriesListSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
+
+    def get_queryset(self):
+        user = self.kwargs['user']
+        return FollowStories.objects.filter(from_user__username=user)
