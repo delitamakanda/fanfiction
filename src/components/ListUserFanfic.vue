@@ -64,12 +64,25 @@
             </article>
             <article class="-mx-2 fanfic-content" v-if="tabs === 'authors'">
                 <ul v-for="author in starredAuthor">
-                    <li>{{ author.user_to.username }}</li>
+                    <li>
+                        <router-link :to="{ name: 'ShowUserFanfic', params: { username: author.user_to.username } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ author.user_to.username }}</router-link>
+
+                    </li>
                 </ul>
             </article>
             <article class="-mx-2 fanfic-content" v-if="tabs === 'fanfictions'">
                 <ul v-for="fanfic in starredFanfic">
-                    <li>{{ fanfic.to_fanfic.title }}</li>
+                    <li>
+                        <router-link class="hover:text-teal-dark text-teal" :to="{
+                          name: 'Detail',
+                          params: {
+                            slug: fanfic.to_fanfic.slug,
+                            id: fanfic.to_fanfic.id
+                          },
+                        }">
+                            {{ fanfic.to_fanfic.title }}
+                        </router-link>
+                    </li>
                 </ul>
             </article>
         </template>
@@ -133,11 +146,11 @@ export default {
             userFanfics () {
                 return this.$route.params.username ? `fanfics/v1/author/${this.$route.params.username}`: `fanfics/author/${this.$state.user.username}`
             },
-            starredFanfic () {
-                return 'follow-stories';
-            },
             starredAuthor () {
-                return 'follow-user'
+                return `following-authors/${this.$route.params.username}`
+            },
+            starredFanfic () {
+                return `following-stories/${this.$route.params.username}`
             }
         }),
     ],
@@ -175,7 +188,7 @@ export default {
         Fanfic,
     },
     created () {
-        if ( this.$route.params.username) { this.getProfileUser() }
+        if ( this.$route.params.username) {this.getProfileUser()}
     },
     methods: {
         async getProfileUser () {
