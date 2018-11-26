@@ -91,7 +91,6 @@ export default {
         async getSocialAccount () {
             this.account = await this.$fetch(`users/${this.$state.user.id}/edit/profile`)
             this.socialaccount = await this.$fetch(`users/${this.account.id}/socialaccount`)
-            console.log(this.socialaccount);
         },
         operation () {
             const message = this.$t('message.socialNetworkAdded');

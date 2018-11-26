@@ -22,9 +22,9 @@
                         :placeholder="$t('message.dateOfBirth')"/>
                     </div>
                 <div class="mb-6">
-                    <avatar v-if="!account.photo && !photo" :email="this.$state.user.email" />
-                    <img v-if="!photo" :src="account.photo" class="block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
-                    <img v-else :src="photo" class="block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
+                    <avatar v-if="!account.photo && displayAvatar" ref="avatar" :email="this.$state.user.email" />
+                    <img v-else :src="account.photo" class="inline-block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
+                    <img :src="photo" v-if="displayPhoto" class="inline-block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="photo">
                         {{ $t('message.Photo') }}
                     </label>
@@ -78,6 +78,8 @@ export default {
             date_of_birth: '',
             photo: '',
             bio: '',
+            displayPhoto: false,
+            displayAvatar: true
         }
     },
     mixins: [
@@ -114,8 +116,9 @@ export default {
                       user: this.$state.user.id
                   },
                   success: function(response) {
-                      console.log(response);
-
+                      this.displayAvatar = false
+                      this.account.photo = response.photo
+                      this.displayPhoto = false
                   }.bind(this),
                   error: function (error) {
                       console.log(error);
@@ -128,6 +131,7 @@ export default {
           if (!files.length) {
               return;
           }
+          this.displayPhoto = true;
           this.createImage(files[0]);
       },
       createImage(file) {
@@ -152,9 +156,9 @@ export default {
                       "X-CSRFToken": get_cookie("csrftoken")
                   },
                   success: function(response) {
-                      console.log(response);
                       this.photo = ''
-                      this.account.photo = ''
+                      this.account.photo = null
+                      this.displayPhoto = false
                   }.bind(this),
                   error: function (error) {
                       console.log(error);
