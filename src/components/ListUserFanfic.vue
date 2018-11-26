@@ -87,7 +87,7 @@
             </article>
         </template>
         <template v-else-if="$state.user !== null && $state.user.username !== null">
-            <h1>{{ subtitle }}</h1>
+            <h2>{{ subtitle }}</h2>
 
             <Loading v-if="remoteDataBusy" />
 
@@ -95,8 +95,8 @@
                 Vous n'avez pas encore de fanfictions. Libérer votre créativité !
             </div>
 
-            <section v-else class="fanfictions-list">
-                <div class="max-w-md w-full">
+            <section v-else class="fanfictions-list flex -mx-2">
+                <div class="md:w-2/3 px-2 w-full">
                     <div v-for="(userFanfic, index) in userFanfics" :key="userFanfic.id" :index="index" class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal mb-4">
                         <div class="mb-8">
                             <div class="text-black font-bold text-xl mb-2">{{ userFanfic.title }} <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" title="Voir" :to="{name: 'Fanfic', params: { id: userFanfic.id }}"> <svgicon icon="view-show" width="22" height="18" color="#000"></svgicon> </router-link></div>
@@ -123,6 +123,12 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="w-full md:w-1/3 px-2">
+                    <h2>{{ $t('message.NotificationsLabel') }}</h2>
+                    <ul v-for="notification in notifications.results">
+                        <li>{{ notification.user.username }} {{ notification.verb }} {{ notification.target }} - {{ notification.created | date }}</li>
+                    </ul>
                 </div>
             </section>
 
@@ -170,7 +176,7 @@ export default {
     },
     data(){
         return{
-            subtitle: 'Vos fanfictions',
+            subtitle: this.$t('message.vosFanfictionsLabel'),
             userFanfics: [],
             userProfile: [],
             tabs: 'fanfic',
@@ -178,7 +184,7 @@ export default {
             loadingEmail: false,
             fanfic: [],
             socialAccount: [],
-            errorFetch: 'Il y a un problème avec la requète.',
+            errorFetch: this.$t('message.errorFetch'),
             notifications: [],
             starredFanfic: [],
             starredAuthor: []
@@ -189,12 +195,16 @@ export default {
     },
     created () {
         if ( this.$route.params.username) {this.getProfileUser()}
+        if (this.$state.user && this.$state.user.id != null) { this.getNotifications()}
     },
     methods: {
         async getProfileUser () {
             this.userProfile = await this.$fetch(`users/${this.$route.params.username}/profile`)
             this.loadingEmail = true
             this.socialAccount = await this.$fetch(`users/${this.userProfile.id}/socialaccount`)
+        },
+        async getNotifications () {
+            this.notifications = await this.$fetch('notifications')
         }
     }
 }

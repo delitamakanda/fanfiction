@@ -9,6 +9,11 @@
             :title="$t('message.addNewSocialNetwork')"
             :operation="operation"
             :valid="valid">
+                <div class="mb-4 mt-4" v-if="socialaccount.length > 0">
+                    <ul class="list-reset" v-for="social in socialaccount">
+                        <li><a :title="social.network" class="hover:text-teal-dark text-teal font-bold mr-4" :href="'https://' + social.network + '.com/' + social.nichandle" target="_blank">{{ social.nichandle }}</a>(<em>{{ social.network }}</em>)</li>
+                    </ul>
+                </div>
                 <div class="mb-4">
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="network">
                         {{ $t('message.network') }}
@@ -59,7 +64,8 @@ export default {
             account: {},
             network: '',
             networks: ['twitter', 'facebook', 'pinterest', 'instagram'],
-            nichandle: ''
+            nichandle: '',
+            socialaccount: {}
         }
     },
     mixins: [
@@ -67,43 +73,52 @@ export default {
         RemoteData({
             account () {
                 return `users/${this.$state.user.id}/edit/profile`;
-            }
+            },
         })
     ],
     computed: {
-      title () {
-        return this.$t('message.addNewSocialNetwork')
-      },
-      valid () {
-        return !!this.network && !!this.nichandle
-      },
+        title () {
+            return this.$t('message.addNewSocialNetwork')
+        },
+        valid () {
+            return !!this.network && !!this.nichandle
+        },
+    },
+    async created () {
+        this.getSocialAccount();
     },
     methods: {
-      operation () {
-          const message = this.$t('message.socialNetworkAdded');
+        async getSocialAccount () {
+            this.account = await this.$fetch(`users/${this.$state.user.id}/edit/profile`)
+            this.socialaccount = await this.$fetch(`users/${this.account.id}/socialaccount`)
+            console.log(this.socialaccount);
+        },
+        operation () {
+            const message = this.$t('message.socialNetworkAdded');
 
-          this.confirm(message, () => {
-              $.ajax({
-                  url: '/api/users/social-account',
-                  type: 'POST',
-                  headers: {
-                      "X-CSRFToken": get_cookie("csrftoken"),
-                  },
-                  data: {
-                      account: this.account.id,
-                      network: this.network,
-                      nichandle: this.nichandle,
-                      user: this.$state.user.id
-                  },
-                  success: function() {
-                      this.network = this.nichandle = ''
-                  }.bind(this),
-                  error: function (error) {
-                      console.log(error);
-                  }.bind(this)
-              })
-          });
-      },
+            this.confirm(message, () => {
+                $.ajax({
+                    url: '/api/users/social-account',
+                    type: 'POST',
+                    headers: {
+                        "X-CSRFToken": get_cookie("csrftoken"),
+                    },
+                    data: {
+                        account: this.account.id,
+                        network: this.network,
+                        nichandle: this.nichandle,
+                        user: this.$state.user.id
+                    },
+                    success: function(response) {
+                        this.network = this.nichandle = ''
+                        this.socialaccount.push(response)
+                    }.bind(this),
+                    error: function (error) {
+                        console.log(error);
+                    }.bind(this)
+                })
+            });
+        },
     }
 }
 </script>

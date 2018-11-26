@@ -35,7 +35,9 @@ export const messages = {
             favoriteAuthorsLabel: 'Starred authors',
             favoriteStoriesLabel: 'Starred fanfictions',
             NotificationsLabel: 'My notifications',
-            notConnectedLabel: 'Your are logged out.'
+            notConnectedLabel: 'Your are logged out.',
+            vosFanfictionsLabel: 'Your fanfictions',
+            emptyMessageFanfiction: 'You haven\'t got fanfictions here. Free your creativity !'
         }
     },
     fr: {
@@ -74,7 +76,9 @@ export const messages = {
             favoriteAuthorsLabel: 'Auteurs favoris',
             favoriteStoriesLabel: 'Fanfictions favorites',
             NotificationsLabel: 'Mes notifications',
-            notConnectedLabel: 'Vous n\'êtes pas authentifier.'
+            notConnectedLabel: 'Vous n\'êtes pas authentifier.',
+            vosFanfictionsLabel: 'Vos fanfictions',
+            emptyMessageFanfiction: 'Vous n\'avez pas encore de fanfictions. Libérer votre créativité !'
         }
     }
 }
