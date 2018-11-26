@@ -65,8 +65,7 @@
             <article class="-mx-2 fanfic-content" v-if="tabs === 'authors'">
                 <ul v-for="author in starredAuthor">
                     <li>
-                        <router-link :to="{ name: 'ShowUserFanfic', params: { username: author.user_to.username } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ author.user_to.username }}</router-link>
-
+                        {{ author.user_to.username }}
                     </li>
                 </ul>
             </article>
