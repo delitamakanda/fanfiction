@@ -28,6 +28,22 @@ from api.utils import create_notification
 from api.fields import GenericRelatedField
 from api.customserializer import Base64ImageField
 
+class SocialSignUpSerializer(serializers.ModelSerializer):
+    client_id = serializers.SerializerMethodField()
+    client_secret = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('email', 'username', 'client_id', 'client_secret')
+        read_only_fields = ('username',)
+
+    def get_client_id(self, obj):
+        return obj.application_set.first().client_id
+
+    def get_client_secret(self, obj):
+        return obj.application_set.first().client_secret
+
+
 class FollowUserSerializer(serializers.ModelSerializer):
     # user_to = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
 

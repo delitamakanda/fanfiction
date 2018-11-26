@@ -10,10 +10,89 @@ from rest_framework.response import Response
 from api.serializers import ChangePasswordSerializer
 from api.serializers import UserSerializer
 from api.serializers import DeleteProfilePhotoSerializer
+from api.serializers import SocialSignUpSerializer
+
+from social_django.utils import load_strategy
+from social_django.utils import load_backend
+from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
+from social_core.exceptions import AuthAlreadyAssociated
 
 from api.models import AccountProfile
 
+from api.custompermission import IsAuthenticatedOrCreate
+
 # Create your api views here.
+class SocialSignUp(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = SocialSignUpSerializer
+    permission_classes = (IsAuthenticatedOrCreate,)
+
+    def create(self, request, *args, **kwargs):
+        """
+        Override `create` instead of `perform_create` to access request
+        request is necessary for `load_strategy`
+        """
+        # https://yeti.co/blog/social-auth-with-django-rest-framework/
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        provider = request.data['provider']
+
+        # If this request was made with an authenticated user, try to associate this social
+        # account with it
+        authed_user = request.user if not request.user.is_anonymous() else None
+
+        # `strategy` is a python-social-auth concept referencing the Python framework to
+        # be used (Django, Flask, etc.). By passing `request` to `load_strategy`, PSA
+        # knows to use the Django strategy
+        strategy = load_strategy(request)
+        # Now we get the backend that corresponds to our user's social auth provider
+        # e.g., Facebook, Twitter, etc.
+        backend = load_backend(strategy=strategy, name=provider, redirect_uri=None)
+
+        if isinstance(backend, BaseOAuth1):
+            # Twitter, for example, uses OAuth1 and requires that you also pass
+            # an `oauth_token_secret` with your authentication request
+            token = {
+                'oauth_token': request.data['access_token'],
+                'oauth_token_secret': request.data['access_token_secret'],
+            }
+        elif isinstance(backend, BaseOAuth2):
+            # We're using oauth's implicit grant type (usually used for web and mobile
+            # applications), so all we have to pass here is an access_token
+            token = request.data['access_token']
+
+        try:
+            # if `authed_user` is None, python-social-auth will make a new user,
+            # else this social account will be associated with the user you pass in
+            user = backend.do_auth(token, user=authed_user)
+        except AuthAlreadyAssociated:
+            # You can't associate a social account with more than user
+            return Response({"errors": "That social media account is already in use"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        if user and user.is_active:
+            # if the access token was set to an empty string, then save the access token
+            # from the request
+            auth_created = user.social_auth.get(provider=provider)
+            if not auth_created.extra_data['access_token']:
+                # Facebook for example will return the access_token in its response to you.
+                # This access_token is then saved for your future use. However, others
+                # e.g., Instagram do not respond with the access_token that you just
+                # provided. We save it here so it can be used to make subsequent calls.
+                auth_created.extra_data['access_token'] = token
+                auth_created.save()
+
+            # Set instance since we are not calling `serializer.save()`
+            serializer.instance = user
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED,
+                            headers=headers)
+        else:
+            return Response({"errors": "Error with social authentication"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
 class UserCreateView(generics.CreateAPIView):
     """
     Create an user

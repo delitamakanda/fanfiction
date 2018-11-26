@@ -98,3 +98,7 @@ REST_FRAMEWORK = {
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
     # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
+
+# Python Social Auth
+
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
