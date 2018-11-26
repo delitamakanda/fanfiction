@@ -360,7 +360,8 @@ class DeleteProfilePhotoSerializer(serializers.ModelSerializer):
         fields = ('photo',)
 
     def update(self, instance, validated_data):
-        instance.photo = None
+        #instance.photo = None
+        instance.photo.delete()
         instance.save()
         return instance
 
