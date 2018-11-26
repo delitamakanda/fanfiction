@@ -1,9 +1,13 @@
 import json
+
+from django_filters.rest_framework import DjangoFilterBackend
+
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework import filters
 from django_filters import AllValuesFilter, DateTimeFilter, NumberFilter
 from rest_framework.throttling import ScopedRateThrottle
 from api.models import Fanfic
@@ -75,6 +79,11 @@ class FanficListRemasteredView(generics.ListAPIView):
     """
     serializer_class = FanficListSerializer
     pagination_class = None
+    filter_backends = (
+        filters.SearchFilter,
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
     permission_classes = (
         permissions.AllowAny,
     )
@@ -85,11 +94,16 @@ class FanficListRemasteredView(generics.ListAPIView):
         'status',
     )
     search_fields = (
-        '^title',
-        '^description',
-        '^credits',
-        '^synopsis',
+        'title',
+        'description',
+        'credits',
+        'synopsis',
     )
+    ordering_fields = (
+        'title',
+        'created'
+    )
+    ordering = ('title',)
 
     def get_queryset(self):
         return Fanfic.objects.all()
@@ -113,7 +127,7 @@ class FanficCreateView(generics.ListCreateAPIView):
         serializer.save(author=self.request.user)
         # launch asynchronous tasks
         fanfic_created.delay(serializer.data['id'])
-        
+
 
 """
 method put/delete/get for auth user only
