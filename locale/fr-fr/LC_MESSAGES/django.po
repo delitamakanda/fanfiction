@@ -1,0 +1,189 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-11-27 00:35+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: backend/settings.py:149
+msgid "Anglais"
+msgstr ""
+
+#: backend/settings.py:150
+msgid "Français"
+msgstr ""
+
+#: backend/urls.py:30
+msgid "accounts/"
+msgstr ""
+
+#: backend/urls.py:31
+msgid "help/"
+msgstr ""
+
+#: helpcenter/forms.py:9
+msgid "A quoi pensez vous ?"
+msgstr ""
+
+#: helpcenter/forms.py:12
+msgid "Le nombre de caractères minimum est de 4000."
+msgstr ""
+
+#: templates/frontend/base.html:43
+msgid "Language"
+msgstr ""
+
+#: templates/help/dico.html:5 templates/registration/base.html:64
+msgid "Lexique"
+msgstr ""
+
+#: templates/help/faq.html:5
+msgid "Foire aux questions"
+msgstr ""
+
+#: templates/help/faq.html:18
+msgid "Cette rubrique est vide"
+msgstr ""
+
+#: templates/help/forum/communities.html:5
+#: templates/help/forum/edit_message.html:5
+#: templates/help/forum/messages.html:6 templates/help/forum/new_topic.html:5
+#: templates/help/forum/reply_topic.html:10 templates/help/forum/topics.html:6
+msgid "Communautés"
+msgstr ""
+
+#: templates/help/forum/communities.html:12
+msgid "Discussion"
+msgstr ""
+
+#: templates/help/forum/communities.html:13
+#: templates/help/forum/messages.html:31
+msgid "Messages"
+msgstr ""
+
+#: templates/help/forum/communities.html:14
+msgid "Sujets"
+msgstr ""
+
+#: templates/help/forum/communities.html:15 templates/help/forum/topics.html:24
+msgid "Dernier message"
+msgstr ""
+
+#: templates/help/forum/communities.html:32
+msgid "Par"
+msgstr ""
+
+#: templates/help/forum/communities.html:32
+msgid "à"
+msgstr ""
+
+#: templates/help/forum/communities.html:36
+msgid "Cette discussion est vide"
+msgstr ""
+
+#: templates/help/forum/edit_message.html:8
+msgid "Editer le message"
+msgstr ""
+
+#: templates/help/forum/edit_message.html:18
+#: templates/help/forum/messages.html:37
+msgid "Editer"
+msgstr ""
+
+#: templates/help/forum/edit_message.html:19
+msgid "Annuler"
+msgstr ""
+
+#: templates/help/forum/messages.html:15
+#: templates/help/forum/reply_topic.html:13
+#: templates/help/forum/reply_topic.html:24
+msgid "Répondre"
+msgstr ""
+
+#: templates/help/forum/messages.html:49 templates/help/forum/messages.html:53
+#: templates/help/forum/topics.html:58 templates/help/forum/topics.html:62
+msgid "Premier"
+msgstr ""
+
+#: templates/help/forum/messages.html:59 templates/help/forum/messages.html:63
+#: templates/help/forum/topics.html:68 templates/help/forum/topics.html:72
+msgid "Précédent"
+msgstr ""
+
+#: templates/help/forum/messages.html:81 templates/help/forum/messages.html:85
+#: templates/help/forum/topics.html:90 templates/help/forum/topics.html:94
+msgid "Suivant"
+msgstr ""
+
+#: templates/help/forum/messages.html:91 templates/help/forum/messages.html:95
+#: templates/help/forum/topics.html:100 templates/help/forum/topics.html:104
+msgid "Dernier"
+msgstr ""
+
+#: templates/help/forum/new_topic.html:7 templates/help/forum/topics.html:13
+msgid "Nouveau sujet"
+msgstr ""
+
+#: templates/help/forum/new_topic.html:17
+msgid "Poster"
+msgstr ""
+
+#: templates/help/forum/topics.html:20
+msgid "Sujet"
+msgstr ""
+
+#: templates/help/forum/topics.html:21
+msgid "Starter"
+msgstr ""
+
+#: templates/help/forum/topics.html:22
+msgid "Réponses"
+msgstr ""
+
+#: templates/help/forum/topics.html:23
+msgid "Vues"
+msgstr ""
+
+#: templates/help/forum/topics.html:36
+msgid "Pages"
+msgstr ""
+
+#: templates/help/forum/topics.html:41
+msgid "Dernière page"
+msgstr ""
+
+#: templates/registration/base.html:57
+msgid "Bonjour"
+msgstr ""
+
+#: templates/registration/base.html:58
+msgid "Se déconnecter"
+msgstr ""
+
+#: templates/registration/base.html:61
+msgid "Aide"
+msgstr ""
+
+#: templates/registration/base.html:63
+msgid "F.A.Q"
+msgstr ""
+
+#: templates/registration/base.html:65
+msgid "Forum"
+msgstr ""
+
+#: templates/registration/base.html:69
+msgid "Retourner sur Fanfiction"
+msgstr ""
