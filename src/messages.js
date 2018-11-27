@@ -12,7 +12,7 @@ export const messages = {
             dateOfBirth: 'Date of birth',
             Photo: 'Photo',
             Biography: 'Biography',
-            BiographyPlaceholder: 'About you...',
+            BiographyPlaceholder: 'About you',
             changeUserInfos: 'Edit user informations',
             profileUpdated: 'Profile will be updated.',
             email: 'Email address',
