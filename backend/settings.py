@@ -15,6 +15,8 @@ from decouple import config
 
 from django.urls import reverse
 
+from django.utils.translation import gettext_lazy as _
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -72,6 +74,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'api.middleware.AutoLogout',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -142,6 +145,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+LANGUAGES = (
+       ('en-us', _('Anglais')),
+       ('fr-fr', _('Français')),
+)
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale/'),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -232,11 +243,13 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 if DEBUG:
     CELERY_BROKER_URL = config('REDIS_URL')
     CELERY_RESULT_BACKEND = config('REDIS_URL')
+    REDIS_URL = config('REDIS_URL')
 else:
     # BROKER_POOL_LIMIT = 3
     # CELERY_BROKER_URL  = config('CLOUDAMQP_URL')
     CELERY_BROKER_URL = config('REDISTOGO_URL')
     CELERY_RESULT_BACKEND = config('REDISTOGO_URL')
+    REDIS_URL = config('REDISTOGO_URL')
 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
