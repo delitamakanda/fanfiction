@@ -70,9 +70,10 @@
                   </div>
             </div>
 
-        <div class="flex flex-wrap mt-4">
-            <aside class="w-full md:w-1/4 ">
-                <div class="sidebar-menu ">
+        <div class="flex flex-wrap mt-4 -mx-2">
+            <aside class="w-full md:w-1/4 px-2">
+                <div class="sidebar-menu mb-4">
+                    <h3>Chapitres :</h3>
                     <ul v-for="(element, index) in chapterList">
                         <li :key="index">
                             <span @click="selectChapter($event)" :id="element.id" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer underline">{{ index + 1 }} - {{ element.title }}
@@ -80,9 +81,25 @@
                         </li>
                     </ul>
                 </div>
+                <div v-if="fanfic.recommended_fanfics">
+                    <h3>Fanfictions recommandées :</h3>
+                    <div v-for="f in fanfic.recommended_fanfics" class="flex -mx-2">
+                        <div class="px-2">
+                            <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer underline" :to="{
+                              name: 'Detail',
+                              params: {
+                                slug: f.slug,
+                                id: f.id
+                              },
+                            }">
+                            {{ f.title }}
+                            </router-link>
+                        </div>
+                    </div>
+                </div>
             </aside>
 
-            <section class="w-full md:w-3/4 ">
+            <section class="w-full md:w-3/4 px-2">
                 <div v-for="(chapter, index) in chapterList" :key="chapter.id" :id="chapter.id" v-if="chapterIsVisible && chapter.id == target" class="shadow-md p-4 rounded bg-white">
                     <small>Publié le : {{ chapter.published | date }}</small>
 
