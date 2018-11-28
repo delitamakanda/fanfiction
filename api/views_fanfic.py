@@ -17,8 +17,6 @@ from api import custompermission
 
 from .tasks import fanfic_created
 
-from api.recommender import Recommender
-
 """
 Fanfics
 """

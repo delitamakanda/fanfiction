@@ -28,6 +28,8 @@ from api.utils import create_notification
 from api.fields import GenericRelatedField
 from api.customserializer import Base64ImageField
 
+from api.recommender import Recommender
+
 class SocialSignUpSerializer(serializers.ModelSerializer):
     client_id = serializers.SerializerMethodField()
     client_secret = serializers.SerializerMethodField()
@@ -178,6 +180,7 @@ class FanficListSerializer(serializers.ModelSerializer):
     author = UserFanficSerializer(read_only=True)
     # author = serializers.SlugRelatedField(queryset=User.objects.all(), slug_field='username')
     users_like = UserFanficSerializer(read_only=True, many=True)
+    recommended_fanfics = serializers.SerializerMethodField()
 
     class Meta:
         model = Fanfic
@@ -202,6 +205,7 @@ class FanficListSerializer(serializers.ModelSerializer):
           'published',
           'category',
           'subcategory',
+          'recommended_fanfics',
         )
         lookup_field = 'slug'
 
@@ -214,6 +218,12 @@ class FanficListSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return obj.get_status_display()
+
+    def get_recommended_fanfics(self, obj):
+        r = Recommender()
+        recommended_fanfics = r.suggest_fanfics_for([obj], 4)
+        serializer = FanficSerializer(recommended_fanfics, many=True)
+        return serializer.data
 
 """
 Serializer for PUT/POST/DELETE method
