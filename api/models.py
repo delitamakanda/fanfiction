@@ -170,6 +170,7 @@ class Fanfic(models.Model):
     category = models.ForeignKey(Category, related_name="categories", on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategory, related_name="sub_categories", on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
+    views = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ('-publish',)
