@@ -206,6 +206,7 @@ class FanficListSerializer(serializers.ModelSerializer):
           'category',
           'subcategory',
           'recommended_fanfics',
+          'views',
         )
         lookup_field = 'slug'
 
@@ -224,6 +225,7 @@ class FanficListSerializer(serializers.ModelSerializer):
         recommended_fanfics = r.suggest_fanfics_for([obj], 4)
         serializer = FanficSerializer(recommended_fanfics, many=True)
         return serializer.data
+
 
 """
 Serializer for PUT/POST/DELETE method

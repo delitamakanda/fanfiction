@@ -162,3 +162,17 @@ class FanficListDetailView(generics.RetrieveAPIView):
         permissions.AllowAny,
     )
     lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        session_key = 'viewed_fanfic_{}'.format(instance.pk)
+
+        if not self.request.session.get(session_key, False):
+            instance.views += 1
+            instance.save()
+            self.request.session[session_key] = True
+
+        serializer = self.get_serializer(instance)
+        data = serializer.data
+        return Response(data)
