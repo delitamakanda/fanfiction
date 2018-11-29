@@ -2,9 +2,10 @@ import json
 
 from django_filters.rest_framework import DjangoFilterBackend
 
+from django.http import Http404
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth.models import User
-from rest_framework import generics, permissions, views, status, viewsets
+from rest_framework import generics, permissions, views, status, viewsets, exceptions
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import filters
@@ -16,6 +17,8 @@ from api.serializers import FanficListSerializer
 from api import custompermission
 
 from .tasks import fanfic_created
+
+from api.recommender import Recommender
 
 """
 Fanfics
@@ -164,15 +167,25 @@ class FanficListDetailView(generics.RetrieveAPIView):
     lookup_field = 'slug'
 
     def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
+        try:
+            instance = self.get_object()
 
-        session_key = 'viewed_fanfic_{}'.format(instance.pk)
+            session_key = 'viewed_fanfic_{}'.format(instance.pk)
 
-        if not self.request.session.get(session_key, False):
-            instance.views += 1
-            instance.save()
-            self.request.session[session_key] = True
+            if not self.request.session.get(session_key, False):
+                instance.views += 1
+                instance.save()
+                self.request.session[session_key] = True
 
-        serializer = self.get_serializer(instance)
-        data = serializer.data
-        return Response(data)
+
+            r = Recommender()
+            most_viewed_fanfic = Fanfic.objects.all().order_by('-views')[0]
+            liked_fanfics = r.fanfics_liked([instance, most_viewed_fanfic])
+
+            serializer = self.get_serializer(instance)
+            data = serializer.data
+            return Response(data, status=status.HTTP_200_OK)
+        except Http404:
+            headers = ""
+            response = {"status": "False", "message": "Details not found", "data": ""}
+            return Response(response, status=status.HTTP_404_NOT_FOUND, headers=headers)
