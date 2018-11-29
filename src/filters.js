@@ -79,3 +79,7 @@ export function unique (values, unique) {
 export function prepend (string, prepend) {
     return `${string}${prepend}`;
 }
+
+export function pluralize (word, amount) {
+    return amount > 1 ? `${word}s` : word;
+}

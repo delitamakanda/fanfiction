@@ -55,14 +55,13 @@
                                     Auteur: <router-link :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author.username, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author.username }}</router-link>
                                 </p>
                                 <p class="text-grey-dark">Publié le : {{ fanfic.publish | date }}</p>
-                                <p class="text-grey-dark">{{ fanfic.genres }} / {{ fanfic.classement }} / {{ fanfic.total_likes }} likes</p>
+                                <p class="text-grey-dark">{{ fanfic.genres }} / {{ fanfic.classement }} / {{ fanfic.total_likes }} likes / {{ fanfic.views }} {{ 'view' | pluralize(fanfic.views) }}</p>
                             </div>
                         </div>
                     </div>
                     </router-link>
             </div>
         </article>
-
         <div v-if="empty">Pas encore de fanfictions dans cette catégorie.
             <router-link :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Créez la votre !</router-link>
         </div>

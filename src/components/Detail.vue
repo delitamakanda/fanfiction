@@ -65,6 +65,7 @@
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.subcategory }}</span>
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.classement }} </span>
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.genres }} </span>
+                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">{{ fanfic.views }} {{ 'view' | pluralize(fanfic.views) }}</span>
                     <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">{{ fanfic.total_likes }} likes</span>
                     <span class="lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer" @click="showModal"><u>{{ total_comments }} commentaire(s)</u> </span>
                   </div>
