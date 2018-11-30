@@ -2,7 +2,7 @@
     <div id="app" class="container mx-auto">
         <app-header v-bind:title="title"></app-header>
         <transition name="fade" mode="out-in">
-            <router-view />
+            <router-view :key="$route.fullPath" />
         </transition>
         <app-footer v-bind:title="title"></app-footer>
         <transition appear name="slideFromBottom">
