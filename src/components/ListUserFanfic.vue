@@ -55,7 +55,7 @@
                         <div class="flex items-center">
                             <div class="text-sm">
                                 <p class="text-grey-dark">Publié le : {{ fic.publish | date }}</p>
-                                <p class="text-grey-dark">{{ fic.genres }} / {{ fic.classement }} / {{ fic.total_likes }} likes</p>
+                                <p class="text-grey-dark">{{ fic.genres }} / {{ fic.classement }} / {{ fic.total_likes }} likes / {{ fic.views }} {{ 'view' | pluralize(fic.views) }}</p>
                             </div>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
                             </p>
 
                             <p class="text-grey-darker text-base">
-                                {{ userFanfic.genres }} / {{ userFanfic.classement }} / {{ userFanfic.status}}
+                                {{ userFanfic.genres }} / {{ userFanfic.classement }} / {{ userFanfic.status}} / {{ userFanfic.views }} {{ 'view' | pluralize(userFanfic.views) }}
                             </p>
 
                             <p v-if="userFanfic.description" class="text-grey-darker text-base">
