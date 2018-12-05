@@ -26,13 +26,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="mobile-web-app-capable" content="yes">
-    <!--<link rel="stylesheet" href="{% static 'styles/tailwind.css' %}">-->
+    <link rel="stylesheet" href="{% static 'styles/tailwind.css' %}">
     <link rel="stylesheet" href="{% static 'styles/base.css' %}">
     {% block styles %}
     {% endblock %}
     </head>
     <body id="page" class="container mx-auto">
-        <nav class="flex items-center justify-between flex-wrap bg-white p-4 shadow">
+        <nav class="flex items-center justify-between flex-wrap bg-white p-6 shadow">
             <div class="flex items-center flex-no-shrink text-teal mr-6">
                 <svg width="23.999999999999996" height="23.999999999999996" xmlns="http://www.w3.org/2000/svg">
                  <g>
@@ -77,14 +77,14 @@
             </div>
         </nav>
         <div class="container">
-            <ol class="breadcrumb my-4">
+            <ol class="breadcrumb my-6">
                 {% block breadcrumb %}
                 {% endblock %}
             </ol>
             {% block content %}
             {% endblock %}
         </div>
-        <footer id="copyright">
+        <footer id="copyright" class="mt-6 mb-4">
         </footer>
         <script>
         var copyrightDate = new Date().getFullYear();

@@ -9,10 +9,12 @@
 
 <div>
 {% for question in questions %}
-    {% ifchanged question.libelle %}<h3>{{ question.get_libelle_display }}</h3>{% endifchanged %}
+    {% ifchanged question.libelle %}<h3 class="mb-6 mt-4">{{ question.get_libelle_display }}</h3>{% endifchanged %}
     <button class="accordion">{{ question.question }}</button>
     <div class="panel">
+        <div class="mt-4 mb-4">
         {{ question.reponse|safe }}
+        </div>
     </div>
 {% empty %}
     <p>{% trans 'Cette rubrique est vide' %}.</p>
