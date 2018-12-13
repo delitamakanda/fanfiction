@@ -9,6 +9,7 @@ import VueState from './plugins/state'
 import VueFetch, { $fetch } from './plugins/fetch'
 import * as filters from './filters'
 import { messages } from './messages';
+import store from './store';
 
 Vue.use(VueI18n)
 Vue.use(VueState, state)
@@ -36,6 +37,7 @@ async function main () {
       el: '#app',
       data: state,
       router,
+      store,
       components: { App },
       template: '<App/>',
       i18n

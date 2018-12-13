@@ -117,7 +117,7 @@
                                     Utilisateurs qui aime votre fanfiction :
                                         <span class="mr-4" v-for="user in userFanfic.users_like">
 
-                                            <router-link :to="{ name: 'ShowUserFanfic', params: { username: user.username, id: user.id } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ user.username }} </router-link>
+                                            <router-link :to="{ name: 'ListUserFanfic', params: { username: user.username, id: user.id } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ user.username }} </router-link>
                                         </span>
                                 </div>
                             </div>
@@ -146,7 +146,6 @@ import '../compiled-icons/edit-pencil'
 import '../compiled-icons/view-show'
 
 export default {
-    name: 'ListUserFanfic',
     mixins: [
         RemoteData({
             userFanfics () {

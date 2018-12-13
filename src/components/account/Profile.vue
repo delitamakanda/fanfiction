@@ -22,7 +22,7 @@
                         :placeholder="$t('message.dateOfBirth')"/>
                     </div>
                 <div class="mb-6">
-                    <avatar v-if="!account.photo && displayAvatar" ref="avatar" :email="this.$state.user.email" />
+                    <avatar v-if="!account.photo" ref="avatar" :email="this.$state.user.email" />
                     <img v-else :src="account.photo" class="inline-block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <img :src="photo" v-if="displayPhoto" class="inline-block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="photo">
@@ -79,7 +79,6 @@ export default {
             photo: '',
             bio: '',
             displayPhoto: false,
-            displayAvatar: true
         }
     },
     mixins: [
@@ -116,7 +115,6 @@ export default {
                       user: this.$state.user.id
                   },
                   success: function(response) {
-                      this.displayAvatar = false
                       this.account.photo = response.photo
                       this.displayPhoto = false
                   }.bind(this),
@@ -157,8 +155,7 @@ export default {
                   },
                   success: function(response) {
                       this.photo = ''
-                      this.account.photo = null
-                      this.displayPhoto = false
+                      this.account.photo = ''
                   }.bind(this),
                   error: function (error) {
                       console.log(error);
