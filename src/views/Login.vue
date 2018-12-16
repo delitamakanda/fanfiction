@@ -70,6 +70,7 @@
                             Se connecter
                         </button>
                     </div>
+                    {{ error }}
                 </template>
                 <template v-else-if="mode === 'signup'">
                     <div class="flex items-center justify-between">
@@ -86,6 +87,7 @@
                             S'enregister
                         </button>
                     </div>
+                    {{ error }}
                 </template>
             </template>
 
@@ -112,7 +114,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('user', ['user']),
+        ...mapGetters('user', ['user', 'error']),
         title () {
             switch (this.mode) {
                 case 'login': return 'Se connecter'
@@ -132,7 +134,7 @@ export default {
     },
 
     methods: {
-        ...mapActions('user', ['connect', 'authenticate']),
+        ...mapActions('user', ['connect', 'authenticate', 'register']),
         async operation () {
             await this[this.mode]()
         },
@@ -154,15 +156,22 @@ export default {
 
         },
         async signup () {
-            await this.$fetch('signup', {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: this.username,
-                    password: this.password,
-                    email: this.email,
-                }),
-            })
-            this.mode = 'login'
+            let username = this.username
+            let password = this.password
+            let email = this.email
+
+            this.register({ username, password, email })
+            // await this.$fetch('signup', {
+            //     method: 'POST',
+            //     body: JSON.stringify({
+            //         username: this.username,
+            //         password: this.password,
+            //         email: this.email,
+            //     }),
+            // })
+            if (this.error != null) {
+                this.mode = 'login'
+            }
         },
         switchVisibility () {
             this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
