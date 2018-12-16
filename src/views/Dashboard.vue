@@ -1,6 +1,5 @@
 <template>
     <div class="flex flex-wrap">
-        <Loading v-if="loading" />
         <div class="w-full sm:w-1/2 md:w-1/4 mb-4">
 
               <p>Vous êtes connecter en tant que {{ user.username }}.</p>
@@ -30,23 +29,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-    name: 'Dashboard',
-    data(){
-        return{
-            error: null,
-            user: [],
-            loading: false,
-        }
-    },
-    async created () {
-        this.loading = true
-        try {
-            this.user = await this.$fetch('user')
-        } catch (e) {
-            this.error = e
-        }
-        this.loading = false
+    computed: {
+        ...mapGetters('user', ['user'])
     },
     methods: {
         async disableAccount () {
@@ -55,7 +42,7 @@ export default {
             if (message === true) {
                 const result = await this.$fetch('disable-account')
                 if (result.status === 'ok') {
-                    this.$state.user.id = null
+                    this.user.id == null
                     if (this.$route.matched.some(m => m.meta.private)) {
                         this.$router.push({ name: 'List' })
                     }

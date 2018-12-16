@@ -26,6 +26,8 @@ import '@/assets/styles/main.css'
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'App',
     components: {
@@ -38,6 +40,9 @@ export default {
             isOpen: false,
             supportsLocalStorage: true
         };
+    },
+    computed: {
+        ...mapGetters('user', ['user'])
     },
     created () {
         // Check for availability of localStorage

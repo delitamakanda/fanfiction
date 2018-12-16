@@ -4,7 +4,7 @@
             {{ errorFetch }}
         </div>
         <Loading v-if="remoteDataBusy" />
-        {{ $t('message.dateJoined') }} {{ user.date_joined | date }}
+        {{ $t('message.dateJoined') }} {{ infos.date_joined | date }}
         <Form
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
             :title="title"
@@ -17,7 +17,7 @@
                     <Input
                         type="text"
                         name="email"
-                        v-model="user.email"
+                        v-model="infos.email"
                         :placeholder="$t('message.email')"/>
                 </div>
                 <template slot="actions">
@@ -38,13 +38,13 @@
 import confirm from '../../mixins/confirm'
 import get_cookie from '../../cookie'
 import RemoteData from '../../mixins/RemoteData'
+import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Edit',
     data(){
         return {
             errorFetch: this.$t('message.errorFetch'),
-            user: {},
+            infos: {},
             username: '',
             email: ''
         }
@@ -52,18 +52,19 @@ export default {
     mixins: [
         confirm,
         RemoteData({
-            user () {
-                return `users/${this.$state.user.id}`;
+            infos () {
+                return `users/${this.user.id}`;
             }
         })
     ],
     computed: {
-      title () {
-        return this.$t('message.changeUserInfos')
-      },
-      valid () {
+        ...mapGetters('user', ['user']),
+        title () {
+            return this.$t('message.changeUserInfos')
+        },
+        valid () {
           return true;
-      }
+        }
     },
     methods: {
      operation () {
@@ -71,7 +72,7 @@ export default {
 
           this.confirm(message, () => {
               $.ajax({
-                  url: `/api/users/${this.$state.user.id}`,
+                  url: `/api/users/${this.user.id}`,
                   type: 'PUT',
                   headers: {
                       "X-CSRFToken": get_cookie("csrftoken")

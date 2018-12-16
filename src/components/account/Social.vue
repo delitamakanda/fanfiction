@@ -55,9 +55,9 @@
 import confirm from '../../mixins/confirm'
 import get_cookie from '../../cookie'
 import RemoteData from '../../mixins/RemoteData'
+import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Social',
     data(){
         return {
             errorFetch: this.$t('message.errorFetch'),
@@ -72,11 +72,12 @@ export default {
         confirm,
         RemoteData({
             account () {
-                return `users/${this.$state.user.id}/edit/profile`;
+                return `users/${this.user.id}/edit/profile`;
             },
         })
     ],
     computed: {
+        ...mapGetters('user', ['user']),
         title () {
             return this.$t('message.addNewSocialNetwork')
         },
@@ -89,7 +90,7 @@ export default {
     },
     methods: {
         async getSocialAccount () {
-            this.account = await this.$fetch(`users/${this.$state.user.id}/edit/profile`)
+            this.account = await this.$fetch(`users/${this.user.id}/edit/profile`)
             this.socialaccount = await this.$fetch(`users/${this.account.id}/socialaccount`)
         },
         operation () {
@@ -106,7 +107,7 @@ export default {
                         account: this.account.id,
                         network: this.network,
                         nichandle: this.nichandle,
-                        user: this.$state.user.id
+                        user: this.user.id
                     },
                     success: function(response) {
                         this.network = this.nichandle = ''

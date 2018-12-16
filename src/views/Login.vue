@@ -97,72 +97,79 @@
 <script>
 import '../compiled-icons/view-show'
 import '../compiled-icons/view-hide'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'Login',
-  data () {
-    return {
-      username: '',
-      mode: 'login',
-      password: '',
-      password2: '',
-      passwordFieldType: 'password',
-      email: '',
-      iconVisibility: false
-    }
-},
-computed: {
-    title () {
-        switch (this.mode) {
-            case 'login': return 'Se connecter'
-            case 'signup': return 'Création d\'un nouveau compte'
+    data () {
+        return {
+            username: '',
+            mode: 'login',
+            password: '',
+            password2: '',
+            passwordFieldType: 'password',
+            email: '',
+            iconVisibility: false
         }
     },
+    computed: {
+        ...mapGetters('user', ['user']),
+        title () {
+            switch (this.mode) {
+                case 'login': return 'Se connecter'
+                case 'signup': return 'Création d\'un nouveau compte'
+            }
+        },
+        retypePasswordError () {
+            return !!this.password2 && this.password !== this.password2
+        },
 
-
-retypePasswordError () {
-    return !!this.password2 && this.password !== this.password2
-},
-
-signupValid () {
-    return !!this.password2 && !!this.email && !this.retypePasswordError
-},
-valid () {
-    return !!this.username && !!this.password && (this.mode !== 'signup' || this.signupValid)
-},
-},
-
-methods: {
-    async operation () {
-        await this[this.mode]()
+        signupValid () {
+            return !!this.password2 && !!this.email && !this.retypePasswordError
+        },
+        valid () {
+            return !!this.username && !!this.password && (this.mode !== 'signup' || this.signupValid)
+        },
     },
-    async login () {
-        this.$state.user = await this.$fetch('login', {
-            method: 'POST',
-            body: JSON.stringify({
-                username: this.username,
-                password: this.password,
-            }),
-        })
-        this.$router.replace(this.$route.params.wantedRoute || { name: 'Dashboard'})
-    },
-    async signup () {
-        await this.$fetch('signup', {
-            method: 'POST',
-            body: JSON.stringify({
-                username: this.username,
-                password: this.password,
-                email: this.email,
-            }),
-        })
-        this.mode = 'login'
-    },
-    switchVisibility () {
-        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
-        this.iconVisibility = this.iconVisibility === false ? true : false;
-    }
 
-},
+    methods: {
+        ...mapActions('user', ['connect', 'authenticate']),
+        async operation () {
+            await this[this.mode]()
+        },
+        async login () {
+            let username = this.username
+            let password = this.password
+
+            this.authenticate({ username, password })
+            // let user = await this.$fetch('login', {
+            //     method: 'POST',
+            //     body: JSON.stringify({
+            //         username: this.username,
+            //         password: this.password,
+            //     }),
+            // })
+
+
+            // this.$router.replace(this.$route.params.wantedRoute || { name: 'Dashboard'})
+
+        },
+        async signup () {
+            await this.$fetch('signup', {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: this.username,
+                    password: this.password,
+                    email: this.email,
+                }),
+            })
+            this.mode = 'login'
+        },
+        switchVisibility () {
+            this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+            this.iconVisibility = this.iconVisibility === false ? true : false;
+        }
+
+    },
 
 }
 </script>

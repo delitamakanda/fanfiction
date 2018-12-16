@@ -43,6 +43,7 @@
 <script>
 import confirm from '../../mixins/confirm'
 import get_cookie from '../../cookie'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     name: 'Password',
@@ -54,6 +55,7 @@ export default {
     },
     mixins: [confirm],
     computed: {
+        ...mapGetters('user', ['user']),
       title () {
         return this.$t('message.changePassword')
       },
@@ -62,6 +64,7 @@ export default {
       },
     },
     methods: {
+        ...mapActions('user', ['logout']),
       operation () {
           const message = this.$t('message.passwordChangedNotification');
 
@@ -78,7 +81,7 @@ export default {
                   },
                   success: function() {
                       this.old_password = this.new_password = ''
-                      this.$state.user = null
+                      this.logout()
                       if (this.$route.matched.some(m => m.meta.private)) {
                           this.$router.push({ name: 'Login' })
                       }

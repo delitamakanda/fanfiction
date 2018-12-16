@@ -22,7 +22,7 @@
                         :placeholder="$t('message.dateOfBirth')"/>
                     </div>
                 <div class="mb-6">
-                    <avatar v-if="!account.photo" ref="avatar" :email="this.$state.user.email" />
+                    <avatar v-if="!account.photo" ref="avatar" :email="this.user.email" />
                     <img v-else :src="account.photo" class="inline-block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <img :src="photo" v-if="displayPhoto" class="inline-block h-30 w-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" />
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="photo">
@@ -67,7 +67,7 @@
 import confirm from '../../mixins/confirm'
 import get_cookie from '../../cookie'
 import RemoteData from '../../mixins/RemoteData'
-
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'Profile',
@@ -85,11 +85,12 @@ export default {
         confirm,
         RemoteData({
             account () {
-                return `users/${this.$state.user.id}/edit/profile`;
+                return `users/${this.user.id}/edit/profile`;
             }
         })
     ],
     computed: {
+        ...mapGetters('user', ['user']),
       title () {
         return this.$t('message.changeProfileEdit')
       },
@@ -103,7 +104,7 @@ export default {
 
           this.confirm(message, () => {
               $.ajax({
-                  url: `/api/users/${this.$state.user.id}/edit/profile`,
+                  url: `/api/users/${this.user.id}/edit/profile`,
                   type: 'PUT',
                   headers: {
                       "X-CSRFToken": get_cookie("csrftoken")
@@ -112,7 +113,7 @@ export default {
                       date_of_birth: this.account.date_of_birth,
                       bio: this.account.bio,
                       photo: this.photo,
-                      user: this.$state.user.id
+                      user: this.user.id
                   },
                   success: function(response) {
                       this.account.photo = response.photo

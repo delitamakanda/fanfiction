@@ -86,7 +86,7 @@
                 </ul>
             </article>
         </template>
-        <template v-else-if="$state.user !== null && $state.user.username !== null">
+        <template v-else-if="user && user.username != null">
             <h2>{{ subtitle }}</h2>
 
             <Loading v-if="remoteDataBusy" />
@@ -144,12 +144,16 @@ import get_cookie from '../cookie'
 import '../compiled-icons/trash'
 import '../compiled-icons/edit-pencil'
 import '../compiled-icons/view-show'
+import { mapGetters } from 'vuex'
 
 export default {
+    computed: {
+        ...mapGetters('user', ['user']),
+    },
     mixins: [
         RemoteData({
             userFanfics () {
-                return this.$route.params.username ? `fanfics/v1/author/${this.$route.params.username}`: `fanfics/author/${this.$state.user.username}`
+                return this.$route.params.username ? `fanfics/v1/author/${this.$route.params.username}`: `fanfics/author/${this.user.username}`
             },
             starredAuthor () {
                 return `following-authors/${this.$route.params.username}`
@@ -194,7 +198,7 @@ export default {
     },
     created () {
         if ( this.$route.params.username) {this.getProfileUser()}
-        if (this.$state.user && this.$state.user.id != null) { this.getNotifications()}
+        if (this.user && this.user.id != null) { this.getNotifications()}
     },
     methods: {
         async getProfileUser () {

@@ -146,11 +146,11 @@
 
 <script>
 import PersistantData from '../mixins/PersistantData'
+import { mapGetters } from 'vuex'
 
 export default {
-    name: 'NewFanfic',
     mixins: [
-        PersistantData('NewFanfic', [
+        PersistantData('DraftFanfic', [
             'title',
             'description',
             'synopsis',
@@ -177,7 +177,6 @@ export default {
             author: '',
             genres: [],
             classement: '',
-            //classement: ['g', '13', 'r', '18'],
             status: '',
             category: '',
             subcategory: '',
@@ -185,6 +184,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('user', ['user']),
         valid () {
             return !!this.title && !!this.category && !!this.subcategory && !!this.status && !!this.genres && !!this.classement
         }
@@ -193,6 +193,7 @@ export default {
         this.getCategories ()
         this.getSubcategories ()
         this.getGenres ()
+        console.log(this.user)
     },
     methods: {
         async operation () {
@@ -203,7 +204,7 @@ export default {
                     description: this.description,
                     synopsis: this.synopsis,
                     credits: this.credits,
-                    author: this.$state.user.id,
+                    author: this.user.id,
                     genres: this.genres,
                     classement: this.classement,
                     status: this.status,

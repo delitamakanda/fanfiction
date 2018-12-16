@@ -70,11 +70,11 @@
 <script>
 import PersistantData from '../mixins/PersistantData'
 import RemoteData from '../mixins/RemoteData'
+import { mapGetters } from 'vuex'
 
 export default {
-    name: 'NewChapter',
     mixins: [
-        PersistantData('NewChapter', [
+        PersistantData('DraftChapter', [
             'title',
             'description',
             'text',
@@ -102,6 +102,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('user', ['user']),
         valid () {
             return !!this.title && !!this.text && !!this.status
         }
@@ -115,7 +116,7 @@ export default {
                     description: this.description,
                     text: this.text,
                     fanfic: this.$route.params.id,
-                    author: this.$state.user.id,
+                    author: this.user.id,
                     status: this.status
                 }),
             })

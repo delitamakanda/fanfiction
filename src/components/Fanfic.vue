@@ -362,8 +362,9 @@ import get_cookie from '../cookie'
 import '../compiled-icons/trash'
 import '../compiled-icons/edit-pencil'
 
+import { mapGetters } from 'vuex'
+
 export default {
-    name: 'Fanfic',
     mixins: [
         RemoteData({
             fanfic () {
@@ -382,6 +383,7 @@ export default {
         modal,
     },
     computed: {
+        ...mapGetters('user', ['user']),
         validComment () {
             return !!this.body
         },
@@ -496,8 +498,8 @@ export default {
             const result = await this.$fetch('comments/new', {
                 method: 'POST',
                 body: JSON.stringify({
-                    name: this.$state.user.username,
-                    email: this.$state.user.email,
+                    name: this.user.username,
+                    email: this.user.email,
                     body: this.body,
                     fanfic: this.fanfic.id,
                     in_reply_to: this.idComment
@@ -515,8 +517,8 @@ export default {
             const result = await this.$fetch('comments-by-chapter/new', {
                 method: 'POST',
                 body: JSON.stringify({
-                    name: this.$state.user.username,
-                    email: this.$state.user.email,
+                    name: this.user.username,
+                    email: this.user.email,
                     body: this.body,
                     fanfic: this.fanfic.id,
                     chapter: this.chapter,
@@ -591,7 +593,7 @@ export default {
                     description: this.chapters.description,
                     text: this.chapters.text,
                     fanfic: this.chapters.fanfic,
-                    author: this.$state.user.id,
+                    author: this.user.id,
                     status: this.chapters.status
                 }),
             })

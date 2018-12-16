@@ -37,7 +37,11 @@ export const messages = {
             NotificationsLabel: 'My notifications',
             notConnectedLabel: 'Your are logged out.',
             vosFanfictionsLabel: 'Your fanfictions',
-            emptyMessageFanfiction: 'You haven\'t got fanfictions here. Free your creativity !'
+            emptyMessageFanfiction: 'You haven\'t got fanfictions here. Free your creativity !',
+            newsLabel: 'No news | {n} new | {n} news',
+            readMoreLabel: 'Read more',
+            showMore: 'Show more',
+            showLess: 'Show less'
         }
     },
     fr: {
@@ -78,7 +82,11 @@ export const messages = {
             NotificationsLabel: 'Mes notifications',
             notConnectedLabel: 'Vous n\'êtes pas authentifier.',
             vosFanfictionsLabel: 'Vos fanfictions',
-            emptyMessageFanfiction: 'Vous n\'avez pas encore de fanfictions. Libérer votre créativité !'
+            emptyMessageFanfiction: 'Vous n\'avez pas encore de fanfictions. Libérer votre créativité !',
+            newsLabel: 'Aucunes actualités | {n} actualité | {n} actualités',
+            readMoreLabel: 'En savoir plus',
+            showMore: 'Voir plus',
+            showLess: 'Voir moins'
         }
     }
 }

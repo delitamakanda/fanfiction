@@ -19,7 +19,7 @@
 
             <div class="flex flex-wrap">
               <div class="md:w-3/4 sm:w-1/2 h-12 mb-4">
-                  <template v-if="$state.user && $state.user.id != null">
+                  <template v-if="user && user.id != null">
                       <button v-if="!followUser" type="button" @click="followAuthor" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'auteur</button>
 
                       <button v-if="followUser" type="button" @click="DisFollowAuthor" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full">Ne plus suivre l'auteur</button>
@@ -268,8 +268,9 @@ import '../compiled-icons/mood-sad-solid'
 import PersistantData from '../mixins/PersistantData'
 import RemoteData from '../mixins/RemoteData'
 
+import { mapGetters } from 'vuex'
+
 export default {
-    name: 'Detail',
     props: {
         id: {
             type: Number,
@@ -319,6 +320,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('user', ['user']),
         valid () {
             return !!this.name && !!this.body
         },
@@ -354,7 +356,7 @@ export default {
                 throw new Error('error')
             }
 
-            if (this.$state.user !== null && this.$state.user.id !== null) {
+            if (this.user && this.user.id !== null) {
                 const res_followUser = await this.$fetch('follow-user')
                 const res_followStories = await this.$fetch('follow-stories')
 
@@ -365,14 +367,14 @@ export default {
 
                     // following author
                     for (let x = 0; x < this.userFollow.length; x++) {
-                        if ((this.userFollow[x].hasOwnProperty("user_from") && this.userFollow[x].user_from === this.$state.user.id) && this.userFollow[x].hasOwnProperty("user_to") && this.userFollow[x].user_to === this.fanfic.author.id) {
+                        if ((this.userFollow[x].hasOwnProperty("user_from") && this.userFollow[x].user_from === this.user.id) && this.userFollow[x].hasOwnProperty("user_to") && this.userFollow[x].user_to === this.fanfic.author.id) {
                             this.followUser = true;
                             this.followUserId = this.userFollow[x].id;
                         }
                     }
                     // following fanfiction
                     for (let y = 0; y < this.fanficFollow.length; y++) {
-                        if ((this.fanficFollow[y].hasOwnProperty("from_user") && this.fanficFollow[y].from_user === this.$state.user.id) && (this.fanficFollow[y].hasOwnProperty("to_fanfic") && this.fanficFollow[y].to_fanfic === this.fanfic.id)) {
+                        if ((this.fanficFollow[y].hasOwnProperty("from_user") && this.fanficFollow[y].from_user === this.user.id) && (this.fanficFollow[y].hasOwnProperty("to_fanfic") && this.fanficFollow[y].to_fanfic === this.fanfic.id)) {
                             this.followStory = true;
                             this.followStoryId = this.fanficFollow[y].id;
                         }
@@ -384,7 +386,7 @@ export default {
             let data = this.fanfic.users_like
 
             for(let i = 0 ; i < data.length; i++){
-                if(data[i].hasOwnProperty("username") && data[i].username === this.$state.user.username) {
+                if(data[i].hasOwnProperty("username") && data[i].username === this.user.username) {
                     this.like = true;
                 }
             }
@@ -421,7 +423,7 @@ export default {
                 method: 'POST',
                 body: JSON.stringify({
                     id: this.fanfic.id,
-                    user: this.$state.user.id
+                    user: this.user.id
                 })
             })
 
@@ -433,7 +435,7 @@ export default {
                 method: 'POST',
                 body: JSON.stringify({
                     id: this.fanfic.id,
-                    user: this.$state.user.id
+                    user: this.user.id
                 })
             })
 
@@ -444,7 +446,7 @@ export default {
             const result = await this.$fetch('follow-user', {
                 method: 'POST',
                 body: JSON.stringify({
-                    user_from: this.$state.user.id,
+                    user_from: this.user.id,
                     user_to: this.fanfic.author.id
                 })
             })
@@ -471,7 +473,7 @@ export default {
             const result = await this.$fetch('follow-stories', {
                 method: 'POST',
                 body: JSON.stringify({
-                    from_user: this.$state.user.id,
+                    from_user: this.user.id,
                     to_fanfic: this.fanfic.id
                 })
             })

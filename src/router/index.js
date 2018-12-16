@@ -1,17 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import state from '../state'
+import store from '../store'
 import List from '@/components/List'
 import Detail from '@/components/Detail'
-import Login from '@/components/Login'
-import Posts from '@/components/Posts'
-import PostDetail from '@/components/PostDetail'
-import Dashboard from '@/components/Dashboard'
+import Login from '@/views/Login'
+import Dashboard from '@/views/Dashboard'
 import ListUserFanfic from '@/components/ListUserFanfic'
-import NewFanfic from '@/components/NewFanfic'
+import NewFanfic from '@/views/NewFanfic'
 import NewChapter from '@/components/NewChapter'
 import Fanfic from '@/components/Fanfic'
 import EditAccount from '@/components/EditAccount'
+import News from '@/views/News'
 
 import Loading from '@/components/Loading'
 import Form from '@/components/Form'
@@ -59,7 +59,7 @@ const router = new Router({
         } },
         { path: '/fanfic/detail/:slug', name: 'Detail', component: Detail, props: true},
         { path: '/login', name: 'Login', component: Login, meta: { guest: true, title: 'Créer un compte ou se connecter à l\'espace membre' } },
-        { path: '/news', name: 'Posts', component: Posts, meta: {
+        { path: '/news', name: 'News', component: News, meta: {
             title: 'News du site Fanfiction',
             metaTags: [
                 {
@@ -72,7 +72,6 @@ const router = new Router({
                 }
             ]
         } },
-        { path: '/news/:slug', name: 'PostDetail', component: PostDetail, props: true },
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true, title: 'Tableau de bord' },
             children: [
                 { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic, meta: { title: 'Vos fanfictions', private: true } },
@@ -102,9 +101,10 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    const user = state.user
+    //const user = state.user
+    const user = store.getters['user/user']
 
-    if (to.matched.some(r => r.meta.private) && user.id == null) {
+    if (to.matched.some(r => r.meta.private) && !user && user.id == null) {
 
         next({
             name: 'Login',
@@ -115,7 +115,7 @@ router.beforeEach((to, from, next) => {
         return
     }
 
-    if ( to.matched.some(r => r.meta.guest) && user.id != null) {
+    if ( to.matched.some(r => r.meta.guest) && user && user.id != null) {
         next({name: 'Dashboard'})
         return
     }
