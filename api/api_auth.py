@@ -99,7 +99,7 @@ class UserCreateView(generics.CreateAPIView):
     """
     serializer_class = UserSerializer
     authentication_classes = ()
-    permission_classes = ()
+    permission_classes = (permissions.AllowAny,)
 
 
 
