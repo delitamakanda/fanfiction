@@ -353,7 +353,7 @@
 </template>
 
 <script>
-import modal from './Modal.vue'
+import modal from '@/components/Modal.vue'
 
 import RemoteData from '../mixins/RemoteData'
 import confirm from '../mixins/confirm'

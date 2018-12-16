@@ -261,7 +261,7 @@
 </template>
 
 <script>
-import modal from './Modal.vue'
+import modal from '@/components/Modal.vue'
 import '../compiled-icons/mood-happy-solid'
 import '../compiled-icons/mood-sad-solid'
 
