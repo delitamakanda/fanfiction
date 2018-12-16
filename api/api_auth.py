@@ -128,7 +128,7 @@ class LoginView(views.APIView):
 
         request.session.set_expiry(3600)
         login(request, user)
-        return Response(UserSerializer(user).data)
+        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
 
 class LogoutView(views.APIView):
