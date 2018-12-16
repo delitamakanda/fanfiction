@@ -20,3 +20,4 @@ webpack-stats.json
 /svg-icons/
 /staticfiles/
 /media/
+tests/
