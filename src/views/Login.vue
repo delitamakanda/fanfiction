@@ -99,7 +99,7 @@
 <script>
 import '../compiled-icons/view-show'
 import '../compiled-icons/view-hide'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
     data () {
@@ -114,8 +114,9 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('user', ['user', 'error']),
+        ...mapState('user', ['user', 'error']),
         title () {
+            this.clearError()
             switch (this.mode) {
                 case 'login': return 'Se connecter'
                 case 'signup': return 'Création d\'un nouveau compte'
@@ -134,7 +135,7 @@ export default {
     },
 
     methods: {
-        ...mapActions('user', ['connect', 'authenticate', 'register']),
+        ...mapActions('user', ['connect', 'authenticate', 'register', 'clearError']),
         async operation () {
             await this[this.mode]()
         },

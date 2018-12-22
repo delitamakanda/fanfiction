@@ -83,3 +83,19 @@ export function prepend (string, prepend) {
 export function pluralize (word, amount) {
     return amount > 1 ? `${word}s` : word;
 }
+
+export function reverse (value) {
+    return value.split('').reverse().join('');
+}
+
+export function filterBy(list, value) {
+    return list.filter(function(item) {
+        return item.indexOf(value) > -1;
+  });
+}
+
+function findBy(list, value) {
+    return list.filter(function(item) {
+        return item == value
+    });
+}

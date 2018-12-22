@@ -41,24 +41,7 @@
                     id: fanfic.id
                   },
                 }">
-                    <div class="border border-grey-light bg-white rounded p-4 flex flex-col justify-between leading-normal">
-                        <div class="mb-8">
-                            <p class="text-sm text-grey-dark flex items-center">
-                            {{ fanfic.category }} / {{ fanfic.subcategory }}
-                          </p>
-                            <div class="text-black font-bold text-xl mb-2">{{ fanfic.title }}</div>
-                            <p v-if="fanfic.synopsis" v-html="fanfic.synopsis" class="text-grey-darker text-base"></p>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="text-sm">
-                                <p class="text-black leading-none">
-                                    Auteur: <router-link :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author.username, slug: fanfic.slug, id: fanfic.id } }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author.username }}</router-link>
-                                </p>
-                                <p class="text-grey-dark">Publié le : {{ fanfic.publish | date }}</p>
-                                <p class="text-grey-dark">{{ fanfic.genres }} / {{ fanfic.classement }} / {{ fanfic.total_likes }} {{ 'like' | pluralize(fanfic.total_likes) }} / {{ fanfic.views }} {{ 'view' | pluralize(fanfic.views) }}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <Fanfic :fanfic="fanfic" />
                     </router-link>
             </div>
         </article>
@@ -80,27 +63,27 @@
 
 <script>
 import RemoteData from '../mixins/RemoteData'
+import Fanfic from '@/components/Fanfic'
 
 export default {
-  name: 'List',
-  mixins: [
-      RemoteData({
-          fanficList () {
-              return 'fanfics/v1?category=&status=publié&subcategory=';
-          },
-          categories () {
-              return 'category'
-          }
-      }),
-  ],
-  data () {
+    mixins: [
+        RemoteData({
+            fanficList () {
+                return 'fanfics/v1?category=&status=publié&subcategory=';
+            },
+            categories () {
+                return 'category'
+            }
+        }),
+    ],
+    data () {
     return {
-        errorFetch: 'Il y a un problème avec la requète.',
+        errorFetch: this.$t('message.errorFetch'),
         search_term: '',
         categories: [],
         fanficList: [],
         empty: false,
-        moreStr: 'Voir plus',
+        moreStr: this.$t('message.showMore'),
         limitationList: 5,
         selected: '',
         currentPage: 1
@@ -149,7 +132,8 @@ export default {
       onPageChange(page) {
           this.currentPage = page;
         }
-    }
+    },
+    components: { Fanfic }
 }
 </script>
 

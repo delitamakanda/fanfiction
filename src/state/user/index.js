@@ -49,7 +49,6 @@ export const actions = {
 
                 if (user) {
                     router.replace({ name: 'Dashboard'})
-                    commit('error', null)
                 }
             }).catch((error) => {
                 commit('error', error.message)
@@ -71,10 +70,6 @@ export const actions = {
 
             })
 
-            if (user) {
-                commit('error', null)
-            }
-
         } catch (e) {
             console.warn(e);
             commit('error', e.message)
@@ -87,6 +82,9 @@ export const actions = {
         if (router.currentRoute.matched.some(m => m.meta.private)) {
             router.replace({ name: 'Login', params: {wantedRoute: router.currentRoute.fullPath } })
         }
+    },
+    clearError({commit}) {
+        commit('error', null)
     }
 }
 

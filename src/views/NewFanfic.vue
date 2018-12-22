@@ -20,6 +20,8 @@
                       </div>
                   </div>
                 </div>
+                <div>
+                </div>
                 <div class="w-full md:w-1/2 px-3">
                   <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="subcategory">
                       {{ $t('message.textSubcategory') }}
@@ -180,7 +182,9 @@ export default {
             status: '',
             category: '',
             subcategory: '',
-            loadingGenres: false
+            loadingGenres: false,
+            startPlaceholder: "Start",
+            endPlaceholder: "End"
         }
     },
     computed: {
@@ -193,7 +197,6 @@ export default {
         this.getCategories ()
         this.getSubcategories ()
         this.getGenres ()
-        console.log(this.user)
     },
     methods: {
         async operation () {
@@ -226,7 +229,7 @@ export default {
         async getSubcategories() {
             this.dataSubCategories = await this.$fetch('subcategory')
         },
-    },
+    }
 }
 </script>
 

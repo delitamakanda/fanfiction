@@ -41,7 +41,9 @@ export const messages = {
             newsLabel: 'No news | {n} new | {n} news',
             readMoreLabel: 'Read more',
             showMore: 'Show more',
-            showLess: 'Show less'
+            showLess: 'Show less',
+            watchLabel: 'Watch',
+            messageLabel: 'Message'
         }
     },
     fr: {
@@ -86,7 +88,9 @@ export const messages = {
             newsLabel: 'Aucunes actualités | {n} actualité | {n} actualités',
             readMoreLabel: 'En savoir plus',
             showMore: 'Voir plus',
-            showLess: 'Voir moins'
+            showLess: 'Voir moins',
+            watchLabel: 'Voir',
+            messageLabel: 'Message'
         }
     }
 }
