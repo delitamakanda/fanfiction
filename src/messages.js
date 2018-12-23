@@ -43,7 +43,12 @@ export const messages = {
             showMore: 'Show more',
             showLess: 'Show less',
             watchLabel: 'Watch',
-            messageLabel: 'Message'
+            messageLabel: 'Message',
+            fanfictionNotFound: 'Fanfiction not found.',
+            commentairesText: 'No comment | {n} comment | {n} comments',
+            byChapterText: 'By chapter',
+            AllCommentsText: 'All',
+            answeredComments: 'Author \'s answers'
         }
     },
     fr: {
@@ -90,7 +95,12 @@ export const messages = {
             showMore: 'Voir plus',
             showLess: 'Voir moins',
             watchLabel: 'Voir',
-            messageLabel: 'Message'
+            messageLabel: 'Message',
+            fanfictionNotFound: 'Fanfiction non trouvée.',
+            commentairesText: 'Aucun commentaire | {n} commentaire | {n} commentaires',
+            byChapterText: 'Par chapitre',
+            AllCommentsText: 'Tous',
+            answeredComments: 'Réponses de l\'auteur'
         }
     }
 }

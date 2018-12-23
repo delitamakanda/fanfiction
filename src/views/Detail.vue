@@ -175,33 +175,8 @@
         <h3 slot="header">Voir les commentaires</h3>
         <div slot="body">
             <p v-if="step === 1" @click="writeComment" class="cursor-pointer block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Donnez votre avis sur cette histoire.</p>
-            <div class="tabs comment-tabs">
-                <ul class="list-reset flex border-b">
-                    <li :class="[ fic === 'story' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="fic='story'" class="cursor-pointer bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold">Tous</a>
-                    </li>
-                    <li :class="[ fic === 'chapters' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="fic='chapters'" class="cursor-pointer bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold">Par chapitre</a></li>
-                </ul>
-            </div>
-            <div class="box comment-content">
-                <div v-for="(com, index) in comment" v-if="comment && fic === 'story'" :key="index">
-                    <span>{{ com.name }}</span> | Publié le : <span>{{ com.created | date }}</span>
-                    <div>{{ com.body }}</div>
-                    <div class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white p-4 leading-normal mb-4" v-if="com.in_reply_to !== null">Réponse à {{ com.in_reply_to.name }} le {{ com.in_reply_to.created | date }}
-                        <div>{{ com.in_reply_to.body }}</div>
-                    </div>
-                    <hr/>
-                </div>
-                <div v-if="!comment.length && fic === 'story'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
-                <div v-for="(com_chapter, index) in CommentByChapter" v-if="CommentByChapter && fic === 'chapters'" :key="index">
-                    <span>{{ com_chapter.name }}</span> | Publié le : <span>{{ com_chapter.created | date }} sur le chapitre {{com_chapter.chapter.title }}</span>
-                    <div>{{ com_chapter.body }}</div>
-                    <div class="border-r border-b border-l border-grey-light border-t lg:border-grey-light bg-white p-4 leading-normal mb-4" v-if="com_chapter.in_reply_to !== null">Réponse à {{ com_chapter.in_reply_to.name }} le {{ com_chapter.in_reply_to.created | date }} sur le chapitre {{ com_chapter.chapter.title }}
-                        <div>{{ com_chapter.in_reply_to.body }}</div>
-                    </div>
-                    <hr/>
-                </div>
-                <div v-if="!CommentByChapter.length && fic === 'chapters'">Cette fanfiction n'a pas encore de commentaires. Soyez le premier :)</div>
-            </div>
+
+            <comment-tab v-if="(CommentByChapter.length > 0) || (comment.length > 0)" class="action-comments mb-4" :allComments="CommentByChapter" :answers="comment" :isAnswerable="answerableComment" />
         </div>
         </modal>
     </div>
@@ -261,9 +236,10 @@
 </template>
 
 <script>
+import CommentTab from '@/components/comment/CommentTab'
 import modal from '@/components/Modal.vue'
-import '../compiled-icons/mood-happy-solid'
-import '../compiled-icons/mood-sad-solid'
+import '@/compiled-icons/mood-happy-solid'
+import '@/compiled-icons/mood-sad-solid'
 
 import PersistantData from '../mixins/PersistantData'
 import RemoteData from '../mixins/RemoteData'
@@ -283,6 +259,7 @@ export default {
     },
     components: {
         modal,
+        'comment-tab': CommentTab
     },
     data () {
         return {
@@ -316,7 +293,8 @@ export default {
             followStoryId: '',
             writeToChapterComment: false,
             fic: 'story',
-            lastChapterDate: ''
+            lastChapterDate: '',
+            answerableComment: false
         }
     },
     computed: {

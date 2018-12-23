@@ -91,10 +91,7 @@
                         <div class="relative">
                             <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="classement">
                                 <option value="">Sélectionner</option>
-                                <option value="g">G</option>
-                                <option value="13">13+</option>
-                                <option value="r">R</option>
-                                <option value="18">18+</option>
+                                <option v-for="(classement, i) in classementOptions" :key="i" :value="classement.key">{{ classement.value }}</option>
                             </select>
                             <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -119,8 +116,7 @@
                         <div class="relative">
                             <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" name="status" v-model="status">
                                 <option value="">Sélectionner</option>
-                                <option value="brouillon">Brouillon</option>
-                                <option value="publié">Publié</option>
+                                <option v-for=" (status, i) in statusOptions" :key="i" :value="status.key">{{ status.value }}</option>
                             </select>
                             <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -166,7 +162,7 @@ export default {
     ],
     data (){
         return{
-            errorFetch: 'Il y a un problème avec la requète.',
+            errorFetch: this.$t('message.errorFetch'),
             fanfic: [],
             error: null,
             dataCategories: [],
@@ -183,8 +179,8 @@ export default {
             category: '',
             subcategory: '',
             loadingGenres: false,
-            startPlaceholder: "Start",
-            endPlaceholder: "End"
+            classementOptions: [{key: 'g', value: 'G'},{key: '13', value: '13+'},{key: 'r', value: 'R'},{key: '18', value: '18+'}],
+            statusOptions: [{key: 'brouillon', value: 'Brouillon'}, {key: 'publié', value: 'Publié'}]
         }
     },
     computed: {
