@@ -85,6 +85,20 @@ export const actions = {
     },
     clearError({commit}) {
         commit('error', null)
+    },
+    async removeAccount({commit}) {
+
+        try {
+
+            const result = await $fetch('disable-account')
+
+            if ((result.status === 'ok') && (router.currentRoute.matched.some(m => m.meta.private))) {
+                commit('user', {})
+                router.replace({ name: 'List', params: {wantedRoute: router.currentRoute.fullPath } })
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
 }
 

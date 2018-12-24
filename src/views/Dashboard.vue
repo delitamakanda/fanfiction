@@ -2,21 +2,21 @@
     <div class="flex flex-wrap">
         <div class="w-full sm:w-1/2 md:w-1/4 mb-4">
 
-              <p>Vous êtes connecter en tant que {{ user.username }}.</p>
+              <p>{{ $t('message.connexionUser', [user.username])}}.</p>
               <ul class="list-reset">
                  <li> <router-link v-if="$route.name !== 'ListUserFanfic'" tag="button" :to="{name: 'ListUserFanfic'}">
-                      Voir mes fanfictions
+                      {{ $t('message.myStoriesLabel') }}
                   </router-link></li>
                   <li><router-link v-if="$route.name !== 'NewFanfic'" tag="button" :to="{name: 'NewFanfic'}">
-                      Ecrire une fanfiction
+                      {{ $t('message.ecrireFanfictions') }}
                   </router-link></li>
 
                   <li><router-link v-if="$route.name !== 'EditAccount'" tag="button" :to="{ name: 'EditAccount' }">
-                      Editer le compte
+                      {{ $t('message.changeProfileEdit') }}
                   </router-link></li>
 
                   <li><button class="text-red hover:text-red-darker" @click.prevent="disableAccount">
-                    Supprimer le compte
+                    {{ $t('message.removeAccountLabel') }}
                 </button></li>
               </ul>
           </div>
@@ -29,24 +29,19 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     computed: {
         ...mapGetters('user', ['user'])
     },
     methods: {
+        ...mapActions('user', ['removeAccount']),
         async disableAccount () {
-            let message = confirm("Après la suppression, votre compte sera désactivé et aucune opération ne pourra être effectuer. Supprimer le compte ?")
+            let message = confirm(this.$t('message.removeAccountText'))
 
             if (message === true) {
-                const result = await this.$fetch('disable-account')
-                if (result.status === 'ok') {
-                    this.user.id == null
-                    if (this.$route.matched.some(m => m.meta.private)) {
-                        this.$router.push({ name: 'List' })
-                    }
-                }
+                this.removeAccount()
             }
 
         }

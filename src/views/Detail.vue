@@ -46,7 +46,7 @@
             <div class="w-full rounded overflow-hidden shadow">
                 <div class="px-6 py-4">
                     <p class="text-grey-darker text-base">Publiée le: {{fanfic.publish | date }}</p>
-                    <p class="text-grey-darker text-base">Mise à jour : {{ lastChapterDate.published | date }}</p>
+                    <p class="text-grey-darker text-base">Mise à jour : {{ fanfic.updated | date }}</p>
                     <div class="text-grey-darker text-base" v-if="fanfic.description">
                         <h4>Description</h4>
                         <p v-html="fanfic.description"></p>
@@ -293,7 +293,6 @@ export default {
             followStoryId: '',
             writeToChapterComment: false,
             fic: 'story',
-            lastChapterDate: '',
             answerableComment: false
         }
     },
@@ -368,10 +367,6 @@ export default {
                     this.like = true;
                 }
             }
-
-            // last chapter date
-            let dateOfLastChapter = this.chapterList.length -1;
-            this.lastChapterDate = this.chapterList[dateOfLastChapter];
         } catch (e) {
             this.error = e
         }
