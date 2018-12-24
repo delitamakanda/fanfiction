@@ -426,7 +426,7 @@ export default {
                     status: this.chapters.status
                 }),
             })
-            if (this.fanfic.status == 'publié' || this.chapters.status == 'publié') {
+            if (this.fanfic.status == 'publié' && this.chapters.status == 'publié') {
                 this.fanfic.updated = Date.now()
             }
             this.closeChapterEditing()
