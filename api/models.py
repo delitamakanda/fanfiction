@@ -160,7 +160,7 @@ class Fanfic(models.Model):
     genres = MultiSelectField(choices=GENRES_CHOICES)
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(blank=True, null=True)
     was_featured_in_home = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='brouillon')
     users_like = models.ManyToManyField(User, related_name='fanfics_liked', blank=True)

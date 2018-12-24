@@ -94,8 +94,6 @@ class FlatPagesSerializer(serializers.ModelSerializer):
         )
 
 
-
-
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -153,6 +151,7 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
           'image',
           'description',
         )
+
 
 """
 Display list of users who liked the fanfic
@@ -264,6 +263,22 @@ class FanficSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Fanfic.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.category = validated_data.get('category', instance.category)
+        instance.subcategory = validated_data.get('subcategory', instance.subcategory)
+        instance.title = validated_data.get('title', instance.title)
+        instance.credits = validated_data.get('credits', instance.credits)
+        instance.description = validated_data.get('description', instance.description)
+        instance.synopsis = validated_data.get('synopsis', instance.synopsis)
+        instance.classement = validated_data.get('classement', instance.classement)
+        instance.genres = validated_data.get('genres', instance.genres)
+        instance.status = validated_data.get('status', instance.status)
+        instance.updated = timezone.now()
+        instance.save()
+        return instance
+
+
 
 
 class UserEditSerializer(serializers.ModelSerializer):
@@ -444,14 +459,15 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         fanfic = validated_data['fanfic']
-        if fanfic.status == 'publié' and validated_data['status'] == 'publié':
+        if validated_data['status'] == 'publié' and fanfic.status == 'publié':
             fanfic.updated = timezone.now()
             fanfic.save()
         return Chapter.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        if instance.fanfic.status == 'publié' and instance.status == 'publié':
+        if instance.status == 'publié' and instance.fanfic.status == 'publié':
             instance.fanfic.updated = timezone.now()
+        print(instance.fanfic.updated)
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.text = validated_data.get('text', instance.text)
