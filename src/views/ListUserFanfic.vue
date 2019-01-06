@@ -87,12 +87,6 @@
                         <Fanfic :fanfic="userFanfic" :displayAuthorName="false" :displayDescription="true" />
                     </router-link>
                 </div>
-                <div class="w-full">
-                    <h2>{{ $t('message.NotificationsLabel') }}</h2>
-                    <ul v-for="notification in notifications.results">
-                        <li>{{ notification.user.username }} {{ notification.verb }} {{ notification.target }} - {{ notification.created | date }}</li>
-                    </ul>
-                </div>
             </section>
 
             <router-view />
@@ -112,7 +106,6 @@ import { mapGetters } from 'vuex'
 export default {
     created () {
         if ( this.$route.params.username) {this.getProfileUser()}
-        if (this.user && this.user.id != null) { this.getNotifications()}
     },
     computed: {
         ...mapGetters('user', ['user']),
@@ -155,7 +148,6 @@ export default {
             fanfic: [],
             socialAccount: [],
             errorFetch: this.$t('message.errorFetch'),
-            notifications: [],
             starredFanfic: [],
             starredAuthor: []
         }
@@ -165,9 +157,6 @@ export default {
             this.userProfile = await this.$fetch(`users/${this.$route.params.username}/profile`)
             this.loadingEmail = true
             this.socialAccount = await this.$fetch(`users/${this.userProfile.id}/socialaccount`)
-        },
-        async getNotifications () {
-            this.notifications = await this.$fetch('notifications')
         }
     },
     components: {
