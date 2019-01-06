@@ -14,11 +14,13 @@
            id="search"
            type="search"
            class="w-full"
+
            placeholder="Rechercher une définition"
            ic-post-to="{% url 'search-ajax-submit' %}"
            ic-trigger-on="keyup changed"
            ic-trigger-delay="300ms"
-           ic-target="#search-result-container"/>
+           ic-target="#search-result-container"
+           required pattern="\S+.*" />
 </form>
 
 <div id="search-result-container">
