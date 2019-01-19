@@ -129,6 +129,11 @@ import modal from './Modal.vue'
 import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
+    created () {
+        if (this.user && this.user.id != null) {
+            this.getNotifications();
+        }
+    },
     props: {
         title: {
             type: String,
