@@ -1,0 +1,5 @@
+Cher {{ chapter.fanfic.author.username }},
+
+Un nouveau chapitre {{ chapter.title }} pour la fanfiction {{ chapter.fanfic.title }} a été publié.
+
+L'équipe Fanfiction
