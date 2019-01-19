@@ -35,7 +35,7 @@
                 <ul v-if="user && user.id != null" class="menu list-reset block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">
                     <li @mouseover="survol2 = true" @mouseleave="survol2 = false"><svgicon icon="notifications-outline" width="22" height="18" color="#4dc0b5"></svgicon> {{ $t('message.NotificationsLabel') }}
                         <transition name="fade" mode="out-in">
-                            <ul class="bg-white p-4 shadow " v-if="survol2" @click="survol2 = false">
+                            <ul class="bg-white p-4 shadow z-10" v-if="survol2" @click="survol2 = false">
                                 <li v-for="notification in notifications" :key="notification.id">
                                     {{ notification.user.username }} {{ notification.verb }} {{ notification.target }} - {{ notification.created | date }}
                                 </li>
@@ -46,7 +46,7 @@
                 <ul class="menu list-reset block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">
                     <li @mouseover="survol = true" @mouseleave="survol = false"><svgicon icon="question" width="22" height="18" color="#4dc0b5"></svgicon> Aide
                         <transition name="fade" mode="out-in">
-                            <ul class="bg-white p-4 shadow " v-if="survol" @click="survol = false">
+                            <ul class="bg-white p-4 z-10 shadow " v-if="survol" @click="survol = false">
                                 <li><a class="text-teal hover:text-teal-darker" href="/help/browse/title">{{ $t('message.lexiqueLabel') }}</a></li>
                                 <li><a class="text-teal hover:text-teal-darker" href="/help/faq">{{ $t('message.faqLabel') }}</a></li>
                                 <li><a class="text-teal hover:text-teal-darker" href="/help/forum">{{ $t('message.forumLabel') }}</a></li>
