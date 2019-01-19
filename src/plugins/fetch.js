@@ -1,3 +1,5 @@
+import 'whatwg-fetch'
+
 import state from '../state'
 import store from '../store'
 import router from '../router/index'
