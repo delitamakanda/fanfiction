@@ -163,6 +163,7 @@ class UserFanficSerializer(serializers.ModelSerializer):
         fields = (
           'id',
           'username',
+          'email',
         )
 
 
@@ -379,6 +380,7 @@ class AccountProfileCreateSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
+        create_notification(validated_data['user'], 'a crée un compte')
         return AccountProfile.objects.create(**validated_data)
 
 
@@ -459,15 +461,14 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         fanfic = validated_data['fanfic']
-        if validated_data['status'] == 'publié' and fanfic.status == 'publié':
+        if validated_data['status'] == 'publié':
             fanfic.updated = timezone.now()
             fanfic.save()
         return Chapter.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        if instance.status == 'publié' and instance.fanfic.status == 'publié':
+        if instance.status == 'publié':
             instance.fanfic.updated = timezone.now()
-        print(instance.fanfic.updated)
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.text = validated_data.get('text', instance.text)

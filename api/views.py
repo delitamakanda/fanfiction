@@ -33,6 +33,8 @@ from api.serializers import ContentTypeSerializer
 
 from api import custompermission
 
+from .tasks import chapter_created
+
 """
 Liste des genres
 """
@@ -108,6 +110,7 @@ class ChapterCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+        chapter_created.delay(serializer.data['id'])
 
 
 
