@@ -474,17 +474,16 @@ class ChapterSerializer(serializers.ModelSerializer):
         return Chapter.objects.create(**validated_data)
 
     def save(self, **kwargs):
-        # kwargs['fanfic']['updated'] = timezone.now()
+        kwargs['updated'] = timezone.now()
         return super().save(**kwargs)
 
     def update(self, instance, validated_data):
-        if instance.status == 'publié':
+        if instance.fanfic.status == 'publié':
             instance.fanfic.updated = timezone.now()
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.text = validated_data.get('text', instance.text)
         instance.status = validated_data.get('status', instance.status)
-        instance.updated = timezone.now()
         instance.save()
         return instance
 
