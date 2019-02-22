@@ -263,14 +263,14 @@ class FanficSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-		# will only be done if a new object is being created
-		# validated_data['created'] = timezone.now()
+        # will only be done if a new object is being created
+        validated_data['updated'] = timezone.now()
         return Fanfic.objects.create(**validated_data)
-	
-	def save(self, **kwargs):
-		# Will be done on every save
-		kwargs['updated'] = timezone.now()
-		return super().save(**kwargs)
+
+    def save(self, **kwargs):
+        # Will be done on every save
+        kwargs['updated'] = timezone.now()
+        return super().save(**kwargs)
 
     def update(self, instance, validated_data):
         instance.category = validated_data.get('category', instance.category)
@@ -472,10 +472,10 @@ class ChapterSerializer(serializers.ModelSerializer):
             fanfic.updated = timezone.now()
             fanfic.save()
         return Chapter.objects.create(**validated_data)
-	
-	def save(self, **kwargs):
-		# wip
-		return super().save(**kwargs)
+
+    def save(self, **kwargs):
+        # kwargs['fanfic']['updated'] = timezone.now()
+        return super().save(**kwargs)
 
     def update(self, instance, validated_data):
         if instance.status == 'publié':
@@ -484,6 +484,7 @@ class ChapterSerializer(serializers.ModelSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.text = validated_data.get('text', instance.text)
         instance.status = validated_data.get('status', instance.status)
+        instance.updated = timezone.now()
         instance.save()
         return instance
 

@@ -231,8 +231,8 @@ class Chapter(models.Model):
     order = OrderField(blank=True, for_fields=['fanfic'])
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='publié')
     published = models.DateTimeField(default=timezone.now)
-	created = models.DateTimeField(auto_now_add=True)
-	updated = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         ordering = ['order']
