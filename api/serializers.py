@@ -263,7 +263,14 @@ class FanficSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
+		# will only be done if a new object is being created
+		validated_data['created'] = timezone.now()
         return Fanfic.objects.create(**validated_data)
+	
+	def save(self, **kwargs):
+		# Will be done on every save
+		kwargs['updated'] = timezone.now()
+		return super().save(**kwargs)
 
     def update(self, instance, validated_data):
         instance.category = validated_data.get('category', instance.category)
