@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'webpack_loader',
@@ -286,3 +287,9 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, name, email'
 }
+
+# corsheaders
+CORS_ORIGIN_WHITELIST = (
+    'localhost:81000',
+    'fanfiction.eu-west-3.elasticbeanstalk.com'
+)
