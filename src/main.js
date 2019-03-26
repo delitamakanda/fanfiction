@@ -3,7 +3,6 @@
 import 'babel-polyfill'
 
 import Vue from 'vue'
-// import Ionic from '@ionic/vue';
 
 import { sync } from 'vuex-router-sync'
 import App from './App'
@@ -16,10 +15,8 @@ import { i18n } from './plugins/i18n';
 import store from './store';
 
 Vue.use(VueState, state)
-// Vue.use(Ionic)
 
 Vue.config.productionTip = false
-Vue.config.ignoredElements = [/^ion-/]
 
 for (const key in filters) {
   Vue.filter(key, filters[key])
