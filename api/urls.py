@@ -54,6 +54,7 @@ urlpatterns = [
     path('unfavorite', api.UnfavoritedFanficView.as_view(), name='unfavorite'),
     path('change-password', api_auth.ChangePasswordView.as_view(), name='change-password'),
     path('pages/<str:type>', views.FlatPagesByTypeView.as_view(), name='pages-by-type'),
+    path('page/<str:type>/html', views.FlatPagesHTMLByTypeView.as_view(), name='pages-html-by-type'),
     path('pages', views.FlatPagesView.as_view(), name='all-pages'),
     path('follow-stories', api.FollowStoriesView.as_view(), name='follow-stories'),
     path('follow-user', api.FollowUserView.as_view(), name='follow-user'),

@@ -5,6 +5,7 @@ from django.core import serializers
 from django.utils import timezone
 from django.shortcuts import render, HttpResponse
 from rest_framework import generics, permissions, views, status, viewsets
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -74,6 +75,23 @@ class FlatPagesByTypeView(generics.RetrieveAPIView):
     )
     lookup_field = 'type'
     name = 'pages'
+
+
+
+class FlatPagesHTMLByTypeView(generics.RetrieveAPIView):
+    """docstring for FlatPagesHTMLByTypeView."""
+    queryset = FlatPages.objects.all()
+    renderer_classes = (TemplateHTMLRenderer,)
+
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    lookup_field = 'type'
+    name = 'pages'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return Response({'page': self.object}, template_name='webview/static_pages.html')
 
 
 
@@ -225,6 +243,7 @@ class ApiRootView(generics.GenericAPIView):
             'sub-category': reverse('subcategory-list', request=request),
             'users': reverse('user-list', request=request),
             'posts' : reverse('post-list', request=request),
+            'pages': reverse('all-pages', request=request),
             'genres': reverse('genre-list', request=request),
             'comments-by-chapter-create': reverse('comment-by-chapter-create', request=request),
             'notifications': reverse('notifications', request=request)
