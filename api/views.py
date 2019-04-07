@@ -4,6 +4,9 @@ from django.core import serializers
 
 from django.utils import timezone
 from django.shortcuts import render, HttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.clickjacking import xframe_options_exempt
+
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.authentication import TokenAuthentication
@@ -77,7 +80,7 @@ class FlatPagesByTypeView(generics.RetrieveAPIView):
     name = 'pages'
 
 
-
+@method_decorator(xframe_options_exempt, name='dispatch')
 class FlatPagesHTMLByTypeView(generics.RetrieveAPIView):
     """docstring for FlatPagesHTMLByTypeView."""
     queryset = FlatPages.objects.all()
