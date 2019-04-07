@@ -14,7 +14,8 @@
                     name="username"
                     v-model="username"
                     placeholder="Pseudo"
-                    required />
+                    v-validate="'required'" />
+                    <span>{{ err.first('username') }}</span>
                 </div>
             <div class="mb-6">
                 <label class="block text-grey-darker text-sm font-bold mb-2" for="password">
@@ -24,11 +25,13 @@
                     name="password"
                     :type="passwordFieldType"
                     v-model="password"
-                    placeholder="Mot de passe" />
+                    placeholder="Mot de passe"
+                    v-validate="'required'" />
                 <button type="button" @click="switchVisibility">
                     <svgicon icon="view-show" v-if="!iconVisibility" width="22" height="18" color="#000"></svgicon>
                     <svgicon icon="view-hide" v-if="iconVisibility" width="22" height="18" color="#000"></svgicon>
                 </button>
+                <span>{{ err.first('password') }}</span>
             </div>
             <template v-if="mode === 'signup'">
                 <div class="mb-6">
@@ -40,7 +43,9 @@
                         type="password"
                         v-model="password2"
                         placeholder="Confirmer le mot de passe"
-                        :invalid="retypePasswordError" />
+                        :invalid="retypePasswordError"
+                        v-validate="'required'" />
+                    <span>{{ err.first('verify-password') }}</span>
                 </div>
                 <div class="mb-4">
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="email">
@@ -50,7 +55,9 @@
                         name="email"
                         type="email"
                         v-model="email"
-                        placeholder="E-mail" />
+                        placeholder="E-mail"
+                        v-validate="'required|email'" />
+                    <span>{{ err.first('email') }}</span>
                 </div>
             </template>
             <template slot="actions">

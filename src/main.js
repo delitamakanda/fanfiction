@@ -12,6 +12,7 @@ import VueState from './plugins/state'
 import VueFetch, { $fetch } from './plugins/fetch'
 import * as filters from './filters'
 import { i18n } from './plugins/i18n';
+import { validate } from './plugins/validate';
 import store from './store';
 
 Vue.use(VueState, state)
