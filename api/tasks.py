@@ -1,4 +1,8 @@
-from celery import task
+from __future__ import absolute_import, unicode_literals
+
+from celery.decorators import task
+from celery.utils.log import get_task_logger
+
 from django.template.loader import get_template, render_to_string
 from django.core.mail import send_mail
 from django.core.mail import send_mass_mail
@@ -9,11 +13,15 @@ from api.models import Comment
 from api.models import FollowStories
 from api.models import FollowUser
 
-@task
+logger = get_task_logger(__name__)
+
+@task()
 def fanfic_created(fanfic_id):
     """
     Task to send an e-mail notification when a fanfic is successfully created.
     """
+    logger.info('******** CALLING ASYNC TASK WITH CELERY **********')
+    
     fanfic = Fanfic.objects.get(id=fanfic_id)
     subject = 'Fanfiction id# {} - {}'.format(fanfic.id, fanfic.title)
     template = get_template('mail/fanfic_created_notification.txt')
@@ -26,7 +34,7 @@ def fanfic_created(fanfic_id):
     return mail_sent
 
 
-@task
+@task()
 def chapter_created(chapter_id):
     chapter = Chapter.objects.get(id=chapter_id)
     subject = 'Fanfiction : nouveau chapitre publié sur {}'.format(chapter.fanfic.title)
