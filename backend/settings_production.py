@@ -102,3 +102,26 @@ REST_FRAMEWORK = {
 # Python Social Auth
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
+# Celery Broker
+
+CELERY_BROKER_TRANSPORT = 'sqs'
+
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'region': 'eu-west-3',
+}
+
+CELERY_BROKER_USER = config('AWS_ACCESS_KEY_ID')
+CELERY_BROKER_PASSWORD = config('AWS_SECRET_ACCESS_KEY')
+CELERY_WORKER_STATE_DB = '/var/run/celery/worker.db'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_WORKER_PREFETCH_MULTIPLIER = 0
+
+CELERY_DEFAULT_QUEUE = 'celery'
+
+CELERY_QUEUES = {
+    CELERY_DEFAULT_QUEUE: {
+        'exchange': CELERY_DEFAULT_QUEUE,
+        'binding_key': CELERY_DEFAULT_QUEUE,
+    }
+}
