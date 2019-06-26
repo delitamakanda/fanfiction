@@ -56,3 +56,14 @@ def user_email_reminder():
 		management.call_command("email_reminder", verbosity=0)
 	except:
 		print("error")
+		
+		
+@task()
+def deactivate_inactive_user(nbe_month):
+	try:
+		"""
+		desactive les users non connectés pendant 1 an
+		"""
+		management.call_command("deactivateuser", "1year", verbosity=0)
+	except:
+		print("error")
