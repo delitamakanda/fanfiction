@@ -19,7 +19,7 @@ def debug_task(self):
 app.conf.beat_schedule = {
 	'user_email_reminder_every_week': {
 		'task': 'api.tasks.user_email_reminder',
-		'schedule': crontab(hour=7, minute=0), #todo
+		'schedule': crontab(minute=0, hour=0, day_of_week='sunday'),
 		'args': ()
 	}
 }
