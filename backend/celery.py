@@ -19,7 +19,12 @@ def debug_task(self):
 app.conf.beat_schedule = {
 	'user_email_reminder_every_week': {
 		'task': 'api.tasks.user_email_reminder',
-		'schedule': crontab(minute=0, hour=0, day_of_week='sunday'),
+		'schedule': crontab(hour=7, minute=30, day_of_week=1),
+		'args': ()
+	},
+	'deactivate_inactive_user': {
+		'task': 'api.tasks.deactivate_inactive_user',
+		'schedule': crontab(hour=0, minute=0, day_of_month=1, month_of_year=1),
 		'args': ()
 	}
 }
