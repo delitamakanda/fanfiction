@@ -21,3 +21,4 @@ webpack-stats.json
 /staticfiles/
 /media/
 tests/
+celerybeat-schedule.db
