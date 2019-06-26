@@ -15,7 +15,7 @@ app.autodiscover_tasks()
 def debug_task(self):
     print('request: {0!r}'.format(self.request))
 	
-@app.conf.beat_schedule = {
+app.conf.beat_schedule = {
 	'user_email_reminder_every_week': {
 		'task': 'api.tasks.user_email_reminder',
 		'schedule': 30.0, # todo
