@@ -59,7 +59,7 @@ def user_email_reminder():
 		
 		
 @task()
-def deactivate_inactive_user(nbe_month):
+def deactivate_inactive_user():
 	try:
 		"""
 		desactive les users non connectés pendant 1 an
