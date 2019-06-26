@@ -6,6 +6,7 @@ from celery.utils.log import get_task_logger
 from django.template.loader import get_template, render_to_string
 from django.core.mail import send_mail
 from django.core.mail import send_mass_mail
+from django.core import management
 
 from api.models import Fanfic
 from api.models import Chapter
@@ -45,3 +46,13 @@ def chapter_created(chapter_id):
     mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [chapter.fanfic.author.email], html_message=msg_html)
 
     return mail_sent
+
+@task()
+def user_email_reminder():
+	try:
+		"""
+		envoie un email aux users ne s'étant pas connecté depuis 2 semaines
+		"""
+		management.call_command("email_reminder", verbosity=0)
+	except:
+		print("error")
