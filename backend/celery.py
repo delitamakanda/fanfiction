@@ -15,7 +15,7 @@ app.autodiscover_tasks()
 @app.task(bind=True)
 def debug_task(self):
     print('request: {0!r}'.format(self.request))
-	
+
 app.conf.beat_schedule = {
 	'user_email_reminder_every_week': {
 		'task': 'api.tasks.user_email_reminder',
@@ -28,3 +28,5 @@ app.conf.beat_schedule = {
 		'args': ()
 	}
 }
+
+app.conf.timezone = 'UTC'
