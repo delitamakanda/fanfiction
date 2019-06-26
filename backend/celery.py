@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
 from django.conf import settings
+from celery.schedules import crontab
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
@@ -18,7 +19,7 @@ def debug_task(self):
 app.conf.beat_schedule = {
 	'user_email_reminder_every_week': {
 		'task': 'api.tasks.user_email_reminder',
-		'schedule': 30.0, # todo
+		'schedule': crontab(hour=7, minute=0), #todo
 		'args': ()
 	}
 }
