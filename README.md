@@ -47,7 +47,7 @@ coverage report -m
 ## Asynchronous tasks
 
 ``` bash
-celery -A backend worker -l info
+celery -A backend worker -l info -B
 ```
 
 ## Translation
