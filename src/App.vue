@@ -8,10 +8,10 @@
         <transition appear name="slideFromBottom">
             <div class="cookie bottom" v-if="isOpen">
                 <div class="cookie__content">
-                    Ce site utilise des cookies pour vous assurer la meilleure expérience sur notre site.
+                    {{ $t('message.cookieMessage') }}
                 </div>
                 <div class="cookie__buttons">
-                    <div class="cookie__button" @click="accept">J'ai compris</div>
+                    <div class="cookie__button" @click="accept">{{ $t('message.agreedLabel') }}</div>
                 </div>
             </div>
         </transition>

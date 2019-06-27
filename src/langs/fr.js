@@ -56,6 +56,8 @@ export default {
         lexiqueLabel: 'Dico de la fanfiction',
         faqLabel: 'Foire aux questions',
         forumLabel: 'Forum de Fanfiction',
-        contactLabel: 'Contacter le webmestre'
+        contactLabel: 'Contacter le webmestre',
+        agreedLabel: 'J\'ai compris',
+        cookieMessage: 'Ce site utilise des cookies pour vous assurer la meilleure expérience sur notre site.'
     }
 }
