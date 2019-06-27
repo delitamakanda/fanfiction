@@ -22,8 +22,8 @@ class Recommender(object):
                 if fanfic_id != with_id:
                     # increment score for fanfic liked
                     r.zincrby(
-                        self.get_fanfic_key(fanfic_id),
-                        with_id,
+                        name=self.get_fanfic_key(fanfic_id),
+                        value=with_id,
                         amount=1
                     )
 
