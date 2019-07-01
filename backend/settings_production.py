@@ -41,19 +41,6 @@ DATABASES = {
     }
 }
 
-# Memcache
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django_bmemcached.memcached.BMemcached',
-        'LOCATION': config('MEMCACHE_SERVERS'),
-        'OPTIONS': {
-            'username': config('MEMCACHE_USERNAME'),
-            'password': config('MEMCACHE_PASSWORD')
-        }
-    }
-}
-
 # SMTP Email servier
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -124,5 +111,13 @@ CELERY_QUEUES = {
     CELERY_DEFAULT_QUEUE: {
         'exchange': CELERY_DEFAULT_QUEUE,
         'binding_key': CELERY_DEFAULT_QUEUE,
+    }
+}
+
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
     }
 }
