@@ -113,3 +113,11 @@ CELERY_QUEUES = {
         'binding_key': CELERY_DEFAULT_QUEUE,
     }
 }
+
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+    }
+}
