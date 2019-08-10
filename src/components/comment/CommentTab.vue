@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import modal from '@/components/Modal.vue'
+import modal from '@/components/popins/Modal.vue'
 import { mapGetters } from 'vuex'
 
 export default {
