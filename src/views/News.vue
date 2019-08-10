@@ -1,6 +1,6 @@
 <template>
 <div class="container mx-auto px-4">
-    <h2>{{ $tc('message.newsLabel', this.totalNews, { n: this.totalNews }) }}</h2>
+    <h2>{{ $tc('message.newsText', this.totalNews, { n: this.totalNews }) }}</h2>
     <Loading v-if="remoteDataBusy" />
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         {{ $t('message.errorFetch') }}
@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import RemoteData from '../mixins/RemoteData'
-import Post from '@/components/Post'
+import RemoteData from '@/mixins/RemoteData'
+import Post from '@/components/news/Post'
 
 export default {
     created() {},

@@ -237,12 +237,12 @@
 
 <script>
 import CommentTab from '@/components/comment/CommentTab'
-import modal from '@/components/Modal.vue'
+import modal from '@/components/popins/Modal.vue'
 import '@/compiled-icons/mood-happy-solid'
 import '@/compiled-icons/mood-sad-solid'
 
-import PersistantData from '../mixins/PersistantData'
-import RemoteData from '../mixins/RemoteData'
+import PersistantData from '@/mixins/PersistantData'
+import RemoteData from '@/mixins/RemoteData'
 
 import { mapGetters } from 'vuex'
 
