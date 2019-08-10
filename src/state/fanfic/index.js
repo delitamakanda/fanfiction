@@ -1,4 +1,4 @@
-import { getFanficsPublish } from '@/api/getFanfics';
+import { getFanficsPublish } from '@/api/fanfic/getFanfics';
 
 export const namespaced = true;
 
