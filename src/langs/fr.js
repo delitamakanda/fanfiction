@@ -37,7 +37,7 @@ export default {
         notConnectedLabel: 'Vous n\'êtes pas authentifier.',
         vosFanfictionsLabel: 'Vos fanfictions',
         emptyMessageFanfiction: 'Vous n\'avez pas encore de fanfictions. Libérer votre créativité !',
-        newsLabel: 'Aucunes actualités | {n} actualité | {n} actualités',
+        newsText: 'Aucunes actualités | {n} actualité | {n} actualités',
         readMoreLabel: 'En savoir plus',
         showMore: 'Voir plus',
         showLess: 'Voir moins',
@@ -58,6 +58,20 @@ export default {
         forumLabel: 'Forum de Fanfiction',
         contactLabel: 'Contacter le webmestre',
         agreedLabel: 'J\'ai compris',
-        cookieMessage: 'Ce site utilise des cookies pour vous assurer la meilleure expérience sur notre site.'
+        cookieMessage: 'Ce site utilise des cookies pour vous assurer la meilleure expérience sur notre site.',
+        mentionsLegalesLabel: 'Mentions légales',
+        politiqueDeConfidentialite: 'Politique de confidentialité',
+        fermerButtonLabel: 'Fermer',
+        formContactTitle: 'Formulaire de contact',
+        formContactValidateLabel: 'Envoyer le message',
+        formContactEmailLabel: 'E-mail',
+        formContactSubjectLabel: 'Objet',
+        formContactMessageLabel: 'Texte de votre message',
+        loginLabel: 'Se connecter',
+        logoutLabel: 'Se déconnecter',
+        greetLabel: 'Bonjour',
+        lireFanfictionsLabel: 'Lire des histoires',
+        newsLabel: 'Nouveautés',
+        aideLabel: 'Aide'
     }
 }

@@ -37,7 +37,7 @@ export default {
         notConnectedLabel: 'Your are logged out.',
         vosFanfictionsLabel: 'Your fanfictions',
         emptyMessageFanfiction: 'You haven\'t got fanfictions here. Free your creativity !',
-        newsLabel: 'No news | {n} new | {n} news',
+        newsText: 'No news | {n} new | {n} news',
         readMoreLabel: 'Read more',
         showMore: 'Show more',
         showLess: 'Show less',
@@ -55,6 +55,20 @@ export default {
         lexiqueLabel: 'Dictionary of the fanfiction',
         faqLabel: 'Frequently Asked Questions',
         forumLabel: 'Forum of Fanfiction',
-        contactLabel: 'Contact the webmaster'
+        contactLabel: 'Contact the webmaster',
+        mentionsLegalesLabel: 'Legal notice',
+        politiqueDeConfidentialite: 'Privacy policies',
+        fermerButtonLabel: 'Close',
+        formContactTitle: 'Contact form',
+        formContactValidateLabel: 'Send message',
+        formContactEmailLabel: 'E-mail',
+        formContactSubjectLabel: 'Object',
+        formContactMessageLabel: 'Message text',
+        loginLabel: 'Login',
+        logoutLabel: 'Logout',
+        greetLabel: 'Hi',
+        lireFanfictionsLabel: 'Read fanfictions',
+        newsLabel: 'News',
+        aideLabel: 'Help'
     }
 }
