@@ -1,4 +1,4 @@
-import VueFetch, { $fetch } from '../plugins/fetch'
+import VueFetch, { $fetch } from '../../plugins/fetch'
 
 export function getFanficsPublish() {
     return $fetch('fanfics/v1')
