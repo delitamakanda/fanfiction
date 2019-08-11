@@ -14,12 +14,10 @@ import Fanfic from '@/views/Fanfic'
 import EditAccount from '@/views/EditAccount'
 import News from '@/views/News'
 
-import Loading from '@/components/Loading'
-import Form from '@/components/Form'
-import Input from '@/components/Input'
-import Pagination from '@/components/Pagination'
-import Avatar from '@/components/Avatar'
-import Grid from '@/components/Grid'
+import Loading from '@/components/ui/Loading'
+import Form from '@/components/ui/Form'
+import Input from '@/components/ui/Input'
+import Avatar from '@/components/ui/Avatar'
 
 import VueFetch from '../plugins/fetch'
 import VeeValidate from 'vee-validate'
@@ -29,9 +27,7 @@ import VueTrumbowyg from 'vue-trumbowyg';
 Vue.component('Loading', Loading)
 Vue.component('Form', Form)
 Vue.component('Input', Input)
-Vue.component('Pagination', Pagination)
 Vue.component('Avatar', Avatar)
-Vue.component('Grid', Grid)
 
 Vue.use(Router)
 Vue.use(VueFetch, {

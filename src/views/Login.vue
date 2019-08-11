@@ -7,7 +7,7 @@
         :valid="valid">
             <div class="mb-4">
                 <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
-                    Username ou E-mail
+                    {{ $t('message.UsernameOrEmailLabel') }}
                 </label>
                 <Input
                     :text="username"
@@ -19,7 +19,7 @@
                 </div>
             <div class="mb-6">
                 <label class="block text-grey-darker text-sm font-bold mb-2" for="password">
-                    Mot de passe
+                    {{ $t('message.passwordLabel') }}
                 </label>
                 <Input
                     name="password"
@@ -36,45 +36,45 @@
             <template v-if="mode === 'signup'">
                 <div class="mb-6">
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="verify-password">
-                        Confirmer le mot de passe
+                        {{ $t('message.confirmPasswordLabel') }}
                     </label>
                     <Input
                         name="verify-password"
                         type="password"
                         v-model="password2"
-                        placeholder="Confirmer le mot de passe"
+                        :placeholder="$t('message.confirmPasswordLabel')"
                         :invalid="retypePasswordError"
                         v-validate="'required'" />
                     <span>{{ err.first('verify-password') }}</span>
                 </div>
                 <div class="mb-4">
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="email">
-                        E-mail
+                        {{ $t('message.formContactEmailLabel') }}
                     </label>
                     <Input
                         name="email"
                         type="email"
                         v-model="email"
-                        placeholder="E-mail"
+                        :placeholder="$t('message.formContactEmailLabel')"
                         v-validate="'required|email'" />
                     <span>{{ err.first('email') }}</span>
                 </div>
             </template>
             <template slot="actions">
                 <template v-if="mode === 'login'">
-                    <a href="accounts/password_reset/" class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Forgot Password?</a>
+                    <a href="accounts/password_reset/" class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">{{ $t('message.forgotPasswordLabel') }}?</a>
                     <div class="flex items-center justify-between">
                         <button
                         class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker"
                         type="button"
                         @click="mode = 'signup'">
-                            S'enregister
+                            {{ $t('message.registerLabel')}}
                         </button>
                         <button
                         class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
                         type="submit"
                         :disabled="!valid">
-                            Se connecter
+                            {{ $t('message.connectionLabel')}}
                         </button>
                     </div>
                     {{ error }}
@@ -85,13 +85,13 @@
                         class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker"
                         type="button"
                         @click="mode = 'login'">
-                            Se connecter
+                            {{ $t('message.connectionLabel')}}
                         </button>
                         <button
                         class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
                         type="submit"
                         :disabled="!valid">
-                            S'enregister
+                            {{ $t('message.registerLabel')}}
                         </button>
                     </div>
                     {{ error }}
@@ -125,8 +125,8 @@ export default {
         title () {
             this.clearError()
             switch (this.mode) {
-                case 'login': return 'Se connecter'
-                case 'signup': return 'Création d\'un nouveau compte'
+                case 'login': return this.$t('message.connectionLabel')
+                case 'signup': return this.$t('message.createNewAccountLabel')
             }
         },
         retypePasswordError () {
@@ -158,10 +158,7 @@ export default {
             //         password: this.password,
             //     }),
             // })
-
-
             // this.$router.replace(this.$route.params.wantedRoute || { name: 'Dashboard'})
-
         },
         async signup () {
             let username = this.username
@@ -177,9 +174,7 @@ export default {
             //         email: this.email,
             //     }),
             // })
-            if (this.error != null) {
-                this.mode = 'login'
-            }
+            this.mode = 'login'
         },
         switchVisibility () {
             this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';

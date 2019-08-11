@@ -69,6 +69,17 @@ export default {
         greetLabel: 'Hi',
         lireFanfictionsLabel: 'Read fanfictions',
         newsLabel: 'News',
-        aideLabel: 'Help'
+        aideLabel: 'Help',
+        searchLabel: 'Search',
+        searchLabelFanfiction: 'Search on Fanfiction...',
+        publishedAtLabel: 'Published at',
+        authorLabel: 'Author',
+        UsernameOrEmailLabel: 'Username or E-mail',
+        passwordLabel: 'Password',
+        confirmPasswordLabel: 'Confirme password',
+        registerLabel: 'Register',
+        connectionLabel: 'Login',
+        createNewAccountLabel: 'Create a new account',
+        forgotPasswordLabel: 'Forgot Password'
     }
 }

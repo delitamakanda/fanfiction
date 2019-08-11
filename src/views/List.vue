@@ -1,157 +1,79 @@
 <template>
-  <div>
-  <Loading v-if="remoteDataBusy" />
+    <div>
+        <Loading v-if="remoteDataBusy" />
 
-    <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
-        {{ errorFetch }}
-    </div>
-
-    <form class="align-center w-full">
-        <div class="flex items-center py-2">
-            <input class="appearance-none bg-transparent border rounded w-full text-grey-darker mr-3 py-1 px-2 leading-tight" type="text" placeholder="Rechercher des fanfictions..." v-model="search_term" aria-label="Search">
-            <button class="bg-teal hover:bg-teal-dark text-white font-bold py-2 px-4 rounded" @click.prevent="getSearchFanfics">Rechercher</button>
-        </div>
-  </form>
-
-    <section>
-        <ul class="flex flex-wrap list-reset -mx-2">
-            <li class="md:w-1/3 sm:w-1/2 w-full px-2 relative overflow mb-4" v-for="(category, index) in categories" :key="category.id" v-if="categories && categories.length > 0 && index <= limitationList"><a href="#tsr" class="pointer" @click="sortByCategories(category.id)">
-                <div v-if="category.logic_value !== ''" :style="{backgroundImage: 'url(' + require('./../assets/img/categories/'+ category.logic_value + '.jpg') + ')' }" :alt="category.name" :title="category.name" class="img-thumbnail border border-grey-light shadow"></div>
-                <div v-else :style="{backgroundImage: 'url(' + require('./../assets/img/categories/empty.jpg') + ')' }" class="img-thumbnail border border-grey-light shadow"></div>
-                <span class="caption">{{ category.name }}</span>
-            </a></li>
-        </ul>
-        <div class="flex">
-            <div @click="readMore(limitationList)" class="flex-1 mb-4 cursor-pointer bg-teal hover:bg-teal-dark text-center text-white font-bold py-2 px-4 rounded-full">Voir {{ limitationList == 5 ? 'plus': 'moins'}}</div>
+        <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+            {{ errorFetch }}
         </div>
 
-        <div class="text-xl mb-4 font-bold" v-if="selected !== ''">
+        <form class="align-center w-full">
+            <div class="flex items-center py-2">
+                <input class="appearance-none bg-transparent border rounded w-full text-grey-darker mr-3 py-1 px-2 leading-tight" type="text" :placeholder="$t('message.searchLabelFanfiction')" v-model="search_term" aria-label="Search">
+                <button class="bg-teal hover:bg-teal-dark text-white font-bold py-2 px-4 rounded" @click.prevent="getSearchFanfics">{{ $t('message.searchLabel') }}</button>
+            </div>
+        </form>
+
+        <category :categories="categories" @selectedCategory="categorySelected" />
+
+        <div class="text-xl mb-4 font-bold" v-if="selected !== '' || search_term !== ''">
             {{ categoryName }}
         </div>
-        <div class="text-xl mb-4 font-bold" v-else>
-            Toutes les fanfictions
+
+        <div class="flex flex-wrap -mx-2">
+            <fanfic
+                v-for="(fanfic,i) in fanfics"
+                class="mb-4 w-full px-1 md:w-1/2"
+                :fanfic="fanfic"
+                :key="i"
+            />
         </div>
-
-        <article class="flex flex-wrap -mx-2">
-            <div id="tsr" class="mb-4 w-full px-2 md:w-1/2" v-for="fic of fanficList">
-                <router-link class="no-underline" :to="{
-                  name: 'Detail',
-                  params: {
-                    slug: fic.slug,
-                    id: fic.id
-                  },
-                }">
-                    <Fanfic :fanfic="fic" />
-                    </router-link>
-            </div>
-        </article>
-        <div v-if="empty">Pas encore de fanfictions dans cette catégorie.
-            <router-link :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Créez la votre !</router-link>
-        </div>
-
-        <!--<Pagination
-           :total-pages="8"
-           :total="8"
-           :per-page="4"
-           :current-page="currentPage"
-           @pagechanged="onPageChange"
-         />-->
-    </section>
-
-  </div>
+    </div>
 </template>
 
 <script>
-import RemoteData from '../mixins/RemoteData'
-import Fanfic from '@/components/Fanfic'
+    import RemoteData from '../mixins/RemoteData'
+    import Category from '@/components/fanfic/Category'
+    import Fanfic from '@/components/fanfic/Fanfic'
 
-export default {
-    mixins: [
-        RemoteData({
-            fanficList () {
-                return 'fanfics/v1?category=&status=publié&subcategory=';
+    import { mapActions, mapState } from 'vuex'
+
+    export default {
+        created () {
+            this.fetchCategories();
+            this.fetchFanficsPublished({ status: 'publié' })
+        },
+        mixins: [
+        RemoteData(),
+        ],
+        data () {
+            return {
+                errorFetch: this.$t('message.errorFetch'),
+                search_term: '',
+                selected: ''
+            }
+        },
+        computed: {
+            ...mapState('fanfic', ['fanfics', 'categories']),
+            categoryName () {
+                return this.selected;
+            }
+        },
+        methods: {
+            ...mapActions('fanfic', ['fetchCategories', 'clearFanficsPublished', 'fetchFanficsPublished', 'fetchFanficsPublishedCategory', 'fetchFanficsPublishedSearch']),
+            getSearchFanfics () {
+                this.fetchFanficsPublishedSearch({ status: 'publié', search_term: `${this.search_term}`})
+                this.selected = ''
             },
-            categories () {
-                return 'category'
+            categorySelected (val) {
+                this.selected = val.name
+                this.fetchFanficsPublishedCategory({ status: 'publié', categoryId: val.id })
             }
-        }),
-    ],
-    data () {
-    return {
-        errorFetch: this.$t('message.errorFetch'),
-        search_term: '',
-        categories: [],
-        fanficList: [],
-        empty: false,
-        moreStr: this.$t('message.showMore'),
-        limitationList: 5,
-        selected: '',
-        currentPage: 1
-        }
-    },
-    computed: {
-        categoryName: function () {
-            return this.selected;
-        }
-    },
-    methods: {
-      async getSearchFanfics () {
-
-            try {
-                this.fanficList = await this.$fetch(`fanfics/v1?category=&subcategory=&status=publié&search=${this.search_term}`)
-            } catch (e) {
-                this.errorFetch = e
-            }
-      },
-      async sortByCategories (categoryId) {
-          try {
-              this.fanficList = await this.$fetch(`fanfics/v1?category=${categoryId}&subcategory=&status=publié`)
-
-              for (let i = 0; i < this.categories.length; i++) {
-                  if (this.categories[i].id == categoryId) {
-                      this.selected = this.categories[i].name
-                  }
-              }
-
-              if (this.fanficList.length === 0) {
-                  this.empty = true
-              } else {
-                  this.empty = false
-              }
-          } catch (e) {
-              this.errorFetch = e
-          }
-      },
-      readMore (limitationList) {
-          if (this.limitationList == this.categories.length) {
-              this.limitationList = 5
-          } else {
-              this.limitationList = this.categories.length
-          }
-      },
-      onPageChange(page) {
-          this.currentPage = page;
-        }
-    },
-    components: { Fanfic }
-}
+        },
+        components: { Fanfic, Category }
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.img-thumbnail {
-    height: 250px;
-    background-size: cover;
-}
 
-.caption {
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    display: table;
-    position: absolute;
-    float: left;
-    text-transform: uppercase;
-    bottom: 15%;
-    padding: 5px;
-}
 </style>

@@ -39,8 +39,8 @@ export default {
         emptyMessageFanfiction: 'Vous n\'avez pas encore de fanfictions. Libérer votre créativité !',
         newsText: 'Aucunes actualités | {n} actualité | {n} actualités',
         readMoreLabel: 'En savoir plus',
-        showMore: 'Voir plus',
-        showLess: 'Voir moins',
+        showMore: 'plus',
+        showLess: 'moins',
         watchLabel: 'Voir',
         messageLabel: 'Message',
         fanfictionNotFound: 'Fanfiction non trouvée.',
@@ -72,6 +72,17 @@ export default {
         greetLabel: 'Bonjour',
         lireFanfictionsLabel: 'Lire des histoires',
         newsLabel: 'Nouveautés',
-        aideLabel: 'Aide'
+        aideLabel: 'Aide',
+        searchLabel: 'Rechercher',
+        searchLabelFanfiction: 'Rechercher sur Fanfiction...',
+        publishedAtLabel: 'Publié le',
+        authorLabel: 'Auteur',
+        UsernameOrEmailLabel: 'Username ou E-mail',
+        passwordLabel: 'Mot de passe',
+        confirmPasswordLabel: 'Confirmer le mot de passe',
+        registerLabel: 'S\'enregister',
+        connectionLabel: 'Se connecter',
+        createNewAccountLabel: 'Création d\'un nouveau compte',
+        forgotPasswordLabel: 'Oubli de mot de passe'
     }
 }
