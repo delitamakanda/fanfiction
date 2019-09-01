@@ -1,127 +1,108 @@
 <template>
     <div>
+        <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+            {{ errorFetch }}
+        </div>
+
+        <Loading v-if="remoteDataBusy" />
+
         <template v-if="this.$route.params.username">
-            <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
-                {{ errorFetch }}
-            </div>
-
-            <Loading v-if="remoteDataBusy" />
-
             <div class="mb-4 bg-white max-w-sm">
               <div class="sm:flex sm:items-center px-6 py-4">
-                <img v-if="userProfile.photo" class="block h-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" :src="userProfile.photo" alt="">
-                <avatar v-else-if="loadingEmail" :email="userProfile.user.email" />
+                <img v-if="profile.photo !== null" class="block h-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" :src="profile.photo" alt="">
+                <avatar v-else :email="profile.user.email" />
                 <div class="text-center sm:text-left sm:flex-grow">
                   <div class="mb-4">
-                    <p class="text-xl leading-tight">Fanfictions de {{ this.$route.params.username }}</p>
-                    <p v-if="userProfile.bio" class="text-sm leading-tight text-grey-dark">{{ userProfile.bio }}</p>
-                    <a v-for="social in socialAccount" v-if="socialAccount.length > 0" class="hover:text-teal-dark text-teal font-bold mr-4" :href="'https://' + social.network + '.com/' + social.nichandle" target="_blank">{{ social.nichandle }}</a>
+                    <p class="text-xl leading-tight">{{ profile.user.username }}</p>
+                    <p v-if="profile.bio" class="text-sm leading-tight text-grey-dark">{{ profile.bio }}</p>
+                    <a v-for="(social, i) in profile.social" v-if="profile.social.length > 1" class="hover:text-teal-dark text-teal font-bold mr-4" :key="i" :href="'https://' + social.network + '.com/' + social.nichandle" target="_blank">{{ social.nichandle }}</a>
                   </div>
-                  <div>
+                  <!--<div>
                     <button type="button" class="text-xs font-semibold rounded-full px-4 py-1 leading-normal bg-white border border-teal text-teal hover:bg-teal hover:text-white">{{ $t('message.messageLabel') }}</button>
-                </div>
+                </div>-->
                 </div>
               </div>
             </div>
-
-            <div class="tabs fanfic-tabs">
-                <ul class="list-reset flex border-b">
-                    <li :class="[ tabs === 'fanfic' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="tabs='fanfic'" class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold cursor-pointer">{{ $t('message.myStoriesLabel') }}</a>
-                    </li>
-                    <li :class="[ tabs === 'authors' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="tabs='authors'" class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold cursor-pointer">{{ $t('message.favoriteAuthorsLabel') }}</a></li>
-                    <li :class="[ tabs === 'fanfictions' ? 'is-active' : ''] + ' -mb-px mr-1'"><a @click="tabs='fanfictions'" class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold cursor-pointer">{{ $t('message.favoriteStoriesLabel') }}</a>
-                    </li>
-                </ul>
-            </div>
-            <article class="flex flex-wrap -mx-2 fanfic-content" v-if="tabs === 'fanfic'">
-                <div class="mb-4 w-full px-2 md:w-1/2" v-for="fic of userFanfics" :key="fic.id">
-                    <router-link :to="{
-                      name: 'Detail',
-                      params: {
-                        slug: fic.slug,
-                        id: fic.id
-                      },
-                    }"
-                    class="no-underline"
-                    >
-                    <Fanfic :fanfic="fic" :displayAuthorName="false" />
-                    </router-link>
-                </div>
-            </article>
-            <article class="-mx-2 fanfic-content" v-if="tabs === 'authors'">
-                <ul v-for="author in starredAuthor">
-                    <li>
-                        <router-link :to="{ name: 'ShowUserFanfic', params: { username: author.user_to.username } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ author.user_to.username }}</router-link>
-
-                    </li>
-                </ul>
-            </article>
-            <article class="-mx-2 fanfic-content" v-if="tabs === 'fanfictions'">
-                <ul v-for="fanfic in starredFanfic">
-                    <li>
-                        <router-link class="hover:text-teal-dark text-teal" :to="{
-                          name: 'Detail',
-                          params: {
-                            slug: fanfic.to_fanfic.slug,
-                            id: fanfic.to_fanfic.id
-                          },
-                        }">
-                            {{ fanfic.to_fanfic.title }}
-                        </router-link>
-                    </li>
-                </ul>
-            </article>
         </template>
-        <template v-else-if="user && user.username != null">
-            <h2>{{ subtitle }}</h2>
 
-            <Loading v-if="remoteDataBusy" />
+        <h3>{{ subtitle }}</h3>
 
-            <div class="empty" v-else-if='userFanfics.length === 0'>
-                {{ $t('message.emptyMessageFanfiction') }}
-            </div>
+        <div class="empty" v-if='fanfics.length === 0'>
+            {{ $t('message.emptyMessageFanfiction') }}
+        </div>
 
-            <section v-else class="fanfictions-list-perso">
-                <div class="w-full mb-4" v-for="(userFanfic, i) in userFanfics" :key="userFanfic.id" :index="i" >
-                    <router-link class="no-underline" :title="$t('message.watchLabel')" :to="{name: 'Fanfic', params: { id: userFanfic.id }}">
-                        <Fanfic :fanfic="userFanfic" :displayAuthorName="false" :displayDescription="true" />
-                    </router-link>
+        <div class="flex flex-wrap -mx-2">
+            <fanfic
+                v-for="(fanfic,i) in fanfics"
+                class="mb-4 w-full px-1 md:w-1/2"
+                :fanfic="fanfic"
+                :key="i"
+            />
+        </div>
+
+        <h3>{{ $t('message.favoriteAuthorsLabel') }}</h3>
+
+        <div class="empty" v-if='starred_authors.length === 0'>
+            {{ $t('message.emptyMessageStarredAuthors') }}
+        </div>
+
+        <div
+            v-for="(fanfic,i) in starred_authors"
+            :key="i"
+            class="flex flex-wrap"
+        >
+            <router-link :key="fanfic.user_to.id" :to="{ name: 'ShowUserFanfic', params: { username: fanfic.user_to.username } }" class="text-teal-500 hover:text-teal-800">
+                <avatar :email="fanfic.user_to.email" class="h-16 w-16 md:h-24 md:w-24 rounded-full mx-auto" />
+                <div class="text-center">
+                  <h2 class="text-lg">{{ fanfic.user_to.username }}</h2>
                 </div>
-            </section>
+            </router-link>
+        </div>
 
-            <router-view />
-        </template>
+        <h3>{{ $t('message.favoriteStoriesLabel') }}</h3>
+
+        <div class="empty" v-if='starred_fanfics.length === 0'>
+            {{ $t('message.emptyMessageStarredFanfiction') }}
+        </div>
+
+        <div class="flex flex-wrap -mx-2">
+            <fanfic
+                v-for="(fanfic,i) in starred_fanfics"
+                class="mb-4 w-full px-1 md:w-1/2"
+                :fanfic="fanfic.to_fanfic"
+                :key="i"
+            />
+        </div>
     </div>
 </template>
 
 <script>
-import Fanfic from '@/components/Fanfic'
+import Fanfic from '@/components/fanfic/Fanfic'
 import RemoteData from '../mixins/RemoteData'
 import get_cookie from '../cookie'
 import '../compiled-icons/trash'
 import '../compiled-icons/edit-pencil'
 import '../compiled-icons/view-show'
-import { mapGetters } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 
 export default {
     created () {
-        if ( this.$route.params.username) {this.getProfileUser()}
+        let user = (this.$route.params.username === undefined) ? this.user.username : this.$route.params.username;
+        let status = (this.$route.params.username === undefined) ? '' : 'publié';
+        this.fetchFanficsPublishedByAuthor({ status: status, author: user })
+        this.fetchStarredAuthors({ author: user })
+        this.fetchStarredFanfics({ author: user })
+        if ( this.$route.params.username !== undefined) {
+            this.fetchProfileUser({ username: this.$route.params.username })
+        }
     },
     computed: {
         ...mapGetters('user', ['user']),
+        ...mapState('fanfic', ['fanfics', 'starred_authors', 'starred_fanfics']),
+        ...mapState('user', ['profile'])
     },
     mixins: [
-        RemoteData({
-            userFanfics () {
-                return this.$route.params.username ? `fanfics/v1/author/${this.$route.params.username}`: `fanfics/author/${this.user.username}`
-            },
-            starredAuthor () {
-                return `following-authors/${this.$route.params.username}`
-            },
-            starredFanfic () {
-                return `following-stories/${this.$route.params.username}`
-            }
-        }),
+        RemoteData({}),
     ],
     props: {
         username: {
@@ -140,42 +121,16 @@ export default {
     data(){
         return{
             subtitle: this.$t('message.vosFanfictionsLabel'),
-            userFanfics: [],
-            userProfile: [],
-            tabs: 'fanfic',
-            isActive: false,
-            loadingEmail: false,
-            fanfic: [],
-            socialAccount: [],
             errorFetch: this.$t('message.errorFetch'),
-            starredFanfic: [],
-            starredAuthor: []
         }
     },
     methods: {
-        async getProfileUser () {
-            this.userProfile = await this.$fetch(`users/${this.$route.params.username}/profile`)
-            this.loadingEmail = true
-            this.socialAccount = await this.$fetch(`users/${this.userProfile.id}/socialaccount`)
-        }
+        ...mapActions('fanfic', ['clearFanficsPublished', 'fetchFanficsPublishedByAuthor', 'fetchStarredAuthors', 'fetchStarredFanfics']),
+        ...mapActions('user', ['fetchProfileUser'])
     },
-    components: {
-        Fanfic
-    },
+    components: { Fanfic },
 }
 </script>
 
 <style scoped>
-.tabs li.is-active a {
-    border-bottom: 1px solid;
-    font-weight: bold;
-}
-
-.fanfic-content {
-    background: white;
-}
-
-.fanfic-tabs {
-    margin-bottom: 10px;
-}
 </style>

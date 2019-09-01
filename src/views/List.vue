@@ -6,10 +6,10 @@
             {{ errorFetch }}
         </div>
 
-        <form class="align-center w-full">
-            <div class="flex items-center py-2">
-                <input class="appearance-none bg-transparent border rounded w-full text-grey-darker mr-3 py-1 px-2 leading-tight" type="text" :placeholder="$t('message.searchLabelFanfiction')" v-model="search_term" aria-label="Search">
-                <button class="bg-teal hover:bg-teal-dark text-white font-bold py-2 px-4 rounded" @click.prevent="getSearchFanfics">{{ $t('message.searchLabel') }}</button>
+        <form class="w-full">
+            <div class="flex items-center py-2"">
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-3" type="text" :placeholder="$t('message.searchLabelFanfiction')" v-model="search_term" aria-label="Search">
+                <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" @click.prevent="getSearchFanfics">{{ $t('message.searchLabel') }}</button>
             </div>
         </form>
 

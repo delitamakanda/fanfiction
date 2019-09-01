@@ -1,6 +1,6 @@
 <template>
     <nav class="flex items-center justify-between flex-wrap bg-white p-6 shadow">
-        <div class="flex items-center flex-no-shrink text-teal mr-6">
+        <div class="flex items-center flex-shrink-0 text-teal mr-6">
             <svg width="23.999999999999996" height="23.999999999999996" xmlns="http://www.w3.org/2000/svg">
              <g>
               <title>background</title>
@@ -33,7 +33,7 @@
                 <router-link v-else :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{{ $t('message.loginLabel')}}</router-link>
                 <router-link :to="{ name: 'News' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{{ $t('message.newsLabel') }}</router-link>
                 <ul v-if="user && user.id != null" class="menu list-reset block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">
-                    <li @mouseover="survol2 = true" @mouseleave="survol2 = false"><svgicon icon="notifications-outline" width="22" height="18" color="#4dc0b5"></svgicon> {{ $t('message.NotificationsLabel') }}
+                    <li @mouseover="survol2 = true" @mouseleave="survol2 = false" class="inline-flex"><svgicon icon="notifications-outline" width="22" height="18" color="#4dc0b5"></svgicon> {{ $t('message.NotificationsLabel') }}
                         <transition name="fade" mode="out-in">
                             <ul class="bg-white p-4 shadow z-10" v-if="survol2" @click="survol2 = false">
                                 <li v-for="notification in notifications" :key="notification.id">
@@ -44,7 +44,7 @@
                     </li>
                 </ul>
                 <ul class="menu list-reset block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">
-                    <li @mouseover="survol = true" @mouseleave="survol = false"><svgicon icon="question" width="22" height="18" color="#4dc0b5"></svgicon> {{ $t('message.aideLabel') }}
+                    <li @mouseover="survol = true" @mouseleave="survol = false" class="inline-flex "><svgicon icon="question" width="22" height="18" color="#4dc0b5"></svgicon> {{ $t('message.aideLabel') }}
                         <transition name="fade" mode="out-in">
                             <ul class="bg-white p-4 z-10 shadow " v-if="survol" @click="survol = false">
                                 <li><a class="text-teal hover:text-teal-darker" href="/help/browse/title">{{ $t('message.lexiqueLabel') }}</a></li>

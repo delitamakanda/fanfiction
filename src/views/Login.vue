@@ -65,13 +65,13 @@
                     <a href="accounts/password_reset/" class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">{{ $t('message.forgotPasswordLabel') }}?</a>
                     <div class="flex items-center justify-between">
                         <button
-                        class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker"
+                        class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-darker"
                         type="button"
                         @click="mode = 'signup'">
                             {{ $t('message.registerLabel')}}
                         </button>
                         <button
-                        class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
+                        class="bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
                         type="submit"
                         :disabled="!valid">
                             {{ $t('message.connectionLabel')}}
@@ -82,13 +82,13 @@
                 <template v-else-if="mode === 'signup'">
                     <div class="flex items-center justify-between">
                         <button
-                        class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker"
+                        class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-darker"
                         type="button"
                         @click="mode = 'login'">
                             {{ $t('message.connectionLabel')}}
                         </button>
                         <button
-                        class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
+                        class="bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
                         type="submit"
                         :disabled="!valid">
                             {{ $t('message.registerLabel')}}

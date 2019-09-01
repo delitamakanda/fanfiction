@@ -1,12 +1,14 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 import router from '../../router'
 import store from '../../store'
+import { getProfile } from '../../api/user'
 
 export const namespaced = true;
 
 export const state = {
     user: {},
-    error: null
+    error: null,
+    profile: []
 }
 
 export const mutations = {
@@ -15,12 +17,18 @@ export const mutations = {
     },
     error (state, error) {
         state.error = error
+    },
+    setProfile (state, data) {
+        state.profile = data
     }
 };
 
 export const actions = {
     async init ({dispatch}) {
         await dispatch('connect')
+    },
+    async fetchProfileUser({ commit}, data) {
+        return commit('setProfile', await getProfile(data.username));
     },
     async connect ({commit}) {
         try {

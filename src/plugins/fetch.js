@@ -24,7 +24,7 @@ export async function $fetch(url, options) {
     if (response.ok) {
         const data = await response.json()
         return data
-    } else if (response.status === 403) {
+    } else if (response.status === 403 || response.status === 404) {
         /*state.user = null
         if (router.currentRoute.matched.some(r => r.meta.private)) {
             router.replace({ name: 'Login', params: {
@@ -32,6 +32,8 @@ export async function $fetch(url, options) {
             }})
         }*/
         store.dispatch('user/logout')
+    } else if (response.status === 204) {
+        
     } else {
         const message = await response.text()
         const error = new Error(message)

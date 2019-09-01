@@ -1,30 +1,28 @@
 <template>
-    <div class="flex flex-wrap">
-        <div class="w-full sm:w-1/2 md:w-1/4 mb-4">
-
-              <p>{{ $t('message.connexionUser', [user.username])}}.</p>
-              <ul class="list-reset">
-                 <li> <router-link v-if="$route.name !== 'ListUserFanfic'" tag="button" :to="{name: 'ListUserFanfic'}">
+    <div>
+        <nav class="flex items-center justify-between flex-wrap p-6">
+            <div class="flex items-center flex-shrink-0 text-white mr-6">
+                <avatar ref="avatar" :email="user.email" />
+            </div>
+            <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+                <div class="text-sm lg:flex-grow">
+                 <div class="block mt-4 lg:inline-block lg:mt-0">{{ $t('message.connexionUser', [user.username])}}.</div>
+                 <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal-500 hover:text-teal-800" v-if="$route.name !== 'ListUserFanfic'" tag="button" :to="{name: 'ListUserFanfic'}">
                       {{ $t('message.myStoriesLabel') }}
-                  </router-link></li>
-                  <li><router-link v-if="$route.name !== 'NewFanfic'" tag="button" :to="{name: 'NewFanfic'}">
+                  </router-link>
+                  <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal-500 hover:text-teal-800" v-if="$route.name !== 'NewFanfic'" tag="button" :to="{name: 'NewFanfic'}">
                       {{ $t('message.ecrireFanfictions') }}
-                  </router-link></li>
-
-                  <li><router-link v-if="$route.name !== 'EditAccount'" tag="button" :to="{ name: 'EditAccount' }">
+                  </router-link>
+                  <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal-500 hover:text-teal-800" v-if="$route.name !== 'EditAccount'" tag="button" :to="{ name: 'EditAccount' }">
                       {{ $t('message.changeProfileEdit') }}
-                  </router-link></li>
-
-                  <li><button class="text-red hover:text-red-darker" @click.prevent="disableAccount">
+                  </router-link>
+                  <button class="block mt-4 lg:inline-block lg:mt-0 text-red-500 hover:text-red-800" @click.prevent="disableAccount">
                     {{ $t('message.removeAccountLabel') }}
-                </button></li>
-              </ul>
-          </div>
-          <div class="w-full sm:w-1/2 md:w-3/4 mb-4">
-
-              <router-view />
-
-          </div>
+                </button>
+                  </div>
+              </div>
+          </nav>
+        <router-view />
     </div>
 </template>
 

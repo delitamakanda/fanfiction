@@ -1,271 +1,252 @@
 <template>
-    <div class="fanfic">
-        <Loading v-if="remoteDataBusy" />
-        <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+    <div>
+        <div class="error bg-red-200 border border-red-200 text-red-500 px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
             {{ errorFetch }}
         </div>
-        <div class="empty" v-else-if="!fanfic">
-            {{ $t('message.fanfictionNotFound') }}
-        </div>
-        <template v-else>
-            <section class="update-infos" v-if="isEditingFanfic">
-                <form
-                @submit.prevent="edit"
-                enctype="multipart/form-data"
-                class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <h2>Editer {{ fanfic.title }}</h2>
-                <div class="flex flex-wrap -mx-3 mb-6">
-                    <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="category">
-                        Catégorie
-                      </label>
-                      <div class="relative">
-                          <select disabled class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="category" name="category" v-model="fanfic.category">
-                              <option value="">Sélectionner</option>
-                              <option v-for="(option, index) of dataCategories" v-bind:value="option.id">{{ option.name }}</option>
-                          </select>
-                          <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                          </div>
-                      </div>
-                    </div>
-                    <div class="w-full md:w-1/2 px-3">
-                      <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="subcategory">
-                          Sous - Catégories
-                      </label>
-                      <div class="relative">
-                          <select disabled class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="subcategory" name="subcategory" v-model="fanfic.subcategory">
-                              <option value="">Sélectionner</option>
-                              <option v-for="(option, index) of dataSubCategories" v-bind:value="option.id">{{ option.name }}</option>
-                          </select>
-                          <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-                    <div class="mb-4">
-                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="title">
-                          Titre de l'histoire
-                        </label>
-                        <Input
-                            name="title"
-                            v-model="fanfic.title"
-                            placeholder="Titre de l'histoire"
-                            maxlength="255"
-                            required />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="synopsis">
-                          Synopsis
-                        </label>
-                        <Input
-                            type="textarea"
-                            name="synopsis"
-                            v-model="fanfic.synopsis"
-                            placeholder="Synopsis"
-                            maxlength="1000"
-                            rows="4" />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="credits">
-                          Crédits
-                        </label>
-                        <Input
-                            type="textarea"
-                            name="credits"
-                            v-model="fanfic.credits"
-                            placeholder="Crédits"
-                            maxlength="350" />
-                    </div>
-                    <div class="mb-6">
-                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="description">
-                          Description de l'histoire
-                        </label>
-                        <Input
-                            type="textarea"
-                            name="description"
-                            v-model="fanfic.description"
-                            placeholder="Description"
-                            maxlength="1000"
-                            rows="4" />
-                    </div>
-                    <div class="flex flex-wrap -mx-3 mb-2">
-                        <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                            <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="classement">
-                              Classement
-                            </label>
-                            <div class="relative">
-                                <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="classement" name="classement" v-model="fanfic.classement">
-                                    <option value="">Sélectionner</option>
-                                    <option v-for="(classement, i) in classementOptions" :key="i" :value="classement.key">{{ classement.value }}</option>
-                                </select>
-                                <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                                </div>
-                            </div>
-                      </div>
-                      <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2">
-                          Genres
-                        </label>
-                        <div class="relative">
-                            <label :for="select[0]" v-for="select in dataGenresFormatted">
-                                <input :value="select[0]" v-model="fanfic.genres" :id="select[0]" type="checkbox">
-                                {{ select[1] }}<br>
-                            </label>
-                        </div>
-                      </div>
-                      <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                          <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
-                            Status
-                          </label>
-                          <div class="relative">
-                            <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="fanfic.status">
-                                <option value="">Sélectionner</option>
-                                <option v-for="(status, i) in statusOptions" :key="i" :value="status.key">{{ status.value }}</option>
-                            </select>
-                            <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-                              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                            </div>
-                          </div>
+        <Loading v-if="remoteDataBusy" />
+        <Form
+            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+            :title="$t('message.writeStoryLabel')"
+            :operation="editingChapter"
+            :valid="valid"
+        >
+            <div class="flex flex-wrap -mx-2 mb-6">
+                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="category">
+                    {{ $t('message.textCategory') }}
+                  </label>
+                  <div class="inline-block relative w-64">
+                      <select class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id="category" name="category" v-model="category">
+                          <option value="">{{ $t('message.selectLabel') }}</option>
+                          <option v-for="(option, index) of categories" v-bind:value="option.id">{{ option.name }}</option>
+                      </select>
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                       </div>
                   </div>
-                    <button
-                        type="button"
-                        @click="editFanfic"
-                        class="secondary inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">
-                        Retour à la l'histoire
-                    </button>
-                    <button
-                        type="submit"
-                        class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded">
-                        Editer l' histoire
-                    </button>
-                </form>
-            </section>
-
-            <section class="infos" v-else>
-                <h2>{{ fanfic.title }}</h2>
-                <div class="info">
-                    Crée le {{ fanfic.publish | date }}
                 </div>
-                <div class="info">
-                    Mis à jour le {{ fanfic.updated | date }}
+                <div class="w-full md:w-1/2 px-3">
+                  <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="subcategory">
+                      {{ $t('message.textSubcategory') }}
+                  </label>
+                  <div class="inline-block relative w-64">
+                      <select :disabled="category.length == 0" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id="subcategory" name="subcategory" v-model="subcategory">
+                          <option value="">{{ $t('message.selectLabel') }}</option>
+                          <option v-for="(option, index) of subcategories" v-if="option.category === obj_fanfic.category" v-bind:value="option.id">{{ option.name }}</option>
+                      </select>
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                      </div>
+                  </div>
                 </div>
-
-                <div v-if="fanfic.synopsis">Synopsis : {{ fanfic.synopsis }}</div>
-                <div>Credits : {{ fanfic.credits }}</div>
-                <div v-if="fanfic.description">Description : {{ fanfic.description }}</div>
-
-                <button type="button" @click="editFanfic" title="Editer l'histoire"><svgicon icon="edit-pencil" width="22" height="18" color="#000"></svgicon></button>
-
-                <button @click="deleteStory(fanfic.id)" title="Supprimer l'histoire"><svgicon icon="trash" width="22" height="18" color="#000"></svgicon></button>
-            </section>
-            <section class="update-chapters" v-if="isEditingChapter">
-                <form
-                @submit.prevent="editingChapter"
-                enctype="multipart/form-data"
-                class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                    <h2>Editer le chapitre</h2>
-                    <div class="mb-4">
-                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="title">
-                          Titre du chapitre
-                        </label>
-                        <Input
-                            name="title"
-                            v-model="chapters.title"
-                            placeholder="Titre du chapitre"
-                            maxlength="255"
-                            required />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="description">
-                          Description du chapitre
-                        </label>
-                        <Input
-                            type="textarea"
-                            name="description"
-                            v-model="chapters.description"
-                            placeholder="Description du chapitre"
-                            maxlength="1000"
-                            rows="4" />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="text">
-                          Chapitre
-                        </label>
-                        <trumbowyg v-model="chapters.text"></trumbowyg>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status_chapter">
-                          Status
-                        </label>
-                        <div class="relative">
-                          <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status_chapter" v-model="chapters.status">
-                              <option value="">Sélectionner</option>
-                              <option v-for="(status, i) in statusOptions" :key="i" :value="status.key">{{ status.value }}</option>
-                          </select>
-                          <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+            </div>
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="title">
+                  {{ $t('message.textTitleStoy') }}
+                </label>
+                <Input
+                    name="title"
+                    v-model="title"
+                    placeholder="Titre de l'histoire"
+                    maxlength="255"
+                    required />
+            </div>
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="synopsis">
+                  {{ $t('message.synopsisLabel') }}
+                </label>
+                <Input
+                    type="textarea"
+                    name="synopsis"
+                    v-model="synopsis"
+                    :placeholder="$t('message.synopsisLabel')"
+                    maxlength="1000"
+                    rows="4" />
+            </div>
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="credits">
+                  {{ $t('message.creditsLabel') }}
+                </label>
+                <Input
+                    type="textarea"
+                    name="credits"
+                    v-model="credits"
+                    :placeholder="$t('message.creditsLabel')"
+                    maxlength="350" />
+            </div>
+            <div class="mb-6">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="description">
+                  {{ $t('message.descriptionLabel') }}
+                </label>
+                <Input
+                    type="textarea"
+                    name="description"
+                    v-model="description"
+                    :placeholder="$t('message.descriptionLabel')"
+                    maxlength="1000"
+                    rows="4" />
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="classement">
+                      {{ $t('message.textRating') }}
+                    </label>
+                    <div class="inline-block relative w-64">
+                        <select class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id="classement" name="classement" v-model="classement">
+                            <option value="">{{ $t('message.selectLabel') }}</option>
+                            <option v-for="(classement, i) in classementOptions" :key="i" :value="classement.key">{{ classement.value }}</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                          </div>
                         </div>
                     </div>
+                </div>
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2">
+                      {{ $t('message.textGenres') }}
+                    </label>
+                    <div class="relative">
+                        <ul>
+                            <li v-for="value in genres">
+                              <input type="checkbox" :value="value[0]" :id="value[0]" v-model="choices" @click="check($event)"> {{ value[1] }}
+                            </li>
+                       </ul>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
+                      {{ $t('message.textStatus') }}
+                    </label>
+                    <div class="inline-block relative w-64">
+                        <select class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id="status" name="status" v-model="status">
+                            <option value="">{{ $t('message.selectLabel') }}</option>
+                            <option v-for=" (status, i) in statusOptions" :key="i" :value="status.key">{{ status.value }}</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template slot="actions">
+                <button
+                    type="submit"
+                    class="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+                    :disabled="!valid">
+                    {{ $t('message.editStoryLabel') }}
+                </button>
+                <button
+                    type="button"
+                    @click="deleteStory"
+                    class="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+                    >
+                    {{ $t('message.removeStoryLabel') }}
+                </button>
+            </template>
+        </Form>
+        <div v-if="isEditingChapter">
+            <Form
+                class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                :title="(obj_chapter.title === undefined) ? '' : obj_chapter.title"
+                :operation="editingChapter"
+                :valid="validChapter">
+                <div class="mb-4">
+                    <label class="block tracking-wide text-grey-500 text-xs font-bold mb-2" for="title">
+                      {{ $t('message.textTitleChapter') }}
+                    </label>
                     <Input
-                        type="hidden"
-                        name="fanfic"
-                        v-model="chapters.fanfic" />
-                    <button
-                        type="button"
-                        @click="closeChapterEditing"
-                        class="secondary inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">
-                        Retour à la l'histoire
-                    </button>
+                        name="title"
+                        v-model="chapterTitle"
+                        :placeholder="$t('message.textTitleChapter')"
+                        maxlength="255"
+                        required />
+                </div>
+                <div class="mb-4">
+                    <label class="block tracking-wide text-grey-500 text-xs font-bold mb-2" for="description">
+                      {{ $t('message.descriptionLabel') }}
+                    </label>
+                    <Input
+                        type="textarea"
+                        name="description"
+                        v-model="chapterDescription"
+                        :placeholder="$t('message.descriptionLabel')"
+                        maxlength="1000"
+                        rows="4" />
+                </div>
+                <div class="mb-4">
+                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="text">
+                      {{ $t('message.contentLabel') }}
+                    </label>
+                    <trumbowyg v-model="chapterText"></trumbowyg>
+                </div>
+                <div class="mb-4">
+                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
+                      {{ $t('message.textStatus' )}}
+                    </label>
+                    <div class="relative">
+                      <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="chapterStatus">
+                          <option value="">{{ $t('message.selectLabel') }}</option>
+                          <option v-for="(status, i) in statusOptions" :key="i" :value="status.key">{{ status.value }}</option>
+                      </select>
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                      </div>
+                    </div>
+                </div>
+                <template slot="actions">
                     <button
                         type="submit"
-                        class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded">
-                        Editer le chapitre
+                        class="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+                        :disabled="!validChapter">
+                        {{ $t('message.editChapterTitle') }}
                     </button>
-                </form>
-            </section>
-            <section class="chapters">
-                <ul>
-                    <li v-for="(chap, index) in chapters" v-if="chap.fanfic === fanfic.id" :key="chap.id">
-                        {{ chap.title }} - Publié le {{ chap.published | date }}
+                </template>
+            </Form>
+        </div>
+        <table class="w-full text-left m-4" style="border-collapse:collapse">
+        <thead>
+            <tr>
+                <th class="py-4 px-6 bg-grey-200 font-sans font-medium uppercase text-sm text-grey border-b border-grey-200">
+                    {{ $t('message.chapterLabel') }}
+                    <button type="button" :title="$t('message.addChapterLabel')" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" @click="writeChapter"><svgicon icon="add-outline" width="22" height="18" color="#000"></svgicon> </button>
+                </th>
+                <th class="py-4 px-6 bg-grey-200 font-sans font-medium uppercase text-sm text-grey border-b border-grey-200"></th>
+                <th class="py-4 px-6 bg-grey-200 font-sans font-medium uppercase text-sm text-grey border-b border-grey-200"></th>
+                <th class="py-4 px-6 bg-grey-200 font-sans font-medium uppercase text-sm text-grey border-b border-grey-200"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="hover:bg-blue-200" v-for="(chapter, i) in chapters" :key="chapter.id">
+                <td class="py-4 px-6 border-b border-grey-200">{{ i + 1 }} - {{ chapter.title }}</td>
+                <td class="py-4 px-6 border-b border-grey-200">{{ chapter.published | date }}</td>
+                <td class="py-4 px-6 border-b border-grey-200">{{ chapter.status }}</td>
+                <td class="py-4 px-6 border-b border-grey-200 text-center">
+                    <button type="button" :title="$t('message.editChapterTitle')" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" @click="editChapter(chapter.id)"><svgicon icon="edit-pencil" width="22" height="18" color="#000"></svgicon> </button>
 
-                        <button type="button" title="Editer un chapitre" class="mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" @click="editChapter(chap.id)"><svgicon icon="edit-pencil" width="22" height="18" color="#000"></svgicon> </button>
-
-                        <button type="button" title="Supprimer le chapitre" @click="deleteChapter(chap.id, index)"><svgicon icon="trash" width="22" height="18" color="#000"></svgicon></button>
-                    </li>
-                </ul>
-            </section>
-            <section class="mb-4 mt-4 action ajout-chapitre">
-                <router-link role="button" class="no-underline bg-teal hover:bg-teal-dark text-white font-bold py-2 px-4 rounded-full" :to="{name: 'NewChapter', params: { fanfic: fanfic.id }}">Ajouter un chapitre</router-link>
-            </section>
-
-            <comment-tab v-if="(anwserByComments.length > 0) || (comments.length > 0)" class="action-comments mb-4" :fanficId="fanfic" :allComments="comments" :answers="anwserByComments" :total="totalAnwsersComment" />
-        </template>
+                    <button type="button" :title="$tc('message.removeChapterTitle', chapter.title, chapter.id, {a: chapter.title, n: chapter.id})" @click="deleteChapter(chapter.title, chapter.id)"><svgicon icon="trash" width="22" height="18" color="#000"></svgicon></button>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+        <modal ref="chapterForm"></modal>
     </div>
 </template>
 
 <script>
-import CommentTab from '@/components/comment/CommentTab'
-
 import RemoteData from '@/mixins/RemoteData'
-import confirm from '@/mixins/confirm'
-
 import get_cookie from '@/cookie'
 import '@/compiled-icons/trash'
 import '@/compiled-icons/edit-pencil'
+import '@/compiled-icons/add-outline'
 
-import { mapGetters } from 'vuex'
+import modal from '@/components/popins/PopinChapterForm.vue'
+import confirm from '@/mixins/confirm'
+
+import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 
 export default {
     mixins: [
         RemoteData({
-            fanfic () {
-                return `fanfics/${this.id}`
-            },
             comments () {
                 return `comments/fanfic/${this.id}/list`
             },
@@ -275,11 +256,90 @@ export default {
         }),
         confirm
     ],
-    components: {
-        'comment-tab' : CommentTab
-    },
+    components: { modal },
     computed: {
         ...mapGetters('user', ['user']),
+        ...mapState('fanfic', ['obj_fanfic', 'obj_chapter', 'chapters', 'genres', 'subcategories', 'categories']),
+        chapterTitle: {
+            get () {
+                return this.obj_chapter.title
+            },
+            set (val) {
+                this.setChapterTitle(val)
+            }
+        },
+        chapterDescription: {
+            get () {
+                return this.obj_chapter.description
+            },
+            set (val) {
+                this.setChapterDescription(val)
+            }
+        },
+        chapterText: {
+            get () {
+                return this.obj_chapter.text
+            },
+            set (val) {
+                this.setChapterText(val)
+            }
+        },
+        chapterStatus: {
+            get () {
+                return this.obj_chapter.status
+            },
+            set (val) {
+                this.setChapterStatus(val)
+            }
+        },
+        status: {
+            get() {
+                return this.obj_fanfic.status;
+            },
+            set(val) {
+                this.editStatus(val)
+            }
+        },
+        category: {
+            get() {
+                return this.obj_fanfic.category;
+            },
+            set (val) {
+                this.editCategory(val)
+            }
+        },
+        synopsis: {
+            get() {
+                return this.obj_fanfic.synopsis;
+            },
+            set(val) {
+                this.editSynopsis(val)
+            }
+        },
+        subcategory: {
+            get() {
+                return this.obj_fanfic.subcategory;
+            },
+            set(val) {
+                this.editSubCategory(val)
+            }
+        },
+        title: {
+            get() {
+                return this.obj_fanfic.title;
+            },
+            set(val) {
+                this.editTitle(val)
+            }
+        },
+        classement: {
+            get() {
+                return this.obj_fanfic.classement;
+            },
+            set(val) {
+                this.editClassement(val)
+            }
+        },
         totalComments() {
             return this.comments.length
         },
@@ -288,37 +348,50 @@ export default {
         },
         totalEffectiveComment() {
             return (this.totalAnwsersComment - this.totalComments)
+        },
+        valid() {
+            return !!this.title;
+        },
+        validChapter () {
+            if (this.isEditingChapter) {
+                return !!this.chapterTitle && !!this.chapterText && !!this.chapterStatus
+            }
+        },
+        choices: {
+            get() {
+                return this.obj_fanfic.genres;
+            },
+            set(val) {
+                this.editGenres(val)
+            }
+        },
+        description: {
+            get () {
+                return this.obj_fanfic.description;
+            },
+            set(val) {
+                this.editDescription(val)
+            }
+        },
+        credits: {
+            get() {
+                return this.obj_fanfic.credits;
+            },
+            set(val) {
+                this.editCredits(val)
+            }
         }
     },
     data () {
         return {
-            fanfic: [],
-            chapters: [],
             comments: [],
             comment: {},
             anwserByComments: [],
             errorFetch: this.$t('message.errorFetch'),
-            isEditingFanfic: false,
             isEditingChapter: false,
             error: null,
-            dataCategories: [],
-            dataSubCategories: [],
-            dataGenres: {},
-            description: '',
-            synopsis: '',
-            credits: '',
-            author: '',
-            genres: [],
-            classement: '',
-            status: '',
-            category: '',
-            subcategory: '',
-            loadingGenres: false,
-            dataGenresFormatted: {},
-            text: '',
-            chapter_id: '',
             classementOptions: [{key: 'g', value: 'G'},{key: '13', value: '13+'},{key: 'r', value: 'R'},{key: '18', value: '18+'}],
-            statusOptions: [{key: 'brouillon', value: 'Brouillon'}, {key: 'publié', value: 'Publié'}]
+            statusOptions: [{key: 'brouillon', value: this.$t('message.textDraft')}, {key: 'publié', value: this.$t('message.textPublish')}],
         }
     },
     props: {
@@ -327,109 +400,81 @@ export default {
             required: true,
         }
     },
-    async created () {
-        this.dataGenresFormatted = await this.$fetch('fanfics/genres')
-        this.loadingGenres = true
-        this.dataGenresFormatted = this.dataGenresFormatted[0]['genres']
-
-        this.dataCategories = await this.$fetch('category')
-        this.dataSubCategories = await this.$fetch('subcategory')
+    created () {
+        this.editFanfic({ id: this.id })
+        this.fetchChapters({ id: this.id, status: '' })
+        this.fetchCategories ()
+        this.fetchSubCategories ()
+        this.fetchGenres ()
     },
     mounted () {
-        this.getChaptersList()
+        this.$root.$chapterForm = this.$refs.chapterForm.openModal
     },
     methods: {
-        async getChaptersList () {
-            this.chapters = await this.$fetch(`chapters/${this.id}/list`)
-        },
-        async deleteChapter (chapterId, index) {
-            const message = `Supprimer le chapitre id #${chapterId} ?`
+        ...mapActions('fanfic', ['fetchCategories', 'fetchSubCategories', 'fetchGenres', 'postFanfic', 'fetchFanficsPublishedByAuthor', 'editFanfic', 'fetchChapters', 'fetchChapter', 'changeFanfic', 'removeFanfic', 'postChapter', 'putChapter', 'clearChapter', 'removeChapter']),
+        ...mapMutations('fanfic', ['editGenres', 'editCategory', 'editStatus', 'editTitle', 'editCredits', 'editSubCategory', 'editClassement', 'editDescription', 'editSynopsis', 'setChapterTitle', 'setChapterDescription', 'setChapterText', 'setChapterStatus']),
+        deleteChapter (chapterTitle, chapterId) {
+            const message = this.$tc('message.removeChapterTitle', chapterTitle, chapterId, {a: chapterTitle, n: chapterId})
 
             this.confirm(message, () => {
-                $.ajax({
-                   url: '/api/chapters/' + chapterId,
-                   type: 'DELETE',
-                   headers: {
-                       "X-CSRFToken": get_cookie("csrftoken"),
-                   },
-                   data: { id: chapterId },
-                   success: function() {
-                       this.chapters.splice(index, 1);
-                   }.bind(this),
-                   error: function(error) {
-                       console.log(error);
-                   }
-                });
+                this.removeChapter({ id: chapterId })
             });
         },
-
-        async deleteStory (userFanficId) {
-            const message = `Etes vous certain de supprimer cette histoire ? id# ${userFanficId} ?`
+        deleteStory () {
+            const message = this.$tc('message.removeStoryDisclaimerText', this.obj_fanfic.title, this.id, { a: this.obj_fanfic.title, n: this.id })
 
             this.confirm(message, () => {
-                $.ajax({
-                   url: '/api/fanfics/' + userFanficId,
-                   type: 'DELETE',
-                   data: { id: userFanficId },
-                   headers: {
-                       "X-CSRFToken": get_cookie("csrftoken"),
-                   },
-                   success: function() {
-                       this.$router.replace(this.$route.params.wantedRoute || { name: 'ListUserFanfic'})
-                   }.bind(this),
-                   error: function(error) {
-                       console.log(error);
-                   }
-                });
+                this.removeFanfic({ id: this.id })
+                this.$router.replace(this.$route.params.wantedRoute || { name: 'NewFanfic'})
             })
         },
-        editFanfic () {
-            this.isEditingFanfic = !this.isEditingFanfic
+        editChapter (chapterId) {
+            this.isEditingChapter = !this.isEditingChapter
+            this.fetchChapter({ id: chapterId })
         },
-        async editChapter (id) {
-            this.chapters = await this.$fetch(`chapters/${id}`)
-            this.isEditingChapter = true
-            this.chapter_id = id
+        edit () {
+            this.changeFanfic({
+                id: this.id,
+                title: this.obj_fanfic.title,
+                description: this.obj_fanfic.description,
+                synopsis: this.obj_fanfic.synopsis,
+                credits: this.obj_fanfic.credits,
+                author: this.user.id,
+                genres: this.obj_fanfic.genres,
+                classement: this.obj_fanfic.classement,
+                status: this.obj_fanfic.status,
+                category: this.obj_fanfic.category,
+                subcategory: this.obj_fanfic.subcategory
+            });
         },
-        async closeChapterEditing () {
+        writeChapter () {
+            this.$root
+              .$chapterForm(this.obj_fanfic)
+              .then(res => {
+                  if (res.status) {
+                     const data = res.r
+                     this.postChapter(data)
+                  }
+              })
+              .catch(err => console.log(err))
+        },
+        editingChapter () {
+            this.putChapter({
+                chapterId: this.obj_chapter.id,
+                title: this.obj_chapter.title,
+                description: this.obj_chapter.description,
+                text: this.obj_chapter.text,
+                fanfic: this.obj_chapter.fanfic,
+                author: this.user.id,
+                status: this.obj_chapter.status
+            })
+
             this.isEditingChapter = false
-            this.getChaptersList()
         },
-        async edit () {
-            const result = await this.$fetch(`fanfics/${this.$route.params.id}`, {
-                method: 'PUT',
-                body: JSON.stringify({
-                    title: this.fanfic.title,
-                    description: this.fanfic.description,
-                    synopsis: this.fanfic.synopsis,
-                    credits: this.fanfic.credits,
-                    author: this.fanfic.author,
-                    genres: this.fanfic.genres,
-                    classement: this.fanfic.classement,
-                    status: this.fanfic.status,
-                    category: this.fanfic.category,
-                    subcategory: this.fanfic.subcategory,
-                }),
-            })
-            this.fanfic.updated = Date.now()
-            this.isEditingFanfic = false
-        },
-        async editingChapter () {
-            const result = await this.$fetch(`chapters/${this.chapter_id}`, {
-                method: 'PUT',
-                body: JSON.stringify({
-                    title: this.chapters.title,
-                    description: this.chapters.description,
-                    text: this.chapters.text,
-                    fanfic: this.chapters.fanfic,
-                    author: this.user.id,
-                    status: this.chapters.status
-                }),
-            })
-            if (this.fanfic.status == 'publié' && this.chapters.status == 'publié') {
-                this.fanfic.updated = Date.now()
-            }
-            this.closeChapterEditing()
+        check(e) {
+          if (e.target.checked) {
+            console.log(e.target.value)
+          }
         }
     }
 }
@@ -437,24 +482,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.action + .action {
-    margin-top: 10px;
-}
-
-.comment-content {
-    background: white;
-}
-
-.comment-tabs {
-    margin-bottom: 10px;
-}
-
-.tabs li.is-active a {
-    border-bottom: 1px solid;
-    font-weight: bold;
-}
-
-.w-full {
-    margin: 0 auto;
-}
 </style>

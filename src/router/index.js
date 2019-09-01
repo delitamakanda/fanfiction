@@ -9,7 +9,7 @@ import Login from '@/views/Login'
 import Dashboard from '@/views/Dashboard'
 import ListUserFanfic from '@/views/ListUserFanfic'
 import NewFanfic from '@/views/NewFanfic'
-import NewChapter from '@/views/NewChapter'
+//import NewChapter from '@/views/NewChapter'
 import Fanfic from '@/views/Fanfic'
 import EditAccount from '@/views/EditAccount'
 import News from '@/views/News'
@@ -73,9 +73,9 @@ const router = new Router({
             children: [
                 { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic, meta: { title: 'Vos fanfictions', private: true } },
                 { path: 'create', name: 'NewFanfic', component: NewFanfic, meta: { title: 'Ecrire une fanfiction', private: true } },
-                { path: 'update/:id/edit', name: 'UpdateFanfic', component: NewFanfic, props: true, meta: { title: 'Editer une fanfiction', private: true } },
-                { path: 'new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, meta: { title: 'Ecrire un chapitre', private: true } },
-                { path: 'update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: NewChapter, props: true, meta: { title: 'Editer un chapitre', private: true } },
+                // { path: 'update/:id/edit', name: 'UpdateFanfic', component: NewFanfic, props: true, meta: { title: 'Editer une fanfiction', private: true } },
+                // { path: 'new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, meta: { title: 'Ecrire un chapitre', private: true } },
+                // { path: 'update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: NewChapter, props: true, meta: { title: 'Editer un chapitre', private: true } },
                 { path: 'fanfic/:id', name: 'Fanfic', component: Fanfic, props: true, meta: { title: 'Voir la fanfiction', private: true } },
                 { path: 'edit-account', name: 'EditAccount', component: EditAccount, meta: { title: 'Edition du compte personnel', private: true } },
                 // TODO: ajout d'une news
@@ -101,7 +101,7 @@ router.beforeEach((to, from, next) => {
     //const user = state.user
     const user = store.getters['user/user']
 
-    if (to.matched.some(r => r.meta.private) && !user && user.id == null) {
+    if (to.matched.some(r => r.meta.private) && user && user.id == null) {
 
         next({
             name: 'Login',

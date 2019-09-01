@@ -1,250 +1,125 @@
 <template>
-    <div>
-        <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
-            {{ errorFetch }}
+<div>
+    <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+        {{ errorFetch }}
+    </div>
+
+    <Loading v-if="remoteDataBusy" />
+
+    <div class="flex">
+      <div class="w-1/5">
+          <template v-if="user && user.id != null">
+              <button v-if="!followUser" v-model="getAuthorFollowed" type="button" @click="followAuthor" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full">{{ $t('message.followAuthorText') }}</button>
+
+              <button v-if="followUser" v-model="getAuthorFollowed" type="button" @click="DisFollowAuthor" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">{{ $t('message.NotFollowAuthorText') }}</button>
+
+              <button v-if="!followStory" v-model="getStoriesFollowed" type="button" @click="followFanfic" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full">{{ $t('message.followFanficText') }}</button>
+
+              <button v-if="followStory" v-model="getStoriesFollowed" type="button" @click="DisFollowFanfic" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">{{ $t('message.NotFollowFanficText') }}</button>
+
+              <button type="button" class="inline-flex items-center bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full" v-model="getUserLiked" @click="favorite" v-if="!like">
+                  <svgicon icon="mood-happy-solid" width="22" height="18" color="#fff"></svgicon> {{ counter }}
+              </button>
+
+              <button type="button" class="inline-flex items-center bg-red-500 hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full" v-model="getUserLiked" @click="unfavorite" v-if="like">
+                  <svgicon icon="mood-sad-solid" width="22" height="18" color="#fff"></svgicon> {{ counter }}
+              </button>
+          </template>
+      </div>
+      <div class="w-3/5">
+          <h2 class="font-bold text-center text-xl mb-2">{{ obj_fanfic.title }}</h2>
+          <p class="text-grey-darker text-base text-center">
+            {{ $t('message.authorLabel') }} : <router-link v-if="obj_fanfic.author" :key="obj_fanfic.id" :to="{ name: 'ShowUserFanfic', params: { username: obj_fanfic.author.username, slug: obj_fanfic.slug, id: obj_fanfic.id } }" class=" lg:inline-block lg:mt-0 text-teal-500 hover:text-teal-600">{{ obj_fanfic.author.username }}</router-link>
+          </p>
+          <p class="text-grey-darker text-center text-base">{{ $t('message.publishedAtLabel') }} : {{obj_fanfic.publish | date }} - {{ $t('message.miseAJourLabel') }} : {{ obj_fanfic.updated | date }}</p>
+      </div>
+      <div class="w-1/5">
+          <button type="button" @click.once="feedback" class="bg-teal-500 hover:bg-teal-500 text-white font-bold py-2 px-4 rounded-full">{{ $t('message.signalerLabel') }}</button>
+          <button type="button" @click="printFanfic" class="bg-teal-500 hover:bg-teal-500 text-white font-bold py-2 px-4 rounded-full">{{ $t('message.formatPDFLabel') }}</button>
+      </div>
+    </div>
+
+    <div class="w-full rounded overflow-hidden shadow">
+        <div class="px-6 py-4">
+            <div class="text-grey-darker text-base" v-if="obj_fanfic.description">
+                <h4>{{ $t('message.descriptionLabel') }}</h4>
+                <p v-html="obj_fanfic.description"></p>
+            </div>
+            <div class="text-grey-darker text-base"  v-if="obj_fanfic.synopsis">
+                <h4>{{ $t('message.synopsisLabel') }}</h4>
+                <p>{{obj_fanfic.synopsis }}</p>
+            </div>
+            <div class="text-grey-darker text-base"  v-if="obj_fanfic.credits">
+                <h4>{{ $t('message.creditsLabel') }}</h4>
+                <p>{{obj_fanfic.credits }}</p>
+            </div>
+            <div class="text-grey-500 text-base">
+                <h4>{{ $t('message.textStatus')}}</h4>
+                <p>{{ obj_fanfic.status }}</p>
+            </div>
         </div>
+        <div class="px-4 py-4">
+            <div class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ obj_fanfic.category}}</div>
+            <div class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ obj_fanfic.subcategory }}</div>
+            <div class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ obj_fanfic.classement }} </div>
+            <div class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ obj_fanfic.genres }} </div>
+            <div class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">{{ obj_fanfic.views }} {{ 'view' | pluralize(obj_fanfic.views) }}</div>
+            <div class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">{{ obj_fanfic.total_likes }} {{'like' | pluralize(obj_fanfic.total_likes) }}</div>
+            <div class="cursor-pointer inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker" @click="readReviews">{{ commentsCount }} {{ 'review' | pluralize(commentsCount)}}</div>
+            <div class="inline-block text-blue-500 hover:text-blue-800 cursor-pointer" @click="writeComment">{{ $t('message.writeCommentLabel', {n: obj_fanfic.title}) }}</div>
+          </div>
+    </div>
 
-        <Loading v-if="remoteDataBusy" />
-
-        <div class="w-full">
-          <div class="px-6 py-4">
-            <div class="font-bold text-xl mb-2">{{ fanfic.title }}</div>
-            <p class="text-grey-darker text-base">
-              Par <router-link v-if="fanfic.author" :to="{ name: 'ShowUserFanfic', params: { username: fanfic.author.username, slug: fanfic.slug, id: fanfic.id } }" class=" lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ fanfic.author.username }}</router-link>
-            </p>
+    <div class="shadow-md my-4 px-4 py-4 rounded bg-white">
+        <div class="inline-block relative w-64">
+          <select v-model.lazy="selecteur" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+            <option v-for="(chapter, i) in chapters" :key="chapter.id" :value="chapter.id">{{ i + 1 }} - {{ chapter.title }}</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
           </div>
         </div>
+        <div class="py-4" v-if="chapterSelected">
+            <h3>{{ chapterSelected.title }}</h3>
+            <p>{{ $t('message.publishedAtLabel') }} : {{ chapterSelected.published | date }}</p>
+            <div v-html="chapterSelected.text"></div>
 
-        <div v-if="step === 1">
-
-            <div class="flex flex-wrap">
-              <div class="md:w-3/4 sm:w-1/2 h-12 mb-4">
-                  <template v-if="user && user.id != null">
-                      <button v-if="!followUser" type="button" @click="followAuthor" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'auteur</button>
-
-                      <button v-if="followUser" type="button" @click="DisFollowAuthor" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full">Ne plus suivre l'auteur</button>
-
-                      <button v-if="!followStory" type="button" @click="followFanfic" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Suivre l'histoire</button>
-
-                      <button v-if="followStory" type="button" @click="DisFollowFanfic" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full">Ne plus suivre l'histoire</button>
-
-                      <button type="button" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full" @click="favorite" v-if="!like">
-                          <svgicon icon="mood-happy-solid" width="22" height="18" color="#fff"></svgicon> +1 /
-                      </button>
-
-                      <button type="button" class="bg-red hover:bg-red-darker text-white font-bold py-2 px-4 rounded-full" @click="unfavorite" v-if="like">
-                          <svgicon icon="mood-sad-solid" width="22" height="18" color="#fff"></svgicon> -1 /
-                      </button>
-                  </template>
-              </div>
-              <div class="md:w-1/4 sm:w-1/2 mb-4 h-12">
-                  <button type="button" @click.once="feedback" class="bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Signaler</button>
-                  <a role="button" :href="'/help/fanfic/'+ fanfic.id + '/pdf'" target="_blank" class="no-underline bg-teal hover:bg-teal-darker text-white font-bold py-2 px-4 rounded-full">Export PDF</a>
-              </div>
-            </div>
-
-            <div class="w-full rounded overflow-hidden shadow">
-                <div class="px-6 py-4">
-                    <p class="text-grey-darker text-base">Publiée le: {{fanfic.publish | date }}</p>
-                    <p class="text-grey-darker text-base">Mise à jour : {{ fanfic.updated | date }}</p>
-                    <div class="text-grey-darker text-base" v-if="fanfic.description">
-                        <h4>Description</h4>
-                        <p v-html="fanfic.description"></p>
-                    </div>
-                    <div class="text-grey-darker text-base"  v-if="fanfic.synopsis">
-                        <h4>Synopsis</h4>
-                        <p>{{ fanfic.synopsis }}</p>
-                    </div>
-                    <div class="text-grey-darker text-base"  v-if="fanfic.credits">
-                        <h4>Crédits</h4>
-                        <p>{{ fanfic.credits }}</p>
-                    </div>
-                </div>
-                <div class="px-6 py-4">
-                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.category}}</span>
-                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.subcategory }}</span>
-                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.classement }} </span>
-                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">{{ fanfic.genres }} </span>
-                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">{{ fanfic.views }} {{ 'view' | pluralize(fanfic.views) }}</span>
-                    <span class="inline-block bg-grey-lighter rounded-full px-3 py-1 text-sm font-semibold text-grey-darker">{{ fanfic.total_likes }} {{'like' | pluralize(fanfic.total_likes) }}</span>
-                    <span class="lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer" @click="showModal"><u>{{ total_comments }} {{ 'commentaire' | pluralize(total_comments)}}</u> </span>
-                  </div>
-            </div>
-
-        <div class="flex flex-wrap mt-4 -mx-2">
-            <aside class="w-full md:w-1/4 px-2">
-                <div class="sidebar-menu mb-4">
-                    <h3>Chapitres :</h3>
-                    <ul v-for="(element, index) in chapterList">
-                        <li :key="index">
-                            <span @click="selectChapter($event)" :id="element.id" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer underline">{{ index + 1 }} - {{ element.title }}
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-                <div v-if="fanfic.recommended_fanfics">
-                    <h3>Fanfictions recommandées :</h3>
-                    <div v-for="f in fanfic.recommended_fanfics" class="flex -mx-2">
-                        <div class="px-2">
-                            <router-link class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer underline" :to="{
-                              name: 'Detail',
-                              params: {
-                                slug: f.slug,
-                                id: f.id
-                              },
-                            }">
-                            {{ f.title }}
-                            </router-link>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <section class="w-full md:w-3/4 px-2">
-                <div v-for="(chapter, index) in chapterList" :key="chapter.id" :id="chapter.id" v-if="chapterIsVisible && chapter.id == target" class="shadow-md p-4 rounded bg-white">
-                    <small>Publié le : {{ chapter.published | date }}</small>
-
-                    <h3>{{ chapter.title }}</h3>
-
-                    <div v-if="chapter.description !== ''" class="bg-blue-lightest border-t border-b border-blue text-blue-dark px-4 py-3" v-html="chapter.description" role="alert">{{ chapter.description }}</div>
-
-                    <div v-html="chapter.text"></div>
-
-                    <div v-show="!writeToChapterComment" class="text-center"><p @click="writeCommentToChapter" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker cursor-pointer underline">Commentez le chapitre &laquo; {{ chapter.title }} &raquo;</p></div>
-
-                    <div v-if="writeToChapterComment">
-                        <Form
-                            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                            :title="'Nouveau commentaire sur ' + chapter.title"
-                            :operation="writeComChapter"
-                            :valid="valid">
-                            <div class="mb-4">
-                                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="name">
-                                    Nom ou Pseudo
-                                </label>
-                                <Input
-                                name="name"
-                                v-model="name"
-                                placeholder=""
-                                maxlength="255"
-                                required />
-                            </div>
-                            <div class="mb-4">
-                                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="email">
-                                    E-mail
-                                </label>
-                                <Input
-                                name="email"
-                                v-model="email"
-                                placeholder="Votre e-mail (seul l'auteur le verra)"
-                                maxlength="255" />
-                            </div>
-                            <div class="mb-4">
-                                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="body">
-                                    Commentaire
-                                </label>
-                                <Input
-                                type="textarea"
-                                name="body"
-                                v-model="body"
-                                placeholder=""
-                                rows="6"
-                                required />
-                            </div>
-                            <input type="hidden" name="chapter" id="chapter" v-model="chapter.id" />
-                            <input type="hidden" name="title" id="title" v-model="chapter.title" />
-                            <input type="hidden" name="order" id="order" v-model="chapter.order" />
-                            <template slot="actions">
-                                <button
-                                    type="submit"
-                                    class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
-                                    :disabled="!valid">
-                                    Ajouter un commentaire
-                                </button>
-                            </template>
-                        </Form>
-                    </div>
-                </div>
-            </section>
+            <div class="cursor-pointer inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker" @click="readReviewsChapters">{{ commentsChapterCount(selecteur) }} {{ 'review' | pluralize(commentsChapterCount(selecteur)) }}</div>
+            <div class="inline-block text-blue-500 hover:text-blue-800 cursor-pointer" @click="writeChapterComment">{{ $t('message.writeCommentChapterLabel', {n: chapterSelected.title}) }}</div>
         </div>
-
-        <modal
-        v-show="isModalVisible"
-        @close="closeModal"
-        >
-        <h3 slot="header">Voir les commentaires</h3>
-        <div slot="body">
-            <p v-if="step === 1" @click="writeComment" class="cursor-pointer block lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">Donnez votre avis sur cette histoire.</p>
-
-            <comment-tab v-if="(CommentByChapter.length > 0) || (comment.length > 0)" class="action-comments mb-4" :allComments="CommentByChapter" :answers="comment" :isAnswerable="answerableComment" />
-        </div>
-        </modal>
     </div>
 
-    <div v-if="step === 2">
-        <Form
-            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-            title="Nouveau commentaire"
-            :operation="operation"
-            :valid="valid">
-            <div class="mb-4">
-                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="name">
-                    Nom ou Pseudo
-                </label>
-                <Input
-                name="name"
-                v-model="name"
-                placeholder=""
-                maxlength="255"
-                required />
-            </div>
-            <div class="mb-4">
-                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="email">
-                    E-mail
-                </label>
-                <Input
-                name="email"
-                v-model="email"
-                placeholder="Votre e-mail (seul l'auteur le verra)"
-                maxlength="255" />
-            </div>
-            <div class="mb-4">
-                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="body">
-                    Commentaire
-                </label>
-                <Input
-                type="textarea"
-                name="body"
-                v-model="body"
-                placeholder=""
-                rows="6"
-                required />
-            </div>
-            <template slot="actions">
-                <button
-                type="submit"
-                class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
-                :disabled="!valid">
-                Ajouter un commentaire
-            </button>
-            <p v-if="step === 2" @click="goStepBack" class="cursor-pointer inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker">Retour au chapitre</p>
-        </template>
-    </Form>
-
+    <div v-if="obj_fanfic.recommended_fanfics" class="shadow-md my-4 px-4 py-4 rounded bg-white">
+        <h3>{{ $t('message.recommendedFanficsLabel') }}:</h3>
+        <div v-for="f in obj_fanfic.recommended_fanfics">
+            <ul class="list-disc list-inside">
+                <router-link class="text-teal-500 hover:text-teal-700 cursor-pointer" :key="f.id" :to="{
+                  name: 'Detail',
+                  params: {
+                    slug: f.slug,
+                    id: f.id
+                  },
+                }">
+                <li>{{ f.title }}</li>
+                </router-link>
+            </ul>
+        </div>
     </div>
+    <popin ref="comment"></popin>
+    <modal ref="commentForm"></modal>
 </div>
 </template>
 
 <script>
-import CommentTab from '@/components/comment/CommentTab'
-import modal from '@/components/popins/Modal.vue'
+import popin from '@/components/popins/PopinComment.vue'
+import modal from '@/components/popins/PopinCommentForm.vue'
 import '@/compiled-icons/mood-happy-solid'
 import '@/compiled-icons/mood-sad-solid'
 
-import PersistantData from '@/mixins/PersistantData'
 import RemoteData from '@/mixins/RemoteData'
+import * as _ from 'lodash'
 
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 
 export default {
     props: {
@@ -257,258 +132,184 @@ export default {
             required: true
         },
     },
-    components: {
-        modal,
-        'comment-tab': CommentTab
-    },
+    components: { modal, popin },
     data () {
         return {
             error: null,
             like: false,
-            users: [],
-            fanfic: [],
-            chapterList: [],
-            comment: [],
-            CommentByChapter: [],
-            date: null,
+            selecteur: null,
             errorFetch: this.$t('message.errorFetch'),
-            isModalVisible: false,
-            name: '',
-            email: '',
-            body: '',
-            chapter: '',
-            order: '',
-            title: '',
-            total_comments: '',
-            step: 1,
             followStory: false,
             followUser: false,
-            followStoryText: '',
-            followUserText: '',
-            chapterIsVisible: false,
-            target: '',
-            userFollow: [],
-            fanficFollow: [],
-            followUserId: '',
-            followStoryId: '',
-            writeToChapterComment: false,
-            fic: 'story',
-            answerableComment: false
+            counter: null,
+            datas: null
         }
     },
     computed: {
+        ...mapState('fanfic', ['obj_fanfic', 'chapters']),
+        ...mapState('comment', ['all_comments', 'chapter_comments']),
         ...mapGetters('user', ['user']),
-        valid () {
-            return !!this.name && !!this.body
+        ...mapGetters('comment', ['commentsCount', 'commentsChapterCount', 'getAllChapersComm']),
+        ...mapState('other', ['followedStory', 'followedAuthor', 'followUserId', 'followStoryId']),
+        chapterSelected () {
+            if (!this.selecteur) return
+            let arr = []
+            this.chapters.map(c => {
+                arr.push(c)
+            })
+            return arr.find(a => a.id === this.selecteur)
         },
+        allCommWithoutAnswer () {
+            return this.all_comments
+                .filter(a => a.in_reply_to === null)
+        },
+        allChapterCommWithoutAnswer () {
+            return this.chapter_comments
+                .filter(c => (c.in_reply_to === null) && (c.chapter.id === this.selecteur))
+        },
+        getUserLiked () {
+            let data = this.obj_fanfic.users_like
+
+            if (!_.isEmpty(data)) {
+                data.forEach(d => {
+                    if (d.hasOwnProperty('username') && d.username === this.user.username) {
+                        this.like = true
+                    }
+                })
+            }
+        },
+        getAuthorFollowed () {
+            let data = this.followedAuthor
+            if (!_.isEmpty(data)) {
+                data.forEach(d => {
+                    if ((d.id !== undefined ) && (d.hasOwnProperty("user_from") && d.user_from === this.user.id) && (d.hasOwnProperty("user_to") && d.user_to === this.obj_fanfic.author.id)) {
+                        this.followUser = true;
+                        let o = d.id
+                        this.setFollowUserId(o)
+                    }
+                })
+            }
+        },
+        getStoriesFollowed () {
+            let data = this.followedStory
+            if (!_.isEmpty(data)) {
+                data.forEach(d => {
+                    if ((d.id !== undefined ) && (d.hasOwnProperty("from_user") && d.from_user === this.user.id) && (d.hasOwnProperty("to_fanfic") && d.to_fanfic === this.obj_fanfic.id)) {
+                        this.followStory = true;
+                        let y = d.id
+                        this.setFollowStoryId(y)
+                    }
+                })
+            }
+        }
     },
     mixins: [
-        PersistantData('NewComment', [
-            'name',
-            'email',
-            'body',
-        ]),
-        RemoteData({
-            fanfic () {
-                return `fanfics/v1/${this.$route.params.slug}`
-            },
-            chapterList () {
-                return `chapters/${this.$route.params.id}/list?status=publié`
-            },
-            comment () {
-                return `comments/${this.$route.params.id}/fanfic`
-            },
-            CommentByChapter () {
-                return `comments/fanfic/${this.$route.params.id}/list`
-            }
-        }),
+        RemoteData(),
     ],
-    async created () {
-        try {
-            const res_comment = await this.$fetch(`comments/${this.$route.params.id}/fanfic`);
-
-            if (res_comment) {
-                this.total_comments = res_comment.length
-            } else {
-                throw new Error('error')
-            }
-
-            if (this.user && this.user.id !== null) {
-                const res_followUser = await this.$fetch('follow-user')
-                const res_followStories = await this.$fetch('follow-stories')
-
-                if (res_followUser && res_followStories) {
-
-                    this.userFollow = res_followUser
-                    this.fanficFollow = res_followStories
-
-                    // following author
-                    for (let x = 0; x < this.userFollow.length; x++) {
-                        if ((this.userFollow[x].hasOwnProperty("user_from") && this.userFollow[x].user_from === this.user.id) && this.userFollow[x].hasOwnProperty("user_to") && this.userFollow[x].user_to === this.fanfic.author.id) {
-                            this.followUser = true;
-                            this.followUserId = this.userFollow[x].id;
-                        }
-                    }
-                    // following fanfiction
-                    for (let y = 0; y < this.fanficFollow.length; y++) {
-                        if ((this.fanficFollow[y].hasOwnProperty("from_user") && this.fanficFollow[y].from_user === this.user.id) && (this.fanficFollow[y].hasOwnProperty("to_fanfic") && this.fanficFollow[y].to_fanfic === this.fanfic.id)) {
-                            this.followStory = true;
-                            this.followStoryId = this.fanficFollow[y].id;
-                        }
-                    }
-                }
-            }
-
-            // users like fanfic
-            let data = this.fanfic.users_like
-
-            for(let i = 0 ; i < data.length; i++){
-                if(data[i].hasOwnProperty("username") && data[i].username === this.user.username) {
-                    this.like = true;
-                }
-            }
-        } catch (e) {
-            this.error = e
-        }
-
-        this.step = 1;
+    created () {
+        this.fetchFanfic({ slug: this.slug })
+        this.fetchChapters({ id: this.id, status: 'publié'})
+        this.fetchAllComments({ id: this.id })
+        this.fetchChapterComments({ id: this.id })
+        this.fetchFollowStory()
+        this.fetchFollowAuthor()
+    },
+    mounted () {
+        this.$root.$comment = this.$refs.comment.openModal
+        this.$root.$commentForm = this.$refs.commentForm.openModal
     },
     methods: {
-        selectChapter (event) {
-            let targetId = event.currentTarget.id
-            this.target = targetId
-            this.chapterIsVisible = true
-            this.writeToChapterComment = false
+        ...mapActions('fanfic', ['fetchChapters', 'clearChapters', 'fetchFanfic', 'clearFanfic']),
+        ...mapActions('comment', ['fetchAllComments', 'fetchChapterComments', 'postChapterCom', 'postComment', 'clearChapterComments']),
+        ...mapActions('other', ['sendFormPreventAbuse', 'postUnfavorited', 'postFavorited', 'fetchFollowStory', 'fetchFollowAuthor', 'addFollowStory', 'removeFollowStory', 'addFollowAuthor', 'removeFollowAuthor', 'clearFollowAuthor', 'clearFollowStory']),
+        ...mapMutations('comment', ['updateChapterComment', 'addChapterComment']),
+        ...mapMutations('fanfic', ['incrementLike', 'decrementLike']),
+        ...mapMutations('other', ['setFollowUserId', 'setFollowStoryId']),
+        readReviews () {
+            this.$root
+              .$comment(this.obj_fanfic, this.allCommWithoutAnswer)
         },
-        async feedback () {
-            let message = confirm("Seuls les fanfictions ne répondant pas à la charte de bonne conduite du site seront supprimées.");
-            if (message === true) {
-                const result = await this.$fetch('feedback', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        id: this.fanfic.id,
-                    })
-                })
-            }
-        },
-        async favorite () {
-            const result = await this.$fetch('favorite', {
-                method: 'POST',
-                body: JSON.stringify({
-                    id: this.fanfic.id,
-                    user: this.user.id
-                })
-            })
-
-            this.fanfic.total_likes++
-            this.like = true
-        },
-        async unfavorite () {
-            const result = await this.$fetch('unfavorite', {
-                method: 'POST',
-                body: JSON.stringify({
-                    id: this.fanfic.id,
-                    user: this.user.id
-                })
-            })
-
-            this.fanfic.total_likes--
-            this.like = false
-        },
-        async followAuthor () {
-            const result = await this.$fetch('follow-user', {
-                method: 'POST',
-                body: JSON.stringify({
-                    user_from: this.user.id,
-                    user_to: this.fanfic.author.id
-                })
-            })
-            this.followUserId = result.id
-            this.followUser = true;
-        },
-        async DisFollowAuthor () {
-            const result = await this.$fetch('follow-user', {
-                method: 'DELETE',
-                body: JSON.stringify({
-                    id: this.followUserId
-                })
-            })
-
-            this.followUser = false
-        },
-        showModal() {
-            this.isModalVisible = true
-        },
-        closeModal() {
-            this.isModalVisible = false
-        },
-        async followFanfic () {
-            const result = await this.$fetch('follow-stories', {
-                method: 'POST',
-                body: JSON.stringify({
-                    from_user: this.user.id,
-                    to_fanfic: this.fanfic.id
-                })
-            })
-            this.followStoryId = result.id
-            this.followStory = true
-        },
-        async DisFollowFanfic () {
-            const result = await this.$fetch('follow-stories', {
-                method: 'DELETE',
-                body: JSON.stringify({
-                    id: this.followStoryId
-                })
-            })
-
-            this.followStory = false
-        },
-        goStepBack () {
-            this.step = 1;
-        },
-        writeCommentToChapter () {
-            this.writeToChapterComment = true;
-        },
-        async writeComChapter () {
-            const result = await this.$fetch('comments-by-chapter/new', {
-                method: 'POST',
-                body: JSON.stringify({
-                    name: this.name,
-                    email: this.email,
-                    body: this.body,
-                    fanfic: this.fanfic.id,
-                    chapter: $('input[name="chapter"]').val()
-                }),
-            })
-
-            this.name = this.email = this.body = '';
-            this.total_comments++;
-
-            this.CommentByChapter.unshift(result);
-            this.comment.unshift(result);
-            this.CommentByChapter[0].chapter = Object.assign({}, this.CommentByChapter[0].chapter, {title: $('input[name="title"]').val(), order: $('input[name="order"]').val()})
-
-            this.writeToChapterComment = false;
-        },
-        async operation () {
-            const result = await this.$fetch('comments/new', {
-                method: 'POST',
-                body: JSON.stringify({
-                    name: this.name,
-                    email: this.email,
-                    body: this.body,
-                    fanfic: this.fanfic.id,
-                }),
-            })
-            this.goStepBack();
-            this.name = this.email = this.body = '';
-            this.total_comments++;
-            this.comment.unshift(result);
-
-            this.closeModal();
+        readReviewsChapters () {
+            this.$root
+              .$comment(this.chapterSelected, this.allChapterCommWithoutAnswer)
         },
         writeComment () {
-            this.step = 2;
+            this.$root
+              .$commentForm(this.obj_fanfic, this.allCommWithoutAnswer)
+              .then(res => {
+                  if (res.status) {
+                      let data = res.r
+                     this.postComment(data)
+                  }
+              })
+              .catch(err => console.log(err))
+        },
+        writeChapterComment () {
+            this.$root
+              .$commentForm(this.chapterSelected, this.allChapterCommWithoutAnswer)
+              .then(res => {
+                  if (res.status) {
+                      let data = res.r
+                      this.datas = data
+                      this.postChapterCom(data)
+                  }
+              })
+              .catch(err => console.log(err))
+        },
+        printFanfic () {
+            window.open(`/help/fanfic/${this.obj_fanfic.id}/pdf`, '_blank')
+        },
+        feedback () {
+            let message = confirm(this.$t('message.feedBackTextLabel'));
+            if (message === true) {
+                this.sendFormPreventAbuse({ id: this.obj_fanfic.id })
+            }
+        },
+        favorite () {
+            this.postFavorited({ id: this.obj_fanfic.id, user: this.user.id })
+            this.incrementLike(this.obj_fanfic)
+            this.like = true
+        },
+        unfavorite () {
+            this.postUnfavorited({ id: this.obj_fanfic.id, user: this.user.id })
+            this.decrementLike(this.obj_fanfic)
+            this.like = false
+        },
+        followAuthor () {
+            this.addFollowAuthor({ user_from: this.user.id, user_to: this.obj_fanfic.author.id })
+            this.followUser = true;
+        },
+        DisFollowAuthor () {
+            this.removeFollowAuthor({ id: this.followUserId })
+            this.followUser = false
+        },
+        followFanfic () {
+            this.addFollowStory({ from_user: this.user.id, to_fanfic: this.obj_fanfic.id })
+            this.followStory = true
+        },
+        DisFollowFanfic () {
+            this.removeFollowStory({ id: this.followStoryId })
+            this.followStory = false
+        }
+    },
+    watch: {
+        datas(val, old) {
+            this.clearChapterComments()
+            if (val) {
+                this.fetchChapterComments({ id: this.id })
+            }
+        },
+        followStory (val, old) {
+            this.clearFollowStory()
+            if (val || !val) {
+                this.fetchFollowStory()
+            }
+        },
+        followUser (val, old) {
+            this.clearFollowAuthor()
+            if (val || !val) {
+                this.fetchFollowAuthor()
+            }
         }
     }
 }
@@ -516,20 +317,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.w-full {
-    margin: 0 auto;
-}
-
-.comment-content {
-    background: white;
-}
-
-.comment-tabs {
-    margin-bottom: 10px;
-}
-
-.tabs li.is-active a {
-    border-bottom: 1px solid;
-    font-weight: bold;
-}
 </style>
