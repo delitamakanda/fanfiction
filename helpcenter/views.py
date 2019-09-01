@@ -187,8 +187,8 @@ def fanfic_pdf(request, fanfic_id):
     Generate pdf output
     """
     try:
-        fanfic = Fanfic.objects.filter(status="publié").get(id=fanfic_id)
-        chapters = Chapter.objects.filter(fanfic=fanfic, status="publié")
+        fanfic = Fanfic.objects.get(id=fanfic_id)
+        chapters = Chapter.objects.filter(fanfic=fanfic)
         html = render_to_string('pdf/fanfic.html', {'fanfic': fanfic, 'chapters': chapters})
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'filename="fanfic_{}.pdf"'.format(fanfic.id)

@@ -157,6 +157,12 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
 Display list of users who liked the fanfic
 """
 class UserFanficSerializer(serializers.ModelSerializer):
+    social = serializers.SerializerMethodField()
+
+    def get_social(self, obj):
+        social_acc = Social.objects.filter(user=obj)
+        serializer = SocialSerializer(social_acc, many=True)
+        return serializer.data
 
     class Meta:
         model = User
@@ -164,6 +170,7 @@ class UserFanficSerializer(serializers.ModelSerializer):
           'id',
           'username',
           'email',
+          'social',
         )
 
 
@@ -348,6 +355,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 class FollowUserListSerializer(serializers.ModelSerializer):
     user_to = UserSerializer(read_only=True)
+    profile = serializers.SerializerMethodField()
+
+    def get_profile(self, obj):
+        user_profile = AccountProfile.objects.filter(user=obj.user_to)
+        serializer = AccountProfileSerializer(user_profile, many=True)
+        return serializer.data
 
     class Meta:
         model = FollowUser
@@ -355,12 +368,13 @@ class FollowUserListSerializer(serializers.ModelSerializer):
             'id',
             'user_from',
             'user_to',
-            'created'
+            'created',
+            'profile'
         )
 
 
 class FollowStoriesListSerializer(serializers.ModelSerializer):
-    to_fanfic = FanficSerializer(read_only=True)
+    to_fanfic = FanficListSerializer(read_only=True)
 
     class Meta:
         model = FollowStories
@@ -393,6 +407,12 @@ class AccountProfileCreateSerializer(serializers.ModelSerializer):
 
 class AccountProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+    social = serializers.SerializerMethodField()
+
+    def get_social(self, obj):
+        social_acc = Social.objects.filter(user=obj.user)
+        serializer = SocialSerializer(social_acc, many=True, read_only=True)
+        return serializer.data
 
     class Meta:
         model = AccountProfile
@@ -402,6 +422,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
             'date_of_birth',
             'photo',
             'bio',
+            'social'
         )
 
 

@@ -116,8 +116,8 @@ CELERY_QUEUES = {
 
 # Cache
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+#     }
+# }

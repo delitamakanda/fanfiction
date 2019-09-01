@@ -109,7 +109,13 @@ class FanficListRemasteredView(generics.ListAPIView):
     ordering = ('title',)
 
     def get_queryset(self):
-        return Fanfic.objects.all()
+        try:
+            user = self.kwargs['username']
+            if user:
+                return Fanfic.objects.filter(author__username=user)
+        except:
+            user = None
+            return Fanfic.objects.all()
 
 
 class FanficCreateView(generics.ListCreateAPIView):
@@ -124,7 +130,14 @@ class FanficCreateView(generics.ListCreateAPIView):
     name='fanfic-create'
 
     def get_queryset(self):
-        return Fanfic.objects.all()
+        try:
+            user = self.kwargs['username']
+            if user:
+                return Fanfic.objects.filter(author__username=user)
+        except:
+            user = None
+            return Fanfic.objects.all()
+
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -157,7 +170,7 @@ method get for retreive and not update
 class FanficListDetailView(generics.RetrieveAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
-    queryset = Fanfic.objects.all().filter(status='publié')
+    queryset = Fanfic.objects.all()
     serializer_class = FanficListSerializer
     name='fanfic-list-detail'
 
