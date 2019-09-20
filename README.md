@@ -2,8 +2,6 @@
 
 > A fanfic application in vue.js and django
 
-[ ![Codeship Status for delitamakanda/fanfiction](https://app.codeship.com/projects/d6c35540-39a2-0136-2546-36a36e9263f1/status?branch=master)](https://app.codeship.com/projects/289961)
-
 ## Build Setup
 
 ``` bash
