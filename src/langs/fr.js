@@ -51,7 +51,7 @@ export default {
         byChapterText: 'Par chapitre',
         AllCommentsText: 'Tous',
         answeredComments: 'Réponses de l\'auteur',
-        connexionUser: 'Vous êtes connecter en tant que {0}',
+        connexionUser: 'Vous êtes connecter en tant que <b>{0}</b>',
         ecrireFanfictions: 'Ecrire une fanfiction',
         removeAccountLabel: 'Supprimer le compte',
         removeAccountText: 'Après la suppression, votre compte sera désactivé et aucune opération ne pourra être effectuer. Supprimer le compte ?',

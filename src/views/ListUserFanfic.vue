@@ -6,7 +6,7 @@
 
         <Loading v-if="remoteDataBusy" />
 
-        <template v-if="this.$route.params.username">
+        <template v-if="this.$route.params.username !== undefined">
             <div class="mb-4 bg-white max-w-sm">
               <div class="sm:flex sm:items-center px-6 py-4">
                 <img v-if="profile.photo !== null" class="block h-24 mx-auto mb-4 sm:mb-0 sm:mr-4 sm:ml-0" :src="profile.photo" alt="">

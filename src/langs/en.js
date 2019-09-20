@@ -114,5 +114,6 @@ export default {
         removeChapterTitle: 'Delete chapter {a} id #{n}',
         removeStoryDisclaimerText: 'Are you sure to delete this story "{a}" id# {n} ?',
         textTitleChapter: 'Chapter title',
+        connexionUser: 'Logged as <b>{0}</b>',
     }
 }

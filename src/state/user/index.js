@@ -1,7 +1,7 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 import router from '../../router'
 import store from '../../store'
-import { getProfile } from '../../api/user'
+import { getProfile, editUserEmail, changePassword } from '../../api/user'
 
 export const namespaced = true;
 
@@ -20,6 +20,9 @@ export const mutations = {
     },
     setProfile (state, data) {
         state.profile = data
+    },
+    setUserEmail (state, data) {
+        state.user.email = data
     }
 };
 
@@ -29,6 +32,12 @@ export const actions = {
     },
     async fetchProfileUser({ commit}, data) {
         return commit('setProfile', await getProfile(data.username));
+    },
+    async changeUserMail({}, data) {
+        await editUserEmail(data.userId, data.email);
+    },
+    async updatePassword({}, data) {
+        await changePassword(data.old_password, data.new_password);
     },
     async connect ({commit}) {
         try {

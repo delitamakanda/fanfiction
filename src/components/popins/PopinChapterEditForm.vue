@@ -14,7 +14,7 @@
                 >
                 <Form
                     class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                    title=""
+                    :title="(obj_chapter.title === undefined) ? '' : obj_chapter.title"
                     :operation="operation"
                     :valid="valid">
                     <div class="mb-4">
@@ -23,7 +23,7 @@
                         </label>
                         <Input
                             name="title"
-                            v-model="title"
+                            v-model="chapterTitle"
                             :placeholder="$t('message.textTitleChapter')"
                             maxlength="255"
                             required />
@@ -35,7 +35,7 @@
                         <Input
                             type="textarea"
                             name="description"
-                            v-model="description"
+                            v-model="chapterDescription"
                             :placeholder="$t('message.descriptionLabel')"
                             maxlength="1000"
                             rows="4" />
@@ -44,14 +44,14 @@
                         <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="text">
                           {{ $t('message.contentLabel') }}
                         </label>
-                        <trumbowyg v-model="text"></trumbowyg>
+                        <trumbowyg v-model="chapterText"></trumbowyg>
                     </div>
                     <div class="mb-4">
                         <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
                           {{ $t('message.textStatus' )}}
                         </label>
                         <div class="relative">
-                          <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="status">
+                          <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="chapterStatus">
                               <option value="">{{ $t('message.selectLabel') }}</option>
                               <option v-for="(status, i) in statusDialogOptions" :key="i" :value="status.key">{{ status.value }}</option>
                           </select>
@@ -65,7 +65,7 @@
                             type="submit"
                             class="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
                             :disabled="!valid">
-                            {{ $t('message.addChapterLabel') }}
+                            {{ $t('message.editChapterTitle') }}
                         </button>
                     </template>
                 </Form>
@@ -88,63 +88,82 @@
 </template>
 
 <script>
-import PersistantData from '../../mixins/PersistantData'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState, mapMutations } from 'vuex'
 
 export default {
     data: () => ({
         dialog: false,
         resolve: null,
         reject: null,
-        fanfic: [],
-        title: '',
-        description: '',
-        text: '',
-        status: '',
-        form: {}
+        form: {},
     }),
-    mixins: [
-        PersistantData('DraftChapter', [
-            'title',
-            'description',
-            'text',
-            'status'
-        ])
-    ],
     computed: {
         ...mapGetters('user', ['user']),
+        ...mapState('fanfic', ['obj_chapter']),
         statusDialogOptions () {
             const choices = [{key: 'brouillon', value: this.$t('message.textDraft')}, {key: 'publié', value: this.$t('message.textPublish')}];
 
             return  choices;
         },
         valid () {
-            return !!this.title && !!this.text && !!this.status
+            return !!this.chapterTitle && !!this.chapterText && !!this.chapterStatus
+        },
+        chapterTitle: {
+            get () {
+                return this.obj_chapter.title
+            },
+            set (val) {
+                this.setChapterTitle(val)
+            }
+        },
+        chapterDescription: {
+            get () {
+                return this.obj_chapter.description
+            },
+            set (val) {
+                this.setChapterDescription(val)
+            }
+        },
+        chapterText: {
+            get () {
+                return this.obj_chapter.text
+            },
+            set (val) {
+                this.setChapterText(val)
+            }
+        },
+        chapterStatus: {
+            get () {
+                return this.obj_chapter.status
+            },
+            set (val) {
+                this.setChapterStatus(val)
+            }
         }
     },
     methods: {
+        ...mapMutations('fanfic', ['setChapterTitle', 'setChapterDescription', 'setChapterText', 'setChapterStatus']),
         close() {
           this.resolve({ status: false })
           this.dialog = false
         },
-        openModal (val) {
-          this.dialog = true
-          this.fanfic = val
-          return new Promise((resolve, reject) => {
-              this.resolve = resolve
-              this.reject = reject
-          })
+        openModal () {
+            this.dialog = true
+            return new Promise((resolve, reject) => {
+                this.resolve = resolve
+                this.reject = reject
+            })
         },
         operation () {
             this.form = {
-                title: this.title,
-                description: this.description,
-                text: this.text,
-                fanfic: this.fanfic.id,
+                chapterId: this.obj_chapter.id,
+                title: this.obj_chapter.title,
+                description: this.obj_chapter.description,
+                text: this.obj_chapter.text,
+                fanfic: this.obj_chapter.fanfic,
                 author: this.user.id,
-                status: this.status
+                status: this.obj_chapter.status
             }
-
             this.validate()
         },
         validate () {

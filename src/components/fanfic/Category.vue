@@ -8,7 +8,7 @@
             </a></div>
         </div>
         <div class="flex">
-            <div @click="readMore(limitationList)" class="flex-1 mb-4 cursor-pointer bg-teal hover:bg-teal-dark text-center text-white font-bold py-2 px-4 rounded-full">{{ $t('message.watchLabel')}} {{ limitationList == 5 ? $t('message.showMore'): $t('message.showLess')}}</div>
+            <div @click="readMore(limitationList)" class="flex-1 mb-4 cursor-pointer bg-teal-500 hover:bg-teal-800 text-center text-white font-bold py-2 px-4 rounded-full">{{ $t('message.watchLabel')}} {{ limitationList == 5 ? $t('message.showMore'): $t('message.showLess')}}</div>
         </div>
     </div>
 </template>

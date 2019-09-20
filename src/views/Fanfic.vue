@@ -7,7 +7,7 @@
         <Form
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
             :title="$t('message.writeStoryLabel')"
-            :operation="editingChapter"
+            :operation="edit"
             :valid="valid"
         >
             <div class="flex flex-wrap -mx-2 mb-6">
@@ -144,65 +144,6 @@
                 </button>
             </template>
         </Form>
-        <div v-if="isEditingChapter">
-            <Form
-                class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                :title="(obj_chapter.title === undefined) ? '' : obj_chapter.title"
-                :operation="editingChapter"
-                :valid="validChapter">
-                <div class="mb-4">
-                    <label class="block tracking-wide text-grey-500 text-xs font-bold mb-2" for="title">
-                      {{ $t('message.textTitleChapter') }}
-                    </label>
-                    <Input
-                        name="title"
-                        v-model="chapterTitle"
-                        :placeholder="$t('message.textTitleChapter')"
-                        maxlength="255"
-                        required />
-                </div>
-                <div class="mb-4">
-                    <label class="block tracking-wide text-grey-500 text-xs font-bold mb-2" for="description">
-                      {{ $t('message.descriptionLabel') }}
-                    </label>
-                    <Input
-                        type="textarea"
-                        name="description"
-                        v-model="chapterDescription"
-                        :placeholder="$t('message.descriptionLabel')"
-                        maxlength="1000"
-                        rows="4" />
-                </div>
-                <div class="mb-4">
-                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="text">
-                      {{ $t('message.contentLabel') }}
-                    </label>
-                    <trumbowyg v-model="chapterText"></trumbowyg>
-                </div>
-                <div class="mb-4">
-                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
-                      {{ $t('message.textStatus' )}}
-                    </label>
-                    <div class="relative">
-                      <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="chapterStatus">
-                          <option value="">{{ $t('message.selectLabel') }}</option>
-                          <option v-for="(status, i) in statusOptions" :key="i" :value="status.key">{{ status.value }}</option>
-                      </select>
-                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                      </div>
-                    </div>
-                </div>
-                <template slot="actions">
-                    <button
-                        type="submit"
-                        class="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
-                        :disabled="!validChapter">
-                        {{ $t('message.editChapterTitle') }}
-                    </button>
-                </template>
-            </Form>
-        </div>
         <table class="w-full text-left m-4" style="border-collapse:collapse">
         <thead>
             <tr>
@@ -229,6 +170,7 @@
         </tbody>
         </table>
         <modal ref="chapterForm"></modal>
+        <popin ref="chapterEditForm"></popin>
     </div>
 </template>
 
@@ -240,6 +182,7 @@ import '@/compiled-icons/edit-pencil'
 import '@/compiled-icons/add-outline'
 
 import modal from '@/components/popins/PopinChapterForm.vue'
+import popin from '@/components/popins/PopinChapterEditForm.vue'
 import confirm from '@/mixins/confirm'
 
 import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
@@ -256,42 +199,10 @@ export default {
         }),
         confirm
     ],
-    components: { modal },
+    components: { modal, popin },
     computed: {
         ...mapGetters('user', ['user']),
         ...mapState('fanfic', ['obj_fanfic', 'obj_chapter', 'chapters', 'genres', 'subcategories', 'categories']),
-        chapterTitle: {
-            get () {
-                return this.obj_chapter.title
-            },
-            set (val) {
-                this.setChapterTitle(val)
-            }
-        },
-        chapterDescription: {
-            get () {
-                return this.obj_chapter.description
-            },
-            set (val) {
-                this.setChapterDescription(val)
-            }
-        },
-        chapterText: {
-            get () {
-                return this.obj_chapter.text
-            },
-            set (val) {
-                this.setChapterText(val)
-            }
-        },
-        chapterStatus: {
-            get () {
-                return this.obj_chapter.status
-            },
-            set (val) {
-                this.setChapterStatus(val)
-            }
-        },
         status: {
             get() {
                 return this.obj_fanfic.status;
@@ -352,11 +263,6 @@ export default {
         valid() {
             return !!this.title;
         },
-        validChapter () {
-            if (this.isEditingChapter) {
-                return !!this.chapterTitle && !!this.chapterText && !!this.chapterStatus
-            }
-        },
         choices: {
             get() {
                 return this.obj_fanfic.genres;
@@ -388,7 +294,6 @@ export default {
             comment: {},
             anwserByComments: [],
             errorFetch: this.$t('message.errorFetch'),
-            isEditingChapter: false,
             error: null,
             classementOptions: [{key: 'g', value: 'G'},{key: '13', value: '13+'},{key: 'r', value: 'R'},{key: '18', value: '18+'}],
             statusOptions: [{key: 'brouillon', value: this.$t('message.textDraft')}, {key: 'publié', value: this.$t('message.textPublish')}],
@@ -409,10 +314,11 @@ export default {
     },
     mounted () {
         this.$root.$chapterForm = this.$refs.chapterForm.openModal
+        this.$root.$chapterEditForm = this.$refs.chapterEditForm.openModal
     },
     methods: {
         ...mapActions('fanfic', ['fetchCategories', 'fetchSubCategories', 'fetchGenres', 'postFanfic', 'fetchFanficsPublishedByAuthor', 'editFanfic', 'fetchChapters', 'fetchChapter', 'changeFanfic', 'removeFanfic', 'postChapter', 'putChapter', 'clearChapter', 'removeChapter']),
-        ...mapMutations('fanfic', ['editGenres', 'editCategory', 'editStatus', 'editTitle', 'editCredits', 'editSubCategory', 'editClassement', 'editDescription', 'editSynopsis', 'setChapterTitle', 'setChapterDescription', 'setChapterText', 'setChapterStatus']),
+        ...mapMutations('fanfic', ['editGenres', 'editCategory', 'editStatus', 'editTitle', 'editCredits', 'editSubCategory', 'editClassement', 'editDescription', 'editSynopsis']),
         deleteChapter (chapterTitle, chapterId) {
             const message = this.$tc('message.removeChapterTitle', chapterTitle, chapterId, {a: chapterTitle, n: chapterId})
 
@@ -427,10 +333,6 @@ export default {
                 this.removeFanfic({ id: this.id })
                 this.$router.replace(this.$route.params.wantedRoute || { name: 'NewFanfic'})
             })
-        },
-        editChapter (chapterId) {
-            this.isEditingChapter = !this.isEditingChapter
-            this.fetchChapter({ id: chapterId })
         },
         edit () {
             this.changeFanfic({
@@ -458,18 +360,17 @@ export default {
               })
               .catch(err => console.log(err))
         },
-        editingChapter () {
-            this.putChapter({
-                chapterId: this.obj_chapter.id,
-                title: this.obj_chapter.title,
-                description: this.obj_chapter.description,
-                text: this.obj_chapter.text,
-                fanfic: this.obj_chapter.fanfic,
-                author: this.user.id,
-                status: this.obj_chapter.status
-            })
+        editChapter ( chapterId ) {
+            this.fetchChapter({ id: chapterId })
 
-            this.isEditingChapter = false
+            this.$root
+                .$chapterEditForm(this.obj_chapter)
+                .then(res => {
+                    if (res.status) {
+                        const data = res.r
+                        this.putChapter(data)
+                    }
+                })
         },
         check(e) {
           if (e.target.checked) {

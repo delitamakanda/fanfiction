@@ -47,11 +47,9 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
     name: 'Password',
-    data(){
-        return {
-            old_password: '',
-            new_password: ''
-        }
+    props: {
+        old_password: String,
+        new_password: String
     },
     mixins: [confirm],
     computed: {
@@ -62,6 +60,22 @@ export default {
       valid () {
         return !!this.old_password && !!this.new_password
       },
+      oldPassword: {
+          get() {
+              return this.old_password;
+          },
+          set(val) {
+              this.$emit('old_password', val)
+          }
+      },
+      newPassword: {
+          get() {
+              return this.new_password;
+          },
+          set(val) {
+              this.$emit('new_password', val)
+          }
+      }
     },
     methods: {
         ...mapActions('user', ['logout']),
@@ -69,7 +83,9 @@ export default {
           const message = this.$t('message.passwordChangedNotification');
 
           this.confirm(message, () => {
-              $.ajax({
+              //this.$emit('old_password', this.oldPassword)
+              //this.$emit('new_password', this.newPassword)
+              /*$.ajax({
                   url: '/api/change-password',
                   type: 'PUT',
                   headers: {
@@ -89,7 +105,7 @@ export default {
                   error: function (error) {
                       console.log(error);
                   }.bind(this)
-              })
+              })*/
           });
       },
     }
