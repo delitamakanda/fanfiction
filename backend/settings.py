@@ -164,17 +164,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-if not DEBUG:
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'dist'),
-        os.path.join(BASE_DIR, 'static'),
-    )
-else:
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-    )
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'dist'),
+    os.path.join(BASE_DIR, 'static'),
+]
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -290,5 +285,6 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:8100',
 	'localhost:4200',
     'fanfiction.eu-west-3.elasticbeanstalk.com',
-	'delitamakanda.github.io'
+	'delitamakanda.github.io',
+    'fanfiction-fr.herokuapp.com',
 )
