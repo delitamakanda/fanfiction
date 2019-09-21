@@ -32,7 +32,8 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='frontend/index.html'), name='index'),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [
     path('markdownx/', include('markdownx.urls')),
