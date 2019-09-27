@@ -1,7 +1,7 @@
 {
   "name": "Fanfiction",
   "short_name": "fanfiction",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#4dc0b5",
