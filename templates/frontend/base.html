@@ -38,7 +38,7 @@
         {% block content %}
         {% endblock %}
         {% render_bundle 'app' 'js' %}
-        <!--<script>
+        <script>
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker
           .register("{% static 'sw.js' %}")
@@ -48,7 +48,7 @@
               console.log(error);
             });
         }
-    </script>-->
+    </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-46115386-9"></script>
     <script>
