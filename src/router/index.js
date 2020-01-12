@@ -3,16 +3,21 @@ import Router from 'vue-router'
 import state from '../state'
 import store from '../store'
 
-import List from '@/views/List'
-import Detail from '@/views/Detail'
+import List from '@/views/fanfics/List'
+import Detail from '@/views/fanfics/Detail'
 import Login from '@/views/Login'
+
 import Dashboard from '@/views/Dashboard'
 import ListUserFanfic from '@/views/ListUserFanfic'
 import NewFanfic from '@/views/NewFanfic'
-import Reviews from '@/views/Reviews'
+import Reviews from '@/views/comments/Reviews'
 import Fanfic from '@/views/Fanfic'
 import EditAccount from '@/views/EditAccount'
-import News from '@/views/News'
+
+import News from '@/views/posts/News'
+
+import Lexique from '@/views/help/Lexique'
+import Faq from '@/views/help/Faq'
 
 import Loading from '@/components/ui/Loading'
 import Form from '@/components/ui/Form'
@@ -69,6 +74,32 @@ const router = new Router({
                 }
             ]
         } },
+        { path: '/faq', name: 'Faq', component: Faq, meta: {
+            title: 'Foire aux questions',
+            metaTags: [
+                {
+                    name: 'description',
+                    content: 'Foire aux questions'
+                },
+                {
+                    name: 'og:description',
+                    content: 'Foire aux questions'
+                }
+            ]
+        }},
+        { path: '/dico', name: 'Lexique', component: Lexique, meta: {
+            title: 'Dico de la fanfiction',
+            metaTags: [
+                {
+                    name: 'description',
+                    content: 'Dico de la fanfiction'
+                },
+                {
+                    name: 'og:description',
+                    content: 'Dico de la fanfiction'
+                }
+            ]
+        }},
         { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true, title: 'Tableau de bord' },
             children: [
                 { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic, meta: { title: 'Mes fanfictions', private: true } },

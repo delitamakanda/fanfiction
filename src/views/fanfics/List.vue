@@ -31,7 +31,7 @@
 </template>
 
 <script>
-    import RemoteData from '../mixins/RemoteData'
+    import RemoteData from '@/mixins/RemoteData'
     import Category from '@/components/fanfic/Category'
     import Fanfic from '@/components/fanfic/Fanfic'
 
