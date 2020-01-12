@@ -12,6 +12,8 @@ from api import api
 from api import api_auth
 
 urlpatterns = [
+    path('help/', include('helpcenter.api.urls')),
+
     path('fanfics/', views_fanfic.FanficCreateView.as_view(), name='fanfic-create'),
     path('fanfics/<str:username>', views_fanfic.FanficCreateView.as_view(), name='fanfic-create-author'),
     path('fanfics/v1/<str:username>', views_fanfic.FanficListRemasteredView.as_view(), name='fanfic-list-remastered-author'),

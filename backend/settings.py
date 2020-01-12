@@ -60,8 +60,13 @@ INSTALLED_APPS += [
     'rest_framework',
     'rest_framework.authtoken',
     'webpack_loader',
+    'fanfics',
+    'comments',
+    'categories',
+    'chapters',
     'helpcenter',
     'accounts',
+    'posts',
     'api.apps.ApiConfig',
 ]
 
@@ -290,7 +295,6 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 CORS_ORIGIN_WHITELIST = (
     'localhost:8100',
 	'localhost:4200',
-    'fanfiction.eu-west-3.elasticbeanstalk.com',
 	'delitamakanda.github.io',
     'fanfiction-fr.herokuapp.com',
 )
