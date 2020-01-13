@@ -25,9 +25,9 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ``` bash
 # set an virtual env
-virtualenv venv -p python3
+virtualenv fanfiction -p python3
 
-source venv/bin/activate
+source fanfiction/bin/activate
 
 pip install -r requirements-dev.txt
 
