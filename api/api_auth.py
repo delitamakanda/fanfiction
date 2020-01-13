@@ -9,19 +9,17 @@ from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from api.serializers import ChangePasswordSerializer
 from api.serializers import UserSerializer
-from api.serializers import DeleteProfilePhotoSerializer
-from api.serializers import SocialSignUpSerializer
+from accounts.api.serializers import DeleteProfilePhotoSerializer, SocialSignUpSerializer
 
 from social_django.utils import load_strategy
 from social_django.utils import load_backend
 from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
 from social_core.exceptions import AuthAlreadyAssociated
 
-from api.models import AccountProfile
+from accounts.models import AccountProfile
 
 from api.custompermission import IsAuthenticatedOrCreate
 
-# Create your api views here.
 class SocialSignUp(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = SocialSignUpSerializer
@@ -126,7 +124,7 @@ class LoginView(views.APIView):
         # if not profile.filter(user=user).exists():
             # AccountProfile.objects.create(user=user)
 
-        request.session.set_expiry(3600)
+        request.session.set_expiry(7200)
         login(request, user)
         return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 

@@ -9,20 +9,17 @@ from django.template.loader import get_template
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 
-from api.models import Fanfic
-from api.models import Chapter
-from api.models import FollowStories
-from api.models import FollowUser
+from fanfics.models import Fanfic
+from chapters.models import Chapter
 
-from api.serializers import ChapterSerializer
-from api.serializers import FanficSerializer
-from api.serializers import FollowStoriesSerializer
-from api.serializers import FollowUserSerializer
+from accounts.models import FollowStories, FollowUser
+
+from fanfics.api.serializers import FanficSerializer
+from accounts.api.serializers import FollowStoriesSerializer, FollowUserSerializer
 from api.serializers import ChangePasswordSerializer
-from api.serializers import UserSerializer
+from accounts.api.serializers import UserSerializer
 
 
-# Create your api views here.
 class EmailFeedbackView(views.APIView):
     """
     Feedback email

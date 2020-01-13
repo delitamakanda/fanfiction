@@ -1,57 +1,24 @@
 import json
 
-from django.core import serializers
-
-from django.utils import timezone
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.contrib.contenttypes.models import ContentType
+from django_filters import AllValuesFilter, DateTimeFilter, NumberFilter
 
 from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from django_filters import AllValuesFilter, DateTimeFilter, NumberFilter
-from rest_framework.throttling import ScopedRateThrottle
-from api.models import Fanfic
-from api.models import Comment
-from api.models import Chapter
-from api.models import Category
-from api.models import SubCategory
-from api.models import FlatPages
-from api.models import Notification
 
-from django.contrib.contenttypes.models import ContentType
+from fanfics.models import Fanfic
+from api.models import FlatPages, Notification
 
-from api.serializers import ChapterSerializer
-from api.serializers import CommentSerializer
-from api.serializers import CommentCreateSerializer
-from api.serializers import CategorySerializer
-from api.serializers import SubCategorySerializer
-from api.serializers import GenresSerializer
 from api.serializers import FlatPagesSerializer
 from api.serializers import NotificationSerializer
-from api.serializers import UserSerializer
 from api.serializers import ContentTypeSerializer
 
 from api import custompermission
-
-from .tasks import chapter_created
-
-"""
-Liste des genres
-"""
-
-class GenresListView(generics.ListAPIView):
-    queryset = Fanfic.objects.all()[:1]
-    serializer_class = GenresSerializer
-    pagination_class = None
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    name='genre-list'
-
 
 """
 FlatPages
@@ -99,110 +66,6 @@ class FlatPagesHTMLByTypeView(generics.RetrieveAPIView):
 
 
 """
-Liste des chapitres
-"""
-
-class ChapterListView(generics.ListAPIView):
-    serializer_class = ChapterSerializer
-    name='chapter-list'
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    pagination_class = None
-    filter_fields = (
-        'status',
-    )
-
-    def get_queryset(self):
-        fanfic = self.kwargs['fanfic']
-        return Chapter.objects.filter(fanfic=fanfic)
-
-
-
-class ChapterCreateView(generics.CreateAPIView):
-    queryset = Chapter.objects.all()
-    serializer_class = ChapterSerializer
-    name='chapter-create'
-    permission_classes = (
-        permissions.IsAuthenticated,
-        custompermission.IsCurrentAuthorOrReadOnly
-    )
-    pagination_class = None
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-        chapter_created.delay(serializer.data['id'])
-
-
-
-class ChapterDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Chapter.objects.all()
-    serializer_class = ChapterSerializer
-    name='chapter-detail'
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        custompermission.IsCurrentAuthorOrReadOnly
-    )
-
-    def perform_update(self, serializer):
-        serializer.save(author=self.request.user)
-
-"""
-Liste des catégories
-"""
-
-class CategoryListView(generics.ListCreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-    )
-    name='category-list'
-    filter_fields = (
-        'name',
-    )
-    search_fields = (
-        '^name',
-    )
-    ordering_fields = (
-        'name',
-    )
-    pagination_class = None
-
-
-class CategoryDetailView(generics.RetrieveAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    name='category-detail'
-
-
-"""
-Liste des sous-catégories
-"""
-
-class SubCategoryListView(generics.ListAPIView):
-    queryset = SubCategory.objects.all()
-    serializer_class = SubCategorySerializer
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    name='subcategory-list'
-    pagination_class = None
-
-
-class SubCategoryDetailView(generics.RetrieveAPIView):
-    queryset = SubCategory.objects.all()
-    serializer_class = SubCategorySerializer
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    name='subcategory-detail'
-
-
-"""
 Notification generics views
 """
 
@@ -245,6 +108,7 @@ class ApiRootView(generics.GenericAPIView):
             'category': reverse('category-list', request=request),
             'sub-category': reverse('subcategory-list', request=request),
             'users': reverse('user-list', request=request),
+            'tags' : reverse('tag-list', request=request),
             'posts' : reverse('post-list', request=request),
             'pages': reverse('all-pages', request=request),
             'genres': reverse('genre-list', request=request),

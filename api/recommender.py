@@ -1,7 +1,7 @@
 import redis
 
 from django.conf import settings
-from api.models import Fanfic
+from fanfics.models import Fanfic
 
 # connect to redis
 

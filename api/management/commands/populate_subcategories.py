@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from api.models import Category
-from api.models import SubCategory
+from categories.models import Category, SubCategory
 
 
 class Command(BaseCommand):
@@ -48,7 +47,7 @@ class Command(BaseCommand):
             SubCategory.objects.create(name="Divers %s" % category_jeux_role, category=category_jeux_role)
         if not SubCategory.objects.filter(name="Divers %s" % category_musique).exists():
             SubCategory.objects.create(name="Divers %s" % category_musique, category=category_musique)
-        #if not SubCategory.objects.filter(name="Divers %s" % category_books).exists():
-            #SubCategory.objects.create(name="Divers %s" % category_books, category=category_books)
+        if not SubCategory.objects.filter(name="Divers %s" % category_books).exists():
+            SubCategory.objects.create(name="Divers %s" % category_books, category=category_books)
 
             self.stdout.write(self.style.SUCCESS('Created subcategories'))

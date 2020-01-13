@@ -1,0 +1,109 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from django.http import Http404
+
+from rest_framework import generics, permissions, filters, status
+from rest_framework.throttling import ScopedRateThrottle
+from rest_framework.reverse import reverse
+from rest_framework.response import Response
+
+from fanfics.models import Fanfic, Genres
+
+from fanfics.api.serializers import GenresSerializer, FanficSerializer
+
+from api import custompermission, recommender
+
+from api.tasks import fanfic_created
+
+class GenresListView(generics.ListAPIView):
+    queryset = Genres.objects.all()
+    serializer_class = GenresSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    name='genre-list'
+
+
+class FanficCreateApiView(generics.ListCreateAPIView):
+    serializer_class = FanficSerializer
+    permission_classes = (
+        permissions.AllowAny,
+        custompermission.IsCurrentAuthorOrReadOnly
+    )
+    filter_backends = (
+        filters.SearchFilter,
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
+    filter_fields = (
+        'category',
+        'subcategory',
+        'status',
+    )
+    search_fields = (
+        'title',
+        'description',
+        'credits',
+        'synopsis',
+    )
+    ordering_fields = (
+        'title',
+        'created'
+    )
+    ordering = ('title',)
+    name='fanfic-create'
+
+    def get_queryset(self):
+        try:
+            user = self.kwargs['username']
+            if user:
+                return Fanfic.objects.filter(author__username=user)
+        except:
+            user = None
+            return Fanfic.objects.all()
+
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+        # launch asynchronous tasks
+        fanfic_created.delay(serializer.data['id'])
+
+
+class FanficDetailView(generics.RetrieveUpdateDestroyAPIView):
+    throttle_scope = 'fanfic'
+    throttle_classes = (ScopedRateThrottle,)
+    queryset = Fanfic.objects.all()
+    serializer_class = FanficSerializer
+    name='fanfic-detail'
+    permission_classes = (
+        permissions.AllowAny,
+        custompermission.IsCurrentAuthorOrReadOnly,
+    )
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+
+            session_key = 'viewed_fanfic_{}'.format(instance.pk)
+
+            if not self.request.session.get(session_key, False):
+                instance.views += 1
+                instance.save()
+                self.request.session[session_key] = True
+
+
+            r = recommender.Recommender()
+            most_viewed_fanfic = Fanfic.objects.all().order_by('-views')[0]
+            liked_fanfics = r.fanfics_liked([instance, most_viewed_fanfic])
+
+            serializer = self.get_serializer(instance)
+            data = serializer.data
+            return Response(data, status=status.HTTP_200_OK)
+        except Http404:
+            headers = ""
+            response = {"status": "False", "message": "Details not found", "data": ""}
+            return Response(response, status=status.HTTP_404_NOT_FOUND, headers=headers)
+
+    def perform_update(self, serializer):
+        serializer.save(author=self.request.user)

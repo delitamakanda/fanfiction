@@ -8,11 +8,10 @@ from django.core.mail import send_mail
 from django.core.mail import send_mass_mail
 from django.core import management
 
-from api.models import Fanfic
-from api.models import Chapter
-from api.models import Comment
-from api.models import FollowStories
-from api.models import FollowUser
+from fanfics.models import Fanfic
+from chapters.models import Chapter
+from comments.models import Comment
+from accounts.models import FollowStories, FollowUser
 
 logger = get_task_logger(__name__)
 

@@ -1,9 +1,8 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
-from api.models import Fanfic
-from api.models import Category
-from api.models import SubCategory
+from fanfics.models import Fanfic
+from categories.models import Category, SubCategory
 
 class Command(BaseCommand):
     help = 'create dummy data to initialize fanfiction'

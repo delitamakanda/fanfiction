@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from api.models import Category
+from categories.models import Category
 
 class Command(BaseCommand):
     help = 'create dummy data to initialize fanfiction'

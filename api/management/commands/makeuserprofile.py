@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 
 from django.core.management.base import BaseCommand
 
-from api.models import AccountProfile
+from accounts.models import AccountProfile
 
 class Command(BaseCommand):
     help = 'create profile for user'

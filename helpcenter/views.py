@@ -15,14 +15,13 @@ from django.template.loader import get_template, render_to_string
 from django.http import HttpResponse, Http404
 from django.core.exceptions import ObjectDoesNotExist
 
-from helpcenter.models import Lexique
-from helpcenter.models import FoireAuxQuestions
-from api.models import Fanfic
-from api.models import Chapter
-from helpcenter.models import Board
-from helpcenter.models import Topic
-from helpcenter.models import Message
-from api.models import AccountProfile
+from helpcenter.models import Lexique, FoireAuxQuestions
+
+from fanfics.models import Fanfic
+from chapters.models import Chapter
+from helpcenter.models import Board, Topic, Message
+
+from accounts.models import AccountProfile
 
 from api.decorators import login_check
 
