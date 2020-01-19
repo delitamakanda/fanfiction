@@ -26,9 +26,9 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-    path(_('accounts/'), include('accounts.urls')),
-    path(_('help/'), include('helpcenter.urls')),
+    path('api/', include(('api.urls', 'api'), namespace='api')),
+    path(_('accounts/'), include(('accounts.urls', 'accounts'), namespace='accounts')),
+    path(_('help/'), include(('helpcenter.urls', 'helpcenter'), namespace='helpcenter')),
     path('', TemplateView.as_view(template_name='frontend/index.html'), name='index'),
 ]
 

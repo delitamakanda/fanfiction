@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<form id="form" role="form" action="{% url 'search' %}" method="post">
+<form id="form" role="form" action="{% url 'helpcenter:search' %}" method="post">
     {% csrf_token %}
     <input name="search"
            id="search"
@@ -16,7 +16,7 @@
            class="w-full"
 
            placeholder="Rechercher une définition"
-           ic-post-to="{% url 'search-ajax-submit' %}"
+           ic-post-to="{% url 'helpcenter:search-ajax-submit' %}"
            ic-trigger-on="keyup changed"
            ic-trigger-delay="300ms"
            ic-target="#search-result-container"

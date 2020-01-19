@@ -6,22 +6,42 @@ from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 
-from fanfics.models import Fanfic, Genres
+from fanfics.models import Fanfic
 
-from fanfics.api.serializers import GenresSerializer, FanficSerializer
+from fanfics.api.serializers import GenresSerializer, FanficSerializer, StatusSerializer, ClassementSerializer, FanficFormattedSerializer
 
 from api import custompermission, recommender
 
 from api.tasks import fanfic_created
 
 class GenresListView(generics.ListAPIView):
-    queryset = Genres.objects.all()
+    queryset = Fanfic.objects.all()[:1]
     serializer_class = GenresSerializer
     pagination_class = None
     permission_classes = (
         permissions.AllowAny,
     )
     name='genre-list'
+
+
+class ClassementListView(generics.ListAPIView):
+    queryset = Fanfic.objects.all()[:1]
+    serializer_class = ClassementSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    name='classement-list'
+
+
+class StatusListView(generics.ListAPIView):
+    queryset = Fanfic.objects.all()[:1]
+    serializer_class = StatusSerializer
+    pagination_class = None
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    name='status-list'
 
 
 class FanficCreateApiView(generics.ListCreateAPIView):
@@ -52,6 +72,12 @@ class FanficCreateApiView(generics.ListCreateAPIView):
     )
     ordering = ('title',)
     name='fanfic-create'
+
+    def get_serializer_class(self):
+        if self.request.method == 'post':
+            return self.serializer_class
+        else:
+            return FanficFormattedSerializer
 
     def get_queryset(self):
         try:

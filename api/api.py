@@ -15,9 +15,8 @@ from chapters.models import Chapter
 from accounts.models import FollowStories, FollowUser
 
 from fanfics.api.serializers import FanficSerializer
-from accounts.api.serializers import FollowStoriesSerializer, FollowUserSerializer
+from accounts.api.serializers import FollowStoriesSerializer, FollowUserSerializer, UserSerializer
 from api.serializers import ChangePasswordSerializer
-from accounts.api.serializers import UserSerializer
 
 
 class EmailFeedbackView(views.APIView):

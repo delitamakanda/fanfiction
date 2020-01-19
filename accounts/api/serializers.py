@@ -13,45 +13,6 @@ from api.customserializer import Base64ImageField
 from api.utils import create_notification
 
 
-class UserFanficSerializer(serializers.ModelSerializer):
-    social = serializers.SerializerMethodField()
-    fanfics = serializers.SerializerMethodField()
-    stories = serializers.SerializerMethodField()
-    authors = serializers.SerializerMethodField()
-
-    def get_social(self, obj):
-        social_acc = Social.objects.filter(user=obj)
-        serializer = SocialSerializer(social_acc, many=True)
-        return serializer.data
-
-    def get_fanfics(self, obj):
-        fanfics = Fanfic.objects.filter(author=obj)
-        serializer = FanficSerializer(fanfics, many=True)
-        return serializer.data
-
-    def get_stories(self, obj):
-        stories = FollowStories.objects.filter(from_user=obj)
-        serializer = FanficSerializer(stories, many=True)
-        return serializer.data
-
-    def get_authors(self, obj):
-        authors = FollowUser.objects.filter(user_from=obj)
-        serializer = UserSerializer(authors, many=True)
-        return serializer.data
-
-    class Meta:
-        model = User
-        fields = (
-          'id',
-          'username',
-          'email',
-          'social',
-          'fanfics',
-          'authors',
-          'stories',
-        )
-
-
 class UserSerializer(serializers.ModelSerializer):
     fanfics = FanficSerializer(many=True, read_only=True)
 

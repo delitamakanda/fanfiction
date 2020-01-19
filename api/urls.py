@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.decorators.cache import cache_page
 from rest_framework.documentation import include_docs_urls
+
 from api import views
 from api import api as api_core
 from api import api_auth
@@ -29,18 +30,17 @@ urlpatterns = [
     path('pages', views.FlatPagesView.as_view(), name='all-pages'),
     path('notifications', views.NotificationListView.as_view(), name='notifications'),
     path('contenttype/<int:pk>', views.ContentTypeView.as_view(), name='contenttype-detail'),
-    
 
-    path('fanfics/', include('fanfics.api.urls')),
-    path('chapters/', include('chapters.api.urls')),
-    path('reviews/', include('comments.api.urls')),
-    path('help/', include('helpcenter.api.urls')),
-    path('news/', include('posts.api.urls')),
-    path('auth/', include('accounts.api.urls')),
-    path('categories/', include('categories.api.urls')),
+    path('', include('accounts.api.urls')),
+    path('', include('helpcenter.api.urls')),
+    path('', include('categories.api.urls')),
+    path('', include('chapters.api.urls')),
+    path('', include('fanfics.api.urls')),
+    path('', include('posts.api.urls')),
+    path('', include('comments.api.urls')),
 
     path('docs', include_docs_urls(title='Fanfiction API', public=True)),
-    path('', views.ApiRootView.as_view(), name=views.ApiRootView.name),
+    path('api-root', views.ApiRootView.as_view(), name=views.ApiRootView.name),
 ]
 
 if settings.DEBUG:

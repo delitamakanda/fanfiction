@@ -64,6 +64,7 @@ class Fanfic(models.Model):
     subcategory = models.ForeignKey(SubCategory, related_name="sub_categories", on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
+    fanfic_is_scraped = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-publish',)
@@ -78,14 +79,3 @@ class Fanfic(models.Model):
 
     def __str__(self):
         return self.title
-
-class Genres(models.Model):
-    name = models.CharField(choices=Fanfic.GENRES_CHOICES, default='RO', max_length=4)
-
-    class Meta:
-        ordering = ('name',)
-        verbose_name = 'genre'
-        verbose_name_plural = 'genres'
-
-    def __str__(self):
-        return self.name
