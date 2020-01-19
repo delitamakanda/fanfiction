@@ -43,6 +43,22 @@ class StatusSerializer(serializers.ModelSerializer):
         return Fanfic.STATUS_CHOICES
 
 
+class SocialSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Social
+        fields = (
+            'id',
+            'account',
+            'network',
+            'nichandle',
+            'user',
+        )
+    
+    def create(self, validated_data):
+        return Social.objects.create(**validated_data)
+
+
 class UserFanficSerializer(serializers.ModelSerializer):
     social = serializers.SerializerMethodField()
     fanfics = serializers.SerializerMethodField()
@@ -147,8 +163,8 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
     genres = serializers.CharField()
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
-    #author = UserFanficSerializer(read_only=True)
-    #users_like = UserFanficSerializer(read_only=True, many=True)
+    author = UserFanficSerializer(read_only=True)
+    users_like = UserFanficSerializer(read_only=True, many=True)
     recommended_fanfics = serializers.SerializerMethodField()
 
     class Meta:
@@ -195,3 +211,46 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
         recommended_fanfics = r.suggest_fanfics_for([obj], 6)
         serializer = FanficSerializer(recommended_fanfics, many=True)
         return serializer.data
+
+
+class UserSerializer(serializers.ModelSerializer):
+    fanfics = FanficSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+          'id',
+          'username',
+          'first_name',
+          'last_name',
+          'fanfics',
+          'password',
+          'email',
+          'is_active',
+          'is_staff',
+          'is_superuser',
+          'date_joined',
+        )
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User(
+            email = validated_data["email"],
+            username = validated_data["username"]
+        )
+        user.set_password(validated_data["password"])
+        user.save()
+        create_notification(user, 'a créé un compte')
+        mail_admins("Account creation", "An user has created an account.")
+        return user
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError('Cette e-mail est déja utilisée.')
+        return value
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.password = validated_data.get('password', instance.password)
+        instance.save()
+        return instance

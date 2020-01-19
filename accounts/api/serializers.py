@@ -6,55 +6,11 @@ from rest_framework import serializers
 from accounts.models import Social, AccountProfile, FollowStories, FollowUser
 from fanfics.models import Fanfic
 
-from fanfics.api.serializers import FanficSerializer
+from fanfics.api.serializers import FanficSerializer, UserSerializer
 
 from api.customserializer import Base64ImageField
 
 from api.utils import create_notification
-
-
-class UserSerializer(serializers.ModelSerializer):
-    fanfics = FanficSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = User
-        fields = (
-          'id',
-          'username',
-          'first_name',
-          'last_name',
-          'fanfics',
-          'password',
-          'email',
-          'is_active',
-          'is_staff',
-          'is_superuser',
-          'date_joined',
-        )
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = User(
-            email = validated_data["email"],
-            username = validated_data["username"]
-        )
-        user.set_password(validated_data["password"])
-        user.save()
-        create_notification(user, 'a créé un compte')
-        mail_admins("Account creation", "An user has created an account.")
-        return user
-
-    def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError('Cette e-mail est déja utilisée.')
-        return value
-
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.password = validated_data.get('password', instance.password)
-        instance.save()
-        return instance
-
 
 class AccountProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -87,22 +43,6 @@ class DeleteProfilePhotoSerializer(serializers.ModelSerializer):
         instance.photo.delete()
         instance.save()
         return instance
-
-
-class SocialSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Social
-        fields = (
-            'id',
-            'account',
-            'network',
-            'nichandle',
-            'user',
-        )
-    
-    def create(self, validated_data):
-        return Social.objects.create(**validated_data)
 
 
 class SocialSignUpSerializer(serializers.ModelSerializer):

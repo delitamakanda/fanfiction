@@ -5,8 +5,8 @@ from rest_framework import generics, permissions
 
 from api import custompermission
 
-from accounts.api.serializers import UserSerializer, SocialSerializer, AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer
-from fanfics.api.serializers import UserFanficSerializer
+from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer
+from fanfics.api.serializers import UserFanficSerializer, SocialSerializer, UserSerializer
 
 from accounts.models import AccountProfile, FollowUser, FollowStories, Social
 
