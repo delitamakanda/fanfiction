@@ -147,7 +147,7 @@ def communities_view_topic_messages_reply(request, pk, topic_pk):
             topic.last_updated = timezone.now()
             topic.save()
 
-            topic_url = reverse('board_topic_message', kwargs={'pk': pk, 'topic_pk': topic_pk})
+            topic_url = reverse('helpcenter:board_topic_message', kwargs={'pk': pk, 'topic_pk': topic_pk})
             topic_message_url = '{url}?page={page}#{id}'.format(
                 url=topic_url,
                 id=message.pk,
