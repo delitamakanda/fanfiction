@@ -85,7 +85,7 @@ export default {
         confirm,
         RemoteData({
             account () {
-                return `users/${this.user.id}/edit/profile`;
+                return `auth/users/${this.user.id}/edit/profile`;
             }
         })
     ],
@@ -104,7 +104,7 @@ export default {
 
           this.confirm(message, () => {
               $.ajax({
-                  url: `/api/users/${this.user.id}/edit/profile`,
+                  url: `/api/auth/users/${this.user.id}/edit/profile`,
                   type: 'PUT',
                   headers: {
                       "X-CSRFToken": get_cookie("csrftoken")

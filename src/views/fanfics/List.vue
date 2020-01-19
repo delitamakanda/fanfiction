@@ -21,9 +21,10 @@
 
         <div class="flex flex-wrap -mx-2">
             <fanfic
-                v-for="(fanfic,i) in fanfics"
+                v-for="(fanfic,i) in fanfics.results"
                 class="mb-4 w-full px-1 md:w-1/2"
                 :fanfic="fanfic"
+                :displayDescription="true"
                 :key="i"
             />
         </div>
@@ -53,13 +54,15 @@
             }
         },
         computed: {
-            ...mapState('fanfic', ['fanfics', 'categories']),
+            ...mapState('fanfic', ['fanfics']),
+            ...mapState('category', ['categories']),
             categoryName () {
                 return this.selected;
             }
         },
         methods: {
-            ...mapActions('fanfic', ['fetchCategories', 'clearFanficsPublished', 'fetchFanficsPublished', 'fetchFanficsPublishedCategory', 'fetchFanficsPublishedSearch']),
+            ...mapActions('category', ['fetchCategories']),
+            ...mapActions('fanfic', ['clearFanficsPublished', 'fetchFanficsPublished', 'fetchFanficsPublishedCategory', 'fetchFanficsPublishedSearch']),
             getSearchFanfics () {
                 this.fetchFanficsPublishedSearch({ status: 'publié', search_term: `${this.search_term}`})
                 this.selected = ''

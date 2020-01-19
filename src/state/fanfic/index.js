@@ -1,32 +1,18 @@
-import { getFanficsPublish, getCategories, getGenres, getEditFanfic, getSubcategories, getFanficsPublishCategory, getFanficsPublishSearch, getChapters, getFanfic, getFanficsPublishByAuthor, getStarredAuthor, getStarredFanfic, postFanfic, getChapter, putFanfic, deleteFanfic, createChapter, updateChapter, deleteChapter } from '@/api/fanfic';
+import { getFanficsPublish, getGenres, getEditFanfic, getFanficsPublishCategory, getFanficsPublishSearch, getFanfic, getFanficsPublishByAuthor, getStarredAuthor, getStarredFanfic, postFanfic, putFanfic, deleteFanfic } from '@/api/fanfic';
 
 export const namespaced = true;
 
 export const state = {
-    categories: [],
-    subcategories: [],
     genres: [],
+    status: [],
+    classement: [],
     fanfics: [],
-    chapters: [],
-    obj_chapter: [],
     obj_fanfic: [],
     starred_authors: [],
     starred_fanfics: [],
 };
 
 export const mutations = {
-    setChapterTitle (state, data) {
-        state.obj_chapter.title = data;
-    },
-    setChapterDescription (state, data) {
-        state.obj_chapter.description = data;
-    },
-    setChapterText (state, data) {
-        state.obj_chapter.text = data;
-    },
-    setChapterStatus (state, data) {
-        state.obj_chapter.status = data;
-    },
     setStarredAuthors (state, data) {
         state.starred_authors = data
     },
@@ -38,12 +24,6 @@ export const mutations = {
     },
     editGenres (state, data) {
         state.obj_fanfic.genres = data
-    },
-    editCategory (state, data) {
-        state.obj_fanfic.category = data
-    },
-    editSubCategory (state, data) {
-        state.obj_fanfic.subcategory = data
     },
     editTitle(state, data) {
         state.obj_fanfic.title = data
@@ -66,12 +46,6 @@ export const mutations = {
     decrementLike (state, data) {
         state.obj_fanfic.total_likes--
     },
-    setCategories (state, data) {
-        state.categories = data
-    },
-    setSubCategories (state, data) {
-        state.subcategories = data
-    },
     setGenres (state, data) {
         state.genres = data
     },
@@ -81,42 +55,13 @@ export const mutations = {
     createFanfic (state, data) {
         state.fanfics.push(data)
     },
-    setChapters (state, data) {
-        state.chapters = data
-    },
-    setChapter (state, data) {
-        state.obj_chapter = data
-    },
-    addChapter (state, data) {
-        state.chapters.push(data)
-    },
+    
     setFanfic (state, data) {
         state.obj_fanfic = data
-    },
-    editedChapter (state, data) {
-        let tmp = state.chapters.find(c => data.chapterId === c.id)
-        Object.assign(tmp, data)
-    },
-    deletedChapter (state, data) {
-        let tmp = state.chapters.filter(c => c.id !== data.id)
-        state.chapters = tmp
     }
 };
 
 export const actions = {
-    async putChapter({commit}, data) {
-        commit('editedChapter', data)
-        await updateChapter(data.chapterId, data.title, data.description,data.text,data.fanfic, data.author, data.status);
-    },
-    async postChapter({commit}, data) {
-        return commit('addChapter', await createChapter(data.title,data.description,data.text,data.fanfic, data.author,data.status));
-    },
-    async fetchChapter ({commit}, data) {
-        return commit('setChapter', await getChapter(data.id));
-    },
-    clearChapter ({commit}) {
-        return commit('setChapter', []);
-    },
     async fetchFanfic ({commit}, data) {
         return commit('setFanfic', await getFanfic(data.slug));
     },
@@ -125,12 +70,6 @@ export const actions = {
     },
     clearFanfic ({commit}) {
         return commit('setFanfic', []);
-    },
-    async fetchCategories ({commit}) {
-        return commit('setCategories', await getCategories());
-    },
-    async fetchSubCategories ({commit}) {
-        return commit('setSubCategories', await getSubcategories());
     },
     async fetchGenres ({commit}) {
         return commit('setGenres', await getGenres());
@@ -147,10 +86,6 @@ export const actions = {
     async removeFanfic({}, data) {
         await deleteFanfic(data.id);
     },
-    async removeChapter({commit}, data) {
-        commit('deletedChapter', data);
-        await deleteChapter(data.id);
-    },
     async fetchFanficsPublishedByAuthor ({commit}, data) {
         return commit('setFanfics', await getFanficsPublishByAuthor(data.status, data.author));
     },
@@ -162,12 +97,6 @@ export const actions = {
     },
     clearFanficsPublished ({commit}) {
         return commit('setFanfics', [])
-    },
-    async fetchChapters ({commit}, data) {
-        return commit('setChapters', await getChapters(data.id, data.status));
-    },
-    clearChapters ({commit}) {
-        return commit('setChapters', []);
     },
     async fetchStarredAuthors ({commit}, data) {
         return commit('setStarredAuthors', await getStarredAuthor(data.author));

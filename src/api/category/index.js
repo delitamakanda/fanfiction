@@ -1,17 +1,17 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 
-export function getLexique() {
-    return $fetch('lexique')
-    .then(res => res.results)
+export function getCategories() {
+    return $fetch('category')
+    .then(res => res)
     .catch(err => {
         console.log(err);
         throw err;
     });
 }
 
-export function getFaq() {
-    return $fetch('faq')
-    .then(res => res.results)
+export function getSubcategories() {
+    return $fetch('subcategory')
+    .then(res => res)
     .catch(err => {
         console.log(err);
         throw err;

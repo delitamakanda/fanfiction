@@ -6,6 +6,9 @@ import * as fanfic from './state/fanfic'
 import * as other from './state/other'
 import * as user from './state/user'
 import * as help from './state/help'
+import * as post from './state/post'
+import * as category from './state/category'
+import * as chapter from './state/chapter'
 
 Vue.use(Vuex)
 
@@ -16,7 +19,10 @@ const store = new Vuex.Store({
         fanfic,
         other,
         user,
-        help
+        help,
+        post,
+        category,
+        chapter,
     }
 })
 

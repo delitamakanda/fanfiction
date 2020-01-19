@@ -1,5 +1,5 @@
 <template>
-    
+    <div>Lexique</div>
 </template>
 
 <script>

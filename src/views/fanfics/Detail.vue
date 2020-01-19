@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+    <!-- <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         {{ errorFetch }}
     </div>
 
@@ -106,7 +106,7 @@
         </div>
     </div>
     <popin ref="comment"></popin>
-    <modal ref="commentForm"></modal>
+    <modal ref="commentForm"></modal>-->
 </div>
 </template>
 
@@ -146,10 +146,11 @@ export default {
         }
     },
     computed: {
-        ...mapState('fanfic', ['obj_fanfic', 'chapters']),
-        ...mapState('comment', ['all_comments', 'chapter_comments']),
+        ...mapState('fanfic', ['obj_fanfic']),
+        ...mapState('chapter', ['chapters']),
+        ...mapState('comment', ['comments']),
         ...mapGetters('user', ['user']),
-        ...mapGetters('comment', ['commentsCount', 'commentsChapterCount', 'getAllChapersComm']),
+        ...mapGetters('comment', ['commentsCount']),
         ...mapState('other', ['followedStory', 'followedAuthor', 'followUserId', 'followStoryId']),
         chapterSelected () {
             if (!this.selecteur) return
@@ -158,14 +159,6 @@ export default {
                 arr.push(c)
             })
             return arr.find(a => a.id === this.selecteur)
-        },
-        allCommWithoutAnswer () {
-            return this.all_comments
-                .filter(a => a.in_reply_to === null)
-        },
-        allChapterCommWithoutAnswer () {
-            return this.chapter_comments
-                .filter(c => (c.in_reply_to === null) && (c.chapter.id === this.selecteur))
         },
         getUserLiked () {
             let data = this.obj_fanfic.users_like
@@ -208,9 +201,8 @@ export default {
     ],
     created () {
         this.fetchFanfic({ slug: this.slug })
-        this.fetchChapters({ id: this.id, status: 'publié'})
-        this.fetchAllComments({ id: this.id })
-        this.fetchChapterComments({ id: this.id })
+        //this.fetchChapters({ id: this.id, status: 'publié'})
+        //this.fetchAllComments({ id: this.id })
         this.fetchFollowStory()
         this.fetchFollowAuthor()
     },
@@ -219,8 +211,9 @@ export default {
         this.$root.$commentForm = this.$refs.commentForm.openModal
     },
     methods: {
-        ...mapActions('fanfic', ['fetchChapters', 'clearChapters', 'fetchFanfic', 'clearFanfic']),
-        ...mapActions('comment', ['fetchAllComments', 'fetchChapterComments', 'postChapterCom', 'postComment', 'clearChapterComments']),
+        ...mapActions('fanfic', ['fetchFanfic', 'clearFanfic']),
+        ...mapActions('comment', ['fetchAllComments', 'postComment']),
+        ...mapActions('chapter', ['fetchChapters', 'clearChapters']),
         ...mapActions('other', ['sendFormPreventAbuse', 'postUnfavorited', 'postFavorited', 'fetchFollowStory', 'fetchFollowAuthor', 'addFollowStory', 'removeFollowStory', 'addFollowAuthor', 'removeFollowAuthor', 'clearFollowAuthor', 'clearFollowStory']),
         ...mapMutations('comment', ['updateChapterComment', 'addChapterComment']),
         ...mapMutations('fanfic', ['incrementLike', 'decrementLike']),
