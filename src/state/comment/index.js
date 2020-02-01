@@ -21,7 +21,7 @@ export const actions = {
         return commit('addComment', await postComment(data.name, data.email, data.body, data.fanfic, data.chapter));
     },
     async fetchAllComments ({commit}, data) {
-        return commit('setAllComments', await getComments(data.id, data.chapterId, data.isActive));
+        return commit('setAllComments', await getComments(data.id, data.isActive));
     },
     async clearComments ({commit}) {
         state.comments = []
@@ -30,7 +30,6 @@ export const actions = {
 
 export const getters = {
     commentsCount: state => {
-        return (state.comments != undefined ? state.comments
-        .filter( a => a.in_reply_to === null) : []).length
+        return state.comments.length
     }
 };

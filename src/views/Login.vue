@@ -7,7 +7,7 @@
         :valid="valid">
             <div class="mb-4">
                 <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
-                    {{ $t('message.UsernameOrEmailLabel') }}
+                    {{ $t('message.username') }}
                 </label>
                 <Input
                     :text="username"

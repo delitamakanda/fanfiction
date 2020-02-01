@@ -1,4 +1,4 @@
-import { getFanficsPublish, getGenres, getEditFanfic, getFanficsPublishCategory, getFanficsPublishSearch, getFanfic, getFanficsPublishByAuthor, getStarredAuthor, getStarredFanfic, postFanfic, putFanfic, deleteFanfic } from '@/api/fanfic';
+import { getFanficsPublish, getGenres, getEditFanfic, getFanficsPublishCategory, getFanficsPublishSearch, getFanfic, getFanficsPublishByAuthor, getStarredAuthor, getStarredFanfic, postFanfic, putFanfic, deleteFanfic, getClassement, getStatus } from '@/api/fanfic';
 
 export const namespaced = true;
 
@@ -7,7 +7,7 @@ export const state = {
     status: [],
     classement: [],
     fanfics: [],
-    obj_fanfic: [],
+    obj_fanfic: {},
     starred_authors: [],
     starred_fanfics: [],
 };
@@ -22,32 +22,17 @@ export const mutations = {
     incrementLike (state, data) {
         state.obj_fanfic.total_likes++
     },
-    editGenres (state, data) {
-        state.obj_fanfic.genres = data
-    },
-    editTitle(state, data) {
-        state.obj_fanfic.title = data
-    },
-    editSynopsis(state, data) {
-        state.obj_fanfic.synopsis = data
-    },
-    editCredits(state, data) {
-        state.obj_fanfic.credits = data
-    },
-    editDescription(state, data) {
-        state.obj_fanfic.description = data
-    },
-    editClassement(state, data) {
-        state.obj_fanfic.classement = data
-    },
-    editStatus(state, data) {
-        state.obj_fanfic.status = data
-    },
     decrementLike (state, data) {
         state.obj_fanfic.total_likes--
     },
     setGenres (state, data) {
         state.genres = data
+    },
+    setClassement (state, data) {
+        state.classement = data
+    },
+    setStatus (state, data) {
+        state.status = data
     },
     setFanfics (state, data) {
         state.fanfics = data
@@ -55,7 +40,6 @@ export const mutations = {
     createFanfic (state, data) {
         state.fanfics.push(data)
     },
-    
     setFanfic (state, data) {
         state.obj_fanfic = data
     }
@@ -74,10 +58,17 @@ export const actions = {
     async fetchGenres ({commit}) {
         return commit('setGenres', await getGenres());
     },
+    async fetchStatus ({commit}) {
+        return commit('setStatus', await getStatus());
+    },
+    async fetchClassement ({commit}) {
+        return commit('setClassement', await getClassement());
+    },
     async fetchFanficsPublished ({commit}, data) {
         return commit('setFanfics', await getFanficsPublish(data.status));
     },
     async postFanfic ({commit}, data) {
+        console.log(data)
         return commit('createFanfic', await postFanfic(data.title, data.description, data.synopsis, data.credits, data.author, data.genres, data.classement, data.status, data.category, data.subcategory));
     },
     async changeFanfic({commit}, data) {

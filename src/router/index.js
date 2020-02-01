@@ -7,14 +7,16 @@ import List from '@/views/fanfics/List'
 import Detail from '@/views/fanfics/Detail'
 import Login from '@/views/Login'
 
-import Dashboard from '@/views/Dashboard'
-import ListUserFanfic from '@/views/ListUserFanfic'
-import NewFanfic from '@/views/NewFanfic'
+import Dashboard from '@/views/admin/Dashboard'
+import ListUserFanfic from '@/views/fanfics/ListUserFanfic'
+import NewFanfic from '@/views/fanfics/NewFanfic'
+import EditFanfic from '@/views/fanfics/EditFanfic'
 import Reviews from '@/views/comments/Reviews'
 import Fanfic from '@/views/Fanfic'
 import EditAccount from '@/views/EditAccount'
 
 import News from '@/views/posts/News'
+import EditNews from '@/views/posts/EditNews'
 
 import Lexique from '@/views/help/Lexique'
 import Faq from '@/views/help/Faq'
@@ -60,6 +62,7 @@ const router = new Router({
             ]
         } },
         { path: '/fanfic/detail/:slug', name: 'Detail', component: Detail, props: true},
+        { path: '/reviews', name: 'Reviews', component: Reviews, meta: { title: 'Mes reviews' }, props: true },
         { path: '/login', name: 'Login', component: Login, meta: { guest: true, title: 'Créer un compte ou se connecter à l\'espace membre' } },
         { path: '/news', name: 'News', component: News, meta: {
             title: 'News du site Fanfiction',
@@ -100,21 +103,19 @@ const router = new Router({
                 }
             ]
         }},
-        { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { private: true, title: 'Tableau de bord' },
+        { path: '/dashboard', name: 'Dashboard', redirect: '/dashboard/create', component: Dashboard, meta: { private: true, title: 'Tableau de bord' },
             children: [
-                { path: 'fanfics', name: 'ListUserFanfic', component: ListUserFanfic, meta: { title: 'Mes fanfictions', private: true } },
+                { path: 'fanfics/:username/list', name: 'ListUserFanfic', component: ListUserFanfic, props: true , meta: { title: 'Mes fanfictions', private: true } },
                 { path: 'create', name: 'NewFanfic', component: NewFanfic, meta: { title: 'Ecrire une fanfiction', private: true } },
-                { path: 'reviews', name: 'Reviews', component: Reviews, meta: { title: 'Mes reviews', private: true } },
                 // { path: 'new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, meta: { title: 'Ecrire un chapitre', private: true } },
                 // { path: 'update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: NewChapter, props: true, meta: { title: 'Editer un chapitre', private: true } },
-                { path: 'fanfic/:id', name: 'Fanfic', component: Fanfic, props: true, meta: { title: 'Voir la fanfiction', private: true } },
+                { path: 'fanfic/:id', name: 'EditFanfic', component: EditFanfic, props: true, meta: { title: 'Voir la fanfiction', private: true } },
                 { path: 'edit-account', name: 'EditAccount', component: EditAccount, meta: { title: 'Edition du compte personnel', private: true } },
-                // TODO: ajout d'une news
-                //{ path: 'edit-news', name: 'EditAccount', component: EditAccount, meta: { title: 'Ajout/Edition de news', private: true, is_admin: true } },
+                { path: 'edit-news', name: 'EditNews', component: EditNews, meta: { title: 'Ajout/Edition de news', private: true, is_staff: true } },
             ]
         },
         { path: '*', component: List, redirect: '/' },
-        { path: '/fanfics/:username/show', name: 'ShowUserFanfic', component: ListUserFanfic, props: true, title: 'Voir les fanfictions d\'un utilisateur' },
+        { path: '/fanfics/:username/show', name: 'ShowUserFanfic', component: ListUserFanfic, props: true, meta: { title: 'Voir les fanfictions d\'un utilisateur' } },
     ],
     mode: 'hash',
     scrollBehavior (to, from, savedPosition) {

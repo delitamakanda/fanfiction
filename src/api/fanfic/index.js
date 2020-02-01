@@ -3,7 +3,7 @@ import VueFetch, { $fetch } from '../../plugins/fetch'
 export function getFanficsPublish(status) {
     if (typeof status === 'undefined') { return ; }
     return $fetch(`fanfics/?status=${status}`)
-    .then(res => res)
+    .then(res => res.results)
     .catch(err => {
         console.log(err);
         throw err;
@@ -13,7 +13,7 @@ export function getFanficsPublish(status) {
 export function getFanficsPublishByAuthor(status, authorUsername) {
     if (typeof status === 'undefined') { return ; }
     return $fetch(`fanfics/${authorUsername}?status=${status}`)
-    .then(res => res)
+    .then(res => res.results)
     .catch(err => {
         console.log(err);
         throw err;
@@ -22,7 +22,7 @@ export function getFanficsPublishByAuthor(status, authorUsername) {
 
 export function getFanficsPublishCategory(status, categoryId) {
     return $fetch(`fanfics/?status=${status}&category=${categoryId}`)
-    .then(res => res)
+    .then(res => res.results)
     .catch(err => {
         console.log(err);
         throw err;
@@ -32,7 +32,7 @@ export function getFanficsPublishCategory(status, categoryId) {
 export function getFanficsPublishSearch(status, searchTerm) {
     if (typeof status === 'undefined') { return ; }
     return $fetch(`fanfics/?status=${status}&search=${searchTerm}`)
-    .then(res => res)
+    .then(res => res.results)
     .catch(err => {
         console.log(err);
         throw err;
@@ -49,7 +49,7 @@ export function getFanfic(slug) {
 }
 
 export function getEditFanfic(id) {
-    return $fetch(`fanfics/${id}/detail`)
+    return $fetch(`fanfics/${id}/fanfic-detail`)
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -77,7 +77,9 @@ export function getStarredFanfic(authorUsername) {
 
 export function getGenres() {
     return $fetch('genres')
-    .then(res => res)
+    .then(res => {
+        return res[0].genres;
+    })
     .catch(err => {
         console.log(err);
         throw err;
@@ -86,7 +88,7 @@ export function getGenres() {
 
 export function getClassement() {
     return $fetch('classement')
-    .then(res => res)
+    .then(res => res[0].classement)
     .catch(err => {
         console.log(err);
         throw err;
@@ -95,7 +97,7 @@ export function getClassement() {
 
 export function getStatus() {
     return $fetch('status')
-    .then(res => res)
+    .then(res => res[0].status)
     .catch(err => {
         console.log(err);
         throw err;

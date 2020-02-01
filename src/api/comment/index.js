@@ -1,7 +1,7 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 
-export function getComments(fanficId, chapterId, isActive) {
-    return $fetch(`comments/?fanfic=${fanficId}&chapter=${chapterId}&active=${isActive}`)
+export function getComments(fanficId, isActive) {
+    return $fetch(`comments/?fanfic=${fanficId}&active=${isActive}`)
     .then(res => res)
     .catch(err => {
         console.log(err);

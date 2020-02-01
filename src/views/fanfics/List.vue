@@ -7,7 +7,7 @@
         </div>
 
         <form class="w-full">
-            <div class="flex items-center py-2"">
+            <div class="flex items-center py-2">
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-3" type="text" :placeholder="$t('message.searchLabelFanfiction')" v-model="search_term" aria-label="Search">
                 <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" @click.prevent="getSearchFanfics">{{ $t('message.searchLabel') }}</button>
             </div>
@@ -15,17 +15,17 @@
 
         <category :categories="categories" @selectedCategory="categorySelected" />
 
-        <div class="text-xl mb-4 font-bold" v-if="selected !== '' || search_term !== ''">
+        <div class="text-xl mb-4 font-bold" v-if="selected != '' || search_term != ''">
             {{ categoryName }}
         </div>
 
-        <div class="flex flex-wrap -mx-2">
+        <div class="flex flex-wrap -mx-2" v-if="fanfics">
             <fanfic
-                v-for="(fanfic,i) in fanfics.results"
+                v-for="item in fanfics"
                 class="mb-4 w-full px-1 md:w-1/2"
-                :fanfic="fanfic"
+                :fanfic="item"
                 :displayDescription="true"
-                :key="i"
+                :key="item.id"
             />
         </div>
     </div>

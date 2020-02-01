@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="error bg-red-200 border border-red-200 text-red-500 px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
+        <!--<div class="error bg-red-200 border border-red-200 text-red-500 px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
             {{ errorFetch }}
         </div>
         <Loading v-if="remoteDataBusy" />
@@ -168,9 +168,7 @@
                 </td>
             </tr>
         </tbody>
-        </table>
-        <modal ref="chapterForm"></modal>
-        <popin ref="chapterEditForm"></popin>
+        </table>-->
     </div>
 </template>
 
@@ -181,122 +179,24 @@ import '@/compiled-icons/trash'
 import '@/compiled-icons/edit-pencil'
 import '@/compiled-icons/add-outline'
 
-import modal from '@/components/popins/PopinChapterForm.vue'
-import popin from '@/components/popins/PopinChapterEditForm.vue'
-import confirm from '@/mixins/confirm'
-
 import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 
 export default {
     mixins: [
-        RemoteData({
-            comments () {
-                return `comments/fanfic/${this.id}/list`
-            },
-            anwserByComments () {
-                return `comments/${this.id}/fanfic`;
-            }
-        }),
+        RemoteData({}),
         confirm
     ],
-    components: { modal, popin },
     computed: {
         ...mapGetters('user', ['user']),
-        ...mapState('fanfic', ['obj_fanfic', 'obj_chapter', 'chapters', 'genres', 'subcategories', 'categories']),
-        status: {
-            get() {
-                return this.obj_fanfic.status;
-            },
-            set(val) {
-                this.editStatus(val)
-            }
-        },
-        category: {
-            get() {
-                return this.obj_fanfic.category;
-            },
-            set (val) {
-                this.editCategory(val)
-            }
-        },
-        synopsis: {
-            get() {
-                return this.obj_fanfic.synopsis;
-            },
-            set(val) {
-                this.editSynopsis(val)
-            }
-        },
-        subcategory: {
-            get() {
-                return this.obj_fanfic.subcategory;
-            },
-            set(val) {
-                this.editSubCategory(val)
-            }
-        },
-        title: {
-            get() {
-                return this.obj_fanfic.title;
-            },
-            set(val) {
-                this.editTitle(val)
-            }
-        },
-        classement: {
-            get() {
-                return this.obj_fanfic.classement;
-            },
-            set(val) {
-                this.editClassement(val)
-            }
-        },
-        totalComments() {
-            return this.comments.length
-        },
-        totalAnwsersComment(){
-            return this.anwserByComments.length
-        },
-        totalEffectiveComment() {
-            return (this.totalAnwsersComment - this.totalComments)
-        },
+        //...mapState('fanfic', ['obj_fanfic', 'obj_chapter', 'chapters', 'genres', 'subcategories', 'categories']),
         valid() {
             return !!this.title;
-        },
-        choices: {
-            get() {
-                return this.obj_fanfic.genres;
-            },
-            set(val) {
-                this.editGenres(val)
-            }
-        },
-        description: {
-            get () {
-                return this.obj_fanfic.description;
-            },
-            set(val) {
-                this.editDescription(val)
-            }
-        },
-        credits: {
-            get() {
-                return this.obj_fanfic.credits;
-            },
-            set(val) {
-                this.editCredits(val)
-            }
         }
     },
     data () {
         return {
-            comments: [],
-            comment: {},
-            anwserByComments: [],
             errorFetch: this.$t('message.errorFetch'),
-            error: null,
-            classementOptions: [{key: 'g', value: 'G'},{key: '13', value: '13+'},{key: 'r', value: 'R'},{key: '18', value: '18+'}],
-            statusOptions: [{key: 'brouillon', value: this.$t('message.textDraft')}, {key: 'publié', value: this.$t('message.textPublish')}],
+            error: null
         }
     },
     props: {
@@ -306,19 +206,17 @@ export default {
         }
     },
     created () {
-        this.editFanfic({ id: this.id })
-        this.fetchChapters({ id: this.id, status: '' })
-        this.fetchCategories ()
-        this.fetchSubCategories ()
-        this.fetchGenres ()
+        //this.editFanfic({ id: this.id })
+        // this.fetchChapters({ id: this.id, status: '' })
+        //this.fetchCategories ()
+        //this.fetchSubCategories ()
+        //this.fetchGenres ()
     },
     mounted () {
-        this.$root.$chapterForm = this.$refs.chapterForm.openModal
-        this.$root.$chapterEditForm = this.$refs.chapterEditForm.openModal
     },
     methods: {
-        ...mapActions('fanfic', ['fetchCategories', 'fetchSubCategories', 'fetchGenres', 'postFanfic', 'fetchFanficsPublishedByAuthor', 'editFanfic', 'fetchChapters', 'fetchChapter', 'changeFanfic', 'removeFanfic', 'postChapter', 'putChapter', 'clearChapter', 'removeChapter']),
-        ...mapMutations('fanfic', ['editGenres', 'editCategory', 'editStatus', 'editTitle', 'editCredits', 'editSubCategory', 'editClassement', 'editDescription', 'editSynopsis']),
+        //...mapActions('fanfic', ['fetchCategories', 'fetchSubCategories', 'fetchGenres', 'postFanfic', 'fetchFanficsPublishedByAuthor', 'editFanfic', 'fetchChapters', 'fetchChapter', 'changeFanfic', 'removeFanfic', 'postChapter', 'putChapter', 'clearChapter', 'removeChapter']),
+        //...mapMutations('fanfic', ['editGenres', 'editCategory', 'editStatus', 'editTitle', 'editCredits', 'editSubCategory', 'editClassement', 'editDescription', 'editSynopsis']),
         deleteChapter (chapterTitle, chapterId) {
             const message = this.$tc('message.removeChapterTitle', chapterTitle, chapterId, {a: chapterTitle, n: chapterId})
 

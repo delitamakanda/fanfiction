@@ -71,6 +71,7 @@ export default {
         greetLabel: 'Hi',
         lireFanfictionsLabel: 'Read fanfictions',
         newsLabel: 'News',
+        newsEditingLabel: 'Add / Edit news',
         aideLabel: 'Help',
         searchLabel: 'Search',
         searchLabelFanfiction: 'Search on Fanfiction...',
