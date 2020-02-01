@@ -11,6 +11,7 @@ class CommentCreateApiView(generics.ListCreateAPIView):
     permission_classes = (
         permissions.AllowAny,
     )
+    pagination_class = None
     filter_fields = (
         'fanfic',
         'chapter',
