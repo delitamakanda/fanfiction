@@ -385,7 +385,7 @@ export default {
             }
         },
         chapters(val, oldVal) {
-            if (val) {
+            if (this.chapters && this.chapters.length) {
                 this.selecteur = this.chapters[0].id
             }
         }
