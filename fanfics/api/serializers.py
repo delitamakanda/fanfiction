@@ -128,6 +128,7 @@ class FanficSerializer(serializers.ModelSerializer):
           'subcategory',
           'views',
           'fanfic_is_scraped',
+          'link_fanfic',
         )
         lookup_field = 'slug'
 
@@ -160,7 +161,7 @@ class FanficSerializer(serializers.ModelSerializer):
 class FanficFormattedSerializer(serializers.ModelSerializer):
     category = serializers.CharField()
     subcategory = serializers.CharField()
-    genres = serializers.CharField()
+    genres = serializers.CharField(source='get_genres_display')
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
     author = UserFanficSerializer(read_only=True)
@@ -193,6 +194,7 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
           'recommended_fanfics',
           'views',
           'fanfic_is_scraped',
+          'link_fanfic',
         )
         lookup_field = 'slug'
 

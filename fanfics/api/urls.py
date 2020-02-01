@@ -9,4 +9,5 @@ urlpatterns = [
     path('fanfics/', fanfic_views.FanficCreateApiView.as_view(), name='fanfic-list'),
     path('fanfics/<str:username>', fanfic_views.FanficCreateApiView.as_view(), name='fanfic-list-by-author'),
     path('fanfics/<str:slug>/detail', fanfic_views.FanficDetailView.as_view(), name='fanfic-detail'),
+    path('fanfics/<int:pk>/fanfic-detail', fanfic_views.FanficUpdateDetailView.as_view(), name='fanfic-update-detail'),
 ]

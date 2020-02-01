@@ -74,10 +74,9 @@ class FanficCreateApiView(generics.ListCreateAPIView):
     name='fanfic-create'
 
     def get_serializer_class(self):
-        if self.request.method == 'post':
-            return self.serializer_class
-        else:
-            return FanficFormattedSerializer
+        if self.request.method == 'POST':
+            return FanficSerializer
+        return FanficFormattedSerializer
 
     def get_queryset(self):
         try:
@@ -95,15 +94,14 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         fanfic_created.delay(serializer.data['id'])
 
 
-class FanficDetailView(generics.RetrieveUpdateDestroyAPIView):
+class FanficDetailView(generics.RetrieveAPIView):
     throttle_scope = 'fanfic'
     throttle_classes = (ScopedRateThrottle,)
     queryset = Fanfic.objects.all()
-    serializer_class = FanficSerializer
+    serializer_class = FanficFormattedSerializer
     name='fanfic-detail'
     permission_classes = (
         permissions.AllowAny,
-        custompermission.IsCurrentAuthorOrReadOnly,
     )
     lookup_field = 'slug'
 
@@ -120,7 +118,8 @@ class FanficDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
             r = recommender.Recommender()
-            most_viewed_fanfic = Fanfic.objects.all().order_by('-views')[0]
+            most_viewed_fanfic = Fanfic.objects.filter(status='publié').order_by('-views')[0]
+            print(most_viewed_fanfic)
             liked_fanfics = r.fanfics_liked([instance, most_viewed_fanfic])
 
             serializer = self.get_serializer(instance)
@@ -130,6 +129,19 @@ class FanficDetailView(generics.RetrieveUpdateDestroyAPIView):
             headers = ""
             response = {"status": "False", "message": "Details not found", "data": ""}
             return Response(response, status=status.HTTP_404_NOT_FOUND, headers=headers)
+
+
+class FanficUpdateDetailView(generics.RetrieveUpdateDestroyAPIView):
+    throttle_scope = 'fanfic'
+    throttle_classes = (ScopedRateThrottle,)
+    queryset = Fanfic.objects.all()
+    serializer_class = FanficSerializer
+    name='fanfic-update-detail'
+    permission_classes = (
+        permissions.AllowAny,
+        custompermission.IsCurrentAuthorOrReadOnly,
+    )
+    lookup_field = 'pk'
 
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)

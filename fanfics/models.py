@@ -65,6 +65,7 @@ class Fanfic(models.Model):
     completed = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
     fanfic_is_scraped = models.BooleanField(default=False)
+    link_fanfic = models.URLField(max_length=200, blank=True, null=True)
 
     class Meta:
         ordering = ('-publish',)
