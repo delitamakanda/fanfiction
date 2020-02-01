@@ -7,9 +7,9 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item"><a href="{% url 'communities_view' %}">{% trans 'Communautés' %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'board_topics' topic.board.pk %}">{{ topic.board.name }}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'board_topic_message' topic.board.pk topic.pk %}">{{ topic.subject }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'helpcenter:communities_view' %}">{% trans 'Communautés' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'helpcenter:board_topics' topic.board.pk %}">{{ topic.board.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'helpcenter:board_topic_message' topic.board.pk topic.pk %}">{{ topic.subject }}</a></li>
     <li class="breadcrumb-item actif">{% trans 'Répondre' %}</li>
 {% endblock %}
 

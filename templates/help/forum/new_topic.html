@@ -2,8 +2,8 @@
 {% load i18n %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item"><a href="{% url 'communities_view' %}">{% trans 'Communautés' %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'helpcenter:communities_view' %}">{% trans 'Communautés' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'helpcenter:board_topics' board.pk %}">{{ board.name }}</a></li>
     <li class="breadcrumb-item actif">{% trans 'Nouveau sujet' %}</li>
 {% endblock %}
 
