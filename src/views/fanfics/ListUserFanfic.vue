@@ -12,7 +12,7 @@
 
     <div class="empty" v-if="fanfics && !fanfics.length">{{ $t('message.emptyMessageFanfiction') }}</div>
 
-    <div class="flex flex-wrap -mx-2" v-if="fanfics && private">
+    <div class="flex flex-wrap -mx-2" v-if="fanfics && this.private">
       <div class="mb-4 w-full px-1 md:w-1/2" v-for="item in fanfics" :key="item.id">
         <router-link
           class="no-underline"
@@ -56,9 +56,16 @@
             </div>
           </div>
         </router-link>
+        <button type="button" 
+          :title="$tc('message.removeStoryDisclaimerText', item.title, item.id, {a: item.title, n: item.id})" 
+          @click="deleteStory(item)"
+          class="bg-blue-500 hover:bg-blue-700 rounded-full text-white font-bold p-2"
+        >
+          <svgicon icon="trash" width="22" height="18" color="#FFFFFF"></svgicon>
+        </button>
       </div>
     </div>
-    <div class="flex flex-wrap -mx-2" v-else="fanfics && !private">
+    <div class="flex flex-wrap -mx-2" v-else>
         <fanfic
             v-for="item in fanfics"
             class="mb-4 w-full px-1 md:w-1/2"
@@ -146,6 +153,7 @@ import "@/compiled-icons/trash";
 import "@/compiled-icons/edit-pencil";
 import "@/compiled-icons/view-show";
 import { mapActions, mapState, mapGetters } from "vuex";
+import confirm from '@/mixins/confirm';
 
 export default {
   created() {
@@ -162,7 +170,10 @@ export default {
     ...mapGetters("user", ["user"]),
     ...mapState("fanfic", ["fanfics"])
   },
-  mixins: [RemoteData({})],
+  mixins: [
+    RemoteData({}),
+    confirm
+  ],
   props: {
     username: {
       type: String,
@@ -191,8 +202,17 @@ export default {
   methods: {
     ...mapActions("fanfic", [
       "fetchFanficsPublishedByAuthor",
-      "clearFanficsPublished"
-    ])
+      "clearFanficsPublished",
+      "removeFanfic"
+    ]),
+    deleteStory (story) {
+      const message = this.$tc('message.removeStoryDisclaimerText', story.title, story.id, { a: story.title, n: story.id })
+
+        this.confirm(message, () => {
+            this.removeFanfic({ id: story.id })
+            this.$router.replace(this.$route.params.wantedRoute || { name: 'NewFanfic'})
+        })
+    },
   },
   components: { Fanfic },
   watch: {

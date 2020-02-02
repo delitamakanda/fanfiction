@@ -14,7 +14,7 @@
                 >
                 <Form
                     class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                    title=""
+                    :title="$t('message.editChapterTitle')"
                     :operation="operation"
                     :valid="valid">
                     <div class="mb-4">
@@ -51,9 +51,9 @@
                           {{ $t('message.textStatus' )}}
                         </label>
                         <div class="relative">
-                          <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="status">
+                          <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="statut">
                               <option value="">{{ $t('message.selectLabel') }}</option>
-                              <option v-for="(status, i) in statusDialogOptions" :key="i" :value="status.key">{{ status.value }}</option>
+                              <option v-for="item in status" :key="item[0]" :value="item[0]">{{ item[1] }}</option>
                           </select>
                           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                               <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -88,19 +88,19 @@
 </template>
 
 <script>
-import PersistantData from '../../mixins/PersistantData'
-import { mapGetters } from 'vuex'
+import PersistantData from '@/mixins/PersistantData'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
     data: () => ({
         dialog: false,
         resolve: null,
         reject: null,
-        fanfic: [],
+        fanfic: {},
         title: '',
         description: '',
         text: '',
-        status: '',
+        statut: '',
         form: {}
     }),
     mixins: [
@@ -108,18 +108,14 @@ export default {
             'title',
             'description',
             'text',
-            'status'
+            'statut'
         ])
     ],
     computed: {
         ...mapGetters('user', ['user']),
-        statusDialogOptions () {
-            const choices = [{key: 'brouillon', value: this.$t('message.textDraft')}, {key: 'publié', value: this.$t('message.textPublish')}];
-
-            return  choices;
-        },
+        ...mapState('fanfic', ['status']),
         valid () {
-            return !!this.title && !!this.text && !!this.status
+            return !!this.title && !!this.text && !!this.statut
         }
     },
     methods: {
@@ -142,7 +138,7 @@ export default {
                 text: this.text,
                 fanfic: this.fanfic.id,
                 author: this.user.id,
-                status: this.status
+                status: this.statut
             }
 
             this.validate()
@@ -180,6 +176,7 @@ export default {
   overflow-y: auto;
   max-width: 750px;
   width: 100%;
+  height: 100%;
 }
 
 .modal-header,
@@ -202,7 +199,8 @@ export default {
 .modal-body {
   position: relative;
   padding: 20px 10px;
-  max-height: 450px;
+  min-height: 450px;
+  height: auto;
   overflow-x: hidden;
   overflow-y: auto;
 }
