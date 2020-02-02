@@ -148,7 +148,7 @@ import "@/compiled-icons/view-show";
 import { mapActions, mapState, mapGetters } from "vuex";
 
 export default {
-  mounted() {
+  created() {
     /* let user = (this.$route.params.username === undefined) ? this.user.username : this.$route.params.username;
         let status = (this.$route.params.username === undefined) ? '' : 'publié';
         this.fetchFanficsPublishedByAuthor({ status: status, author: user })

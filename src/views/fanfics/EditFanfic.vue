@@ -5,7 +5,6 @@
         </div>
         <Loading v-if="remoteDataBusy" />
 
-        {{ obj_fanfic }}
         <Form
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
             :title="$t('message.writeStoryLabel')"
@@ -32,7 +31,7 @@
                       {{ $t('message.textSubcategory') }}
                   </label>
                   <div class="inline-block relative w-64">
-                      <select :disabled="category.length == 0" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id="subcategory" name="subcategory" v-model="subcategory">
+                      <select :disabled="categories && !categories.length" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id="subcategory" name="subcategory" v-model="subcategory">
                           <option value="">{{ $t('message.selectLabel') }}</option>
                           <option v-for="(option, index) of subcategories" v-if="option.category === obj_fanfic.category" v-bind:value="option.id">{{ option.name }}</option>
                       </select>
@@ -54,6 +53,92 @@
                     required
                 />
             </div>
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="synopsis">
+                  {{ $t('message.synopsisLabel') }}
+                </label>
+                <Input
+                    type="textarea"
+                    name="synopsis"
+                    v-model="synopsis"
+                    :placeholder="$t('message.synopsisLabel')"
+                    maxlength="1000"
+                    rows="4" />
+            </div>
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="credits">
+                  {{ $t('message.creditsLabel') }}
+                </label>
+                <Input
+                    type="textarea"
+                    name="credits"
+                    v-model="credits"
+                    :placeholder="$t('message.creditsLabel')"
+                    maxlength="350" />
+            </div>
+            <div class="mb-4">
+                <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="description">
+                  {{ $t('message.descriptionLabel') }}
+                </label>
+                <Input
+                    type="textarea"
+                    name="description"
+                    v-model="description"
+                    :placeholder="$t('message.descriptionLabel')"
+                    maxlength="1000"
+                    rows="4" />
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="classement">
+                      {{ $t('message.textRating') }}
+                    </label>
+                    <div class="inline-block relative w-64">
+                        <select class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id="classement" name="classement" v-model="rating">
+                            <option value="">{{ $t('message.selectLabel') }}</option>
+                            <option v-for="item in classement" :key="item[0]" :value="item[0]">{{ item[1] }}</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2">
+                      {{ $t('message.textGenres') }}
+                    </label>
+                    <div class="relative">
+                        <ul>
+                            <li v-for="(item, index) in genres" :key="index">
+                              <input type="checkbox" :value="item[0]" :id="'checkbox-'+item[0]" v-model="checkedGenres" :name="'checkbox-'+item[0]" @click="check($event)">
+                              <label :for="index">{{ item[1] }}</label>
+                            </li>
+                       </ul>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block tracking-wide text-grey-darker text-xs font-bold mb-2" for="status">
+                      {{ $t('message.textStatus') }}
+                    </label>
+                    <div class="inline-block relative w-64">
+                        <select class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id="status" name="status" v-model="statut">
+                            <option value="">{{ $t('message.selectLabel') }}</option>
+                            <option v-for="item in status" :key="item[0]" :value="item[0]">{{ item[1] }}</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template slot="actions">
+                <button
+                    type="submit"
+                    class="bg-blue-500 w-full hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+                    :disabled="!valid">
+                    {{ $t('message.editStoryLabel') }}
+                </button>
+            </template>
         </Form>
     </div>
 </template>
@@ -87,7 +172,13 @@ export default {
             error: null,
             newCategory: 0,
             newSubCategory: 0,
-            newTitle: ''
+            newTitle: '',
+            newDescription: '',
+            newSynopsis: '',
+            newCredits: '',
+            newGenres: [],
+            newClassement: '',
+            newStatus: ''
         }
     },
     computed: {
@@ -96,7 +187,47 @@ export default {
         ...mapState('chapter', ['chapters']),
         ...mapState('category', ['categories', 'subcategories']),
         valid() {
-            return !!this.title;
+            return true;
+        },
+        statut: {
+            get() {
+                return this.obj_fanfic.status
+            },
+            set(val) {
+                this.newStatus = val
+            }
+        },
+        rating: {
+            get() {
+                return this.obj_fanfic.classement
+            },
+            set(val) {
+                this.newClassement = val
+            }
+        },
+        checkedGenres: {
+            get() {
+                return this.obj_fanfic.genres
+            },
+            set(val) {
+                this.newGenres = val
+            }
+        },
+        credits: {
+            get() {
+                return this.obj_fanfic.credits
+            },
+            set(val) {
+                this.newCredits = val
+            }
+        },
+        synopsis: {
+            get() {
+                return this.obj_fanfic.synopsis
+            },
+            set(val) {
+                this.newSynopsis = val
+            }
         },
         category: {
             get() {
@@ -121,6 +252,14 @@ export default {
             set(val) {
                 this.newSubCategory = val
             }
+        },
+        description: {
+            get() {
+                return this.obj_fanfic.description
+            },
+            set(val) {
+                this.newDescription = val
+            }
         }
     },
     created() {
@@ -137,16 +276,16 @@ export default {
         edit () {
             this.changeFanfic({
                 id: this.id,
-                title: this.newTitle,
-                description: this.obj_fanfic.description,
-                synopsis: this.obj_fanfic.synopsis,
-                credits: this.obj_fanfic.credits,
+                title: this.newTitle ? this.newTitle : this.title,
+                description: this.newDescription ? this.newDescription : this.description,
+                synopsis: this.newSynopsis ? this.newSynopsis : this.synopsis,
+                credits: this.newCredits ? this.newCredits : this.credits,
                 author: this.user.id,
-                genres: this.obj_fanfic.genres,
-                classement: this.obj_fanfic.classement,
-                status: this.obj_fanfic.status,
-                category: this.newCategory,
-                subcategory: this.newSubCategory
+                genres: this.newGenres ? this.newGenres : this.checkedGenres,
+                classement: this.newClassement ? this.newClassement : this.rating,
+                status: this.newStatus ? this.newStatus : this.statut,
+                category: this.newCategory ? this.newCategory : this.category,
+                subcategory: this.newSubCategory ? this.newSubCategory : this.subcategory
             });
         },
         check(e) {

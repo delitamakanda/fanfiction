@@ -104,8 +104,8 @@ export function getStatus() {
     });
 }
 
-export function putFanfic(fanficSlug, title, description, synopsis, credits, userId, genre, classement, status, category, subcategory) {
-    return $fetch(`fanfics/${fanficSlug}/detail`, {
+export function putFanfic(id, title, description, synopsis, credits, userId, genre, classement, status, category, subcategory) {
+    return $fetch(`fanfics/${id}/fanfic-detail`, {
         method: 'put',
         body: JSON.stringify({
             title: title,
@@ -124,11 +124,11 @@ export function putFanfic(fanficSlug, title, description, synopsis, credits, use
     .catch(err => console.log(err));
 }
 
-export function deleteFanfic(fanficSlug) {
-    return $fetch(`fanfics/${fanficSlug}/detail`, {
+export function deleteFanfic(id) {
+    return $fetch(`fanfics/${id}/fanfic-detail`, {
         method: 'delete',
         body: JSON.stringify({
-            slug: fanficSlug
+            id: id
         })
     })
     .then(res => res.json())

@@ -129,7 +129,7 @@
             <template slot="actions">
                 <button
                     type="submit"
-                    class="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+                    class="bg-blue-500  w-full hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
                     :disabled="!valid">
                     {{ $t('message.createStoryLabel') }}
                 </button>
