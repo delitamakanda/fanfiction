@@ -117,6 +117,8 @@ export default {
         addChapterLabel: 'Ajouter un chapitre à l\'histoire',
         editChapterTitle: 'Editer un chapitre',
         removeChapterTitle: 'Supprimer le chapitre {a} no. #{n}',
-        removeStoryDisclaimerText: 'Etes vous certain de supprimer cette histoire "{a}" id# {n} ?'
+        removeStoryDisclaimerText: 'Etes vous certain de supprimer cette histoire "{a}" id# {n} ?',
+        actionsLabel: "Actions",
+        removeChapterLabel: "Supprimer"
     }
 }

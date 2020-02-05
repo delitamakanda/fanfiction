@@ -116,5 +116,7 @@ export default {
         removeStoryDisclaimerText: 'Are you sure to delete this story "{a}" id# {n} ?',
         textTitleChapter: 'Chapter title',
         connexionUser: 'Logged as <b>{0}</b>',
+        actionsLabel: "Actions",
+        removeChapterLabel: "Remove"
     }
 }

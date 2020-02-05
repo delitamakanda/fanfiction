@@ -89,7 +89,7 @@
 
 <script>
 import PersistantData from '@/mixins/PersistantData'
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState, mapActions } from 'vuex'
 
 export default {
     data: () => ({
@@ -97,11 +97,12 @@ export default {
         resolve: null,
         reject: null,
         fanfic: {},
-        title: '',
-        description: '',
-        text: '',
-        statut: '',
-        form: {}
+        form: {},
+        newTitle: '',
+        newDescription: '',
+        newText: '',
+        newStatut: '',
+        isEditing: true
     }),
     mixins: [
         PersistantData('DraftChapter', [
@@ -115,38 +116,79 @@ export default {
         ...mapGetters('user', ['user']),
         ...mapState('fanfic', ['status']),
         valid () {
-            return !!this.title && !!this.text && !!this.statut
+            return !!this.title && !!this.text
+        },
+        title: {
+          get() {
+            return this.isEditing ? this.fanfic.title : ''
+          },
+          set(val) {
+            this.newTitle = val
+          }
+        },
+        description: {
+          get() {
+            return this.isEditing ? this.fanfic.description : ''
+          },
+          set(val) {
+            this.newDescription = val
+          }
+        },
+        text: {
+          get() {
+            return this.isEditing ? this.fanfic.text : ''
+          },
+          set(val) {
+            this.newText = val
+          }
+        },
+        statut: {
+          get() {
+            return this.isEditing ? this.fanfic.status : ''
+          },
+          set(val) {
+            this.newStatut = val
+          }
         }
     },
     methods: {
-        close() {
-          this.resolve({ status: false })
-          this.dialog = false
-        },
-        openModal (val) {
-          this.dialog = true
-          this.fanfic = val
-          return new Promise((resolve, reject) => {
-              this.resolve = resolve
-              this.reject = reject
-          })
-        },
-        operation () {
+      ...mapActions('chapter', ['clearChapter']),
+      close() {
+        this.resolve({ status: false })
+        this.dialog = false
+        this.isEditing = false
+      },
+      openModal (val, val2) {
+        this.dialog = true
+        this.fanfic = val
+        this.isEditing = val2
+        return new Promise((resolve, reject) => {
+          this.resolve = resolve
+          this.reject = reject
+        })
+      },
+      operation () {
             this.form = {
-                title: this.title,
-                description: this.description,
-                text: this.text,
-                fanfic: this.fanfic.id,
+                title: this.newTitle ? this.newTitle : this.title,
+                description: this.newDescription ? this.newDescription : this.description,
+                text: this.newText ? this.newText : this.text,
+                fanfic: this.fanfic.fanfic ? this.fanfic.fanfic : this.fanfic.id,
                 author: this.user.id,
-                status: this.statut
+                status: this.newStatut ? this.newStatut : this.statut
             }
 
             this.validate()
         },
         validate () {
-            this.dialog = false
-            this.resolve({ status: true, r: this.form })
+          this.dialog = false
+          this.isEditing = false
+          this.resolve({ status: true, r: this.form })
         }
+    },
+    watch: {
+      fanfic(val, oldVal) {
+        console.log(val)
+      }
     }
 }
 </script>

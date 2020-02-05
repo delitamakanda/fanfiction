@@ -15,7 +15,7 @@ export const mutations = {
         state.chapter = data
     },
     addChapter (state, data) {
-        state.chapters = data
+        state.chapters.push(data)
     },
     editedChapter (state, data) {
         let tmp = state.chapters.find(c => data.chapterId === c.id)

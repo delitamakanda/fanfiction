@@ -247,13 +247,13 @@
         <tr>
           <th
             class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
-          >Chapitres</th>
+          >{{ $t('message.chapterLabel') }}</th>
           <th
             class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
-          >Status</th>
+          >{{ $t('message.textStatus') }}</th>
           <th
             class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
-          >Actions</th>
+          >{{ $t('message.actionsLabel') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -267,7 +267,7 @@
           >
             <span
               class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-            >Company name</span>
+            >{{ $t('message.chapterLabel') }}</span>
             {{ chapter.title }}
           </td>
           <td
@@ -275,17 +275,17 @@
           >
             <span
               class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-            >Status</span>
-            <span class="rounded bg-red-400 py-1 px-3 text-xs font-bold">{{ chapter.status }}</span>
+            >{{ $t('message.textStatus') }}</span>
+            <span :class="'rounded '+ colorStatus(chapter) +' py-1 px-3 text-xs font-bold'">{{ chapter.status }}</span>
           </td>
           <td
             class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
           >
             <span
               class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-            >Actions</span>
-            <a href="#" class="text-blue-400 hover:text-blue-600 underline">Edit</a>
-            <a href="#" class="text-blue-400 hover:text-blue-600 underline pl-6">Remove</a>
+            >{{ $t('message.actionsLabel') }}</span>
+            <a href="#" @click.prevent="editChapter(chapter)" class="text-blue-400 hover:text-blue-600 underline">{{ $t('message.editChapterTitle')}}</a>
+            <a href="#" @click.prevent="deleteChapter(chapter)" class="text-blue-400 hover:text-blue-600 underline pl-6">{{ $t('message.removeChapterLabel') }}</a>
           </td>
         </tr>
       </tbody>
@@ -335,7 +335,7 @@ export default {
   computed: {
     ...mapGetters("user", ["user"]),
     ...mapState("fanfic", ["obj_fanfic", "genres", "classement", "status"]),
-    ...mapState("chapter", ["chapters"]),
+    ...mapState("chapter", ["chapters", "chapter"]),
     ...mapState("category", ["categories", "subcategories"]),
     valid() {
       return true;
@@ -471,15 +471,43 @@ export default {
         console.log(e.target.value);
       }
     },
+    colorStatus(chapter) {
+      return chapter.status === 'publié' ? 'bg-green-400' : 'bg-red-400';
+    },
     createChapter(story) {
       this.fetchStatus();
-      this.$root.$popin(story).then(res => {
+      this.$root.$popin(story, false).then(res => {
         if (res.status) {
           const data = res.r;
           this.postChapter(data);
         }
       });
-    }
+    },
+    editChapter(chapter) {
+      this.fetchChapter({ id: chapter.id })
+      this.$root.$popin(chapter, true)
+        .then(res => {
+          if (res.status) {
+            const data = res.r
+            this.putChapter({
+              chapterId: chapter.id, 
+              title: data.title, 
+              description: data.description,
+              text: data.text,
+              fanfic: data.fanfic, 
+              author: data.author,
+              status: data.status
+            })
+          }
+      });
+    },
+    deleteChapter (chapter) {
+      const message = this.$tc('message.removeChapterTitle', chapter.title, chapter.id, {a: chapter.title, n: chapter.id})
+      
+      this.confirm(message, () => {
+        this.removeChapter({ id: chapter.id })
+      });
+    },
   },
   watch: {
     newCategory(val, oldVal) {
