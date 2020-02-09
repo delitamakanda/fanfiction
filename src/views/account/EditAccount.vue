@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="px-2 mb-4">
+        <!-- <div class="px-2 mb-4">
             <div class="flex -mx-2">
                 <div class="w-full md:w-1/2 px-2">
                     <edit-user :user="user" @editEmail="emailChanged"></edit-user>
@@ -11,7 +11,7 @@
                     <edit-social></edit-social>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 

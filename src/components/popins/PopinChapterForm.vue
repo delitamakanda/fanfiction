@@ -51,7 +51,7 @@
                           {{ $t('message.textStatus' )}}
                         </label>
                         <div class="relative">
-                          <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="statut">
+                          <select class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow" id="status" v-model="statut" ref="statutSelect">
                               <option value="">{{ $t('message.selectLabel') }}</option>
                               <option v-for="item in status" :key="item[0]" :value="item[0]">{{ item[1] }}</option>
                           </select>
@@ -116,11 +116,11 @@ export default {
         ...mapGetters('user', ['user']),
         ...mapState('fanfic', ['status']),
         valid () {
-            return !!this.title && !!this.text
+            return !!this.title && !!this.text && !!this.statut
         },
         title: {
           get() {
-            return this.isEditing ? this.fanfic.title : ''
+            return this.isEditing ? this.fanfic.title : this.newTitle
           },
           set(val) {
             this.newTitle = val
@@ -128,7 +128,7 @@ export default {
         },
         description: {
           get() {
-            return this.isEditing ? this.fanfic.description : ''
+            return this.isEditing ? this.fanfic.description : this.newDescription
           },
           set(val) {
             this.newDescription = val
@@ -136,7 +136,7 @@ export default {
         },
         text: {
           get() {
-            return this.isEditing ? this.fanfic.text : ''
+            return this.isEditing ? this.fanfic.text : this.newText
           },
           set(val) {
             this.newText = val
@@ -144,7 +144,7 @@ export default {
         },
         statut: {
           get() {
-            return this.isEditing ? this.fanfic.status : ''
+            return this.isEditing ? this.fanfic.status : this.newStatut
           },
           set(val) {
             this.newStatut = val
@@ -162,6 +162,7 @@ export default {
         this.dialog = true
         this.fanfic = val
         this.isEditing = val2
+        
         return new Promise((resolve, reject) => {
           this.resolve = resolve
           this.reject = reject
@@ -187,7 +188,6 @@ export default {
     },
     watch: {
       fanfic(val, oldVal) {
-        console.log(val)
       }
     }
 }

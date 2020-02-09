@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="obj_fanfic && obj_fanfic.author && obj_fanfic.author.username">
     <div class="error bg-red-lightest border border-red-light text-red-dark px-4 py-3 rounded relative" v-if="hasRemoteErrors" role="alert">
         {{ errorFetch }}
     </div>
@@ -39,12 +39,12 @@
             </p>
             </div>
             <div class="flex items-center">
-            <router-link v-if="obj_fanfic && obj_fanfic.author" :key="obj_fanfic.id" :to="{ name: 'ShowUserFanfic', params: { username: obj_fanfic.author.username, slug: obj_fanfic.slug, id: obj_fanfic.id, private: false }}">
-                <avatar v-if="obj_fanfic && obj_fanfic.author" :email="obj_fanfic.author.email" class="h-16 w-16 md:h-10 md:w-10 rounded-full mx-auto" :alt="obj_fanfic.author.username" />
+            <router-link :key="obj_fanfic.id" :to="{ name: 'ShowUserFanfic', params: { username: obj_fanfic.author.username, slug: obj_fanfic.slug, id: obj_fanfic.id, private: false }}">
+                <avatar :email="obj_fanfic.author.email" class="h-16 w-16 md:h-10 md:w-10 rounded-full mx-auto" :alt="obj_fanfic.author.username" />
             </router-link>
             <div class="text-sm">
-                <router-link v-if="obj_fanfic && obj_fanfic.author.username" :key="obj_fanfic.id" :to="{ name: 'ShowUserFanfic', params: { username: obj_fanfic.author.username, slug: obj_fanfic.slug, id: obj_fanfic.id }}">
-                    <p v-if="obj_fanfic && obj_fanfic.author" class="text-gray-900 leading-none">
+                <router-link :key="obj_fanfic.id" :to="{ name: 'ShowUserFanfic', params: { username: obj_fanfic.author.username, slug: obj_fanfic.slug, id: obj_fanfic.id }}">
+                    <p class="text-gray-900 leading-none">
                         {{ obj_fanfic.author.username }}
                     </p>
                 </router-link>

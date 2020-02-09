@@ -13,7 +13,7 @@ import NewFanfic from '@/views/fanfics/NewFanfic'
 import EditFanfic from '@/views/fanfics/EditFanfic'
 import Reviews from '@/views/comments/Reviews'
 import Fanfic from '@/views/Fanfic'
-import EditAccount from '@/views/EditAccount'
+import EditAccount from '@/views/account/EditAccount'
 
 import News from '@/views/posts/News'
 import EditNews from '@/views/posts/EditNews'

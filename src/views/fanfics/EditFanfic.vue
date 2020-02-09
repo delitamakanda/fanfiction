@@ -513,9 +513,6 @@ export default {
     newCategory(val, oldVal) {
       this.selectedCategory = val;
     },
-    chapters(val, oldVal) {
-        console.log(val)
-    }
   }
 };
 </script>
