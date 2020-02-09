@@ -105,7 +105,7 @@ def communities_view_new_topic(request, pk):
                 topic=topic,
                 created_by=user
             )
-            return redirect('board_topic_message', pk=pk, topic_pk=topic.pk)
+            return redirect('helpcenter:board_topic_message', pk=pk, topic_pk=topic.pk)
     else:
         form = NewTopicForm()
     return render(request, 'help/forum/new_topic.html', {'board': board, 'form': form})
@@ -177,7 +177,7 @@ class MessageUpdateView(UpdateView):
         message.updated_by = self.request.user
         message.updated_at = timezone.now()
         message.save()
-        return redirect('board_topic_message', pk=message.topic.board.pk, topic_pk=message.topic.pk)
+        return redirect('helpcenter:board_topic_message', pk=message.topic.board.pk, topic_pk=message.topic.pk)
 
 
 
