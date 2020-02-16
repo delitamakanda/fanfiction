@@ -12,7 +12,8 @@ import ListUserFanfic from '@/views/fanfics/ListUserFanfic'
 import NewFanfic from '@/views/fanfics/NewFanfic'
 import EditFanfic from '@/views/fanfics/EditFanfic'
 import Reviews from '@/views/comments/Reviews'
-import Fanfic from '@/views/Fanfic'
+import Social from '@/views/account/Social'
+import MonProfil from '@/views/account/MonProfil'
 import EditAccount from '@/views/account/EditAccount'
 
 import News from '@/views/posts/News'
@@ -110,8 +111,19 @@ const router = new Router({
                 // { path: 'new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, meta: { title: 'Ecrire un chapitre', private: true } },
                 // { path: 'update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: NewChapter, props: true, meta: { title: 'Editer un chapitre', private: true } },
                 { path: 'fanfic/:id', name: 'EditFanfic', component: EditFanfic, props: true, meta: { title: 'Voir la fanfiction', private: true } },
-                { path: 'edit-account', name: 'EditAccount', component: EditAccount, meta: { title: 'Edition du compte personnel', private: true } },
-                { path: 'edit-news', name: 'EditNews', component: EditNews, meta: { title: 'Ajout/Edition de news', private: true, is_staff: true } },
+                { path: 'edit-account', name: 'EditAccount', component: EditAccount, meta: { title: 'Edition du compte personnel', private: true }, redirect: '/dashboard/edit-account/my-profil', children: [
+                    { path: 'my-profil', name: 'MonProfil', component: MonProfil, private: true, props: true },
+                    { path: 'social', name: 'Social', component: Social, private: true, props: true },
+                    { path: 'my-reviews', name: 'MyReviews', component: Reviews, private: true, props: true },
+                ] },
+                { path: 'edit-news', name: 'EditNews', component: EditNews, meta: { title: 'Ajout/Edition de news', private: true }, beforeEnter: (to, from, next) => {
+                    const user = store.getters['user/user']
+                    if (user.is_staff) {
+                        next(true)
+                    } else {
+                        next({name: 'Dashboard'})
+                    }
+                } },
             ]
         },
         { path: '*', component: List, redirect: '/' },

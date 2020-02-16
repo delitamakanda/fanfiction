@@ -32,8 +32,7 @@ export async function $fetch(url, options) {
             }})
         }*/
         store.dispatch('user/logout')
-    } else if (response.status === 204) {
-        
+    } else if (response.status === 204 || response.status === 205) {
     } else {
         const message = await response.text()
         const error = new Error(message)

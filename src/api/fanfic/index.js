@@ -58,7 +58,7 @@ export function getEditFanfic(id) {
 }
 
 export function getStarredAuthor(authorUsername) {
-    return $fetch(`auth/following-authors/${authorUsername}`)
+    return $fetch(`following-authors/${authorUsername}`)
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -67,7 +67,7 @@ export function getStarredAuthor(authorUsername) {
 }
 
 export function getStarredFanfic(authorUsername) {
-    return $fetch(`auth/following-stories/${authorUsername}`)
+    return $fetch(`following-stories/${authorUsername}`)
     .then(res => res)
     .catch(err => {
         console.log(err);

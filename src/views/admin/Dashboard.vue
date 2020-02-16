@@ -15,7 +15,7 @@
                 </div>
                 </div>
                 <div class="w-full h-screen antialiased flex flex-col hover:cursor-pointer">
-                <router-link class="hover:bg-gray-300 bg-gray-200 border-t-2 p-3 w-full text-xl text-left text-gray-600 font-semibold" v-if="$route.name !== 'ListUserFanfic'" tag="button" :to="{name: 'ListUserFanfic', params: { username: user.username }}">
+                <router-link class="hover:bg-gray-300 bg-gray-200 border-t-2 p-3 w-full text-xl text-left text-gray-600 font-semibold" v-if="$route.name !== 'ListUserFanfic'" tag="button" :to="{name: 'ListUserFanfic', params: { username: user.username, private: true }}">
                     <svgicon class="pr-1 pt-1 float-right" icon="book-reference" width="22" height="auto" color="#718096"></svgicon>
                     {{ $t('message.myStoriesLabel') }}
                 </router-link>
