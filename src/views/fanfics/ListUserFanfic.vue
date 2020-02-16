@@ -157,14 +157,6 @@ import confirm from '@/mixins/confirm';
 
 export default {
   created() {
-    /* let user = (this.$route.params.username === undefined) ? this.user.username : this.$route.params.username;
-        let status = (this.$route.params.username === undefined) ? '' : 'publié';
-        this.fetchFanficsPublishedByAuthor({ status: status, author: user })
-        this.fetchStarredAuthors({ author: user })
-        this.fetchStarredFanfics({ author: user })
-        if ( this.$route.params.username !== undefined) {
-            this.fetchProfileUser({ username: this.$route.params.username })
-        }*/
   },
   computed: {
     ...mapGetters("user", ["user"]),

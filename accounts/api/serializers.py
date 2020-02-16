@@ -6,7 +6,7 @@ from rest_framework import serializers
 from accounts.models import Social, AccountProfile, FollowStories, FollowUser
 from fanfics.models import Fanfic
 
-from fanfics.api.serializers import FanficSerializer, UserSerializer
+from fanfics.api.serializers import FanficSerializer, UserSerializer, SocialSerializer
 
 from api.customserializer import Base64ImageField
 
@@ -14,6 +14,7 @@ from api.utils import create_notification
 
 class AccountProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+    social = serializers.SerializerMethodField()
     # photo =  serializers.ImageField(max_length=None, use_url=True)
     photo =  Base64ImageField(max_length=None, use_url=True, allow_empty_file=True, allow_null=True, required=False)
 
@@ -25,11 +26,17 @@ class AccountProfileSerializer(serializers.ModelSerializer):
             'date_of_birth',
             'photo',
             'bio',
+            'social',
         )
 
     def create(self, validated_data):
         create_notification(validated_data['user'], 'a crée un compte')
         return AccountProfile.objects.create(**validated_data)
+
+    def get_social(self, obj):
+        social_acc = Social.objects.filter(user=obj.user)
+        serializer = SocialSerializer(social_acc, many=True)
+        return serializer.data
 
 
 class DeleteProfilePhotoSerializer(serializers.ModelSerializer):

@@ -9,4 +9,5 @@ urlpatterns = [
 
     path('users/<int:account>/socialaccount', views_user.SocialListApiView.as_view(), name='socialaccount-view'),
     path('users/social-account', views_user.SocialListApiView.as_view(), name='socialaccount-createview'),
+    path('users/social-account/<int:pk>/delete', views_user.SocialDestroyApiView.as_view(), name='socialaccount-destroy'),
 ]

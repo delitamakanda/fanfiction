@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
-from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
-from rest_framework import generics, permissions
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser, JSONParser
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 
 from api import custompermission
 
@@ -45,7 +47,7 @@ class AccountProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
         custompermission.IsCurrentUserOrReadonly,
     )
     lookup_field = ('user__username')
-    parser_classes = (MultiPartParser, FormParser, FileUploadParser,)
+    parser_classes = (MultiPartParser, FormParser,)
 
 
 
@@ -65,3 +67,14 @@ class SocialListApiView(generics.ListCreateAPIView):
             return Social.objects.filter(account=account)
         else:
             return Social.objects.all()
+
+
+class SocialDestroyApiView(generics.DestroyAPIView):
+    """
+    Destroy a social account
+    """
+    queryset = Social.objects.all()
+    serializer_class = SocialSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )
