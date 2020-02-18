@@ -47,7 +47,8 @@ class AccountProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
         custompermission.IsCurrentUserOrReadonly,
     )
     lookup_field = ('user__username')
-    parser_classes = (MultiPartParser, FormParser,)
+    parser_classes = (MultiPartParser, FormParser, JSONParser,)
+
 
 
 

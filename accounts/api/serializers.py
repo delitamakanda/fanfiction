@@ -14,7 +14,7 @@ from api.utils import create_notification
 
 class AccountProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    social = serializers.SerializerMethodField()
+    social = serializers.SerializerMethodField(read_only=True)
     # photo =  serializers.ImageField(max_length=None, use_url=True)
     photo =  Base64ImageField(max_length=None, use_url=True, allow_empty_file=True, allow_null=True, required=False)
 
