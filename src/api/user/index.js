@@ -1,5 +1,4 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
-import get_cookie from '@/cookie'
 
 export function getProfile(username) {
     return $fetch(`users/${username}/profile`)
@@ -10,12 +9,22 @@ export function getProfile(username) {
     });
 }
 
-export function editProfile(userUsername, dateOfBirth, profileBio, profilePhoto) {
+export function editProfile(userUsername, dateOfBirth, profileBio) {
     return $fetch(`users/${userUsername}/profile`, {
         method: 'put',
         body: JSON.stringify({
             date_of_birth: dateOfBirth,
-            bio: profileBio,
+            bio: profileBio
+        })
+    })
+    .then(res => res)
+    .catch(err => console.log(err));
+}
+
+export function editPhoto(userUsername, profilePhoto) {
+    return $fetch(`users/${userUsername}/profile`, {
+        method: 'put',
+        body: JSON.stringify({
             photo: profilePhoto
         })
     })
@@ -79,3 +88,15 @@ export function deleteSocialAccount(socialAccountId) {
     .then(res => res.json())
     .catch(err => console.log(err));
 }
+
+export function deletePhoto(profileId) {
+    return $fetch(`remove-photo/${profileId}`, {
+        method: 'put',
+        body: JSON.stringify({
+            id: profileId
+        })
+    })
+    .then(res => res.json())
+    .catch(err => console.log(err));
+}
+

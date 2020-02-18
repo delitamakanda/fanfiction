@@ -1,7 +1,7 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 import router from '../../router'
 import store from '../../store'
-import { getProfile, editProfile, editUserEmail, changePassword, deleteSocialAccount, createSocialAccount } from '../../api/user'
+import { getProfile, editProfile, editPhoto, deletePhoto, editUserEmail, changePassword, deleteSocialAccount, createSocialAccount } from '../../api/user'
 
 export const namespaced = true;
 
@@ -30,9 +30,15 @@ export const mutations = {
     editProfile(state, data) {
         state.profile = data
     },
+    editPhoto(state, data) {
+        state.profile.photo = data.photo
+    },
     deleteAccount (state, data) {
         let tmp = state.profile.social.filter(c => c.id !== data)
         state.profile.social = tmp
+    },
+    deleteProfilePhoto (state) {
+        state.profile.photo = null
     }
 };
 
@@ -45,7 +51,11 @@ export const actions = {
     },
     async editProfileUser({commit}, data) {
         commit('editProfile', data)
-        await editProfile(data.username, data.date_of_birth, data.bio, data.photo)
+        await editProfile(data.username, data.date_of_birth, data.bio)
+    },
+    async editPhotoUser({commit}, data) {
+        commit('editPhoto', data)
+        await editPhoto(data.username, data.photo)
     },
     async createSocialAccount({ commit }, data) {
         return commit('setSocialAccount', await createSocialAccount(data.account, data.network, data.nichandle, data.user))
@@ -53,6 +63,10 @@ export const actions = {
     async deleteSocialAccount({ commit }, data) {
         commit('deleteAccount', data.id)
         await deleteSocialAccount(data.id)
+    },
+    async deleteProfilePhoto({commit}, data) {
+        commit('deleteProfilePhoto')
+        await deletePhoto(data.id)
     },
     async changeUserMail({}, data) {
         await editUserEmail(data.userId, data.email);
