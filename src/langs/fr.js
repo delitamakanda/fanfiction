@@ -84,6 +84,8 @@ export default {
         authorLabel: 'Auteur',
         UsernameOrEmailLabel: 'Username ou E-mail',
         passwordLabel: 'Mot de passe',
+        actualPasswordLabel: 'Mot de passe actuel',
+        newPasswordLabel: 'Nouveau mot de passe',
         confirmPasswordLabel: 'Confirmer le mot de passe',
         registerLabel: 'S\'enregister',
         connectionLabel: 'Se connecter',

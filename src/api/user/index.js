@@ -34,7 +34,7 @@ export function editPhoto(userUsername, profilePhoto) {
 
 export function editUserEmail(userId, userEmail) {
     return $fetch(`users/${userId}`, {
-        method: 'put',
+        method: 'patch',
         body: JSON.stringify({
             email: userEmail
         })
@@ -54,7 +54,7 @@ export function changePassword(oldPassword, newPassword) {
             new_password: newPassword
         })
     })
-    .then(res => res)
+    .then(res => res.json())
     .catch(err => {
         console.log(err);
         throw err;

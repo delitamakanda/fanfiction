@@ -31,5 +31,9 @@ export const actions = {
 export const getters = {
     commentsCount: state => {
         return state.comments.length
+    },
+    commentsByAuthor: (state, user) => {
+        // todo
+        return state.comments;
     }
 };

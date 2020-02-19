@@ -68,7 +68,8 @@ export const actions = {
         commit('deleteProfilePhoto')
         await deletePhoto(data.id)
     },
-    async changeUserMail({}, data) {
+    async changeUserMail({commit}, data) {
+        commit('setUserEmail', data.email)
         await editUserEmail(data.userId, data.email);
     },
     async updatePassword({}, data) {
