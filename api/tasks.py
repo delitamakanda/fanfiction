@@ -29,10 +29,8 @@ def fanfic_created(fanfic_id):
     msg_text = template.render(context)
     msg_html = render_to_string('mail/fanfic_created_notification.html', context)
     # message = 'Cher {},\n\nVotre fanfiction {} a été créer avec succès. Son identifiant est le numéro #{}.'.format(fanfic.author.username, fanfic.title, fanfic.id)
-    mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [fanfic.author.email], html_message=msg_html)
+    mail_sent = None
 
-    if fanfic.status == 'brouillon':
-        mail_sent = None
     if fanfic.status == 'publié':
         mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [fanfic.author.email], html_message=msg_html)
     
@@ -47,9 +45,8 @@ def chapter_created(chapter_id):
     context = {'chapter': chapter}
     msg_text = template.render(context)
     msg_html = render_to_string('mail/chapter_created_notification.html', context)
-
-    if chapter.status == 'brouillon':
-        mail_sent = None
+    mail_sent = None
+        
     if chapter.status == 'publié':
         mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [chapter.fanfic.author.email], html_message=msg_html)
 

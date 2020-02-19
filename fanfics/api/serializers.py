@@ -251,8 +251,3 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Cette e-mail est déja utilisée.')
         return value
 
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.password = validated_data.get('password', instance.password)
-        instance.save()
-        return instance
