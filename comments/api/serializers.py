@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from comments.models import Comment
-from fanfics.api.serializers import FanficSerializer
-from chapters.api.serializers import ChapterSerializer
+from fanfics.api.serializers import FanficFormattedSerializer
+from chapters.api.serializers import ChapterFormattedSerializer
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
@@ -26,8 +26,8 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    fanfic = FanficSerializer(read_only=True)
-    chapter = ChapterSerializer(read_only=True)
+    fanfic = FanficFormattedSerializer(read_only=True)
+    chapter = ChapterFormattedSerializer(read_only=True)
 
     class Meta:
         model = Comment
