@@ -4,6 +4,22 @@ from rest_framework import serializers
 from chapters.models import Chapter
 from fanfics.models import Fanfic
 
+class ChapterFormattedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Chapter
+        fields = (
+          'id',
+          'author',
+          'fanfic',
+          'title',
+          'description',
+          'text',
+          'order',
+          'status',
+          'published',
+        )
+    
 class ChapterSerializer(serializers.ModelSerializer):
     status = serializers.ChoiceField(choices=Fanfic.STATUS_CHOICES, default='publié')
 
