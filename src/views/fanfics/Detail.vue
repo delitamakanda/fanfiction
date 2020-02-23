@@ -35,11 +35,11 @@
                 {{ $t('message.creditsLabel') }}: {{obj_fanfic.credits }}
             </p>
             <p class="text-gray-700 text-base">
-                {{ obj_fanfic.genres }} - {{ obj_fanfic.classement }} - {{ obj_fanfic.publish | date }} -  id: {{ obj_fanfic.id }} - {{ obj_fanfic.total_likes }} {{'like' | pluralize(obj_fanfic.total_likes) }} - {{ obj_fanfic.views }} {{ 'view' | pluralize(obj_fanfic.views) }} - {{ $t('message.publishedAtLabel') }} : {{obj_fanfic.publish | date }} <span v-if="obj_fanfic.updated"> - {{ $t('message.miseAJourLabel') }} : {{ obj_fanfic.updated | date }}</span> - {{ commentsCount }} {{ 'review' | pluralize(commentsCount) }} - <router-link :to="{ name: 'Reviews' }">{{ $t('message.commentairesLabel') }}</router-link>
+                {{ obj_fanfic.genres }} - {{ obj_fanfic.classement }} - {{ obj_fanfic.publish | date }} -  id: {{ obj_fanfic.id }} - {{ obj_fanfic.total_likes }} {{'like' | pluralize(obj_fanfic.total_likes) }} - {{ obj_fanfic.views }} {{ 'view' | pluralize(obj_fanfic.views) }} - {{ $t('message.publishedAtLabel') }} : {{obj_fanfic.publish | date }} <span v-if="obj_fanfic.updated"> - {{ $t('message.miseAJourLabel') }} : {{ obj_fanfic.updated | date }}</span> - {{ commentsCount }} {{ 'review' | pluralize(commentsCount) }} - <router-link :to="{ name: 'Reviews', params: { isPrivate: false, fanficId: obj_fanfic.id } }">{{ $t('message.commentairesLabel') }}</router-link>
             </p>
             </div>
             <div class="flex items-center">
-            <router-link :key="obj_fanfic.id" :to="{ name: 'ShowUserFanfic', params: { username: obj_fanfic.author.username, slug: obj_fanfic.slug, id: obj_fanfic.id, private: false }}">
+            <router-link :key="obj_fanfic.id" :to="{ name: 'ShowUserFanfic', params: { username: obj_fanfic.author.username, slug: obj_fanfic.slug, id: obj_fanfic.id, isPrivate: false }}">
                 <avatar :email="obj_fanfic.author.email" class="h-16 w-16 md:h-10 md:w-10 rounded-full mx-auto" :alt="obj_fanfic.author.username" />
             </router-link>
             <div class="text-sm">

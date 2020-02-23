@@ -19,9 +19,6 @@ import EditAccount from '@/views/account/EditAccount'
 import News from '@/views/posts/News'
 import EditNews from '@/views/posts/EditNews'
 
-import Lexique from '@/views/help/Lexique'
-import Faq from '@/views/help/Faq'
-
 import Loading from '@/components/ui/Loading'
 import Form from '@/components/ui/Form'
 import Input from '@/components/ui/Input'
@@ -49,88 +46,69 @@ import 'trumbowyg/dist/ui/trumbowyg.css'
 
 const router = new Router({
     routes: [
-        { path: '/', name: 'List', component: List, meta: {
-            title: 'Toutes les fanfictions',
-            metaTags: [
-                {
-                    name: 'description',
-                    content: 'Fanfictions basées sur des Animés, mangas, films, romans, faits historiques, etc.'
-                },
-                {
-                    property: 'og:description',
-                    content: 'Fanfictions basées sur des Animés, mangas, films, romans, faits historiques, etc.'
-                }
-            ]
-        } },
-        { path: '/fanfic/detail/:slug', name: 'Detail', component: Detail, props: true},
+        {
+            path: '/', name: 'List', component: List, meta: {
+                title: 'Toutes les fanfictions',
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Fanfictions basées sur des Animés, mangas, films, romans, faits historiques, etc.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Fanfictions basées sur des Animés, mangas, films, romans, faits historiques, etc.'
+                    }
+                ]
+            }
+        },
+        { path: '/fanfic/detail/:slug', name: 'Detail', component: Detail, props: true },
         { path: '/reviews', name: 'Reviews', component: Reviews, meta: { title: 'Mes reviews' }, props: true },
         { path: '/login', name: 'Login', component: Login, meta: { guest: true, title: 'Créer un compte ou se connecter à l\'espace membre' } },
-        { path: '/news', name: 'News', component: News, meta: {
-            title: 'News du site Fanfiction',
-            metaTags: [
-                {
-                    name: 'description',
-                    content: 'Toutes les nouveautés et annonces du site.'
-                },
-                {
-                    property: 'og:description',
-                    content: 'Toutes les nouveautés et annonces du site.'
-                }
-            ]
-        } },
-        { path: '/faq', name: 'Faq', component: Faq, meta: {
-            title: 'Foire aux questions',
-            metaTags: [
-                {
-                    name: 'description',
-                    content: 'Foire aux questions'
-                },
-                {
-                    name: 'og:description',
-                    content: 'Foire aux questions'
-                }
-            ]
-        }},
-        { path: '/dico', name: 'Lexique', component: Lexique, meta: {
-            title: 'Dico de la fanfiction',
-            metaTags: [
-                {
-                    name: 'description',
-                    content: 'Dico de la fanfiction'
-                },
-                {
-                    name: 'og:description',
-                    content: 'Dico de la fanfiction'
-                }
-            ]
-        }},
-        { path: '/dashboard', name: 'Dashboard', redirect: '/dashboard/create', component: Dashboard, meta: { private: true, title: 'Tableau de bord' },
-            children: [
-                { path: 'fanfics/:username/list', name: 'ListUserFanfic', component: ListUserFanfic, props: true , meta: { title: 'Mes fanfictions', private: true } },
-                { path: 'create', name: 'NewFanfic', component: NewFanfic, meta: { title: 'Ecrire une fanfiction', private: true } },
-                // { path: 'new/:id/chapter', name: 'NewChapter', component: NewChapter, props: true, meta: { title: 'Ecrire un chapitre', private: true } },
-                // { path: 'update/:id/chapter/:chapter_id/edit', name: 'UpdateChapter', component: NewChapter, props: true, meta: { title: 'Editer un chapitre', private: true } },
-                { path: 'fanfic/:id', name: 'EditFanfic', component: EditFanfic, props: true, meta: { title: 'Voir la fanfiction', private: true } },
-                { path: 'edit-account', name: 'EditAccount', component: EditAccount, meta: { title: 'Edition du compte personnel', private: true }, redirect: '/dashboard/edit-account/my-profil', children: [
-                    { path: 'my-profil', name: 'MonProfil', component: MonProfil, private: true, props: true },
-                    { path: 'social', name: 'Social', component: Social, private: true, props: true },
-                    { path: 'my-reviews', name: 'MyReviews', component: Reviews, private: true, props: true },
-                ] },
-                { path: 'edit-news', name: 'EditNews', component: EditNews, meta: { title: 'Ajout/Edition de news', private: true }, beforeEnter: (to, from, next) => {
-                    const user = store.getters['user/user']
-                    if (user.is_staff) {
-                        next(true)
-                    } else {
-                        next({name: 'Dashboard'})
+        {
+            path: '/news', name: 'News', component: News, meta: {
+                title: 'News du site Fanfiction',
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Toutes les nouveautés et annonces du site.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Toutes les nouveautés et annonces du site.'
                     }
-                } },
+                ]
+            }
+        },
+        {
+            path: '/dashboard', name: 'Dashboard', redirect: '/dashboard/create', component: Dashboard, meta: { private: true, title: 'Tableau de bord' },
+            children: [
+                { path: 'fanfics/:username/list', name: 'ListUserFanfic', component: ListUserFanfic, props: true, meta: { title: 'Mes fanfictions', private: true } },
+                { path: 'create', name: 'NewFanfic', component: NewFanfic, meta: { title: 'Ecrire une fanfiction', private: true } },
+                { path: 'fanfic/:id', name: 'EditFanfic', component: EditFanfic, props: true, meta: { title: 'Voir la fanfiction', private: true } },
+                {
+                    path: 'edit-account', name: 'EditAccount', component: EditAccount, meta: { title: 'Edition du compte personnel', private: true }, redirect: '/dashboard/edit-account/my-profil', children: [
+                        { path: 'my-profil', name: 'MonProfil', component: MonProfil, meta: { private: true, title: 'Mon profil' }, props: true },
+                        { path: 'social', name: 'Social', component: Social, meta: { private: true, title: 'Social' }, props: true },
+                        { path: 'my-reviews', name: 'MyReviews', component: Reviews, props: true, meta: { private: true, title: 'Commentaires' } },
+                    ]
+                },
+                {
+                    path: 'edit-news', name: 'EditNews', component: EditNews, meta: { title: 'Ajout/Edition de news', private: true }, props: true, beforeEnter: (to, from, next) => {
+                        const user = store.getters['user/user']
+                        if (user.is_staff) {
+                            next(true)
+                        } else {
+                            next({ name: 'Dashboard' })
+                        }
+                    }
+                },
             ]
         },
         { path: '*', component: List, redirect: '/' },
         { path: '/fanfics/:username/show', name: 'ShowUserFanfic', component: ListUserFanfic, props: true, meta: { title: 'Voir les fanfictions d\'un utilisateur' } },
     ],
     mode: 'hash',
-    scrollBehavior (to, from, savedPosition) {
+    scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {
             return savedPosition
         }

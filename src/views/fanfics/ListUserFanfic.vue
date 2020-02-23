@@ -12,7 +12,7 @@
 
     <div class="empty" v-if="fanfics && !fanfics.length">{{ $t('message.emptyMessageFanfiction') }}</div>
 
-    <div class="flex flex-wrap -mx-2" v-if="fanfics && this.private">
+    <div class="flex flex-wrap -mx-2" v-if="fanfics && isPrivate">
       <div class="mb-4 w-full px-1 md:w-1/2" v-for="item in fanfics" :key="item.id">
         <router-link
           class="no-underline"
@@ -157,6 +157,11 @@ import confirm from '@/mixins/confirm';
 
 export default {
   created() {
+    if(!this.isPrivate) {
+      this.fetchFanficsPublishedByAuthor({ status:'publié', author: this.username });
+    } else {
+      this.fetchFanficsPublishedByAuthor({ author: this.username });
+    }
   },
   computed: {
     ...mapGetters("user", ["user"]),
@@ -179,7 +184,7 @@ export default {
       type: Number,
       required: false
     },
-    private: {
+    isPrivate: {
         type: Boolean,
         required: false,
         default: true
@@ -209,10 +214,8 @@ export default {
   components: { Fanfic },
   watch: {
     fanfics(val, oldVal) {
-        if(!this.private) {
-            this.fetchFanficsPublishedByAuthor({ status:'publié', author: this.username });
-        }
-        this.fetchFanficsPublishedByAuthor({ author: this.username });
+      console.log('val', val)
+      console.log('oldVal', oldVal)
     }
   }
 };

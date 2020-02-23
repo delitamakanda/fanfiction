@@ -9,6 +9,15 @@ export function getComments(fanficId, isActive) {
     });
 }
 
+export function getAllComments() {
+    return $fetch(`comments-list/`)
+    .then(res => res)
+    .catch(err => {
+        console.log(err);
+        throw err;
+    });
+}
+
 export function postComment (name, email, body, fanfic, chapter) {
     return $fetch('comments/', {
         method: 'post',

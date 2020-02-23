@@ -47,8 +47,8 @@
                     <li @mouseover="survol = true" @mouseleave="survol = false" class="inline-flex "><svgicon icon="question" width="22" height="18" color="#4dc0b5"></svgicon> {{ $t('message.aideLabel') }}
                         <transition name="fade" mode="out-in">
                             <ul class="bg-white p-4 z-10 shadow " v-if="survol" @click="survol = false">
-                                <li><router-link class="text-teal hover:text-teal-darker" :to="{ name: 'Lexique' }">{{ $t('message.lexiqueLabel') }}</router-link></li>
-                                <li><router-link class="text-teal hover:text-teal-darker" :to="{ name: 'Faq' }">{{ $t('message.faqLabel') }}</router-link></li>
+                                <li><a class="text-teal hover:text-teal-darker" href="/help/browse/title">{{ $t('message.lexiqueLabel') }}</a></li>
+                                <li><a class="text-teal hover:text-teal-darker" href="/help/foire-aux-questions">{{ $t('message.faqLabel') }}</a></li>
                                 <li><a class="text-teal hover:text-teal-darker" href="/help/forum">{{ $t('message.forumLabel') }}</a></li>
                                 <li><a href="#" class="text-teal hover:text-teal-darker" @click="openContactForm">{{ $t('message.contactLabel') }}</a></li>
                             </ul>

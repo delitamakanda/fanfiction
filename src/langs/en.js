@@ -1,5 +1,12 @@
 export default {
     message: {
+        newsPage: {
+            title: "Add / Edit a news",
+            titleLabel: "Title",
+            headerLabel: "Header",
+            contentLabel: "Content",
+            tagsLabel: "Tags"
+        },
         errorFetch: 'There is a problem with the request.',
         addNewSocialNetwork: 'Add a social network',
         changePassword: 'Password change',

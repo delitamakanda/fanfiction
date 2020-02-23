@@ -1,14 +1,14 @@
-import { getComments, postComment } from '@/api/comment';
+import { getComments, getAllComments, postComment } from '@/api/comment';
 import * as _ from 'lodash';
 
 export const namespaced = true;
 
 export const state = {
-    comments: []
+    comments: [],
 };
 
 export const mutations = {
-    setAllComments (state, data) {
+    setComments (state, data) {
         state.comments = data
     },
     addComment (state, data) {
@@ -21,7 +21,10 @@ export const actions = {
         return commit('addComment', await postComment(data.name, data.email, data.body, data.fanfic, data.chapter));
     },
     async fetchAllComments ({commit}, data) {
-        return commit('setAllComments', await getComments(data.id, data.isActive));
+        return commit('setComments', await getComments(data.id, data.isActive));
+    },
+    async fetchComments ({commit}) {
+        return commit('setComments', await getAllComments());
     },
     async clearComments ({commit}) {
         state.comments = []
@@ -32,8 +35,7 @@ export const getters = {
     commentsCount: state => {
         return state.comments.length
     },
-    commentsByAuthor: (state, user) => {
-        // todo
-        return state.comments;
+    commentsByAuthor: (state) => (user) => {
+        return state.comments.filter(c => c.fanfic.author.id === user.id);
     }
 };

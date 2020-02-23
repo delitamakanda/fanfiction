@@ -1,5 +1,12 @@
 export default {
     message: {
+        newsPage: {
+            title: "Ajouter / Modifier une actualité",
+            titleLabel: "Titre",
+            headerLabel: "Header",
+            contentLabel: "Contenu",
+            tagsLabel: "Tags"
+        },
         errorFetch: 'Il y a un problème avec la requète.',
         addNewSocialNetwork: 'Ajouter un réseau social',
         changePassword: 'Changer le mot de passe',
