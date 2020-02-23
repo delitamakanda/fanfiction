@@ -2,7 +2,7 @@ from rest_framework import generics, permissions
 
 from posts.models import Post, Tag
 
-from posts.api.serializers import PostSerializer, TagSerializer
+from posts.api.serializers import PostSerializer, TagSerializer, PostCreateSerializer
 
 
 class TagList(generics.ListAPIView):
@@ -13,6 +13,25 @@ class TagList(generics.ListAPIView):
     )
     pagination_class = None
     name = 'tag-list'
+
+
+class PostCreate(generics.CreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostCreateSerializer
+    permission_classes = (
+        permissions.IsAdminUser,
+    )
+    name='post-create'
+
+
+
+class PostUpdate(generics.UpdateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostCreateSerializer
+    permission_classes = (
+        permissions.IsAdminUser,
+    )
+    name='post-update'
 
 
 class PostList(generics.ListAPIView):

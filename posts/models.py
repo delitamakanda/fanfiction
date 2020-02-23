@@ -7,7 +7,7 @@ from markdownx.models import MarkdownxField
 class Tag(models.Model):
     word = models.CharField(max_length=35, db_index=True)
     slug = models.CharField(max_length=250)
-    created_at = models.DateTimeField(auto_now_add=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.word)
