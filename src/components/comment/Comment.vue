@@ -1,8 +1,8 @@
 <template>
 <div>
-    <div class="ml-20 mr-48" v-for="comment in comments" :key="comment.id">
+    <div class="lg:ml-20 lg:mr-48" v-for="comment in comments" :key="comment.id">
         <div class="flex mt-3">
-            <div class="w-3/5">
+            <div class="lg:w-3/5 w-full">
                 <div class="bg-white shadow mt-4 p-3 pb-1 relative">
                     <div class="flex items-center">
                         <div>

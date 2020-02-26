@@ -160,7 +160,7 @@ export default {
     if(!this.isPrivate) {
       this.fetchFanficsPublishedByAuthor({ status:'publié', author: this.username });
     } else {
-      this.fetchFanficsPublishedByAuthor({ author: this.username });
+      this.fetchFanficsPublishedByAuthor({ author: this.username, status:'' });
     }
   },
   computed: {

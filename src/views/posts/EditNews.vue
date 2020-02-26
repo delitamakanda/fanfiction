@@ -69,6 +69,8 @@ export default {
     created() {
         if (this.newsSlug && this.newsSlug.length) {
             this.getNews({ slug: this.newsSlug})
+        } else {
+            this.clearNews()
         }
     },
     components: {
@@ -129,7 +131,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('post', ['addNews', 'updateNews', 'getNews']),
+        ...mapActions('post', ['addNews', 'updateNews', 'getNews', 'clearNews']),
         operation () {
             const message = this.$t('message.infosUpdated');
             
@@ -152,8 +154,6 @@ export default {
                     this.addNews(data)
                 });
             }
-
-            this.header = this.title = this.content = ''
         }
     }
 }

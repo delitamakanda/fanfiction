@@ -93,7 +93,7 @@ const router = new Router({
                     ]
                 },
                 {
-                    path: 'edit-news', name: 'EditNews', component: EditNews, meta: { title: 'Ajout/Edition de news', private: true }, props: true, beforeEnter: (to, from, next) => {
+                    path: 'edit-news/:newsSlug', name: 'EditNews', component: EditNews, meta: { title: 'Ajout/Edition de news', private: true }, props: true, beforeEnter: (to, from, next) => {
                         const user = store.getters['user/user']
                         if (user.is_staff) {
                             next(true)
