@@ -9,6 +9,15 @@ export function getNews(postSlug) {
     });
 }
 
+export function fetchNews() {
+    return $fetch(`posts`)
+    .then(res => res)
+    .catch(err => {
+        console.log(err);
+        throw err;
+    });
+}
+
 export function editNews(data) {
     return $fetch(`posts/${data.id}/edit`, {
         method: 'put',
@@ -19,6 +28,17 @@ export function editNews(data) {
             content: data.content,
             tags: data.tags
         })
+    })
+    .then(res => res)
+    .catch(err => {
+        console.log(err);
+        throw err;
+    });
+}
+
+export function deleteNews(data) {
+    return $fetch(`posts/${data}`, {
+        method: 'delete'
     })
     .then(res => res)
     .catch(err => {

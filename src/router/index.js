@@ -18,6 +18,7 @@ import EditAccount from '@/views/account/EditAccount'
 
 import News from '@/views/posts/News'
 import EditNews from '@/views/posts/EditNews'
+import AddNews from '@/views/posts/AddNews'
 
 import Loading from '@/components/ui/Loading'
 import Form from '@/components/ui/Form'
@@ -93,7 +94,17 @@ const router = new Router({
                     ]
                 },
                 {
-                    path: 'edit-news/:newsSlug', name: 'EditNews', component: EditNews, meta: { title: 'Ajout/Edition de news', private: true }, props: true, beforeEnter: (to, from, next) => {
+                    path: 'edit-news/:newsSlug', name: 'EditNews', component: EditNews, meta: { title: 'Edition de news', private: true }, props: true, beforeEnter: (to, from, next) => {
+                        const user = store.getters['user/user']
+                        if (user.is_staff) {
+                            next(true)
+                        } else {
+                            next({ name: 'Dashboard' })
+                        }
+                    }
+                },
+                {
+                    path: 'add-news', name: 'AddNews', component: AddNews, meta: { title: 'Ajout de news', private: true }, props: false, beforeEnter: (to, from, next) => {
                         const user = store.getters['user/user']
                         if (user.is_staff) {
                             next(true)

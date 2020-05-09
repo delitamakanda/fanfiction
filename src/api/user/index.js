@@ -34,7 +34,7 @@ export function editPhoto(userUsername, profilePhoto) {
 
 export function editUserEmail(userId, userEmail) {
     return $fetch(`users/${userId}`, {
-        method: 'patch',
+        method: 'put',
         body: JSON.stringify({
             email: userEmail
         })
