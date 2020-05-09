@@ -12,7 +12,7 @@
                 <Input
                     type="text"
                     name="title"
-                    v-model="title"
+                    v-model="newTitle"
                     :placeholder="$t('message.newsPage.titleLabel')"/>
             </div>
             <div class="mb-4">
@@ -22,7 +22,7 @@
                 <Input
                     type="text"
                     name="header"
-                    v-model="header"
+                    v-model="newHeader"
                     :placeholder="$t('message.newsPage.headerLabel')"/>
             </div>
             <div class="mb-4">
@@ -32,7 +32,7 @@
                 <Input
                 type="textarea"
                 name="content"
-                v-model="content"
+                v-model="newContent"
                 :placeholder="$t('message.newsPage.contentLabel')"
                 rows="6"
                 required />
@@ -42,7 +42,7 @@
                   {{ $t('message.newsPage.tagsLabel') }}
                 </label>
                 <input-tag
-                    v-model="tags"
+                    v-model="newTags"
                     :placeholder="$t('message.newsPage.tagsLabel')">
                 </input-tag>
             </div>
@@ -61,29 +61,13 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import confirm from "@/mixins/confirm";
 import InputTag from 'vue-input-tag'
 
 export default {
-    created() {
-        this.getNews({ slug: this.newsSlug})
-    },
-    destroyed() {
-        this.clearNews()
-    },
     components: {
         'input-tag': InputTag
-    },
-    props: {
-        newsSlug: {
-            type: String,
-            required: true
-        },
-        newsId: {
-            type: Number,
-            required: true
-        },
     },
     data () {
         return {
@@ -96,59 +80,25 @@ export default {
     mixins: [ confirm ],
     computed: {
         ...mapGetters('user', ['user']),
-        ...mapState('post', ['news']),
         valid() {
-            return !!this.newsSlug
-        },
-        header: {
-            get() {
-                return this.news.header
-            },
-            set(val) {
-                this.newHeader = val
-            }
-        },
-        title: {
-            get() {
-                return this.news.title
-            },
-            set(val) {
-                this.newTitle = val
-            }
-        },
-        content: {
-            get() {
-                return this.news.content
-            },
-            set(val) {
-                this.newContent = val
-            }
-        },
-        tags: {
-            get() {
-                return this.news.tags
-            },
-            set(val) {
-                this.newTags.push(...val)
-            }
+            return !!this.newTitle && !!this.newContent
         }
     },
     methods: {
-        ...mapActions('post', ['updatePost', 'getNews', 'clearNews']),
+        ...mapActions('post', ['addNews']),
         operation () {
             const message = this.$t('message.infosUpdated');
             
             const data = {
                 user: this.user.id,
-                header: this.newHeader ? this.newHeader : this.header,
-                title: this.newTitle ? this.newTitle : this.title,
-                content: this.newContent ? this.newContent : this.content,
-                tags: this.newTags ? this.newTags : this.tags,
-                id: this.news.id
+                header: this.newHeader,
+                title: this.newTitle,
+                content: this.newContent,
+                tags: this.newTags
             }
 
             this.confirm(message, () => {
-                this.updatePost(data)
+                this.addNews(data)
             });
         }
     }
