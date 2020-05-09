@@ -129,7 +129,7 @@ export default {
                 return this.news.tags
             },
             set(val) {
-                this.newTags.push(...val)
+                this.newTags.push(val)
             }
         }
     },
