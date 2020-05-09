@@ -35,6 +35,9 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         custompermission.IsUserOrReadonly,
     )
 
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
 
 class AccountProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     """

@@ -34,6 +34,16 @@ class PostUpdate(generics.UpdateAPIView):
     name='post-update'
 
 
+
+class PostDelete(generics.DestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostCreateSerializer
+    permission_classes = (
+        permissions.IsAdminUser,
+    )
+    name='post-delete'
+
+
 class PostList(generics.ListAPIView):
     queryset = Post.objects.order_by('-created').all()
     serializer_class = PostSerializer
@@ -46,7 +56,7 @@ class PostList(generics.ListAPIView):
 
 class PostDetail(generics.RetrieveAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = PostCreateSerializer
     permission_classes = (
         permissions.AllowAny,
     )
