@@ -1,2 +1,2 @@
 web: gunicorn backend.wsgi:application --preload
-worker: celery worker --app=backend --loglevel=info -B
+worker: celery -A backend worker beat -l info --without-gossip --without-mingle --without-heartbeat
