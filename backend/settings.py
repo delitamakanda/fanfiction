@@ -25,10 +25,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', 'dummy_secret_key', cast=str)
+SECRET_KEY = config('SECRET_KEY', cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', True, cast=bool)
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -250,9 +250,9 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Asynchronous tasks
 
-CELERY_BROKER_URL = config('REDIS_URL', 'redis://localhost:6379/0', cast=str)
-CELERY_RESULT_BACKEND = config('REDIS_URL', 'redis://localhost:6379/0', cast=str)
-REDIS_URL = config('REDIS_URL', 'redis://localhost:6379/0', cast=str)
+CELERY_BROKER_URL = config('REDIS_URL')
+CELERY_RESULT_BACKEND = config('REDIS_URL')
+REDIS_URL = config('REDIS_URL')
 CELEY_BROKER_POOL_LIMIT = 3
 
 CELERY_ACCEPT_CONTENT = ['application/json']
