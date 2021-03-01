@@ -1,5 +1,5 @@
 attrs==17.4.0
-celery==4.2.0
+celery==4.4.7
 certifi==2018.1.18
 chardet==3.0.4
 defusedxml
@@ -11,11 +11,11 @@ django-multiselectfield==0.1.8
 django-webpack-loader==0.6.0
 djangorestframework==3.9.1
 idna==2.6
-oauthlib==2.0.7
-Pillow==7.1.0
+oauthlib==3.1.0
+Pillow==8.1.0
 pluggy==0.6.0
 py==1.5.2
-PyJWT==1.6.0
+PyJWT==2.0.0
 pytest==3.4.1
 pytest-django==3.1.2
 python-decouple==3.1
@@ -27,7 +27,6 @@ six==1.11.0
 urllib3==1.24.2
 whitenoise==3.3.1
 django-storages
-boto3
 django-markdownx==2.0.23
 coreapi==2.3.3
 coverage
@@ -36,5 +35,5 @@ redis==3.2.0
 social-auth-app-django==3.1.0
 django-rest-framework-social-oauth2==1.1.0
 django-cors-headers==2.5.2
-django-celery-beat
+django-celery-beat==2.2.0
 bs4==0.0.1

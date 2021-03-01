@@ -25,7 +25,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ``` bash
 # set an virtual env
-virtualenv fanfiction -p python3
+python3 -m venv fanfiction
 
 source fanfiction/bin/activate
 
