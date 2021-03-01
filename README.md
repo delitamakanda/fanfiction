@@ -1,6 +1,6 @@
 # fanfiction
 
-[![Build Status](https://travis-ci.org/delitamakanda/fanfiction.svg?branch=master)](https://travis-ci.org/delitamakanda/fanfiction)
+[![Django CI](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml/badge.svg?branch=master)](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml)
 
 > A fanfic application in vue.js and django
 
