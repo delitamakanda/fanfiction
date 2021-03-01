@@ -10,14 +10,7 @@ from rest_framework.test import APIClient
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
-from api.serializers import CommentSerializer
-from api.serializers import FanficListSerializer
-from api.serializers import FanficSerializer
-
-from api.models import Fanfic
-from api.models import Comment
-from api.models import Category
-from api.models import SubCategory
+from comments.api.serializers import CommentSerializer
 
 from api import views
 from api import views_fanfic

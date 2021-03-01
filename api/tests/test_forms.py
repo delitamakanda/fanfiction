@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
 from django.contrib.auth.models import User
-from api.helpcenter.views import communities_view_new_topic
+from helpcenter.views import communities_view_new_topic
 from api.models import Board, Topic, Message
 from api.helpcenter.forms import NewTopicForm
 

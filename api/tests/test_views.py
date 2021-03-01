@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
-from api.helpcenter.views import communities_view, communities_view_board_topics, communities_view_new_topic, communities_view_topic_messages
+from helpcenter.views import communities_view, communities_view_board_topics, communities_view_new_topic, communities_view_topic_messages
 from api.models import Board, Topic, Message
 
 class HomeTests(TestCase):
