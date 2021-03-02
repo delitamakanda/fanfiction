@@ -23,6 +23,6 @@ staticfiles/
 media/
 /tests/
 celerybeat-schedule.db
-dist/
+#dist/
 build/
 config/
