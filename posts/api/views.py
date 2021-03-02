@@ -5,7 +5,7 @@ from posts.models import Post, Tag
 from posts.api.serializers import PostSerializer, TagSerializer, PostCreateSerializer
 
 
-class TagList(generics.ListAPIView):
+class TagListAPIView(generics.ListAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (
@@ -15,7 +15,7 @@ class TagList(generics.ListAPIView):
     name = 'tag-list'
 
 
-class PostCreate(generics.CreateAPIView):
+class PostCreateAPIView(generics.CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
     permission_classes = (
@@ -25,7 +25,7 @@ class PostCreate(generics.CreateAPIView):
 
 
 
-class PostUpdate(generics.UpdateAPIView):
+class PostUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
     permission_classes = (
@@ -34,17 +34,7 @@ class PostUpdate(generics.UpdateAPIView):
     name='post-update'
 
 
-
-class PostDelete(generics.DestroyAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostCreateSerializer
-    permission_classes = (
-        permissions.IsAdminUser,
-    )
-    name='post-delete'
-
-
-class PostList(generics.ListAPIView):
+class PostListAPIView(generics.ListAPIView):
     queryset = Post.objects.order_by('-created').all()
     serializer_class = PostSerializer
     permission_classes = (
@@ -54,9 +44,9 @@ class PostList(generics.ListAPIView):
     name='post-list'
 
 
-class PostDetail(generics.RetrieveAPIView):
+class PostDetailAPIView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostCreateSerializer
+    serializer_class = PostSerializer
     permission_classes = (
         permissions.AllowAny,
     )

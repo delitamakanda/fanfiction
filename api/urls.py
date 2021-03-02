@@ -31,15 +31,6 @@ urlpatterns = [
     path('notifications', views.NotificationListView.as_view(), name='notifications'),
     path('contenttype/<int:pk>', views.ContentTypeView.as_view(), name='contenttype-detail'),
 
-    path('', include('accounts.api.urls')),
-    path('', include('helpcenter.api.urls')),
-    path('', include('categories.api.urls')),
-    path('', include('chapters.api.urls')),
-    path('', include('fanfics.api.urls')),
-    path('', include('posts.api.urls')),
-    path('', include('comments.api.urls')),
-
-    path('docs', include_docs_urls(title='Fanfiction API', public=True)),
     path('api-root', views.ApiRootView.as_view(), name=views.ApiRootView.name),
 ]
 
