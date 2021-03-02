@@ -174,8 +174,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 if not DEBUG:
     STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'dist'),
-        # os.path.join(BASE_DIR, 'static'),
+        # os.path.join(BASE_DIR, 'dist'),
+        os.path.join(BASE_DIR, 'static'),
     ]
 else:
     STATICFILES_DIRS = [
