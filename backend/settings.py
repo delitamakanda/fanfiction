@@ -75,7 +75,7 @@ SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-	'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -155,8 +155,8 @@ USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = (
-       ('en-us', _('Anglais')),
-       ('fr-fr', _('Français')),
+    ('en-us', _('Anglais')),
+    ('fr-fr', _('Français')),
 )
 
 LOCALE_PATHS = (
@@ -214,7 +214,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
@@ -227,13 +227,19 @@ REST_FRAMEWORK = {
     },
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'SEARCH_PARAM': 'q',
+    'ORDERING_PARAM': 'ordering',
 }
 
 # OAuth settings
 
 OAUTH2_PROVIDER = {
-    # this is the list of available scopes
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+        'groups': 'Access to your groups'
+    },
+    'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -306,8 +312,11 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 # corsheaders
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8100',
-	'http://localhost:4200',
-	'https://delitamakanda.github.io',
+    'http://localhost:4200',
+    'https://delitamakanda.github.io',
     'https://fanfiction-fr.herokuapp.com',
-	'http://localhost',
+    'http://localhost',
+    'https://fanfiction-fr.netlify.app'
 )
+
+CORS_URLS_REGEX = r'^/api/.*$'
