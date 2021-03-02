@@ -41,3 +41,4 @@ django-cors-headers==2.5.2
 django-celery-beat
 cairocffi==0.9.0
 bs4==0.0.1
+django-oauth-toolkit==1.4.0

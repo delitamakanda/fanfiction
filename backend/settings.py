@@ -53,13 +53,13 @@ INSTALLED_APPS = [
     'social_django',
     'rest_framework_social_oauth2',
     'django_celery_beat',
-]
-
-INSTALLED_APPS += [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'webpack_loader',
+]
+
+INSTALLED_APPS += [
     'fanfics',
     'comments',
     'categories',
@@ -83,6 +83,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'api.middleware.AutoLogout',
     'django.middleware.locale.LocaleMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -205,6 +206,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'api.customauthentication.CsrfExemptSessionAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
@@ -212,6 +214,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
@@ -226,6 +229,13 @@ REST_FRAMEWORK = {
     # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
 
+# OAuth settings
+
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+}
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 """
@@ -233,12 +243,14 @@ Authenticate with username or email
 """
 
 AUTHENTICATION_BACKENDS = (
+    'oauth2_provider.backends.OAuth2Backend',
     'social_core.backends.facebook.FacebookAppOAuth2',
     'social_core.backends.facebook.FacebookOAuth2',
 
     'social_core.backends.google.GoogleOAuth2',
 
     'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.github.GithubOAuth2',
 
     'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',
@@ -293,9 +305,9 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 
 # corsheaders
 CORS_ORIGIN_WHITELIST = (
-    'localhost:8100',
-	'localhost:4200',
-	'delitamakanda.github.io',
-    'fanfiction-fr.herokuapp.com',
-	'localhost',
+    'http://localhost:8100',
+	'http://localhost:4200',
+	'https://delitamakanda.github.io',
+    'https://fanfiction-fr.herokuapp.com',
+	'http://localhost',
 )
