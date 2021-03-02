@@ -31,7 +31,7 @@ urlpatterns = [
     path('notifications', views.NotificationListView.as_view(), name='notifications'),
     path('contenttype/<int:pk>', views.ContentTypeView.as_view(), name='contenttype-detail'),
 
-    path('api-root', views.ApiRootView.as_view(), name=views.ApiRootView.name),
+    
 ]
 
 if settings.DEBUG:

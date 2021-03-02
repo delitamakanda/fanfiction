@@ -68,6 +68,10 @@ from chapters.api.views import (
     ChapterDetailView
 )
 
+from api.views import (
+    ApiRootView,
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
@@ -76,7 +80,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [    
-    # path('api/', include(('api.urls', 'api'), namespace='api')),
+    path('api/', ApiRootView.as_view(), name=ApiRootView.name),
     path('api/docs/', include_docs_urls(title='Fanfiction API', public=False)),
 
     path('api/users/<str:user__username>/account', UserFanficDetailView.as_view(), name='user-list'),
@@ -91,7 +95,7 @@ urlpatterns += [
 
     path('api/category/', CategoryListView.as_view(), name='category-list'),
     path('api/category/<int:pk>/', CategoryDetailView.as_view(), name='category-detail'),
-    path('api/subcategory/', SubCategoryListView.as_view(), name='subcategory-list/'),
+    path('api/subcategory/', SubCategoryListView.as_view(), name='subcategory-list'),
     path('api/subcategory/<int:pk>/', SubCategoryDetailView.as_view(), name='subcategory-detail'),
 
     path('api/tags/', TagListAPIView.as_view(), name='tag-list'),

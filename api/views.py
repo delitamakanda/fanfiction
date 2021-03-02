@@ -100,15 +100,15 @@ class ApiRootView(generics.GenericAPIView):
     name = 'api-root'
     def get(self, request, *args, **kwargs):
         return Response({
-            'comments': reverse('api:comment-list', request=request),
-            'category': reverse('api:category-list', request=request),
-            'sub-category': reverse('api:subcategory-list', request=request),
-            'tags' : reverse('api:tag-list', request=request),
-            'posts' : reverse('api:post-list', request=request),
-            'pages': reverse('api:all-pages', request=request),
-            'genres': reverse('api:genre-list', request=request),
-            'classement': reverse('api:classement-list', request=request),
-            'status': reverse('api:status-list', request=request),
-            'notifications': reverse('api:notifications', request=request),
-            'fanfics': reverse('api:fanfic-list', request=request)
+            'comments': reverse('comment-list', request=request),
+            'category': reverse('category-list', request=request),
+            'subcategory': reverse('subcategory-list', request=request),
+            'tags' : reverse('tag-list', request=request),
+            'posts' : reverse('post-list', request=request),
+            # 'pages': reverse('all-pages', request=request),
+            'genres': reverse('genre-list', request=request),
+            'classement': reverse('classement-list', request=request),
+            'status': reverse('status-list', request=request),
+            # 'notifications': reverse('notifications', request=request),
+            'fanfics': reverse('fanfic-list', request=request)
         })
