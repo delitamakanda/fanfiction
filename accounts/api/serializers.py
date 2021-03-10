@@ -12,11 +12,13 @@ from api.customserializer import Base64ImageField
 
 from api.utils import create_notification
 
+
 class AccountProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     social = serializers.SerializerMethodField(read_only=True)
     # photo =  serializers.ImageField(max_length=None, use_url=True)
-    photo =  Base64ImageField(max_length=None, use_url=True, allow_empty_file=True, allow_null=True, required=False)
+    photo = Base64ImageField(max_length=None, use_url=True,
+                             allow_empty_file=True, allow_null=True, required=False)
 
     class Meta:
         model = AccountProfile
@@ -80,7 +82,8 @@ class FollowUserSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        create_notification(validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
+        create_notification(
+            validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
         return FollowUser.objects.create(**validated_data)
 
 
@@ -96,5 +99,13 @@ class FollowStoriesSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        create_notification(validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
+        create_notification(
+            validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
         return FollowStories.objects.create(**validated_data)
+
+
+class SignupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password',)
+        write_only_fields = ('password',)

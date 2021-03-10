@@ -7,10 +7,11 @@ from rest_framework.response import Response
 
 from api import custompermission
 
-from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer
+from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, SignupSerializer
 from fanfics.api.serializers import UserFanficSerializer, SocialSerializer, UserSerializer
 
 from accounts.models import AccountProfile, FollowUser, FollowStories, Social
+
 
 class UserFanficDetailView(generics.RetrieveAPIView):
     """
@@ -53,8 +54,6 @@ class AccountProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     parser_classes = (MultiPartParser, FormParser, JSONParser,)
 
 
-
-
 class SocialListApiView(generics.ListCreateAPIView):
     """
     Retrieve a social account
@@ -82,3 +81,9 @@ class SocialDestroyApiView(generics.DestroyAPIView):
     permission_classes = (
         permissions.IsAuthenticated,
     )
+
+
+class SignupView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = SignupSerializer
+    permission_classes = (custompermission.IsAuthenticatedOrCreate,)
