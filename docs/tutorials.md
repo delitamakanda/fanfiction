@@ -9,3 +9,5 @@
 - https://testdriven.io/blog/flask-social-auth/
 - https://testdriven.io/blog/django-charts/
 - https://testdriven.io/blog/accepting-payments-with-stripe-vuejs-and-flask/
+
+- https://yeti.co/blog/oauth2-with-django-rest-framework/
