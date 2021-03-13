@@ -315,7 +315,6 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:4200',
     'https://delitamakanda.github.io',
     'https://fanfiction-fr.herokuapp.com',
-    'http://localhost',
     'https://fanfiction-fr.netlify.app'
 )
 
