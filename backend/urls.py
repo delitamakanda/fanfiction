@@ -197,6 +197,6 @@ if settings.DEBUG:
 
 urlpatterns += [
     path('markdownx/', include('markdownx.urls')),
-    path('oauth2-social/', include('rest_framework_social_oauth2.urls')),
-    path('oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('api/oauth2-social/', include('rest_framework_social_oauth2.urls')),
+    path('api/oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
