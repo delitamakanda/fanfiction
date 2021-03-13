@@ -107,5 +107,5 @@ class FollowStoriesSerializer(serializers.ModelSerializer):
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'password', ,'email')
+        fields = ('username', 'password', 'email')
         write_only_fields = ('password',)
