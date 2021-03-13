@@ -322,4 +322,5 @@ CORS_ORIGIN_WHITELIST = (
     'https://fanfiction-fr.netlify.app',
 )
 
-CORS_URLS_REGEX = r'^/(api)/.*$'
+CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_CREDENTIALS = True
