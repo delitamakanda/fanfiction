@@ -57,8 +57,11 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'api.customauthentication.CsrfExemptSessionAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
@@ -73,7 +76,9 @@ REST_FRAMEWORK = {
         'fanfic': '2000/days',
     },
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
-    # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    'SEARCH_PARAM': 'q',
+    'ORDERING_PARAM': 'ordering',
 }
 
 # Python Social Auth
