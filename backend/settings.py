@@ -84,7 +84,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'api.middleware.AutoLogout',
     'django.middleware.locale.LocaleMiddleware',
-    'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
 
 SESSION_COOKIE_NAME = 'oauth2provider_sessionid'
@@ -215,8 +214,8 @@ REST_FRAMEWORK = {
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        # 'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
