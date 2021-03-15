@@ -73,9 +73,9 @@ INSTALLED_APPS += [
 SITE_ID = 1
 
 MIDDLEWARE = [
-	'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+	'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -212,7 +212,6 @@ REST_FRAMEWORK = {
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
@@ -240,9 +239,9 @@ OAUTH2_PROVIDER = {
     'SCOPES': {
         'read': 'Read scope',
         'write': 'Write scope',
-        # 'groups': 'Access to your groups'
+        'groups': 'Access to your groups'
     },
-    'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
+    # 'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -314,13 +313,13 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 
 # corsheaders
 # CORS_ORIGIN_WHITELIST = (
-    # 'http://localhost:8100',
-	# 'http://localhost:8080',
-    # 'http://localhost:4200',
-	# 'http://localhost',
-    # 'https://delitamakanda.github.io',
-    # 'https://fanfiction-fr.herokuapp.com',
-    # 'https://fanfiction-fr.netlify.app',
+#     'http://localhost:8100',
+# 	'http://localhost:8080',
+#     'http://localhost:4200',
+# 	'http://localhost',
+#     'https://delitamakanda.github.io',
+#     'https://fanfiction-fr.herokuapp.com',
+#     'https://fanfiction-fr.netlify.app',
 # )
 
 CORS_ORIGIN_ALLOW_ALL = True
