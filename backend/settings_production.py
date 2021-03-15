@@ -47,9 +47,9 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'api.custompagination.LimitOffsetPaginationWithUpperBound',
     'PAGE_SIZE': 4,
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
+    # 'DEFAULT_RENDERER_CLASSES': (
+        # 'rest_framework.renderers.JSONRenderer',
+    # ),
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
