@@ -3,7 +3,7 @@ celery==4.4.7
 certifi==2018.1.18
 chardet==3.0.4
 defusedxml
-django==2.2.13
+django==2.2.18
 django-allauth==0.35.0
 django-embed-video==1.1.2
 django-filter==2.2.0
