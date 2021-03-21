@@ -27,6 +27,7 @@ from accounts.api.views import (
     AccountProfileDetailView,
     SocialListApiView,
     SocialDestroyApiView,
+    GroupListView,
     SignupView,
 )
 
@@ -147,6 +148,7 @@ urlpatterns += [
          name='socialaccount-createview'),
     path('api/users/social-account/<int:pk>/delete/',
          SocialDestroyApiView.as_view(), name='socialaccount-destroy'),
+     path('api/groups/', GroupListView.as_view()),
      path('api/sign_up/', SignupView.as_view(), name="sign_up"),
 
     path('api/faq/', FoireAuxQuestionsApiView.as_view(), name='faq'),

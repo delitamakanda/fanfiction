@@ -25,7 +25,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', cast=str, default='dummy_secret_key') # hack for CI
+SECRET_KEY = config('SECRET_KEY', cast=str,
+                    default='dummy_secret_key')  # hack for CI
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
@@ -75,10 +76,10 @@ SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -208,10 +209,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'api.customauthentication.CsrfExemptSessionAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
@@ -235,6 +236,7 @@ REST_FRAMEWORK = {
 # OAuth settings
 
 OAUTH2_PROVIDER = {
+    # 'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
     'SCOPES': {
         'read': 'Read scope',
         'write': 'Write scope',
@@ -269,8 +271,10 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Asynchronous tasks
 
-CELERY_BROKER_URL = config('REDIS_URL', cast=str, default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = config('REDIS_URL', cast=str, default='redis://localhost:6379/0')
+CELERY_BROKER_URL = config('REDIS_URL', cast=str,
+                           default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = config(
+    'REDIS_URL', cast=str, default='redis://localhost:6379/0')
 REDIS_URL = config('REDIS_URL', cast=str, default='redis://localhost:6379/0')
 CELEY_BROKER_POOL_LIMIT = 3
 

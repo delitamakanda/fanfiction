@@ -1,13 +1,14 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404
 
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser, JSONParser
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 
 from api import custompermission
 
-from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, SignupSerializer
+from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, SignupSerializer, GroupSerializer
 from fanfics.api.serializers import UserFanficSerializer, SocialSerializer, UserSerializer
 
 from accounts.models import AccountProfile, FollowUser, FollowStories, Social
@@ -81,6 +82,13 @@ class SocialDestroyApiView(generics.DestroyAPIView):
     permission_classes = (
         permissions.IsAuthenticated,
     )
+
+
+class GroupListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, TokenHasScope]
+    required_scopes = ['groups']
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
 
 
 class SignupView(generics.CreateAPIView):
