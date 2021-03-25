@@ -315,15 +315,21 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 }
 
 # corsheaders
-CORS_ORIGIN_WHITELIST = (
+CORS_ORIGIN_WHITELIST = [
     'http://localhost:8100',
-	'http://localhost:8080',
+    'http://localhost:8080',
     'http://localhost:4200',
-	'http://localhost',
+    'http://localhost',
     'https://delitamakanda.github.io',
     'https://fanfiction-fr.herokuapp.com',
-    'https://fanfiction-fr.netlify.app',
-)
+    'https://fanfiction-fr.netlify.app'
+]
+
+CORS_URLS_REGEX = r'^/api/.*$'
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://\w+\.netlify\.app$",
+]
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
