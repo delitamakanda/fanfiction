@@ -1,7 +1,7 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 
 export function getNews(postSlug) {
-    return $fetch(`posts/${postSlug}`)
+    return $fetch(`posts/${postSlug}/`)
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -19,7 +19,7 @@ export function fetchNews() {
 }
 
 export function editNews(data) {
-    return $fetch(`posts/${data.id}/edit`, {
+    return $fetch(`posts/${data.id}/edit/`, {
         method: 'put',
         body: JSON.stringify({
             user: data.user,
@@ -37,7 +37,7 @@ export function editNews(data) {
 }
 
 export function deleteNews(data) {
-    return $fetch(`posts/${data}`, {
+    return $fetch(`posts/${data}/`, {
         method: 'delete'
     })
     .then(res => res)

@@ -40,7 +40,7 @@ export function getFanficsPublishSearch(status, searchTerm) {
 }
 
 export function getFanfic(slug) {
-    return $fetch(`fanfics/${slug}/detail`)
+    return $fetch(`fanfics/${slug}/detail/`)
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -49,7 +49,7 @@ export function getFanfic(slug) {
 }
 
 export function getEditFanfic(id) {
-    return $fetch(`fanfics/${id}/fanfic-detail`)
+    return $fetch(`fanfics/${id}/fanfic-detail/`)
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -58,7 +58,7 @@ export function getEditFanfic(id) {
 }
 
 export function getStarredAuthor(authorUsername) {
-    return $fetch(`following-authors/${authorUsername}`)
+    return $fetch(`following-authors/${authorUsername}/`)
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -67,7 +67,7 @@ export function getStarredAuthor(authorUsername) {
 }
 
 export function getStarredFanfic(authorUsername) {
-    return $fetch(`following-stories/${authorUsername}`)
+    return $fetch(`following-stories/${authorUsername}/`)
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -76,7 +76,7 @@ export function getStarredFanfic(authorUsername) {
 }
 
 export function getGenres() {
-    return $fetch('genres')
+    return $fetch('genres/')
     .then(res => {
         return res[0].genres;
     })
@@ -87,7 +87,7 @@ export function getGenres() {
 }
 
 export function getClassement() {
-    return $fetch('classement')
+    return $fetch('classement/')
     .then(res => res[0].classement)
     .catch(err => {
         console.log(err);
@@ -96,7 +96,7 @@ export function getClassement() {
 }
 
 export function getStatus() {
-    return $fetch('status')
+    return $fetch('status/')
     .then(res => res[0].status)
     .catch(err => {
         console.log(err);
@@ -105,7 +105,7 @@ export function getStatus() {
 }
 
 export function putFanfic(id, title, description, synopsis, credits, userId, genre, classement, status, category, subcategory) {
-    return $fetch(`fanfics/${id}/fanfic-detail`, {
+    return $fetch(`fanfics/${id}/fanfic-detail/`, {
         method: 'put',
         body: JSON.stringify({
             title: title,
@@ -125,7 +125,7 @@ export function putFanfic(id, title, description, synopsis, credits, userId, gen
 }
 
 export function deleteFanfic(id) {
-    return $fetch(`fanfics/${id}/fanfic-detail`, {
+    return $fetch(`fanfics/${id}/fanfic-detail/`, {
         method: 'delete',
         body: JSON.stringify({
             id: id

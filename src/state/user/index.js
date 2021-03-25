@@ -77,7 +77,7 @@ export const actions = {
     },
     async connect ({commit}) {
         try {
-            const user = await $fetch('user')
+            const user = await $fetch('user/')
             commit('user', user)
             if (user && user.id != null) {
                 router.replace(router.currentRoute.params.wantedRoute || { name: 'Dashboard'})
@@ -90,7 +90,7 @@ export const actions = {
     async authenticate ({commit}, data) {
 
         try {
-            const user = await $fetch('login', {
+            const user = await $fetch('login/', {
                 method: 'POST',
                 body: JSON.stringify({
                     username: data.username,
@@ -113,7 +113,7 @@ export const actions = {
     },
     async register ({commit}, data) {
         try {
-            const user = await $fetch('signup', {
+            const user = await $fetch('signup/', {
                 method: 'POST',
                 body: JSON.stringify({
                     username: data.username,
@@ -143,7 +143,7 @@ export const actions = {
 
         try {
 
-            const result = await $fetch('disable-account')
+            const result = await $fetch('disable-account/')
 
             if ((result.status === 'ok') && (router.currentRoute.matched.some(m => m.meta.private))) {
                 commit('user', {})

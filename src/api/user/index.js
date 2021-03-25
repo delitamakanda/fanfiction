@@ -1,7 +1,7 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 
 export function getProfile(username) {
-    return $fetch(`users/${username}/profile`)
+    return $fetch(`users/${username}/profile/`)
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -10,7 +10,7 @@ export function getProfile(username) {
 }
 
 export function editProfile(userUsername, dateOfBirth, profileBio) {
-    return $fetch(`users/${userUsername}/profile`, {
+    return $fetch(`users/${userUsername}/profile/`, {
         method: 'put',
         body: JSON.stringify({
             date_of_birth: dateOfBirth,
@@ -22,7 +22,7 @@ export function editProfile(userUsername, dateOfBirth, profileBio) {
 }
 
 export function editPhoto(userUsername, profilePhoto) {
-    return $fetch(`users/${userUsername}/profile`, {
+    return $fetch(`users/${userUsername}/profile/`, {
         method: 'put',
         body: JSON.stringify({
             photo: profilePhoto
@@ -33,7 +33,7 @@ export function editPhoto(userUsername, profilePhoto) {
 }
 
 export function editUserEmail(userId, userEmail) {
-    return $fetch(`users/${userId}`, {
+    return $fetch(`users/${userId}/`, {
         method: 'put',
         body: JSON.stringify({
             email: userEmail
@@ -47,7 +47,7 @@ export function editUserEmail(userId, userEmail) {
 }
 
 export function changePassword(oldPassword, newPassword) {
-    return $fetch(`change-password`, {
+    return $fetch(`change-password/`, {
         method: 'put',
         body: JSON.stringify({
             old_password: oldPassword,
@@ -62,7 +62,7 @@ export function changePassword(oldPassword, newPassword) {
 }
 
 export function createSocialAccount(profileId, network, nichandle, userId) {
-    return $fetch(`users/social-account`, {
+    return $fetch(`users/social-account/`, {
         method: 'post',
         body: JSON.stringify({
             account: profileId,
@@ -79,7 +79,7 @@ export function createSocialAccount(profileId, network, nichandle, userId) {
 }
 
 export function deleteSocialAccount(socialAccountId) {
-    return $fetch(`users/social-account/${socialAccountId}/delete`, {
+    return $fetch(`users/social-account/${socialAccountId}/delete/`, {
         method: 'delete',
         body: JSON.stringify({
             id: socialAccountId
@@ -90,7 +90,7 @@ export function deleteSocialAccount(socialAccountId) {
 }
 
 export function deletePhoto(profileId) {
-    return $fetch(`remove-photo/${profileId}`, {
+    return $fetch(`remove-photo/${profileId}/`, {
         method: 'put',
         body: JSON.stringify({
             id: profileId

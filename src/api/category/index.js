@@ -1,7 +1,7 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 
 export function getCategories() {
-    return $fetch('category')
+    return $fetch('category/')
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -10,7 +10,7 @@ export function getCategories() {
 }
 
 export function getSubcategories() {
-    return $fetch('subcategory')
+    return $fetch('subcategory/')
     .then(res => res)
     .catch(err => {
         console.log(err);

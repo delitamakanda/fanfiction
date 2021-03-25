@@ -1,7 +1,7 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 
 export function getNotificationsUser() {
-    return $fetch('notifications')
+    return $fetch('notifications/')
     .then(res => res.results)
     .catch(err => {
         console.log(err);
@@ -10,7 +10,7 @@ export function getNotificationsUser() {
 }
 
 export function getPages(page) {
-    return $fetch(`pages/${page}`)
+    return $fetch(`pages/${page}/`)
     .then(res => res)
     .catch(err => {
         console.log(err);
@@ -19,7 +19,7 @@ export function getPages(page) {
 }
 
 export function sendMail(user, subject, message) {
-    return $fetch('contact-mail', {
+    return $fetch('contact-mail/', {
         method: 'post',
         body: JSON.stringify({
             from_email: user,
@@ -32,7 +32,7 @@ export function sendMail(user, subject, message) {
 }
 
 export function preventAbuse(fanficId) {
-    return $fetch('feedback', {
+    return $fetch('feedback/', {
         method: 'post',
         body: JSON.stringify({
             id: fanficId
@@ -43,7 +43,7 @@ export function preventAbuse(fanficId) {
 }
 
 export function followFanfic (fromUserId, followFanficId) {
-    return $fetch('follow-stories', {
+    return $fetch('follow-stories/', {
         method: 'post',
         body: JSON.stringify({
             from_user: fromUserId,
@@ -55,7 +55,7 @@ export function followFanfic (fromUserId, followFanficId) {
 }
 
 export function disFollowFanfic (followFanficId) {
-    return $fetch('follow-stories', {
+    return $fetch('follow-stories/', {
         method: 'delete',
         body: JSON.stringify({
             id: followFanficId
@@ -66,7 +66,7 @@ export function disFollowFanfic (followFanficId) {
 }
 
 export function followAuthor (fromUserId, toUserId) {
-    return $fetch('follow-user', {
+    return $fetch('follow-user/', {
         method: 'post',
         body: JSON.stringify({
             user_from: fromUserId,
@@ -78,7 +78,7 @@ export function followAuthor (fromUserId, toUserId) {
 }
 
 export function disFollowAuthor (fromUserId) {
-    return $fetch('follow-user', {
+    return $fetch('follow-user/', {
         method: 'delete',
         body: JSON.stringify({
             id: fromUserId
@@ -89,19 +89,19 @@ export function disFollowAuthor (fromUserId) {
 }
 
 export function getFollowAuthor () {
-    return $fetch('follow-user')
+    return $fetch('follow-user/')
     .then(res => res)
     .catch(err => console.log(err))
 }
 
 export function getFollowFanfic () {
-    return $fetch('follow-stories')
+    return $fetch('follow-stories/')
     .then(res => res)
     .catch(err => console.log(err))
 }
 
 export function favorite (fanficId, userId) {
-    return $fetch('favorite', {
+    return $fetch('favorite/', {
         method: 'post',
         body: JSON.stringify({
             id: fanficId,
@@ -113,7 +113,7 @@ export function favorite (fanficId, userId) {
 }
 
 export function unfavorite (fanficId, userId) {
-    return $fetch('unfavorite', {
+    return $fetch('unfavorite/', {
         method: 'post',
         body: JSON.stringify({
             id: fanficId,
