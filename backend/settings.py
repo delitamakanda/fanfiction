@@ -331,5 +331,5 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://\w+\.netlify\.app$",
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
