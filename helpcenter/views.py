@@ -45,6 +45,7 @@ def browse_by_title(request, initial=None):
     })
 
 
+@method_decorator(xframe_options_exempt, name='dispatch')
 class SearchSubmitView(View):
     template = 'help/search_submit.html'
     response_message = 'Search'
@@ -60,12 +61,14 @@ class SearchSubmitView(View):
         return HttpResponse(rendered_template, content_type='text/html')
 
 
+@method_decorator(xframe_options_exempt, name='dispatch')
 class SearchAjaxSubmitView(SearchSubmitView):
     template = 'help/search_results.html'
     response_message = ''
 
 
 questions = FoireAuxQuestions.objects.all().order_by('libelle')
+
 
 @xframe_options_exempt
 def foire_aux_questions_view(request):
