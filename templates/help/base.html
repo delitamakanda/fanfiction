@@ -1,15 +1,9 @@
-{% load render_bundle from webpack_loader %}
 {% load staticfiles %}
+{% load i18n %}
 <html lang="fr">
     <head>
     <meta charset="UTF-8">
-    <title>Fanfiction</title>
-    <meta property="og:title" content="Fanfiction" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="fanfiction.us-east-1.elasticbeanstalk.com/" />
-    <meta property="og:image" content="{% static 'favicon-32x32.png' %}" />
-    <meta property="og:locale" content="fr_FR" />
-    <meta property="og:og:site_name" content="Fanfiction" />
+    <title>Fanfiction {% block title %}{% endblock %}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="apple-touch-icon" sizes="57x57" href="{% static 'apple-icon-57x57.png' %}">
@@ -32,22 +26,25 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="mobile-web-app-capable" content="yes">
-    {% render_bundle 'app' 'css' %}
+    <link rel="stylesheet" href="{% static 'styles/tailwind.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    {% block styles %}
+    {% endblock %}
     </head>
-    <body>
+    <body id="page" class="container mx-auto">
         {% block content %}
         {% endblock %}
-        {% render_bundle 'app' 'js' %}
         <script>
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker
-          .register("{% static 'sw.js' %}")
-          .then(function() {
-              console.log('Service Worker Registered');
-            }).catch(function(error){
-              console.log(error);
-            });
+        var submenu = document.querySelector('.submenu');
+        var el = document.querySelector('.menu');
+
+        el.onclick = function () {
+            submenu.classList.toggle('is-active');
         }
-    </script>
+        </script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="//cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
+        {% block scripts %}
+        {% endblock %}
     </body>
 </html>

@@ -26,16 +26,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="{% static 'styles/tailwind.css' %}">
-    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
     {% block styles %}
     {% endblock %}
     </head>
-    <body id="webview" class="container mx-auto">
-        <div class="container">
-            {% block content %}
-            {% endblock %}
-        </div>
+    <body id="webview">
+        {% block content %}
+        {% endblock %}
+        
         {% block scripts %}
         {% endblock %}
     </body>

@@ -5,8 +5,8 @@
 	{% if items %}
 
     	{% for item in items %}
-        <dl>
-            <dt>{{ item.title }}</dt>
+        <dl class="my-6">
+            <dt class="font-semibold">{{ item.title }}</dt>
             <dd>{{ item.definition }}</dd>
         </dl>
     	{% endfor %}

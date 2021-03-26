@@ -1,5 +1,7 @@
+{% load i18n %}
+
 {% if query %}
   {% include 'help/search_results.html' %}
 {% else %}
-  <p>Pas de définition.</p>
+  <p>{% trans "Pas de définition." %}</p>
 {% endif %}
