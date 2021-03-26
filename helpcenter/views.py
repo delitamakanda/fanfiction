@@ -14,6 +14,7 @@ from django.template import loader
 from django.template.loader import get_template, render_to_string
 from django.http import HttpResponse, Http404
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from helpcenter.models import Lexique, FoireAuxQuestions
 
@@ -29,10 +30,12 @@ from markdownx.utils import markdownify
 
 from helpcenter.forms import NewTopicForm, ReplyMessageForm
 
-# Create your views here.
+
+@xframe_options_exempt
 def browse_by_title(request, initial=None):
     if initial:
-        words = Lexique.objects.filter(title__istartswith=initial).order_by('title')
+        words = Lexique.objects.filter(
+            title__istartswith=initial).order_by('title')
     else:
         words = Lexique.objects.all().order_by('title')
 
@@ -51,7 +54,8 @@ class SearchSubmitView(View):
         query = request.POST.get('search', '')
         words = Lexique.objects.all().order_by('title')
         items = Lexique.objects.filter(title__icontains=query)
-        context = {'title': self.response_message, 'query': query, 'items': items, 'words': words}
+        context = {'title': self.response_message,
+                   'query': query, 'items': items, 'words': words}
         rendered_template = template.render(context, request)
         return HttpResponse(rendered_template, content_type='text/html')
 
@@ -62,6 +66,8 @@ class SearchAjaxSubmitView(SearchSubmitView):
 
 
 questions = FoireAuxQuestions.objects.all().order_by('libelle')
+
+@xframe_options_exempt
 def foire_aux_questions_view(request):
     for question in questions:
         question.reponse = markdownify(question.reponse)
@@ -76,7 +82,8 @@ class CommunitiesListView(ListView):
 
 def communities_view_board_topics(request, pk):
     board = get_object_or_404(Board, pk=pk)
-    queryset = board.topics.order_by('-last_updated').annotate(replies=Count('messages') - 1)
+    queryset = board.topics.order_by(
+        '-last_updated').annotate(replies=Count('messages') - 1)
     page = request.GET.get('page', 1)
     paginator = Paginator(queryset, 20)
 
@@ -128,7 +135,8 @@ class MessageListView(ListView):
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
-        self.topic = get_object_or_404(Topic, board__pk=self.kwargs.get('pk'), pk=self.kwargs.get('topic_pk'))
+        self.topic = get_object_or_404(Topic, board__pk=self.kwargs.get(
+            'pk'), pk=self.kwargs.get('topic_pk'))
         queryset = self.topic.messages.order_by('created_at')
         return queryset
 
@@ -147,7 +155,8 @@ def communities_view_topic_messages_reply(request, pk, topic_pk):
             topic.last_updated = timezone.now()
             topic.save()
 
-            topic_url = reverse('helpcenter:board_topic_message', kwargs={'pk': pk, 'topic_pk': topic_pk})
+            topic_url = reverse('helpcenter:board_topic_message', kwargs={
+                                'pk': pk, 'topic_pk': topic_pk})
             topic_message_url = '{url}?page={page}#{id}'.format(
                 url=topic_url,
                 id=message.pk,
@@ -180,7 +189,6 @@ class MessageUpdateView(UpdateView):
         return redirect('helpcenter:board_topic_message', pk=message.topic.board.pk, topic_pk=message.topic.pk)
 
 
-
 def fanfic_pdf(request, fanfic_id):
     """
     Generate pdf output
@@ -188,10 +196,13 @@ def fanfic_pdf(request, fanfic_id):
     try:
         fanfic = Fanfic.objects.get(id=fanfic_id)
         chapters = Chapter.objects.filter(fanfic=fanfic, status="publié")
-        html = render_to_string('pdf/fanfic.html', {'fanfic': fanfic, 'chapters': chapters})
+        html = render_to_string(
+            'pdf/fanfic.html', {'fanfic': fanfic, 'chapters': chapters})
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'filename="fanfic_{}.pdf"'.format(fanfic.id)
-        weasyprint.HTML(string=html).write_pdf(response, stylesheets=[weasyprint.CSS(settings.STATIC_ROOT + '/styles/base.css')])
+        response['Content-Disposition'] = 'filename="fanfic_{}.pdf"'.format(
+            fanfic.id)
+        weasyprint.HTML(string=html).write_pdf(response, stylesheets=[
+            weasyprint.CSS(settings.STATIC_ROOT + '/styles/base.css')])
         return response
     except ObjectDoesNotExist:
         raise Http404("Cette fanfiction n'existe pas")
