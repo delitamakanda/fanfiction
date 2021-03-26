@@ -29,6 +29,11 @@ from accounts.api.views import (
     SocialDestroyApiView,
     GroupListView,
     SignupView,
+    FavoritedFanficView,
+    UnfavoritedFanficView,
+    FollowUserView,
+    FollowStoriesView,
+    DeleteAccountView,
 )
 
 from helpcenter.api.views import (
@@ -76,11 +81,6 @@ from api.views import (
 
 from api.api import (
     EmailFeedbackView,
-    FavoritedFanficView,
-    UnfavoritedFanficView,
-    FollowUserView,
-    FollowStoriesView,
-    DeleteAccountView,
     ContactMailView,
     FlatPagesView,
     FlatPagesByTypeView,

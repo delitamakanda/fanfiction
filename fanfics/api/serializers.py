@@ -54,7 +54,7 @@ class SocialSerializer(serializers.ModelSerializer):
             'nichandle',
             'user',
         )
-    
+
     def create(self, validated_data):
         return Social.objects.create(**validated_data)
 
@@ -88,50 +88,51 @@ class UserFanficSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-          'id',
-          'username',
-          'email',
-          'social',
-          'fanfics',
-          'authors',
-          'stories',
+            'id',
+            'username',
+            'email',
+            'social',
+            'fanfics',
+            'authors',
+            'stories',
         )
 
 
 class FanficSerializer(serializers.ModelSerializer):
     genres = serializers.MultipleChoiceField(choices=Fanfic.GENRES_CHOICES)
-    classement = serializers.ChoiceField(choices=Fanfic.CLASSEMENT_CHOICES, default='g')
-    status = serializers.ChoiceField(choices=Fanfic.STATUS_CHOICES, default='brouillon')
+    classement = serializers.ChoiceField(
+        choices=Fanfic.CLASSEMENT_CHOICES, default='g')
+    status = serializers.ChoiceField(
+        choices=Fanfic.STATUS_CHOICES, default='brouillon')
 
     class Meta:
         model = Fanfic
         fields = (
-          'id',
-          'author',
-          'title',
-          'slug',
-          'synopsis',
-          'credits',
-          'description',
-          'genres',
-          'classement',
-          'publish',
-          'created',
-          'updated',
-          'was_featured_in_home',
-          'status',
-          'users_like',
-          'total_likes',
-          'objects',
-          'published',
-          'category',
-          'subcategory',
-          'views',
-          'fanfic_is_scraped',
-          'link_fanfic',
+            'id',
+            'author',
+            'title',
+            'slug',
+            'synopsis',
+            'credits',
+            'description',
+            'genres',
+            'classement',
+            'publish',
+            'created',
+            'updated',
+            'was_featured_in_home',
+            'status',
+            'users_like',
+            'total_likes',
+            'objects',
+            'published',
+            'category',
+            'subcategory',
+            'views',
+            'fanfic_is_scraped',
+            'link_fanfic',
         )
         lookup_field = 'slug'
-
 
     def create(self, validated_data):
         # will only be done if a new object is being created
@@ -145,12 +146,15 @@ class FanficSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.category = validated_data.get('category', instance.category)
-        instance.subcategory = validated_data.get('subcategory', instance.subcategory)
+        instance.subcategory = validated_data.get(
+            'subcategory', instance.subcategory)
         instance.title = validated_data.get('title', instance.title)
         instance.credits = validated_data.get('credits', instance.credits)
-        instance.description = validated_data.get('description', instance.description)
+        instance.description = validated_data.get(
+            'description', instance.description)
         instance.synopsis = validated_data.get('synopsis', instance.synopsis)
-        instance.classement = validated_data.get('classement', instance.classement)
+        instance.classement = validated_data.get(
+            'classement', instance.classement)
         instance.genres = validated_data.get('genres', instance.genres)
         instance.status = validated_data.get('status', instance.status)
         instance.updated = timezone.now()
@@ -171,33 +175,32 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fanfic
         fields = (
-          'id',
-          'author',
-          'title',
-          'slug',
-          'synopsis',
-          'credits',
-          'description',
-          'genres',
-          'classement',
-          'publish',
-          'created',
-          'updated',
-          'was_featured_in_home',
-          'status',
-          'users_like',
-          'total_likes',
-          'objects',
-          'published',
-          'category',
-          'subcategory',
-          'recommended_fanfics',
-          'views',
-          'fanfic_is_scraped',
-          'link_fanfic',
+            'id',
+            'author',
+            'title',
+            'slug',
+            'synopsis',
+            'credits',
+            'description',
+            'genres',
+            'classement',
+            'publish',
+            'created',
+            'updated',
+            'was_featured_in_home',
+            'status',
+            'users_like',
+            'total_likes',
+            'objects',
+            'published',
+            'category',
+            'subcategory',
+            'recommended_fanfics',
+            'views',
+            'fanfic_is_scraped',
+            'link_fanfic',
         )
         lookup_field = 'slug'
-
 
     def get_genres(self, obj):
         return obj.get_genres_display()
@@ -221,24 +224,24 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-          'id',
-          'username',
-          'first_name',
-          'last_name',
-          'fanfics',
-          'password',
-          'email',
-          'is_active',
-          'is_staff',
-          'is_superuser',
-          'date_joined',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'fanfics',
+            'password',
+            'email',
+            'is_active',
+            'is_staff',
+            'is_superuser',
+            'date_joined',
         )
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = User(
-            email = validated_data["email"],
-            username = validated_data["username"]
+            email=validated_data["email"],
+            username=validated_data["username"]
         )
         user.set_password(validated_data["password"])
         user.save()
@@ -248,6 +251,40 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError('Cette e-mail est déja utilisée.')
+            raise serializers.ValidationError(
+                'Cette e-mail est déja utilisée.')
         return value
 
+
+class FollowUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FollowUser
+        fields = (
+            'id',
+            'user_from',
+            'user_to',
+            'created'
+        )
+
+    def create(self, validated_data):
+        create_notification(
+            validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
+        return FollowUser.objects.create(**validated_data)
+
+
+class FollowStoriesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FollowStories
+        fields = (
+            'id',
+            'from_user',
+            'to_fanfic',
+            'created'
+        )
+
+    def create(self, validated_data):
+        create_notification(
+            validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
+        return FollowStories.objects.create(**validated_data)

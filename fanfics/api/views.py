@@ -1,7 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from django.http import Http404
 
-from rest_framework import generics, permissions, filters, status
+from rest_framework import generics, permissions, filters, status, views
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
@@ -14,6 +14,7 @@ from api import custompermission, recommender
 
 from api.tasks import fanfic_created
 
+
 class GenresListView(generics.ListAPIView):
     queryset = Fanfic.objects.all()[:1]
     serializer_class = GenresSerializer
@@ -21,7 +22,7 @@ class GenresListView(generics.ListAPIView):
     permission_classes = (
         permissions.AllowAny,
     )
-    name='genre-list'
+    name = 'genre-list'
 
 
 class ClassementListView(generics.ListAPIView):
@@ -31,7 +32,7 @@ class ClassementListView(generics.ListAPIView):
     permission_classes = (
         permissions.AllowAny,
     )
-    name='classement-list'
+    name = 'classement-list'
 
 
 class StatusListView(generics.ListAPIView):
@@ -41,7 +42,7 @@ class StatusListView(generics.ListAPIView):
     permission_classes = (
         permissions.AllowAny,
     )
-    name='status-list'
+    name = 'status-list'
 
 
 class FanficCreateApiView(generics.ListCreateAPIView):
@@ -71,7 +72,7 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         'created'
     )
     ordering = ('title',)
-    name='fanfic-create'
+    name = 'fanfic-create'
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -87,7 +88,6 @@ class FanficCreateApiView(generics.ListCreateAPIView):
             user = None
             return Fanfic.objects.all()
 
-
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
         # launch asynchronous tasks
@@ -99,7 +99,7 @@ class FanficDetailView(generics.RetrieveAPIView):
     throttle_classes = (ScopedRateThrottle,)
     queryset = Fanfic.objects.all()
     serializer_class = FanficFormattedSerializer
-    name='fanfic-detail'
+    name = 'fanfic-detail'
     permission_classes = (
         permissions.AllowAny,
     )
@@ -116,9 +116,9 @@ class FanficDetailView(generics.RetrieveAPIView):
                 instance.save()
                 self.request.session[session_key] = True
 
-
             r = recommender.Recommender()
-            most_viewed_fanfic = Fanfic.objects.filter(status='publié').order_by('-views')[0]
+            most_viewed_fanfic = Fanfic.objects.filter(
+                status='publié').order_by('-views')[0]
             print(most_viewed_fanfic)
             liked_fanfics = r.fanfics_liked([instance, most_viewed_fanfic])
 
@@ -127,7 +127,8 @@ class FanficDetailView(generics.RetrieveAPIView):
             return Response(data, status=status.HTTP_200_OK)
         except Http404:
             headers = ""
-            response = {"status": "False", "message": "Details not found", "data": ""}
+            response = {"status": "False",
+                        "message": "Details not found", "data": ""}
             return Response(response, status=status.HTTP_404_NOT_FOUND, headers=headers)
 
 
@@ -136,7 +137,7 @@ class FanficUpdateDetailView(generics.RetrieveUpdateDestroyAPIView):
     throttle_classes = (ScopedRateThrottle,)
     queryset = Fanfic.objects.all()
     serializer_class = FanficSerializer
-    name='fanfic-update-detail'
+    name = 'fanfic-update-detail'
     permission_classes = (
         permissions.AllowAny,
         custompermission.IsCurrentAuthorOrReadOnly,
