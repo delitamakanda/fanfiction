@@ -34,14 +34,7 @@
     <body id="page" class="container mx-auto">
         {% block content %}
         {% endblock %}
-        <script>
-        var submenu = document.querySelector('.submenu');
-        var el = document.querySelector('.menu');
-
-        el.onclick = function () {
-            submenu.classList.toggle('is-active');
-        }
-        </script>
+		
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="//cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
         {% block scripts %}
