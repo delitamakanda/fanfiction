@@ -16,17 +16,3 @@
 {% empty %}
     <p>{% trans "Pas de définitions." %}</p>
 {% endfor %}
-
-<script>
-var link = document.getElementsByClassName("disable-link");
-var i;
-
-for (i = 0; i < link.length; i++) {
-  link[i].addEventListener("click", function(e) {
-    console.log(window.history)
-    window.history.pushState('obj', 'newtitle', '/help/browse/title');
-    // e.preventDefault();
-    // e.stopImmediatePropagation();
-  });
-}
-</script>
