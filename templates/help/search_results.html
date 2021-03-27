@@ -1,5 +1,7 @@
+{% load i18n %}
+
 {% if query %}
-	<p>Recherche: <strong>{{ query }}</strong></p>
+	<p>{% trans "Recherche" %}: <strong>{{ query }}</strong></p>
 	<p>{{ title }}</p>
 
 	{% if items %}

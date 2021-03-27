@@ -15,6 +15,7 @@ from django.template.loader import get_template, render_to_string
 from django.http import HttpResponse, Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.views.decorators.csrf import csrf_exempt
 
 from helpcenter.models import Lexique, FoireAuxQuestions
 
@@ -61,6 +62,7 @@ class SearchSubmitView(View):
         return HttpResponse(rendered_template, content_type='text/html')
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 @method_decorator(xframe_options_exempt, name='dispatch')
 class SearchAjaxSubmitView(SearchSubmitView):
     template = 'help/search_results.html'

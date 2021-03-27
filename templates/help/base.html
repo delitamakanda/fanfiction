@@ -35,8 +35,8 @@
         {% block content %}
         {% endblock %}
 		
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="//cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
+        <script src="{% static 'scripts/jquery.min.js' %}"></script>
+        <script src="{% static 'scripts/intercooler-1.1.1.min.js' %}"></script>
         {% block scripts %}
         {% endblock %}
     </body>
