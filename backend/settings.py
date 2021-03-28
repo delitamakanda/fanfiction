@@ -79,8 +79,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'api.middleware.AutoLogout',
@@ -240,8 +240,11 @@ OAUTH2_PROVIDER = {
     'SCOPES': {
         'read': 'Read scope',
         'write': 'Write scope',
-        'groups': 'Access to your groups'
+        'groups': 'Access to your groups',
     },
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 60*60*60,  # 3 hours
+    'REFRESH_TOKEN_EXPIRE_SECONDS': 7*24*60*60,  # A week
+    'ROTATE_REFRESH_TOKEN': True,
     # 'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
 }
 

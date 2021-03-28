@@ -1,24 +1,27 @@
 import json
 
 from django.shortcuts import render, HttpResponse
-from django.http import Http404
+from django.http import Http404, HttpResponse
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from rest_framework import generics, permissions, views, status, viewsets
-from rest_framework.response import Response
-from api.serializers import ChangePasswordSerializer
-from api.serializers import UserSerializer
-from accounts.api.serializers import DeleteProfilePhotoSerializer, SocialSignUpSerializer
 
 from social_django.utils import load_strategy
 from social_django.utils import load_backend
 from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
 from social_core.exceptions import AuthAlreadyAssociated
 
+from rest_framework import generics, permissions, views, status, viewsets
+from rest_framework.response import Response
+
+from api.serializers import ChangePasswordSerializer
+from api.serializers import UserSerializer
+from accounts.api.serializers import DeleteProfilePhotoSerializer, SocialSignUpSerializer
+
 from accounts.models import AccountProfile
 
 from api.custompermission import IsAuthenticatedOrCreate
+
 
 class SocialSignUp(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -46,7 +49,8 @@ class SocialSignUp(generics.CreateAPIView):
         strategy = load_strategy(request)
         # Now we get the backend that corresponds to our user's social auth provider
         # e.g., Facebook, Twitter, etc.
-        backend = load_backend(strategy=strategy, name=provider, redirect_uri=None)
+        backend = load_backend(
+            strategy=strategy, name=provider, redirect_uri=None)
 
         if isinstance(backend, BaseOAuth1):
             # Twitter, for example, uses OAuth1 and requires that you also pass
@@ -100,18 +104,17 @@ class UserCreateView(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
 
 
-
 class LoginView(views.APIView):
     """
     Login user
     """
     serializer_class = UserSerializer
-    permission_classes = ( permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         # profile = AccountProfile.objects.all()
 
-        user = authenticate (
+        user = authenticate(
             username=request.data.get("username"),
             password=request.data.get("password"))
 
@@ -133,7 +136,7 @@ class LogoutView(views.APIView):
     """
     Logout user
     """
-    permission_classes = ( permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
         logout(request)
@@ -145,7 +148,7 @@ class CheckoutUserView(views.APIView):
     Checkout current user
     """
     serializer_class = UserSerializer
-    permission_classes = ( permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request):
         serializer = UserSerializer(request.user)
@@ -154,28 +157,27 @@ class CheckoutUserView(views.APIView):
 
 
 class ChangePasswordView(views.APIView):
-  """
-  Change password view
-  """
-  permission_classes = (permissions.IsAuthenticated,)
+    """
+    Change password view
+    """
+    permission_classes = (permissions.IsAuthenticated,)
 
-  def get_object(self, queryset=None):
-      return self.request.user
+    def get_object(self, queryset=None):
+        return self.request.user
 
-  def put(self, request, *args, **kwargs):
-      self.object = self.get_object()
-      serializer = ChangePasswordSerializer(data=request.data)
+    def put(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = ChangePasswordSerializer(data=request.data)
 
-      if serializer.is_valid():
-          old_password = serializer.data.get('old_password')
-          if not self.object.check_password(old_password):
-              return Response({'old_password': ['Mot de passe erroné.']}, status=status.HTTP_400_BAD_REQUEST)
-          self.object.set_password(serializer.data.get('new_password'))
-          self.object.save()
-          return Response(status=status.HTTP_204_NO_CONTENT)
+        if serializer.is_valid():
+            old_password = serializer.data.get('old_password')
+            if not self.object.check_password(old_password):
+                return Response({'old_password': ['Mot de passe erroné.']}, status=status.HTTP_400_BAD_REQUEST)
+            self.object.set_password(serializer.data.get('new_password'))
+            self.object.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RemovePhotoFromAccount(views.APIView):

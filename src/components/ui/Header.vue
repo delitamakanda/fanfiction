@@ -31,7 +31,6 @@
                     <a href="javascript:void(0)" @click="disconnect" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4 cursor-pointer">{{ $t('message.logoutLabel')}} </a>
                 </template>
                 <router-link v-else :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{{ $t('message.loginLabel')}}</router-link>
-                <router-link :to="{ name: 'News' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{{ $t('message.newsLabel') }}</router-link>
                 <ul v-if="user && user.id != null" class="menu list-reset block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">
                     <li @mouseover="survol2 = true" @mouseleave="survol2 = false" class="inline-flex"><svgicon icon="notifications-outline" width="22" height="18" color="#4dc0b5"></svgicon> {{ $t('message.NotificationsLabel') }}
                         <transition name="fade" mode="out-in">

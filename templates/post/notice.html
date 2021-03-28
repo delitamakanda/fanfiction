@@ -1,0 +1,48 @@
+{% extends "help/base.html" %}
+{% load markdownify %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="infinite-container mt-2">
+    {% for post in posts %}
+      <details class="infinite-item select-none py-4 border-b border-gray-400">
+      <summary class="flex items-center font-bold cursor-pointer">
+        <div>{{ post.title }} - {{ post.created| date:'d/m/y' }}</div>
+        <button class="ml-auto">
+          <svg class="fill-current opacity-75 w-4 h-4 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.95 10.707l.707-.707L8 4.343 6.586 5.757 10.828 10l-4.242 4.243L8 15.657l4.95-4.95z"/></svg>
+        </button>
+        </summary>
+        <div class="mt-4 leading-normal text-md">
+        {% if post.header %}
+        <img src="{{ post.header }}" alt="{{ post.title }}" />
+        {% endif %}
+        <p>{{ post.content|show_markdown|safe }}</p>
+        </div>
+      </details>
+    {% endfor %}
+  </div>
+
+  <div class="loading" style="display: none;">
+    {% trans "Chargement" %}&hellip;
+  </div>
+
+  {% if page_obj.has_next %}
+    <a class="infinite-more-link inline-block my-20 mx-auto py-12 px-12 no-underline border-gray-400 border rounded" href="?page={{ page_obj.next_page_number }}">{% trans "Voir plus" %}</a>
+  {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+    onBeforePageLoad: function () {
+    $('.loading').show();
+    },
+    onAfterPageLoad: function ($items) {
+    $('.loading').hide();
+    }
+});
+</script>
+{% endblock %}

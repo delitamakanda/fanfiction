@@ -25,11 +25,6 @@
                     {{ $t('message.ecrireFanfictions') }}
                 </router-link>
                 
-                <router-link v-if="user && user.is_staff" class="hover:bg-gray-300 bg-gray-200 border-t-2 p-3 w-full text-xl text-left text-gray-600 font-semibold" tag="button" :to="{name: 'AddNews'}">
-                    <svgicon class="pr-1 pt-1 float-right" icon="list" width="22" height="auto" color="#718096"></svgicon>
-                    {{ $t('message.newsEditingLabel') }}
-                </router-link>
-                
                 <router-link class="hover:bg-gray-300 bg-gray-200 border-t-2 p-3 w-full text-xl text-left text-gray-600 font-semibold" v-if="$route.name !== 'EditAccount'" tag="button" :to="{ name: 'EditAccount' }">
                     {{ $t('message.changeProfileEdit') }}
                 </router-link>

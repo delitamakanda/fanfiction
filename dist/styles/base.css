@@ -10,3 +10,8 @@
 .menu li {position: relative;min-width: 180px;}
 .menu li ul {position: absolute;left: 0;top: 1.5rem;list-style-type: disc;list-style-position: inside;}
 footer {text-align: center;}
+details summary svg {transform: rotate(90deg);}
+details[open] summary svg {transform: rotate(-90deg);}
+details[open] summary ~ * {animation: ease-opacity-t-b 0.5s ease;}
+svg {transition: all 0.3s;}
+details summary:focus, details summary button:focus {outline: none;}

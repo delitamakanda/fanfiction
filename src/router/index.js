@@ -16,10 +16,6 @@ import Social from '@/views/account/Social'
 import MonProfil from '@/views/account/MonProfil'
 import EditAccount from '@/views/account/EditAccount'
 
-import News from '@/views/posts/News'
-import EditNews from '@/views/posts/EditNews'
-import AddNews from '@/views/posts/AddNews'
-
 import Loading from '@/components/ui/Loading'
 import Form from '@/components/ui/Form'
 import Input from '@/components/ui/Input'
@@ -66,21 +62,6 @@ const router = new Router({
         { path: '/reviews', name: 'Reviews', component: Reviews, meta: { title: 'Mes reviews' }, props: true },
         { path: '/login', name: 'Login', component: Login, meta: { guest: true, title: 'Créer un compte ou se connecter à l\'espace membre' } },
         {
-            path: '/news', name: 'News', component: News, meta: {
-                title: 'News du site Fanfiction',
-                metaTags: [
-                    {
-                        name: 'description',
-                        content: 'Toutes les nouveautés et annonces du site.'
-                    },
-                    {
-                        property: 'og:description',
-                        content: 'Toutes les nouveautés et annonces du site.'
-                    }
-                ]
-            }
-        },
-        {
             path: '/dashboard', name: 'Dashboard', redirect: '/dashboard/create', component: Dashboard, meta: { private: true, title: 'Tableau de bord' },
             children: [
                 { path: 'fanfics/:username/list', name: 'ListUserFanfic', component: ListUserFanfic, props: true, meta: { title: 'Mes fanfictions', private: true } },
@@ -92,26 +73,6 @@ const router = new Router({
                         { path: 'social', name: 'Social', component: Social, meta: { private: true, title: 'Social' }, props: true },
                         { path: 'my-reviews', name: 'MyReviews', component: Reviews, props: true, meta: { private: true, title: 'Commentaires' } },
                     ]
-                },
-                {
-                    path: 'edit-news/:newsSlug', name: 'EditNews', component: EditNews, meta: { title: 'Edition de news', private: true }, props: true, beforeEnter: (to, from, next) => {
-                        const user = store.getters['user/user']
-                        if (user.is_staff) {
-                            next(true)
-                        } else {
-                            next({ name: 'Dashboard' })
-                        }
-                    }
-                },
-                {
-                    path: 'add-news', name: 'AddNews', component: AddNews, meta: { title: 'Ajout de news', private: true }, props: false, beforeEnter: (to, from, next) => {
-                        const user = store.getters['user/user']
-                        if (user.is_staff) {
-                            next(true)
-                        } else {
-                            next({ name: 'Dashboard' })
-                        }
-                    }
                 },
             ]
         },
