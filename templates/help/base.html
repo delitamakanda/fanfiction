@@ -30,6 +30,12 @@
     <link rel="stylesheet" href="{% static 'styles/base.css' %}">
     {% block styles %}
     {% endblock %}
+    <script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function() {
+        history.go(1);
+    }
+    </script>
     </head>
     <body id="page" class="container mx-auto">
         {% block content %}
