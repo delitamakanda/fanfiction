@@ -4,6 +4,9 @@
 
 > A fanfic application in vue.js and django
 
+### Demo Live App
+[ionic app](https://fanfiction-fr.netlify.app/)
+
 ## Build Setup
 
 ``` bash
