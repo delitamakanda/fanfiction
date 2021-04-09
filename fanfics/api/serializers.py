@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
+from categories.api.serializers import CategorySerializer
+
 from accounts.models import Social, AccountProfile, FollowStories, FollowUser
 from fanfics.models import Fanfic
 
@@ -171,6 +173,9 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
     author = UserFanficSerializer(read_only=True)
     users_like = UserFanficSerializer(read_only=True, many=True)
     recommended_fanfics = serializers.SerializerMethodField()
+    most_liked_fanfics = FanficSerializer(many=True, read_only=True)
+    newest_fanfics = FanficSerializer(many=True, read_only=True)
+    all_categories = CategorySerializer(many=True, read_only=True)
 
     class Meta:
         model = Fanfic
@@ -196,6 +201,9 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
             'category',
             'subcategory',
             'recommended_fanfics',
+            'all_categories',
+            'newest_fanfics',
+            'most_liked_fanfics',
             'views',
             'fanfic_is_scraped',
             'link_fanfic',
@@ -213,7 +221,7 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
 
     def get_recommended_fanfics(self, obj):
         r = Recommender()
-        recommended_fanfics = r.suggest_fanfics_for([obj], 6)
+        recommended_fanfics = r.suggest_fanfics_for([obj], 10)
         serializer = FanficSerializer(recommended_fanfics, many=True)
         return serializer.data
 
