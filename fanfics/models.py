@@ -95,5 +95,3 @@ class Fanfic(models.Model):
     def newest_fanfics(self):
         return Fanfic.objects.filter(status='publié').order_by('-publish')[:10]
 
-    def all_categories(self):
-        return Category.objects.all()

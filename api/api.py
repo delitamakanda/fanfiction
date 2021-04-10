@@ -12,11 +12,15 @@ from rest_framework import generics, permissions, views, status, viewsets
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from fanfics.models import Fanfic
-from api.models import FlatPages, Notification
-
 from api.serializers import FlatPagesSerializer, ContentTypeSerializer, NotificationSerializer
+from fanfics.api.serializers import FanficSerializer
+from categories.api.serializers import CategorySerializer
 
+from api.models import FlatPages, Notification
+from fanfics.models import Fanfic
+from categories.models import Category
+
+from api.recommender import Recommender
 
 class EmailFeedbackView(views.APIView):
     """
@@ -146,3 +150,24 @@ class NotificationListView(generics.ListAPIView):
         notifications = notifications[:20]
 
         return notifications
+
+
+class BrowseFanfictionListView(views.APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        liked_fanfics = Fanfic.objects.filter(
+            status='publié').order_by('-total_likes')[:10]
+        newest_fanfics = Fanfic.objects.filter(
+            status='publié').order_by('-publish')[:10]
+
+        r = Recommender()
+        recommended_fanfics = r.suggest_fanfics_for([fanfic for fanfic in Fanfic.objects.filter(status='publié')], 10)
+        categories = Category.objects.all()
+
+        LikedSerializerData = FanficSerializer(liked_fanfics, many=True)
+        newSerializerData = FanficSerializer(newest_fanfics, many=True)
+        recoSerializerData = FanficSerializer(recommended_fanfics, many=True)
+        categorySerializerData = CategorySerializer(categories, many=True)
+
+        return Response({'recommended_fanfics': recoSerializerData.data, 'most_liked_fanfics': LikedSerializerData.data, 'newest_fanfics': newSerializerData.data, 'all_categories': categorySerializerData.data})

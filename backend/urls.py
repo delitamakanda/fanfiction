@@ -87,6 +87,7 @@ from api.api import (
     FlatPagesHTMLByTypeView,
     ContentTypeView,
     NotificationListView,
+    BrowseFanfictionListView,
 )
 
 from api.api_auth import (
@@ -137,6 +138,8 @@ urlpatterns += [
     path('api/notifications/', NotificationListView.as_view(), name='notifications'),
     path('api/contenttype/<int:pk>/',
          ContentTypeView.as_view(), name='contenttype-detail'),
+    path('api/browse-fanfics/',
+         BrowseFanfictionListView.as_view(), name='browse-fanfics'),
 
     path('api/users/<str:user__username>/account/',
          UserFanficDetailView.as_view(), name='user-list'),
