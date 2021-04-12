@@ -52,6 +52,8 @@ class Fanfic(models.Model):
                             unique=True, blank=True, null=True)
     synopsis = models.CharField(max_length=250, blank=True, default='')
     credits = models.CharField(max_length=250, blank=True, default='')
+    picture = models.CharField(max_length=1000, blank=True, null=True)
+    language = models.CharField(max_length=2, default='fr')
     description = models.CharField(max_length=500, blank=True, default='')
     classement = models.CharField(
         max_length=2, choices=CLASSEMENT_CHOICES, default='g')

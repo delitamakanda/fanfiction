@@ -110,9 +110,11 @@ class FanficSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'author',
+            'picture',
             'title',
             'slug',
             'synopsis',
+            'language',
             'credits',
             'description',
             'genres',
@@ -179,9 +181,11 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'author',
+            'picture',
             'title',
             'slug',
             'synopsis',
+            'language',
             'credits',
             'description',
             'genres',
