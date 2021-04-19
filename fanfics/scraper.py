@@ -1,5 +1,6 @@
 import cloudscraper
 import requests
+import os
 import csv
 from bs4 import BeautifulSoup
 
@@ -14,6 +15,8 @@ urls = ['https://www.fanfiction.net/anime/One-Piece/?&srt=1&lan=1&r=103', 'https
         'https://www.fanfiction.net/anime/GTO/?&srt=1&lan=1&r=103', 'https://www.fanfiction.net/book/Lord-of-the-Rings/?&srt=1&lan=1&r=103']
 
 fanfics = []
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 for url in urls:
     response = scraper.get(url).text
@@ -38,7 +41,17 @@ for url in urls:
         fanfic['link_fanfic'] = row.a['href']
         fanfics.append(fanfic)
         # print(row.prettify())
-    print(fanfics)
+        # print(fanfics)
+        # print(fanfic)
+
+        for fanfic in fanfics:
+            filename = os.path.join(BASE_DIR, 'fanfics/management/commands/fanfictions_scraping.csv')
+            with open(filename, 'w', newline='') as f:
+                w = csv.DictWriter(f, ['title', 'picture', 'author', 'synopsis',
+                               'classement', 'language', 'genre', 'link_fanfic'])
+                w.writeheader()
+                for fc in fanfics:
+                    w.writerow(fc)
 
     # filename = 'fanfictions_scraping.csv'
     # with open(filename, 'w', newline='') as f:

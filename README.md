@@ -98,3 +98,11 @@ Elementary
 >>> r.suggest_fanfics_for([fanfic_1, fanfic_2])
 [<Fanfic: Nature>, <Fanfic: Elementary>]
 ```
+
+## Scraper
+
+```bash
+python3 scraper.py
+
+python3 manage.py import_from_fanfiction_as_csv fanfictions_scraping.csv
+```
