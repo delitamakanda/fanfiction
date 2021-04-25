@@ -1,9 +1,13 @@
 import csv
 import os
+import re
 
 from django.apps import apps
 from django.core.management.base import BaseCommand, CommandError
+from django.contrib.auth.models import User
+
 from fanfics.models import Fanfic
+from categories.models import Category, SubCategory
 
 
 class Command(BaseCommand):
@@ -16,13 +20,43 @@ class Command(BaseCommand):
         super().__init__(*args, **kwargs)
         self.model_name = Fanfic
 
+    def find_whole_word(self, word):
+        return re.compile(r'\b({0})\b'.format(word), flags=re.IGNORECASE).search
+
     def import_from_fanfiction_as_csv(self, data):
         try:
-            pass
+            rating = ""
+            if data["classement"] == "Rated: T":
+                rating = "r"
+            if data["classement"] == "Rated: K":
+                rating = "g"
+            if data["classement"] == "Rated: K+":
+                rating = "13+"
+            if data["classement"] == "Rated: M":
+                rating = "18"
+
+            lang = "fr"
+            if data["language"] == "English":
+                lang = "en"
+
+            print(self.find_whole_word('Adventure')(data["genre"]))
+            # print(data["genre"])
+            # print(data)
             # self.model_name.objects.get_or_create(
             # title=data["title"],
-            # genre=data["genre"],
-            # author=data["author"]
+            # genres=data["genre"],
+            # synopsis=data["synopsis"],
+            # author=data["author"],
+            # picture=data["picture"],
+            # description=data["link_fanfic"],
+            # link_fanfic=data["link_fanfic"],
+            # language=lang,
+            # classement=rating,
+            # status='publié',
+            # category='',
+            # subcategory='',
+            # credits = 'Clamp'
+            # fanfic_is_scraped = True
             # )
         except Exception as e:
             raise CommandError("Error in inserting {}: {}".format(
@@ -64,16 +98,20 @@ class Command(BaseCommand):
                             genre = words[6]
                             link_fanfic = 'https://www.fanfiction.net' + \
                                 words[7]
-                            print(words[7])
+                            # print(words[7])
                             data = {}
                             data["title"] = title
                             data["picture"] = picture
                             data["author"] = author
+                            data["synopsis"] = synopsis
+                            data["language"] = language
+                            data["classement"] = classement
+                            data["link_fanfic"] = link_fanfic
                             data["genre"] = genre
                             self.import_from_fanfiction_as_csv(data)
                             self.stdout.write(
-                                self.style.SUCCESS('{} - {}: {}'.format(
-                                    title, author,
+                                self.style.SUCCESS('{} - {} - {}'.format(
+                                    title, classement,
                                     genre
                                 )
                                 )

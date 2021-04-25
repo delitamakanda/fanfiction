@@ -11,8 +11,8 @@ scraper = cloudscraper.create_scraper()
 
 base_url = 'https://www.fanfiction.net/'
 
-urls = ['https://www.fanfiction.net/anime/One-Piece/?&srt=1&lan=1&r=103', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103',
-        'https://www.fanfiction.net/anime/GTO/?&srt=1&lan=1&r=103', 'https://www.fanfiction.net/book/Lord-of-the-Rings/?&srt=1&lan=1&r=103']
+urls = ['https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=2', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103',
+        'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=3', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=4']
 
 fanfics = []
 
