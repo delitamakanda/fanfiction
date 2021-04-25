@@ -5,14 +5,14 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 DEBUG = config('DEBUG', cast=bool, default=False)
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = ['*', ]
 
 # email admin
 
 SERVER_EMAIL = config('ADMIN_EMAIL')
 
 ADMINS = [
-  (config('ADMIN_NAME'), config('ADMIN_EMAIL')),
+    (config('ADMIN_NAME'), config('ADMIN_EMAIL')),
 ]
 
 STATIC_ROOT = 'static'
@@ -64,7 +64,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-		# 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
@@ -90,3 +90,15 @@ SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 CELERY_BROKER_URL = config('HEROKU_REDIS_OLIVE_URL')
 CELERY_RESULT_BACKEND = config('HEROKU_REDIS_OLIVE_URL')
 REDIS_URL = config('HEROKU_REDIS_OLIVE_URL')
+
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': REDIS_URL,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}

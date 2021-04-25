@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.decorators.cache import cache_page
 from rest_framework.documentation import include_docs_urls
 
 from accounts.api.views import (
@@ -105,8 +106,8 @@ urlpatterns = [
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
     path('help/', include(('helpcenter.urls', 'helpcenter'), namespace='helpcenter')),
     path('posts/', include(('posts.urls', 'posts'), namespace='posts')),
-    path('', TemplateView.as_view(
-        template_name='frontend/index.html'), name='index'),
+    path('', cache_page(60 * 15)(TemplateView.as_view(
+        template_name='frontend/index.html')), name='index'),
 ]
 
 urlpatterns += [

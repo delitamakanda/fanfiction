@@ -1,8 +1,10 @@
 {% extends "help/base.html" %}
 {% load i18n %}
+{% load cache %}
 
 {% block content %}
 
+{% cache 500 questions %}
 <div>
 {% for question in questions %}
     {% ifchanged question.libelle %}<h3 class="mb-6 mt-4">{{ question.get_libelle_display }}</h3>{% endifchanged %}
@@ -16,6 +18,7 @@
     <p>{% trans 'Cette rubrique est vide' %}.</p>
 {% endfor %}
 </div>
+{% endcache %}
 
 {% endblock %}
 

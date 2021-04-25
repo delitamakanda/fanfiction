@@ -16,6 +16,9 @@ from django.http import HttpResponse, Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 from helpcenter.models import Lexique, FoireAuxQuestions
 
@@ -31,7 +34,9 @@ from markdownx.utils import markdownify
 
 from helpcenter.forms import NewTopicForm, ReplyMessageForm
 
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
+@cache_page(60 * 15)
 @xframe_options_exempt
 def browse_by_title(request, initial=None):
     if initial:
@@ -47,6 +52,7 @@ def browse_by_title(request, initial=None):
 
 
 @method_decorator(xframe_options_exempt, name='dispatch')
+@method_decorator(cache_page(CACHE_TTL), name='dispatch')
 class SearchSubmitView(View):
     template = 'help/search_submit.html'
     response_message = 'Search'
@@ -64,6 +70,7 @@ class SearchSubmitView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 @method_decorator(xframe_options_exempt, name='dispatch')
+@method_decorator(cache_page(CACHE_TTL), name='dispatch')
 class SearchAjaxSubmitView(SearchSubmitView):
     template = 'help/search_results.html'
     response_message = ''
