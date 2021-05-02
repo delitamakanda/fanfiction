@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <div class="clearfix">
+    <div class="clearfix" v-if="!obj_fanfic.fanfic_is_scraped">
         <div class="float-right">
             <div class="inline-block relative w-64">
                 <select v-model.lazy="selecteur" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
@@ -125,7 +125,7 @@
 
     <div class="w-full my-8 text-center">
         <button type="button" @click.once="feedback" class="bg-teal-500 hover:bg-teal-500 text-white font-bold py-2 px-4 rounded-full">{{ $t('message.signalerLabel') }}</button>
-        <button type="button" @click="printFanfic" class="bg-teal-500 hover:bg-teal-500 text-white font-bold py-2 px-4 rounded-full">{{ $t('message.formatPDFLabel') }}</button>
+        <button v-if="!obj_fanfic.fanfic_is_scraped" type="button" @click="printFanfic" class="bg-teal-500 hover:bg-teal-500 text-white font-bold py-2 px-4 rounded-full">{{ $t('message.formatPDFLabel') }}</button>
     </div>
 
     <div v-if="obj_fanfic.recommended_fanfics && obj_fanfic.recommended_fanfics.length" class="flex flex-col w-full flex-wrap">
