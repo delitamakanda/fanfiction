@@ -47,14 +47,14 @@ class Fanfic(models.Model):
     )
     author = models.ForeignKey(
         User, related_name="fanfics", on_delete=models.CASCADE)
-    title = models.CharField(max_length=150, db_index=True)
-    slug = models.SlugField(max_length=200, db_index=True,
+    title = models.CharField(max_length=255, db_index=True)
+    slug = models.SlugField(max_length=255, db_index=True,
                             unique=True, blank=True, null=True)
-    synopsis = models.CharField(max_length=250, blank=True, default='')
-    credits = models.CharField(max_length=250, blank=True, default='')
+    synopsis = models.CharField(max_length=1000, blank=True, default='')
+    credits = models.CharField(max_length=255, blank=True, default='')
     picture = models.CharField(max_length=1000, blank=True, null=True)
     language = models.CharField(max_length=2, default='fr')
-    description = models.CharField(max_length=500, blank=True, default='')
+    description = models.CharField(max_length=1000, blank=True, default='')
     classement = models.CharField(
         max_length=2, choices=CLASSEMENT_CHOICES, default='g')
     genres = MultiSelectField(choices=GENRES_CHOICES)
@@ -76,7 +76,7 @@ class Fanfic(models.Model):
     completed = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
     fanfic_is_scraped = models.BooleanField(default=False)
-    link_fanfic = models.URLField(max_length=200, blank=True, null=True)
+    link_fanfic = models.URLField(max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ('-publish',)
