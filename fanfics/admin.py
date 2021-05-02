@@ -7,7 +7,7 @@ from chapters.models import Chapter
 
 @mark_safe
 def fanfic_pdf(obj):
-    if obj.status == "publié":
+    if obj.status == "publié" and obj.fanfic_is_scraped == False:
         return '<a href="{}" target="_blank">PDF</a>'.format(reverse('helpcenter:fanfic_pdf', args=[obj.id]))
     else:
         return ''

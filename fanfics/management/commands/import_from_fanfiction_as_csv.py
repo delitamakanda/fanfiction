@@ -16,9 +16,15 @@ class Command(BaseCommand):
         "from external site : https://www.fanfiction.net/"
     )
 
+    def create_subcategory(self):
+        if not SubCategory.objects.filter(name="Card Captor Sakura").exists():
+            SubCategory.objects.get_or_create(name='Card Captor Sakura', category=Category.objects.get(
+                name="Animes-Mangas"), description="La vie de Sakura, une petite fille de 10 ans comme les autres, est bouleversée lorsqu'elle ouvre par mégarde le Livre de Clow et libère ainsi toutes les cartes magiques qu'il contenait. Kero Bero, le Gardien du Sceau, parvient à convaincre Sakura de devenir une chasseuse de cartes afin de capturer ces dernières avant qu'elles ne répandent le chaos sur Terre.")
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.model_name = Fanfic
+        self.create_subcategory()
 
     def find_whole_word(self, word):
         return re.compile(r'\b({0})\b'.format(word), flags=re.IGNORECASE).search
@@ -28,36 +34,43 @@ class Command(BaseCommand):
             rating = ""
             if data["classement"] == "Rated: T":
                 rating = "r"
-            if data["classement"] == "Rated: K":
+            elif data["classement"] == "Rated: K":
                 rating = "g"
-            if data["classement"] == "Rated: K+":
+            elif data["classement"] == "Rated: K+":
                 rating = "13+"
-            if data["classement"] == "Rated: M":
+            elif data["classement"] == "Rated: M":
                 rating = "18"
 
             lang = "fr"
             if data["language"] == "English":
                 lang = "en"
 
-            print(self.find_whole_word('Adventure')(data["genre"]))
-            # print(data["genre"])
-            # print(data)
-            # self.model_name.objects.get_or_create(
-            # title=data["title"],
-            # genres=data["genre"],
-            # synopsis=data["synopsis"],
-            # author=data["author"],
-            # picture=data["picture"],
-            # description=data["link_fanfic"],
-            # link_fanfic=data["link_fanfic"],
-            # language=lang,
-            # classement=rating,
-            # status='publié',
-            # category='',
-            # subcategory='',
-            # credits = 'Clamp'
-            # fanfic_is_scraped = True
-            # )
+            genre = ["GE", "DR"]
+            if self.find_whole_word('Adventure')(data["genre"]):
+                genre = ["AC"]
+            elif self.find_whole_word('Romance')(data["genre"]):
+                genre = ["RO"]
+            elif self.find_whole_word('Tragedy')(data["genre"]):
+                genre = ["TR"]
+
+            if not self.model_name.objects.filter(title=data["title"]).exists():
+                self.model_name.objects.get_or_create(
+                    title=data["title"],
+                    genres=genre,
+                    synopsis=data["synopsis"],
+                    author=User.objects.get(username="admin"),
+                    picture=data["picture"],
+                    description=data["link_fanfic"],
+                    link_fanfic=data["link_fanfic"],
+                    language=lang,
+                    classement=rating,
+                    status='publié',
+                    category=Category.objects.get(name="Animes-Mangas"),
+                    subcategory=SubCategory.objects.get(
+                        name='Card Captor Sakura'),
+                    credits='Clamp',
+                    fanfic_is_scraped=True
+                )
         except Exception as e:
             raise CommandError("Error in inserting {}: {}".format(
                 self.model_name, str(e)))
