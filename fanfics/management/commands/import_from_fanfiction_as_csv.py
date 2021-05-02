@@ -37,7 +37,7 @@ class Command(BaseCommand):
             elif data["classement"] == "Rated: K":
                 rating = "g"
             elif data["classement"] == "Rated: K+":
-                rating = "13+"
+                rating = "13"
             elif data["classement"] == "Rated: M":
                 rating = "18"
 
