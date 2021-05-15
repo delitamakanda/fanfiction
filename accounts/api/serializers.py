@@ -128,8 +128,8 @@ class SignupSerializer(serializers.ModelSerializer):
                   'password2', 'first_name', 'last_name')
         write_only_fields = ('password',)
         extra_kwargs = {
-            'first_name': {'required': True},
-            'last_name': {'required': True}
+            'first_name': {'required': False},
+            'last_name': {'required': False}
         }
 
     def validate(self, attrs):
