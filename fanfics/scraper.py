@@ -11,8 +11,11 @@ scraper = cloudscraper.create_scraper()
 
 base_url = 'https://www.fanfiction.net/'
 
-urls = ['https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=2', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103',
-        'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=3', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=4']
+# urls = ['https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=2', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103',
+# 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=3', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=4']
+
+urls = ['https://www.fanfiction.net/comic/Marvel/?&srt=1&lan=1&r=103&p=2', 'https://www.fanfiction.net/comic/Marvel/?&srt=1&lan=1&r=103',
+        'https://www.fanfiction.net/comic/Marvel/?&srt=1&lan=1&r=103&p=3', 'https://www.fanfiction.net/comic/Marvel/?&srt=1&lan=1&r=103&p=4']
 
 fanfics = []
 
@@ -42,13 +45,14 @@ for url in urls:
         fanfics.append(fanfic)
         # print(row.prettify())
         # print(fanfics)
-        # print(fanfic)
+        print(fanfic)
 
         for fanfic in fanfics:
-            filename = os.path.join(BASE_DIR, 'fanfics/management/commands/fanfictions_scraping.csv')
+            filename = os.path.join(
+                BASE_DIR, 'fanfics/management/commands/fanfictions_scraping_2.csv')
             with open(filename, 'w', newline='') as f:
                 w = csv.DictWriter(f, ['title', 'picture', 'author', 'synopsis',
-                               'classement', 'language', 'genre', 'link_fanfic'])
+                                       'classement', 'language', 'genre', 'link_fanfic'])
                 w.writeheader()
                 for fc in fanfics:
                     w.writerow(fc)
@@ -60,4 +64,3 @@ for url in urls:
     #     w.writeheader()
     #     for fanfic in fanfics:
     #         w.writerow(fanfic)
-

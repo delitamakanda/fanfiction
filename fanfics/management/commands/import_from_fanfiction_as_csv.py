@@ -17,9 +17,9 @@ class Command(BaseCommand):
     )
 
     def create_subcategory(self):
-        if not SubCategory.objects.filter(name="Card Captor Sakura").exists():
-            SubCategory.objects.get_or_create(name='Card Captor Sakura', category=Category.objects.get(
-                name="Animes-Mangas"), description="La vie de Sakura, une petite fille de 10 ans comme les autres, est bouleversée lorsqu'elle ouvre par mégarde le Livre de Clow et libère ainsi toutes les cartes magiques qu'il contenait. Kero Bero, le Gardien du Sceau, parvient à convaincre Sakura de devenir une chasseuse de cartes afin de capturer ces dernières avant qu'elles ne répandent le chaos sur Terre.")
+        if not SubCategory.objects.filter(name="Marvel").exists():
+            SubCategory.objects.get_or_create(name='Marvel', category=Category.objects.get(
+                name="BD-Comics-DA"), description="Marvel Worldwide Inc., plus communément appelé Marvel Comics ou simplement Marvel, est une subdivision de Marvel Entertainment et l'une des principales maisons d'édition américaines de comics. Martin Goodman fonde la société en 1938 pour profiter de l'engouement naissant pour les comics.")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -52,6 +52,10 @@ class Command(BaseCommand):
                 genre = ["RO"]
             elif self.find_whole_word('Tragedy')(data["genre"]):
                 genre = ["TR"]
+            elif self.find_whole_word('Sci')(data["genre"]):
+                genre = ["GE"]
+            elif self.find_whole_word('Supernatural')(data["genre"]):
+                genre = ["SU"]
 
             if not self.model_name.objects.filter(title=data["title"]).exists():
                 self.model_name.objects.get_or_create(
@@ -65,10 +69,10 @@ class Command(BaseCommand):
                     language=lang,
                     classement=rating,
                     status='publié',
-                    category=Category.objects.get(name="Animes-Mangas"),
+                    category=Category.objects.get(name="BD-Comics-DA"),
                     subcategory=SubCategory.objects.get(
-                        name='Card Captor Sakura'),
-                    credits='Clamp',
+                        name='Marvel'),
+                    credits='Marvel Comics',
                     fanfic_is_scraped=True
                 )
         except Exception as e:

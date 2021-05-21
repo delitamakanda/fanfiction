@@ -21,7 +21,7 @@
 
         <category :categories="categories" @selectedCategory="categorySelected" />
 
-        <div class="text-xl mb-4 font-bold" v-if="selected != '' || search_term != ''">
+        <div class="text-xl mb-4 font-bold" v-if="selectedCategoryName != '' || search_term != ''">
             {{ categoryName }}
         </div>
 
@@ -49,7 +49,7 @@
             if (this.fanfics.length && isNegative === 0) {
                 this.isPrevIsShown = false
             }
-            this.fetchFanficsPublished({ status: 'publié', offset: this.currentOffset })
+            this.fetchFanficsPublished({ status: 'publié', offset: this.currentOffset, categoryId: '' })
         },
         mixins: [
             RemoteData(),
@@ -58,7 +58,8 @@
             return {
                 errorFetch: this.$t('message.errorFetch'),
                 search_term: '',
-                selected: '',
+                selectedCategoryName: '',
+                selectedCategoryId: '',
                 currentOffset: 0,
                 isPrevIsShown: false,
             }
@@ -67,7 +68,7 @@
             ...mapState('fanfic', ['fanfics']),
             ...mapState('category', ['categories']),
             categoryName() {
-                return this.selected;
+                return this.selectedCategoryName;
             }
         },
         methods: {
@@ -75,11 +76,14 @@
             ...mapActions('fanfic', ['clearFanficsPublished', 'fetchFanficsPublished', 'fetchFanficsPublishedCategory', 'fetchFanficsPublishedSearch']),
             getSearchFanfics() {
                 this.fetchFanficsPublishedSearch({ status: 'publié', search_term: `${this.search_term}` })
-                this.selected = ''
+                this.selectedCategoryName = ''
             },
             categorySelected(val) {
-                this.selected = val.name
-                this.fetchFanficsPublishedCategory({ status: 'publié', categoryId: val.id })
+                this.selectedCategoryName = val.name
+                this.selectedCategoryId = val.id
+                this.isPrevIsShown = false
+                this.currentOffset = 0 // reset pagination
+                this.fetchFanficsPublishedCategory({ status: 'publié', categoryId: this.selectedCategoryId, offset: this.currentOffset })
             },
             loadNext() {
                 this.currentOffset = this.currentOffset + 4;
@@ -87,7 +91,7 @@
                 if (isNegative !== -1 || isNegative !== 0) {
                     this.isPrevIsShown = true
                 }
-                this.fetchFanficsPublished({ status: 'publié', offset: this.currentOffset })
+                this.fetchFanficsPublished({ status: 'publié', offset: this.currentOffset, categoryId: this.selectedCategoryId })
             },
             loadPrev() {
                 this.currentOffset = this.currentOffset - 4;
@@ -95,7 +99,7 @@
                 if (isNegative === -1 || isNegative === 0) {
                     this.isPrevIsShown = false
                 }
-                this.fetchFanficsPublished({ status: 'publié', offset: this.currentOffset })
+                this.fetchFanficsPublished({ status: 'publié', offset: this.currentOffset, categoryId: this.selectedCategoryId })
             },
         },
         components: { Fanfic, Category }

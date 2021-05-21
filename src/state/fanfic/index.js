@@ -65,7 +65,7 @@ export const actions = {
         return commit('setClassement', await getClassement());
     },
     async fetchFanficsPublished ({commit}, data) {
-        return commit('setFanfics', await getFanficsPublish(data.status, data.offset));
+        return commit('setFanfics', await getFanficsPublish(data.status, data.offset, data.categoryId));
     },
     async postFanfic ({commit}, data) {
         console.log(data)

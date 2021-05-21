@@ -1,8 +1,8 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 
-export function getFanficsPublish(status, offset) {
+export function getFanficsPublish(status, offset, categoryId) {
     if (typeof status === 'undefined') { return ; }
-    return $fetch(`fanfics/?limit=4&offset=${offset}&status=${status}`)
+    return $fetch(`fanfics/?limit=4&offset=${offset}&status=${status}&category=${categoryId}`)
     .then(res => res.results)
     .catch(err => {
         console.log(err);
