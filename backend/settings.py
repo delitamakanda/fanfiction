@@ -245,7 +245,7 @@ OAUTH2_PROVIDER = {
         'write': 'Write scope',
         'groups': 'Access to your groups',
     },
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 60*60*60,  # 3 hours
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 7*24*60*60,  # 60*60*60 : 3 hours
     'REFRESH_TOKEN_EXPIRE_SECONDS': 7*24*60*60,  # A week
     'ROTATE_REFRESH_TOKEN': True,
     # 'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
@@ -334,8 +334,7 @@ CORS_ORIGIN_WHITELIST = [
 CORS_URLS_REGEX = r'^/api/.*$'
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://\w+\.netlify\.app$",
-    r"^http://localhost:8100$"
+    r"^https://\w+\.netlify\.app$"
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -358,3 +357,17 @@ CACHES = {
         }
     }
 }
+
+# CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8100',
+    'http://localhost:8080',
+    'http://localhost:4200',
+    'http://localhost',
+    'https://delitamakanda.github.io',
+    'https://fanfiction-fr.herokuapp.com',
+    'https://fanfiction-fr.netlify.app'
+]
+
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
