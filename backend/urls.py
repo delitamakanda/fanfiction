@@ -101,6 +101,10 @@ from api.api_auth import (
     RemovePhotoFromAccount,
 )
 
+from api.api_session import (
+     get_csrf,
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
@@ -113,6 +117,8 @@ urlpatterns = [
 urlpatterns += [
     path('api/', ApiRootView.as_view(), name=ApiRootView.name),
     path('api/docs/', include_docs_urls(title='Fanfiction API', public=False)),
+
+    path('api/csrf/', get_csrf, name='csrf'),
 
     path('api/user/', CheckoutUserView.as_view(), name='user'),
     path('api/signup/', UserCreateView.as_view(), name='signup'),
