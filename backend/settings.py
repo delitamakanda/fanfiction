@@ -335,6 +335,7 @@ CORS_URLS_REGEX = r'^/api/.*$'
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://\w+\.netlify\.app$",
+    r"^http://localhost:8100$"
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
