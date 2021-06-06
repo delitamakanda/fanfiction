@@ -9,3 +9,4 @@
 - https://mailgo.dev/
 - https://css-tricks.com/how-to-convert-a-date-string-into-a-human-readable-format/
 - https://nickymeuleman.netlify.app/blog/css-animated-wrapping-underline
+- https://hakibenita.com/django-markdown
