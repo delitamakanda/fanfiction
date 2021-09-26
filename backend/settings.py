@@ -212,10 +212,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'api.customauthentication.CsrfExemptSessionAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
@@ -365,14 +365,14 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8100',
     'http://localhost:8080',
     'http://localhost:4200',
-    'http://localhost',
+    'http://localhost:8000',
     'https://delitamakanda.github.io',
     'https://fanfiction-fr.herokuapp.com',
     'https://fanfiction-fr.netlify.app'
 ]
 
-CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_HTTPONLY = False
 
-SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = None

@@ -28,7 +28,7 @@
                 <router-link :to="{ name: 'List' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{{ $t('message.lireFanfictionsLabel') }}</router-link>
                 <template v-if="user && user.id != null">
                     <router-link :to="{ name: 'Dashboard' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ $t('message.greetLabel')}}, {{ user.username }} !</router-link>
-                    <a href="javascript:void(0)" @click="disconnect" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4 cursor-pointer">{{ $t('message.logoutLabel')}} </a>
+                    <a href="javascript:void(0)" @click="disconnect()" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4 cursor-pointer">{{ $t('message.logoutLabel')}} </a>
                 </template>
                 <router-link v-else :to="{ name: 'Login' }" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">{{ $t('message.loginLabel')}}</router-link>
                 <ul v-if="user && user.id != null" class="menu list-reset block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker mr-4">
