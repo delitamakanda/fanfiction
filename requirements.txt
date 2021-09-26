@@ -27,7 +27,7 @@ urllib3==1.26.5
 whitenoise==3.3.1
 dj-database-url
 gunicorn
-psycopg2-binary==2.9
+psycopg2-binary==2.8.6
 django-storages
 boto3==1.15.1
 django-markdownx==2.0.23
