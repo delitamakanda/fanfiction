@@ -128,6 +128,7 @@ export default {
         removeChapterTitle: 'Supprimer le chapitre {a} no. #{n}',
         removeStoryDisclaimerText: 'Etes vous certain de supprimer cette histoire "{a}" id# {n} ?',
         actionsLabel: "Actions",
-        removeChapterLabel: "Supprimer"
+        removeChapterLabel: "Supprimer",
+        linkLabel: "Aller sur le site"
     }
 }
