@@ -22,33 +22,29 @@ def fanfic_created(fanfic_id):
     """
     logger.info('******** CALLING ASYNC TASK WITH CELERY **********')
     
-    fanfic = Fanfic.objects.get(id=fanfic_id)
+    fanfic = Fanfic.objects.get(id=fanfic_id, status='published')
     subject = 'Fanfiction id# {} - {}'.format(fanfic.id, fanfic.title)
     template = get_template('mail/fanfic_created_notification.txt')
     context = {'fanfic': fanfic}
     msg_text = template.render(context)
     msg_html = render_to_string('mail/fanfic_created_notification.html', context)
     # message = 'Cher {},\n\nVotre fanfiction {} a été créer avec succès. Son identifiant est le numéro #{}.'.format(fanfic.author.username, fanfic.title, fanfic.id)
-    mail_sent = None
 
-    if fanfic.status == 'publié':
-        mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [fanfic.author.email], html_message=msg_html)
+    mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [fanfic.author.email], html_message=msg_html)
     
     return mail_sent
 
 
 @task()
 def chapter_created(chapter_id):
-    chapter = Chapter.objects.get(id=chapter_id)
+    chapter = Chapter.objects.get(id=chapter_id, status='publié')
     subject = 'Fanfiction : nouveau chapitre publié sur {}'.format(chapter.fanfic.title)
     template = get_template('mail/chapter_created_notification.txt')
     context = {'chapter': chapter}
     msg_text = template.render(context)
     msg_html = render_to_string('mail/chapter_created_notification.html', context)
-    mail_sent = None
         
-    if chapter.status == 'publié':
-        mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [chapter.fanfic.author.email], html_message=msg_html)
+    mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [chapter.fanfic.author.email], html_message=msg_html)
 
     return mail_sent
 

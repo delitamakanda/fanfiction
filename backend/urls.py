@@ -91,6 +91,10 @@ from api.api import (
     BrowseFanfictionListView,
 )
 
+from api.api_fanfic import (
+     ShareFanficAPIView,
+)
+
 from api.api_auth import (
     CheckoutUserView,
     UserCreateView,
@@ -130,6 +134,8 @@ urlpatterns += [
     path('api/remove-photo/<int:pk>/',
          RemovePhotoFromAccount.as_view(), name='remove-photo'),
 
+    path('api/share/', ShareFanficAPIView.as_view(), name='share'),
+
     path('api/feedback/', EmailFeedbackView.as_view(), name='feedback'),
     path('api/favorite/', FavoritedFanficView.as_view(), name='favorite'),
     path('api/unfavorite/', UnfavoritedFanficView.as_view(), name='unfavorite'),
@@ -155,7 +161,7 @@ urlpatterns += [
          AccountProfileDetailView.as_view(), name='user-edit-account-profile'),
     path('api/users/<int:account>/socialaccount/',
          SocialListApiView.as_view(), name='socialaccount-view'),
-    path('api/users/social-account', SocialListApiView.as_view(),
+    path('api/users/social-account/', SocialListApiView.as_view(),
          name='socialaccount-createview'),
     path('api/users/social-account/<int:pk>/delete/',
          SocialDestroyApiView.as_view(), name='socialaccount-destroy'),

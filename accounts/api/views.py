@@ -100,10 +100,11 @@ class SignupView(generics.CreateAPIView):
 
 def liked_fanfic(request):
     fanfic_id = request.data.get('id')
-    user = request.data.get('user')
+    user_id = request.data.get('user')
 
-    if fanfic_id and user:
+    if fanfic_id and user_id:
         try:
+            user = User.objects.get(id=user_id)
             fanfic = Fanfic.objects.get(id=int(fanfic_id))
 
             if fanfic:
@@ -132,12 +133,13 @@ class FavoritedFanficView(views.APIView):
 
 def unliked_fanfic(request):
     fanfic_id = request.data.get('id')
-    user = request.data.get('user')
+    user_id = request.data.get('user')
 
-    if fanfic_id and user:
+    if fanfic_id and user_id:
         try:
             fanfic = Fanfic.objects.get(id=int(fanfic_id))
-
+            user = User.objects.get(id=user_id)
+            
             if fanfic:
                 likes = fanfic.users_like.remove(user)
             fanfic.users_like = likes
