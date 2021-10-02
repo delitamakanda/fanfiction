@@ -131,7 +131,7 @@ export const actions = {
     logout ({commit}) {
         commit('user', {})
 
-        $fetch('logout')
+        $fetch('logout/')
         if (router.currentRoute.matched.some(m => m.meta.private)) {
             router.replace({ name: 'Login', params: {wantedRoute: router.currentRoute.fullPath } })
         }

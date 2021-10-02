@@ -1,7 +1,7 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 
 export function getFanficsPublish(status, offset, categoryId) {
-    if (typeof status === 'undefined') { return ; }
+    if (typeof status === undefined) { return ; }
     return $fetch(`fanfics/?limit=4&offset=${offset}&status=${status}&category=${categoryId}`)
     .then(res => res.results)
     .catch(err => {
@@ -11,8 +11,8 @@ export function getFanficsPublish(status, offset, categoryId) {
 }
 
 export function getFanficsPublishByAuthor(status, authorUsername) {
-    if (typeof status === 'undefined') { return ; }
-    return $fetch(`fanfics/${authorUsername}?status=${status}`)
+    if (typeof status === undefined) { return ; }
+    return $fetch(`fanfics/${authorUsername}/?status=${status}`)
     .then(res => res.results)
     .catch(err => {
         console.log(err);
@@ -30,7 +30,7 @@ export function getFanficsPublishCategory(status, categoryId) {
 }
 
 export function getFanficsPublishSearch(status, searchTerm) {
-    if (typeof status === 'undefined') { return ; }
+    if (typeof status === undefined) { return ; }
     return $fetch(`fanfics/?status=${status}&search=${searchTerm}`)
     .then(res => res.results)
     .catch(err => {

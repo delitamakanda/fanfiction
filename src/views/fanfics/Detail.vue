@@ -49,7 +49,7 @@
                             {{ $t('message.commentairesLabel') }}</router-link>
                     </p>
                     <template v-if="user && user.id != null" class="flex items-center">
-                        <button v-if="!followUser" v-model="getAuthorFollowed" type="button" @click="followAuthor"
+                        <!-- <button v-if="!followUser" v-model="getAuthorFollowed" type="button" @click="followAuthor"
                             class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full">
                             {{$t('message.followAuthorText') }}</button>
 
@@ -63,7 +63,7 @@
 
                         <button v-if="followStory" v-model="getStoriesFollowed" type="button" @click="DisFollowFanfic"
                             class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
-                            {{$t('message.NotFollowFanficText') }}</button>
+                            {{$t('message.NotFollowFanficText') }}</button>-->
 
                         <button type="button"
                             class="inline-flex items-center bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full"
@@ -205,28 +205,6 @@
                 </div>
             </div>
         </div>
-
-
-        <!-- 
-    <div class="shadow-md my-4 px-4 py-4 rounded bg-white">
-        <div class="inline-block relative w-64">
-          <select v-model.lazy="selecteur" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-            <option v-for="(chapter, i) in chapters" :key="chapter.id" :value="chapter.id">{{ i + 1 }} - {{ chapter.title }}</option>
-          </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-          </div>
-        </div>
-        <div class="py-4" v-if="chapterSelected">
-            <h3>{{ chapterSelected.title }}</h3>
-            <p>{{ $t('message.publishedAtLabel') }} : {{ chapterSelected.published | date }}</p>
-            <div v-html="chapterSelected.text"></div>
-
-            <div class="cursor-pointer inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker" @click="readReviewsChapters">{{ commentsChapterCount(selecteur) }} {{ 'review' | pluralize(commentsChapterCount(selecteur)) }}</div>
-            <div class="inline-block text-blue-500 hover:text-blue-800 cursor-pointer" @click="writeChapterComment">{{ $t('message.writeCommentChapterLabel', {n: chapterSelected.title}) }}</div>
-        </div>
-    </div>
-    -->
     </div>
 </template>
 
@@ -286,14 +264,11 @@
                 return arr.find(a => a.id === this.selecteur)
             },
             getUserLiked() {
-                let data = this.obj_fanfic.users_like
+                const data = this.obj_fanfic.users_like;
+                const isLiked = data.includes(this.user.id);
 
-                if (!_.isEmpty(data)) {
-                    data.forEach(d => {
-                        if (d.hasOwnProperty('username') && d.username === this.user.username) {
-                            this.like = true
-                        }
-                    })
+                if (isLiked) {
+                    this.like = true;
                 }
             },
             getAuthorFollowed() {
@@ -334,8 +309,8 @@
             this.fetchChapters({ id: this.id, status: 'publié' })
             this.fetchAllComments({ id: this.id, isActive: true })
 
-            //this.fetchFollowStory()
-            //this.fetchFollowAuthor()
+            this.fetchFollowStory()
+            this.fetchFollowAuthor()
         },
         methods: {
             ...mapActions('fanfic', ['fetchFanfic', 'clearFanfic']),

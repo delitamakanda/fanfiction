@@ -1,7 +1,7 @@
 import VueFetch, { $fetch } from '../../plugins/fetch'
 
 export function getChapters(fanficId, status) {
-    if (typeof status === 'undefined') { return ; }
+    if (typeof status === undefined) { return ; }
     return $fetch(`chapters/${fanficId}/list/?status=${status}`)
     .then(res => res)
     .catch(err => {

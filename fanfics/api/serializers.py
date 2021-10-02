@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from accounts.models import Social, AccountProfile, FollowStories, FollowUser
+from accounts.models import FollowStories, FollowUser, Social, AccountProfile
 from fanfics.models import Fanfic
 
 from api.recommender import Recommender
@@ -173,7 +173,7 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
     author = UserFanficSerializer(read_only=True)
-    users_like = UserFanficSerializer(read_only=True, many=True)
+    # users_like = UserFanficSerializer(read_only=True, many=True)
     recommended_fanfics = serializers.SerializerMethodField()
     most_liked_fanfics = FanficSerializer(many=True, read_only=True)
     newest_fanfics = FanficSerializer(many=True, read_only=True)
@@ -264,37 +264,3 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Cette e-mail est déja utilisée.')
         return value
-
-
-class FollowUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = FollowUser
-        fields = (
-            'id',
-            'user_from',
-            'user_to',
-            'created'
-        )
-
-    def create(self, validated_data):
-        create_notification(
-            validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
-        return FollowUser.objects.create(**validated_data)
-
-
-class FollowStoriesSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = FollowStories
-        fields = (
-            'id',
-            'from_user',
-            'to_fanfic',
-            'created'
-        )
-
-    def create(self, validated_data):
-        create_notification(
-            validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
-        return FollowStories.objects.create(**validated_data)
