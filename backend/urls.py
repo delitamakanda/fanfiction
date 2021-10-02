@@ -114,7 +114,7 @@ urlpatterns = [
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
     path('help/', include(('helpcenter.urls', 'helpcenter'), namespace='helpcenter')),
     path('posts/', include(('posts.urls', 'posts'), namespace='posts')),
-    path('', cache_page(60 * 15)(TemplateView.as_view(
+    path('', cache_page(60 * 3)(TemplateView.as_view(
         template_name='frontend/index.html')), name='index'),
 ]
 

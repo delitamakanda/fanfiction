@@ -8,6 +8,8 @@ from accounts.models import Social, AccountProfile, FollowStories, FollowUser
 from fanfics.models import Fanfic
 
 from api.recommender import Recommender
+from django.core.mail import mail_admins
+from api.utils import create_notification
 
 
 class GenresSerializer(serializers.ModelSerializer):

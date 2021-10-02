@@ -104,11 +104,10 @@ def liked_fanfic(request):
 
     if fanfic_id and user_id:
         try:
-            user = User.objects.get(id=user_id)
             fanfic = Fanfic.objects.get(id=int(fanfic_id))
 
             if fanfic:
-                likes = fanfic.users_like.add(user)
+                likes = fanfic.users_like.add(user_id)
             fanfic.users_like = likes
             fanfic.save()
             return Response({'status': 'ok'}, status=status.HTTP_201_CREATED)
@@ -138,10 +137,9 @@ def unliked_fanfic(request):
     if fanfic_id and user_id:
         try:
             fanfic = Fanfic.objects.get(id=int(fanfic_id))
-            user = User.objects.get(id=user_id)
             
             if fanfic:
-                likes = fanfic.users_like.remove(user)
+                likes = fanfic.users_like.remove(user_id)
             fanfic.users_like = likes
             fanfic.save()
             return Response({'status': 'ok'}, status=status.HTTP_200_OK)
