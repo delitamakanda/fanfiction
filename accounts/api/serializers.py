@@ -80,7 +80,7 @@ class FollowUserSerializer(serializers.ModelSerializer):
             'id',
             'user_from',
             'user_to',
-            'created'
+            'created',
         )
 
     def create(self, validated_data):

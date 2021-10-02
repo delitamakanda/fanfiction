@@ -79,5 +79,5 @@ class NotificationSerializer(serializers.HyperlinkedModelSerializer):
             'created',
         )
 
-    def get_target_ct(self, obj):
-        return Fanfic.objects.all()
+    # def get_target_ct(self, obj):
+        # return Fanfic.objects.all()

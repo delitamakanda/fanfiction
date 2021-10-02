@@ -108,8 +108,8 @@ def liked_fanfic(request):
 
             if fanfic:
                 likes = fanfic.users_like.add(user_id)
-            fanfic.users_like = likes
-            fanfic.save()
+                fanfic.users_like = likes
+                fanfic.save()
             return Response({'status': 'ok'}, status=status.HTTP_201_CREATED)
         except:
             return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
@@ -140,8 +140,8 @@ def unliked_fanfic(request):
             
             if fanfic:
                 likes = fanfic.users_like.remove(user_id)
-            fanfic.users_like = likes
-            fanfic.save()
+                fanfic.users_like = likes
+                fanfic.save()
             return Response({'status': 'ok'}, status=status.HTTP_200_OK)
         except:
             return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
@@ -166,6 +166,7 @@ class FollowUserView(views.APIView):
     """
     Users followed
     """
+    serializer_class = FollowUserSerializer
     authentication_class = ()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
@@ -202,6 +203,7 @@ class FollowStoriesView(views.APIView):
     """
     Stories followed
     """
+    serializer_class = FollowStoriesSerializer
     authentication_class = ()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 

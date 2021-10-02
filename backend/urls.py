@@ -92,7 +92,7 @@ from api.api import (
 )
 
 from api.api_fanfic import (
-     ShareFanficAPIView,
+    ShareFanficAPIView,
 )
 
 from api.api_auth import (
@@ -106,7 +106,7 @@ from api.api_auth import (
 )
 
 from api.api_session import (
-     get_csrf,
+    get_csrf,
 )
 
 urlpatterns = [
@@ -114,8 +114,10 @@ urlpatterns = [
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
     path('help/', include(('helpcenter.urls', 'helpcenter'), namespace='helpcenter')),
     path('posts/', include(('posts.urls', 'posts'), namespace='posts')),
-    path('', cache_page(60 * 3)(TemplateView.as_view(
+    path('', cache_page(60 * 5)(TemplateView.as_view(
         template_name='frontend/index.html')), name='index'),
+    # path('', TemplateView.as_view(
+    # template_name='frontend/index.html'), name='index'),
 ]
 
 urlpatterns += [
@@ -165,8 +167,8 @@ urlpatterns += [
          name='socialaccount-createview'),
     path('api/users/social-account/<int:pk>/delete/',
          SocialDestroyApiView.as_view(), name='socialaccount-destroy'),
-     path('api/groups/', GroupListView.as_view()),
-     path('api/sign_up/', SignupView.as_view(), name="sign_up"),
+    path('api/groups/', GroupListView.as_view()),
+    path('api/sign_up/', SignupView.as_view(), name="sign_up"),
 
     path('api/faq/', FoireAuxQuestionsApiView.as_view(), name='faq'),
     path('api/lexique/', LexiqueApiView.as_view(), name='lexique'),
