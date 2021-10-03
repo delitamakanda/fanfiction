@@ -193,7 +193,7 @@ urlpatterns += [
     path('api/classement/', ClassementListView.as_view(), name='classement-list'),
     path('api/status/', StatusListView.as_view(), name='status-list'),
     path('api/fanfics/', FanficCreateApiView.as_view(), name='fanfic-list'),
-    path('api/fanfics/<str:username>/',
+    path('api/fanfics/<str:author>/',
          FanficCreateApiView.as_view(), name='fanfic-list-by-author'),
     path('api/fanfics/<str:slug>/detail/',
          FanficDetailView.as_view(), name='fanfic-detail'),

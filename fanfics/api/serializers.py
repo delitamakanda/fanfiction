@@ -63,28 +63,22 @@ class SocialSerializer(serializers.ModelSerializer):
 
 class UserFanficSerializer(serializers.ModelSerializer):
     social = serializers.SerializerMethodField()
-    fanfics = serializers.SerializerMethodField()
-    stories = serializers.SerializerMethodField()
-    authors = serializers.SerializerMethodField()
+    fav_stories = serializers.SerializerMethodField()
+    fav_authors = serializers.SerializerMethodField()
 
     def get_social(self, obj):
         social_acc = Social.objects.filter(user=obj)
         serializer = SocialSerializer(social_acc, many=True)
         return serializer.data
 
-    def get_fanfics(self, obj):
-        fanfics = Fanfic.objects.filter(author=obj)
-        serializer = FanficSerializer(fanfics, many=True)
+    def get_fav_stories(self, obj):
+        favorites_stories = FollowStories.objects.filter(from_user=obj)
+        serializer = FanficSerializer(favorites_stories, many=True)
         return serializer.data
 
-    def get_stories(self, obj):
-        stories = FollowStories.objects.filter(from_user=obj)
-        serializer = FanficSerializer(stories, many=True)
-        return serializer.data
-
-    def get_authors(self, obj):
-        authors = FollowUser.objects.filter(user_from=obj)
-        serializer = UserSerializer(authors, many=True)
+    def get_fav_authors(self, obj):
+        favorites_authors = FollowUser.objects.filter(user_from=obj)
+        serializer = UserSerializer(favorites_authors, many=True)
         return serializer.data
 
     class Meta:
@@ -94,9 +88,8 @@ class UserFanficSerializer(serializers.ModelSerializer):
             'username',
             'email',
             'social',
-            'fanfics',
-            'authors',
-            'stories',
+            'fav_authors',
+            'fav_stories',
         )
 
 
@@ -172,8 +165,7 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
     genres = serializers.CharField(source='get_genres_display')
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
-    author = UserFanficSerializer(read_only=True)
-    # users_like = UserFanficSerializer(read_only=True, many=True)
+    author = serializers.SerializerMethodField()
     recommended_fanfics = serializers.SerializerMethodField()
     most_liked_fanfics = FanficSerializer(many=True, read_only=True)
     newest_fanfics = FanficSerializer(many=True, read_only=True)
@@ -226,6 +218,9 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
         recommended_fanfics = r.suggest_fanfics_for([obj], 10)
         serializer = FanficSerializer(recommended_fanfics, many=True)
         return serializer.data
+
+    def get_author(self, obj):
+        return UserSerializer(obj.author).data
 
 
 class UserSerializer(serializers.ModelSerializer):

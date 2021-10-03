@@ -124,10 +124,15 @@ class FavoritedFanficView(views.APIView):
     permission_classes = ()
 
     def post(self, request, *args, **kwargs):
-        serializer = FanficSerializer()
-        if serializer.data:
+        """
+        serializer = FollowUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        """
+        serializer = FanficSerializer(data=request.data)
+        if serializer.is_valid():
             liked_fanfic(request)
-        return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 def unliked_fanfic(request):
@@ -156,10 +161,10 @@ class UnfavoritedFanficView(views.APIView):
     permission_classes = ()
 
     def post(self, request, *args, **kwargs):
-        serializer = FanficSerializer()
-        if serializer.data:
+        serializer = FanficSerializer(data=request.data)
+        if serializer.is_valid():
             unliked_fanfic(request)
-        return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class FollowUserView(views.APIView):

@@ -46,7 +46,8 @@ class StatusListView(generics.ListAPIView):
 
 
 class FanficCreateApiView(generics.ListCreateAPIView):
-    # serializer_class = FanficSerializer
+    serializer_class = FanficSerializer
+    queryset = Fanfic.objects.all()
     permission_classes = (
         permissions.AllowAny,
         custompermission.IsCurrentAuthorOrReadOnly
@@ -80,13 +81,18 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         return FanficFormattedSerializer
 
     def get_queryset(self):
+        queryset = super(FanficCreateApiView, self).get_queryset()
+
         try:
-            username = self.kwargs['username']
-            if username:
-                return Fanfic.objects.filter(author__username=username)
+            username = self.kwargs['author']
+            if username != '':
+                queryset = Fanfic.objects.filter(author__username=username)
+                return queryset
+            return queryset
         except:
-            username = None
-            return Fanfic.objects.all()
+            return queryset
+
+    
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
