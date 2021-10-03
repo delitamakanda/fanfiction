@@ -212,8 +212,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'api.customauthentication.CsrfExemptSessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+		'rest_framework.authentication.BasicAuthentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
