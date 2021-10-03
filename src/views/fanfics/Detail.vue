@@ -49,7 +49,7 @@
                             {{ $t('message.commentairesLabel') }}</router-link>
                     </p>
                     <template v-if="user && user.id != null" class="flex items-center">
-                        <!-- <button v-if="!followUser" v-model="getAuthorFollowed" type="button" @click="followAuthor"
+                        <button v-if="!followUser" v-model="getAuthorFollowed" type="button" @click="followAuthor"
                             class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full">
                             {{$t('message.followAuthorText') }}</button>
 
@@ -63,7 +63,7 @@
 
                         <button v-if="followStory" v-model="getStoriesFollowed" type="button" @click="DisFollowFanfic"
                             class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
-                            {{$t('message.NotFollowFanficText') }}</button>-->
+                            {{$t('message.NotFollowFanficText') }}</button>
 
                         <button type="button"
                             class="inline-flex items-center bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full"
