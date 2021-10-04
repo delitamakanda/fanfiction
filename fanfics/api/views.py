@@ -72,7 +72,7 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         'created',
         'updated',
     )
-    ordering = ('-title',)
+    ordering = ('-id',)
     name = 'fanfic-create'
 
     def get_serializer_class(self):
@@ -124,7 +124,7 @@ class FanficDetailView(generics.RetrieveAPIView):
 
             r = recommender.Recommender()
             most_viewed_fanfic = Fanfic.objects.filter(
-                status='publié').order_by('-views')[:10]
+                status='publié').order_by('-total_likes').values_list('id', flat=True)[:10]
             print(most_viewed_fanfic)
             liked_fanfics = r.fanfics_liked([instance, most_viewed_fanfic])
 
