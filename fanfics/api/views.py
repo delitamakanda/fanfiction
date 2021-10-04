@@ -124,7 +124,7 @@ class FanficDetailView(generics.RetrieveAPIView):
 
             r = recommender.Recommender()
             most_viewed_fanfic = Fanfic.objects.filter(
-                status='publié').order_by('-views')[0]
+                status='publié').order_by('-views')[:10]
             print(most_viewed_fanfic)
             liked_fanfics = r.fanfics_liked([instance, most_viewed_fanfic])
 
