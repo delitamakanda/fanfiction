@@ -72,7 +72,7 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         'created',
         'updated',
     )
-    ordering = ('-updated',)
+    ordering = ('-title',)
     name = 'fanfic-create'
 
     def get_serializer_class(self):
