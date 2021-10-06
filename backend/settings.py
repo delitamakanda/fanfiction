@@ -339,7 +339,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_REPLACE_HTTPS_REFERER = True
+# CORS_REPLACE_HTTPS_REFERER = True
 
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
@@ -362,13 +362,13 @@ CACHES = {
 
 # CSRF
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8100',
-    'http://localhost:8080',
-    'http://localhost:4200',
-    'http://localhost:8000',
-    'https://delitamakanda.github.io',
-    'https://fanfiction-fr.herokuapp.com',
-    'https://fanfiction-fr.netlify.app'
+    'localhost:8100',
+    'localhost:8080',
+    'localhost:4200',
+    'localhost:8000',
+    'delitamakanda.github.io',
+    'fanfiction-fr.herokuapp.com',
+    'fanfiction-fr.netlify.app'
 ]
 
 CSRF_COOKIE_HTTPONLY = False
