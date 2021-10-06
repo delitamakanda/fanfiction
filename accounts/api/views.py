@@ -129,8 +129,8 @@ class FavoritedFanficView(views.APIView):
         if serializer.is_valid():
             serializer.save()
         """
-        serializer = FanficSerializer(data=request.data)
-        if serializer.is_valid():
+        serializer = FanficSerializer()
+        if serializer.data:
             liked_fanfic(request)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -161,8 +161,8 @@ class UnfavoritedFanficView(views.APIView):
     permission_classes = ()
 
     def post(self, request, *args, **kwargs):
-        serializer = FanficSerializer(data=request.data)
-        if serializer.is_valid():
+        serializer = FanficSerializer()
+        if serializer.data:
             unliked_fanfic(request)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
