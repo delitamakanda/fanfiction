@@ -12,6 +12,7 @@ class ShareFanficAPIView(views.APIView):
     Share fanfiction with e-mail
     """
     permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
 
     def post(self, request, *args, **kwargs):
         fanfic_id = request.data.get('id')

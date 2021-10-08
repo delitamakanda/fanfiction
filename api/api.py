@@ -55,6 +55,7 @@ class ContactMailView(views.APIView):
     Send an email to webmaster
     """
     permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
 
     def post(self, request, *args, **kwargs):
         from_email = request.data.get('from_email')
