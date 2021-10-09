@@ -31,7 +31,7 @@ SECRET_KEY = config('SECRET_KEY', cast=str,
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
@@ -321,24 +321,21 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 }
 
 # corsheaders
-CORS_ORIGIN_WHITELIST = [
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
     'http://localhost:8100',
     'http://localhost:8080',
     'http://localhost:4200',
     'http://localhost',
     'https://delitamakanda.github.io',
     'https://fanfiction-fr.herokuapp.com',
-    'https://fanfiction-fr.netlify.app'
-]
+    'https://fanfiction-fr.netlify.app',
+)
 
 CORS_URLS_REGEX = r'^/api/.*$'
 
-# CORS_ALLOWED_ORIGIN_REGEXES = [
-    # r"^https://\w+\.netlify\.app$"
-# ]
 
-# CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
 # CORS_REPLACE_HTTPS_REFERER = True
 
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
