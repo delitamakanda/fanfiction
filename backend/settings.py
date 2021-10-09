@@ -81,7 +81,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-	'corsheaders.middleware.CorsPostCsrfMiddleware',
+	# 'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
@@ -91,7 +91,6 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
-SESSION_COOKIE_NAME = 'oauth2provider_sessionid'
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -334,13 +333,13 @@ CORS_ORIGIN_WHITELIST = [
 
 CORS_URLS_REGEX = r'^/api/.*$'
 
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://\w+\.netlify\.app$"
-]
+# CORS_ALLOWED_ORIGIN_REGEXES = [
+    # r"^https://\w+\.netlify\.app$"
+# ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_REPLACE_HTTPS_REFERER = True
+# CORS_REPLACE_HTTPS_REFERER = True
 
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
@@ -363,20 +362,22 @@ CACHES = {
 
 # CSRF
 CSRF_TRUSTED_ORIGINS = [
-    'localhost:8100',
-    'localhost:8080',
-    'localhost:4200',
-    'localhost:8000',
-    'delitamakanda.github.io',
-    'fanfiction-fr.herokuapp.com',
-    'fanfiction-fr.netlify.app'
+    'http://localhost:8100',
+    'http://localhost:8080',
+    'http://localhost:4200',
+    'http://localhost:8000',
+    'http://localhost',
+    'https://delitamakanda.github.io',
+    'https://fanfiction-fr.herokuapp.com',
+    'https://fanfiction-fr.netlify.app'
 ]
 
-CSRF_COOKIE_HTTPONLY = False
-SESSION_COOKIE_HTTPONLY = False
+# CSRF_COOKIE_HTTPONLY = False
+# SESSION_COOKIE_HTTPONLY = False
 
-SESSION_COOKIE_SAMESITE = None
-CSRF_COOKIE_SAMESITE = None
+# SESSION_COOKIE_SAMESITE = None
+# CSRF_COOKIE_SAMESITE = None
 
-SESSION_COOKIE_DOMAIN = None
+# SESSION_COOKIE_DOMAIN = None
+# SESSION_COOKIE_NAME = 'oauth2provider_sessionid'
 
