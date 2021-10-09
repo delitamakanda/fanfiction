@@ -6,6 +6,9 @@ from rest_framework import serializers
 
 from accounts.models import FollowStories, FollowUser, Social, AccountProfile
 from fanfics.models import Fanfic
+from chapters.models import Chapter
+
+from chapters.api.serializers import ChapterFormattedSerializer
 
 from api.recommender import Recommender
 from django.core.mail import mail_admins
@@ -169,6 +172,7 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
     recommended_fanfics = serializers.SerializerMethodField()
     most_liked_fanfics = FanficSerializer(many=True, read_only=True)
     newest_fanfics = FanficSerializer(many=True, read_only=True)
+    chapters = serializers.SerializerMethodField()
 
     class Meta:
         model = Fanfic
@@ -201,6 +205,7 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
             'views',
             'fanfic_is_scraped',
             'link_fanfic',
+            'chapters',
         )
         lookup_field = 'slug'
 
@@ -221,6 +226,10 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
 
     def get_author(self, obj):
         return UserSerializer(obj.author).data
+
+    def get_chapters(self, obj):
+        all_published_chapters = Chapter.objects.filter(fanfic=obj, status='publié')
+        return ChapterFormattedSerializer(all_published_chapters, many=True).data
 
 
 class UserSerializer(serializers.ModelSerializer):
