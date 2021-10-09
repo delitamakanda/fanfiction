@@ -321,21 +321,19 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 }
 
 # corsheaders
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8100',
-    'http://localhost:8080',
-    'http://localhost:4200',
-    'http://localhost',
-    'https://delitamakanda.github.io',
-    'https://fanfiction-fr.herokuapp.com',
-    'https://fanfiction-fr.netlify.app',
-)
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:8100',
+#     'http://localhost:8080',
+#     'http://localhost:4200',
+#     'http://localhost',
+#     'https://delitamakanda.github.io',
+#     'https://fanfiction-fr.herokuapp.com',
+#     'https://fanfiction-fr.netlify.app',
+# )
 
 CORS_URLS_REGEX = r'^/api/.*$'
-
-
 # CORS_REPLACE_HTTPS_REFERER = True
 
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
@@ -358,16 +356,16 @@ CACHES = {
 }
 
 # CSRF
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8100',
-    'http://localhost:8080',
-    'http://localhost:4200',
-    'http://localhost:8000',
-    'http://localhost',
-    'https://delitamakanda.github.io',
-    'https://fanfiction-fr.herokuapp.com',
-    'https://fanfiction-fr.netlify.app'
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://localhost:8100',
+#     'http://localhost:8080',
+#     'http://localhost:4200',
+#     'http://localhost:8000',
+#     'http://localhost',
+#     'https://delitamakanda.github.io',
+#     'https://fanfiction-fr.herokuapp.com',
+#     'https://fanfiction-fr.netlify.app'
+# ]
 
 # CSRF_COOKIE_HTTPONLY = False
 # SESSION_COOKIE_HTTPONLY = False
