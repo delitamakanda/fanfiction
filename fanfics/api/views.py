@@ -60,15 +60,18 @@ class FanficCreateApiView(generics.ListCreateAPIView):
     filter_fields = (
         'category',
         'subcategory',
+		'genres',
         'status',
     )
     search_fields = (
         'title',
         'description',
         'synopsis',
+		'author',
     )
     ordering_fields = (
         'title',
+		'id',
         'created',
         'updated',
     )
