@@ -73,6 +73,8 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         'title',
 		'id',
         'created',
+		'total_likes',
+		'views',
         'updated',
     )
     ordering = ('-id',)
