@@ -60,6 +60,8 @@ class FanficCreateApiView(generics.ListCreateAPIView):
     filter_fields = (
         'category__slug',
         'subcategory__slug',
+		'category',
+		'subcategory',
 		'genres',
         'status',
     )
