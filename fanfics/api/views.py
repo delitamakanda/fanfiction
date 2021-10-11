@@ -58,8 +58,8 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         filters.OrderingFilter,
     )
     filter_fields = (
-        'category',
-        'subcategory',
+        'category__slug',
+        'subcategory__slug',
 		'genres',
         'status',
     )
