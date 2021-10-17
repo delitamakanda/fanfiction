@@ -53,7 +53,7 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         custompermission.IsCurrentAuthorOrReadOnly
     )
     filter_backends = (
-        filters.SearchFilter,
+        # filters.SearchFilter,
         DjangoFilterBackend,
         filters.OrderingFilter,
     )
