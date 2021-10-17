@@ -1,3 +1,4 @@
+import django_filters
 from rest_framework import filters as drf_filters
 from django_filters import rest_framework as df_filters
 from django_filters.fields import CSVWidget
