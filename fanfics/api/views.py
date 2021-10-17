@@ -65,12 +65,12 @@ class FanficCreateApiView(generics.ListCreateAPIView):
 		'genres',
         'status',
     )
-    search_fields = (
-        'title',
-        'description',
-        'synopsis',
+    search_fields = [
+        '^title',
+        '^description',
+        '^synopsis',
 		'author',
-    )
+	]
     ordering_fields = (
         'title',
 		'id',
