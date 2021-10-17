@@ -11,6 +11,6 @@ class FanficFilter(django_filters.FilterSet):
         model = Fanfic
         fields = ['title', 'description', 'synopsis', 'genres']
 
-    def filter_genres(self, queryset, name, genres):
+    def filter_genres(self, queryset, genres):
         return queryset.filter(genres__contains=genres.split(','))
  
