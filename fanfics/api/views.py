@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from fanfics.models import Fanfic
 
 from fanfics.api.serializers import GenresSerializer, FanficSerializer, StatusSerializer, ClassementSerializer, FanficFormattedSerializer
+from fanfics.api.filters import FanficFilter
 
 from api import custompermission, recommender
 
@@ -56,6 +57,7 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
         filters.OrderingFilter,
+		FanficFilter,
     )
     filter_fields = (
         'category__slug',
@@ -66,9 +68,9 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         'status',
     )
     search_fields = [
-        '^title',
-        '^description',
-        '^synopsis',
+        'title',
+        'description',
+        'synopsis',
 		'author',
 	]
     ordering_fields = (
