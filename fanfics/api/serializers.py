@@ -169,7 +169,7 @@ class FanficSerializer(serializers.ModelSerializer):
 class FanficFormattedSerializer(serializers.ModelSerializer):
     category = serializers.CharField()
     subcategory = serializers.CharField()
-    genres = CustomMultipleChoiceField(choices=Fanfic.GENRES_CHOICES)
+    genres = serializers.CharField(source='get_genres_display')
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
     author = serializers.SerializerMethodField()
