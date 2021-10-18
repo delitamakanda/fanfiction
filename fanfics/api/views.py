@@ -52,34 +52,34 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         permissions.AllowAny,
         custompermission.IsCurrentAuthorOrReadOnly
     )
-    filter_backends = (
+    filter_backends = [
 		DjangoFilterBackend,
         filters.SearchFilter,
-        filters.OrderingFilter,
-    )
-    filter_fields = (
+        filters.OrderingFilter
+	]
+    filter_fields = [
         'category__slug',
         'subcategory__slug',
 		'category',
 		'subcategory',
 		'genres',
-        'status',
-    )
-    search_fields = [
-        'title',
-        'description',
-        'synopsis',
-		'author',
+        'status'
 	]
-    ordering_fields = (
+    search_fields = [
+        '^title',
+        '^description',
+        '^synopsis',
+		'^author__username'
+	]
+    ordering_fields = [
         'title',
 		'id',
         'created',
 		'total_likes',
 		'views',
-        'updated',
-    )
-    ordering = ('-id',)
+        'updated'
+	]
+    ordering = ['-id']
     name = 'fanfic-create'
 
     def get_serializer_class(self):
