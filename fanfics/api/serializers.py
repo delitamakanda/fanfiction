@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.utils.functional import lazy
 from django.contrib.auth.models import User
 
-from rest_framework import serializers
+from rest_framework import serializers, fields
 
 from accounts.models import FollowStories, FollowUser, Social, AccountProfile
 from fanfics.models import Fanfic
@@ -14,6 +14,10 @@ from api.recommender import Recommender
 from django.core.mail import mail_admins
 from api.utils import create_notification
 
+
+class CustomMultipleChoiceField(fields.MultipleChoiceField):
+	def to_representation(self, value):
+		return list(super().to_representation(value))
 
 class GenresSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
@@ -165,7 +169,7 @@ class FanficSerializer(serializers.ModelSerializer):
 class FanficFormattedSerializer(serializers.ModelSerializer):
     category = serializers.CharField()
     subcategory = serializers.CharField()
-    genres = serializers.CharField(source='get_genres_display')
+    genres = CustomMultipleChoiceField(choices=Fanfic.GENRES_CHOICES)
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
     author = serializers.SerializerMethodField()
