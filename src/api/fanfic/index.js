@@ -31,7 +31,7 @@ export function getFanficsPublishCategory(status, categoryId) {
 
 export function getFanficsPublishSearch(status, searchTerm) {
     if (typeof status === undefined) { return ; }
-    return $fetch(`fanfics/?status=${status}&search=${searchTerm}`)
+    return $fetch(`fanfics/?q=${searchTerm}&status=${status}`)
     .then(res => res.results)
     .catch(err => {
         console.log(err);

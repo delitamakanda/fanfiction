@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from fanfics.models import Fanfic
 
 from fanfics.api.serializers import GenresSerializer, FanficSerializer, StatusSerializer, ClassementSerializer, FanficFormattedSerializer
+from fanfics.api.filters import FanficFilter
 
 from api import custompermission, recommender
 
@@ -48,6 +49,7 @@ class StatusListView(generics.ListAPIView):
 class FanficCreateApiView(generics.ListCreateAPIView):
     serializer_class = FanficSerializer
     queryset = Fanfic.objects.all()
+    filter_class = FanficFilter
     permission_classes = (
         permissions.AllowAny,
         custompermission.IsCurrentAuthorOrReadOnly
@@ -57,19 +59,19 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         filters.SearchFilter,
         filters.OrderingFilter
 	]
-    filter_fields = [
-        'category__slug',
-        'subcategory__slug',
-		'category',
-		'subcategory',
-		'genres',
-        'status'
-	]
+    # filter_fields = [
+        # 'category__slug',
+        # 'subcategory__slug',
+		# 'category',
+		# 'subcategory',
+		# 'genres',
+        # 'status'
+	# ]
     search_fields = [
-        '^title',
+        'title',
         '^description',
         '^synopsis',
-		'^author__username'
+		'author__username',
 	]
     ordering_fields = [
         'title',
