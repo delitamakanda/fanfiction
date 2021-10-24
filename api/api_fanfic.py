@@ -16,7 +16,7 @@ class ShareFanficAPIView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         fanfic_id = request.data.get('id')
-        fanfic = Fanfic.objects.get(id=fanfic_id, status='published')
+        fanfic = Fanfic.objects.get(id=fanfic_id)
         current_site = get_current_site(request)
 
         name = request.data.get('name')
