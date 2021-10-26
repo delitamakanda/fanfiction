@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser, JSONParser
@@ -173,7 +174,7 @@ class FollowUserView(views.APIView):
     """
     serializer_class = FollowUserSerializer
     authentication_class = ()
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, format=None):
         """
@@ -210,7 +211,7 @@ class FollowStoriesView(views.APIView):
     """
     serializer_class = FollowStoriesSerializer
     authentication_class = ()
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, format=None):
         """
@@ -222,7 +223,8 @@ class FollowStoriesView(views.APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
-
+		
+	@csrf_exempt
     def post(self, request):
         serializer = FollowStoriesSerializer(data=request.data)
         if serializer.is_valid():
@@ -230,6 +232,7 @@ class FollowStoriesView(views.APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
+	@csrf_exempt
     def delete(self, request, pk=None):
         follow_story_id = request.data.get('id')
 
