@@ -102,3 +102,6 @@ CACHES = {
         }
     }
 }
+
+# csrf
+CSRF_TRUSTED_ORIGINS = ['fanfiction-fr.netlify.app']
