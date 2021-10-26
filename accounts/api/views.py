@@ -224,7 +224,7 @@ class FollowStoriesView(views.APIView):
         except:
             return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
 		
-	@csrf_exempt
+    @csrf_exempt
     def post(self, request):
         serializer = FollowStoriesSerializer(data=request.data)
         if serializer.is_valid():
@@ -232,7 +232,7 @@ class FollowStoriesView(views.APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
-	@csrf_exempt
+    @csrf_exempt
     def delete(self, request, pk=None):
         follow_story_id = request.data.get('id')
 
