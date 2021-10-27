@@ -14,6 +14,8 @@ from fanfics.api.serializers import UserFanficSerializer, SocialSerializer, Fanf
 from accounts.models import AccountProfile, FollowUser, FollowStories, Social
 from fanfics.models import Fanfic
 
+from api.customauthentication import CsrfExemptSessionAuthentication
+
 
 class UserFanficDetailView(generics.RetrieveAPIView):
     """
@@ -171,7 +173,7 @@ class FollowUserView(views.APIView):
     Users followed
     """
     serializer_class = FollowUserSerializer
-    authentication_class = ()
+    authentication_class = (CsrfExemptSessionAuthentication,)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
@@ -208,7 +210,7 @@ class FollowStoriesView(views.APIView):
     Stories followed
     """
     serializer_class = FollowStoriesSerializer
-    authentication_class = ()
+    authentication_class = (CsrfExemptSessionAuthentication,)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
