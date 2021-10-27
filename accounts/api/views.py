@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404
 
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser, JSONParser
-from rest_framework import generics, permissions, status, views
+from rest_framework import generics, permissions, status, views, authentication
 from rest_framework.response import Response
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 
@@ -173,7 +173,7 @@ class FollowUserView(views.APIView):
     Users followed
     """
     serializer_class = FollowUserSerializer
-    authentication_class = (CsrfExemptSessionAuthentication,)
+    authentication_class = (CsrfExemptSessionAuthentication, authentication.BasicAuthentication,)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
@@ -210,8 +210,8 @@ class FollowStoriesView(views.APIView):
     Stories followed
     """
     serializer_class = FollowStoriesSerializer
-    authentication_class = (CsrfExemptSessionAuthentication,)
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    authentication_class = ()
+    authentication_class = (CsrfExemptSessionAuthentication, authentication.BasicAuthentication,)
 
     def get(self, request, format=None):
         """
