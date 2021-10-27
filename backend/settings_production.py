@@ -56,7 +56,7 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'api.customauthentication.CsrfExemptSessionAuthentication',
+        # #,
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
@@ -104,4 +104,4 @@ CACHES = {
 }
 
 # CSRF
-CSRF_TRUSTED_ORIGINS = ["fanfiction-fr.netlify.app"]
+# CSRF_TRUSTED_ORIGINS = ["fanfiction-fr.netlify.app"]
