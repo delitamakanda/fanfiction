@@ -106,3 +106,4 @@ CACHES = {
 # csrf
 # CSRF_TRUSTED_ORIGINS = ['fanfiction-fr.netlify.app']
 # CORS_REPLACE_HTTPS_REFERER = True
+SECURE_REFERRER_POLICY = "strict-origin"

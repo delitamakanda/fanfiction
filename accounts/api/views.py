@@ -172,7 +172,7 @@ class FollowUserView(views.APIView):
     """
     serializer_class = FollowUserSerializer
     authentication_class = ()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
         """
@@ -209,7 +209,7 @@ class FollowStoriesView(views.APIView):
     """
     serializer_class = FollowStoriesSerializer
     authentication_class = ()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
         """
