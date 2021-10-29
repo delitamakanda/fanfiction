@@ -131,10 +131,10 @@ class FanficDetailView(generics.RetrieveAPIView):
 
             r = recommender.Recommender()
             most_liked_fanfics = Fanfic.objects.filter(
-                 status='publié').order_by('-total_likes')[:10]
+                 status='publié').order_by('-total_likes')[:0]
             print(most_liked_fanfics)
             for most_liked_fanfic in most_liked_fanfics:
-                liked_fanfics = r.fanfics_liked([instance, most_liked_fanfic])
+                r.fanfics_liked([instance, most_liked_fanfic])
 
             serializer = self.get_serializer(instance)
             data = serializer.data

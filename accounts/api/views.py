@@ -14,8 +14,6 @@ from fanfics.api.serializers import UserFanficSerializer, SocialSerializer, Fanf
 from accounts.models import AccountProfile, FollowUser, FollowStories, Social
 from fanfics.models import Fanfic
 
-from api.customauthentication import CsrfExemptSessionAuthentication
-
 
 class UserFanficDetailView(generics.RetrieveAPIView):
     """
@@ -144,7 +142,7 @@ def unliked_fanfic(request):
     if fanfic_id and user_id:
         try:
             fanfic = Fanfic.objects.get(id=int(fanfic_id))
-            
+
             if fanfic:
                 likes = fanfic.users_like.remove(user_id)
                 fanfic.users_like = likes
@@ -168,12 +166,13 @@ class UnfavoritedFanficView(views.APIView):
             unliked_fanfic(request)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class FollowUserView(views.APIView):
     """
     Users followed
     """
     serializer_class = FollowUserSerializer
-    authentication_class = (CsrfExemptSessionAuthentication,)
+    authentication_class = ()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
@@ -210,7 +209,7 @@ class FollowStoriesView(views.APIView):
     Stories followed
     """
     serializer_class = FollowStoriesSerializer
-    authentication_class = (CsrfExemptSessionAuthentication,)
+    authentication_class = ()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
@@ -223,7 +222,7 @@ class FollowStoriesView(views.APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
-		
+
     def post(self, request):
         serializer = FollowStoriesSerializer(data=request.data)
         if serializer.is_valid():
