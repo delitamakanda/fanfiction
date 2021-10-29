@@ -20,7 +20,7 @@ from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.decorators.cache import cache_page
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 from rest_framework.documentation import include_docs_urls
 
 from accounts.api.views import (
@@ -142,8 +142,8 @@ urlpatterns += [
     path('api/feedback/', EmailFeedbackView.as_view(), name='feedback'),
     path('api/favorite/', FavoritedFanficView.as_view(), name='favorite'),
     path('api/unfavorite/', UnfavoritedFanficView.as_view(), name='unfavorite'),
-    path('api/follow-stories/', csrf_exempt(FollowStoriesView.as_view()), name='follow-stories'),
-    path('api/follow-user/', csrf_exempt(FollowUserView.as_view()), name='follow-user'),
+    path('api/follow-stories/', FollowStoriesView.as_view(), name='follow-stories'),
+    path('api/follow-user/', FollowUserView.as_view(), name='follow-user'),
     path('api/disable-account/', DeleteAccountView.as_view(), name='disable-account'),
     path('api/contact-mail/', ContactMailView.as_view(), name='contact-mail'),
     path('api/pages/<str:type>/',
