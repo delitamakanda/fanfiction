@@ -171,8 +171,8 @@ class FollowUserView(views.APIView):
     """
     Users followed
     """
-    serializer_class = FollowUserSerializer
-    authentication_class = ()
+    serializer_class = FollowUserSerializer()
+    authentication_classes = ()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
@@ -208,8 +208,8 @@ class FollowStoriesView(views.APIView):
     """
     Stories followed
     """
-    serializer_class = FollowStoriesSerializer
-    authentication_class = ()
+    serializer_class = FollowStoriesSerializer()
+    authentication_classes = ()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
@@ -245,7 +245,8 @@ class DeleteAccountView(views.APIView):
     """
     Disable user account
     """
-    serializer_class = UserSerializer
+    serializer_class = UserSerializer()
+    authentication_classes = ()
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
