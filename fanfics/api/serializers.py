@@ -16,8 +16,9 @@ from api.utils import create_notification
 
 
 class CustomMultipleChoiceField(fields.MultipleChoiceField):
-	def to_representation(self, value):
-		return list(super().to_representation(value))
+    def to_representation(self, value):
+        return list(super().to_representation(value))
+
 
 class GenresSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
@@ -80,15 +81,17 @@ class UserFanficSerializer(serializers.ModelSerializer):
 
     def get_fav_stories(self, obj):
         favorites_stories = FollowStories.objects.filter(from_user=obj)
-		qs_favorites_stories = favorites_stories.objects.values_list('to_fanfic')
-		fanfics = Fanfic.objects.filter(id=qs_favorites_stories)
+        qs_favorites_stories = favorites_stories.objects.values_list(
+            'to_fanfic')
+        fanfics = Fanfic.objects.filter(id=qs_favorites_stories)
         serializer = FanficSerializer(fanfics, many=True)
         return serializer.data
 
     def get_fav_authors(self, obj):
         favorites_authors = FollowUser.objects.filter(user_from=obj)
-		qs_favorites_authors = favorites_authors.objects.values_list('user_from')
-		users = User.objects.filter(id=qs_favorites_authors)
+        qs_favorites_authors = favorites_authors.objects.values_list(
+            'user_from')
+        users = User.objects.filter(id=qs_favorites_authors)
         serializer = UserSerializer(users, many=True)
         return serializer.data
 
@@ -236,7 +239,8 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
         return UserSerializer(obj.author).data
 
     def get_chapters(self, obj):
-        all_published_chapters = Chapter.objects.filter(fanfic=obj, status='publié')
+        all_published_chapters = Chapter.objects.filter(
+            fanfic=obj, status='publié')
         return ChapterFormattedSerializer(all_published_chapters, many=True).data
 
 
