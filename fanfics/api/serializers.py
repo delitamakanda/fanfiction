@@ -70,30 +70,30 @@ class SocialSerializer(serializers.ModelSerializer):
 
 
 class UserFanficSerializer(serializers.ModelSerializer):
-    social = serializers.SerializerMethodField()
-    fav_stories = serializers.SerializerMethodField()
-    fav_authors = serializers.SerializerMethodField()
+    #social = serializers.SerializerMethodField()
+    #fav_stories = serializers.SerializerMethodField()
+    #fav_authors = serializers.SerializerMethodField()
 
-    def get_social(self, obj):
-        social_acc = Social.objects.filter(user=obj)
-        serializer = SocialSerializer(social_acc, many=True)
-        return serializer.data
+    #def get_social(self, obj):
+        #social_acc = Social.objects.filter(user=obj)
+        #serializer = SocialSerializer(social_acc, many=True)
+        #return serializer.data
 
-    def get_fav_stories(self, obj):
-        favorites_stories = FollowStories.objects.filter(from_user=obj)
-        qs_favorites_stories = favorites_stories.objects.values_list(
-            'to_fanfic')
-        fanfics = Fanfic.objects.filter(id=qs_favorites_stories)
-        serializer = FanficSerializer(fanfics, many=True)
-        return serializer.data
+    #def get_fav_stories(self, obj):
+        #favorites_stories = FollowStories.objects.filter(from_user=obj)
+        #qs_favorites_stories = favorites_stories.objects.values_list(
+            #'to_fanfic')
+        #fanfics = Fanfic.objects.filter(id=qs_favorites_stories)
+        #serializer = FanficSerializer(fanfics, many=True)
+        #return serializer.data
 
-    def get_fav_authors(self, obj):
-        favorites_authors = FollowUser.objects.filter(user_from=obj)
-        qs_favorites_authors = favorites_authors.objects.values_list(
-            'user_from')
-        users = User.objects.filter(id=qs_favorites_authors)
-        serializer = UserSerializer(users, many=True)
-        return serializer.data
+    #def get_fav_authors(self, obj):
+        #favorites_authors = FollowUser.objects.filter(user_from=obj)
+        #qs_favorites_authors = favorites_authors.objects.values_list(
+            #'user_from')
+        #users = User.objects.filter(id=qs_favorites_authors)
+        #serializer = UserSerializer(users, many=True)
+        #return serializer.data
 
     class Meta:
         model = User
@@ -101,9 +101,9 @@ class UserFanficSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
-            'social',
-            'fav_authors',
-            'fav_stories',
+            # 'social',
+            # 'fav_authors',
+            # 'fav_stories',
         )
 
 
