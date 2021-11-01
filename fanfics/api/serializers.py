@@ -70,14 +70,14 @@ class SocialSerializer(serializers.ModelSerializer):
 
 
 class UserFanficSerializer(serializers.ModelSerializer):
-    #social = serializers.SerializerMethodField()
+    social = serializers.SerializerMethodField()
     #fav_stories = serializers.SerializerMethodField()
     #fav_authors = serializers.SerializerMethodField()
 
-    #def get_social(self, obj):
-        #social_acc = Social.objects.filter(user=obj)
-        #serializer = SocialSerializer(social_acc, many=True)
-        #return serializer.data
+    def get_social(self, obj):
+        social_acc = Social.objects.filter(user=obj)
+        serializer = SocialSerializer(social_acc, many=True)
+        return serializer.data
 
     #def get_fav_stories(self, obj):
         #favorites_stories = FollowStories.objects.filter(from_user=obj)
@@ -101,7 +101,7 @@ class UserFanficSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
-            # 'social',
+            'social',
             # 'fav_authors',
             # 'fav_stories',
         )
