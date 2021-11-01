@@ -21,6 +21,7 @@ class UserFanficDetailView(generics.RetrieveAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserFanficSerializer
+	lookup_field = ('username',)
     permission_classes = (
         permissions.AllowAny,
     )
