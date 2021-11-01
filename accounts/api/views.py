@@ -24,7 +24,6 @@ class UserFanficDetailView(generics.RetrieveAPIView):
     permission_classes = (
         permissions.AllowAny,
     )
-    lookup_field = ('username')
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
