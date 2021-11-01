@@ -74,7 +74,7 @@ class UserFanficSerializer(serializers.ModelSerializer):
     fav_authors = serializers.SerializerMethodField()
 
     def get_social(self, obj):
-        social_acc = Social.objects.filter(accountprofile__user=obj)
+        social_acc = Social.objects.filter(account__user=obj)
         serializer = SocialSerializer(social_acc, many=True)
         return serializer.data
 
