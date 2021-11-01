@@ -61,7 +61,7 @@ class SocialSerializer(serializers.ModelSerializer):
             'account',
             'network',
             'nichandle',
-            'user',
+            # 'user',
         )
 
     def create(self, validated_data):
