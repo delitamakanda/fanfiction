@@ -83,7 +83,7 @@ class UserFanficSerializer(serializers.ModelSerializer):
         favorites_stories = FollowStories.objects.filter(from_user=obj)
         #qs_favorites_stories = favorites_stories.objects.values_list(
             #'to_fanfic')
-        fanfics = Fanfic.objects.filter(id=favorites_stories__to_fanfic)
+        fanfics = Fanfic.objects.filter(id=favorites_stories__to_fanfic__id)
         serializer = FanficSerializer(fanfics, many=True)
         return serializer.data
 
@@ -91,7 +91,7 @@ class UserFanficSerializer(serializers.ModelSerializer):
         favorites_authors = FollowUser.objects.filter(user_from=obj)
         #qs_favorites_authors = favorites_authors.objects.values_list(
             #'user_from')
-        users = User.objects.filter(id=favorites_authors__user_to)
+        users = User.objects.filter(id=favorites_authors__user_to__id)
         serializer = UserSerializer(users, many=True)
         return serializer.data
 
