@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.http.response import Http404
 from django.shortcuts import get_object_or_404
 
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser, JSONParser
@@ -202,6 +203,57 @@ class FollowUserView(views.APIView):
             return Response({'status': 'ok'}, status=status.HTTP_200_OK)
         except:
             return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+
+class FollowAuthorDeleteView(views.APIView):
+    """
+    Author followed
+    """
+    serializer_class = FollowUserSerializer()
+    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object(self, request, user_to):
+        user_from = request.data.get('user_from')
+        try:
+            return FollowUser.objects.get(user_to=user_to, user_from=user_from)
+        except FollowUser.DoesNotExist:
+            raise Http404
+
+    def get(self, request, user_to, format=None):
+        author_followed = self.get_object(request, user_to)
+        serializer = FollowUserSerializer(author_followed)
+        return Response(serializer.data)
+
+    def delete(self, request, user_to, format=None):
+        author_followed = self.get_object(request, user_to)
+        author_followed.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class FollowStoriesDeleteView(views.APIView):
+    """
+    Author followed
+    """
+    serializer_class = FollowStoriesSerializer()
+    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object(self, request, to_fanfic):
+        from_user = request.data.get('from_user')
+        try:
+            return FollowStories.objects.get(to_fanfic=to_fanfic, from_user=from_user)
+        except FollowStories.DoesNotExist:
+            raise Http404
+
+    def get(self, request, to_fanfic, format=None):
+        story_followed = self.get_object(request, to_fanfic)
+        serializer = FollowStoriesSerializer(story_followed)
+        return Response(serializer.data)
+
+    def delete(self, request, to_fanfic, format=None):
+        story_followed = self.get_object(request, to_fanfic)
+        story_followed.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class FollowStoriesView(views.APIView):

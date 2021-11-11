@@ -36,6 +36,8 @@ from accounts.api.views import (
     FollowUserView,
     FollowStoriesView,
     DeleteAccountView,
+    FollowAuthorDeleteView,
+    FollowStoriesDeleteView,
 )
 
 from helpcenter.api.views import (
@@ -144,6 +146,10 @@ urlpatterns += [
     path('api/unfavorite/', UnfavoritedFanficView.as_view(), name='unfavorite'),
     path('api/follow-stories/', FollowStoriesView.as_view(), name='follow-stories'),
     path('api/follow-user/', FollowUserView.as_view(), name='follow-user'),
+
+    path('api/story-followed/<int:to_fanfic>/', FollowStoriesDeleteView.as_view()),
+    path('api/author-followed/<int:user_to>/', FollowAuthorDeleteView.as_view()),
+
     path('api/disable-account/', DeleteAccountView.as_view(), name='disable-account'),
     path('api/contact-mail/', ContactMailView.as_view(), name='contact-mail'),
     path('api/pages/<str:type>/',
