@@ -10,3 +10,11 @@
 - https://css-tricks.com/how-to-convert-a-date-string-into-a-human-readable-format/
 - https://nickymeuleman.netlify.app/blog/css-animated-wrapping-underline
 - https://hakibenita.com/django-markdown
+
+
+- https://vant-contrib.gitee.io/vant/#/en-US/home
+- https://adamj.eu/tech/2021/11/22/django-black-friday-deals/
+- https://icon.kitchen/i/H4sIAAAAAAAAAzWOvQ7CMAyE38WsHQoqqHRl4AFgQwjlxw0RaVwlDQhVfXecoC629PnOdzO8hUsYoZtBmut3ROjABKEt%2Bgkq6M3J2VGEKQsi8gKNvUguH60iz2BAnx6S6AVLxU%2FOq5sdihyFLWs2dS2VbthU0O6Pjoe2ZSS8cZzb7Iv%2F8hSlhbJBMWY2kE4ud7yxVAeyOodT5PlBCfflB3pI6InGAAAA
+- https://couleur.io/
+- https://splidejs.com/guides/getting-started/
+- https://www.smashingmagazine.com/2021/11/localizing-your-nextjs-app/
