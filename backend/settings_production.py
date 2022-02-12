@@ -17,6 +17,8 @@ ADMINS = [
 
 STATIC_ROOT = 'static'
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 # Media storages
 
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
