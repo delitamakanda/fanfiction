@@ -102,7 +102,9 @@ Elementary
 ## Scraper
 
 ```bash
-python3 scraper.py
+python3 fanfics/scraper.py ccs
+python3 fanfics/scraper.py op
+python3 fanfics/scraper.py marvel
 
 python3 manage.py import_from_fanfiction_as_csv fanfictions_scraping.csv
 ```
