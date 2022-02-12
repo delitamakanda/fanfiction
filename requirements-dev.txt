@@ -25,7 +25,7 @@ pytz==2018.3
 requests[security]
 six==1.11.0
 urllib3==1.26.5
-whitenoise==3.3.1
+whitenoise==5.3.0
 django-storages
 django-markdownx==2.0.23
 coreapi==2.3.3
