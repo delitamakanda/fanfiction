@@ -106,5 +106,7 @@ python3 fanfics/scraper.py ccs
 python3 fanfics/scraper.py op
 python3 fanfics/scraper.py marvel
 
-python3 manage.py import_from_fanfiction_as_csv fanfictions_scraping.csv
+python3 manage.py import_from_fanfiction_as_csv output_ccs.csv
+python3 manage.py import_from_fanfiction_as_csv output_op.csv
+python3 manage.py import_from_fanfiction_as_csv output_marvel.csv
 ```
