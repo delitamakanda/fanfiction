@@ -9,7 +9,7 @@ django-embed-video==1.1.2
 django-filter==2.4.0
 django-multiselectfield==0.1.8
 django-webpack-loader==0.6.0
-djangorestframework==3.11.2
+djangorestframework==3.13.1
 idna==2.6
 oauthlib==3.1.0
 Pillow==9.0.0
