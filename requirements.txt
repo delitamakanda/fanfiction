@@ -1,5 +1,5 @@
 attrs==17.4.0
-celery==5.2.2
+celery==5.2.0b3
 certifi==2018.1.18
 chardet==3.0.4
 defusedxml==0.7.1
