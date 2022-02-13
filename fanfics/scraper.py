@@ -31,6 +31,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 for url in urls:
     response = scraper.get(url).text
+    print(response)
     response_html = BeautifulSoup(response, 'html5lib')
 
     table = response_html.find('div', attrs={'id': 'content_wrapper_inner'})
