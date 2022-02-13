@@ -1,3 +1,4 @@
+from turtle import delay
 import cloudscraper
 import requests
 import os
@@ -8,7 +9,7 @@ from bs4 import BeautifulSoup
 # https://www.geeksforgeeks.org/implementing-web-scraping-python-beautiful-soup/
 
 # create a cloudscraper instance
-scraper = cloudscraper.create_scraper(browser={'browser': 'firefox','platform': 'windows','mobile': False})
+scraper = cloudscraper.create_scraper(browser={'browser': 'firefox','platform': 'windows','mobile': False}, delay=10)
 
 base_url = 'https://www.fanfiction.net/'
 
@@ -30,8 +31,7 @@ fanfics = []
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 for url in urls:
-    response = scraper.get(url).text
-    print(response)
+    response = scraper.get(url=url).text
     response_html = BeautifulSoup(response, 'html5lib')
 
     table = response_html.find('div', attrs={'id': 'content_wrapper_inner'})
