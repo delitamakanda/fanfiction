@@ -8,14 +8,14 @@ from bs4 import BeautifulSoup
 # https://www.geeksforgeeks.org/implementing-web-scraping-python-beautiful-soup/
 
 # create a cloudscraper instance
-scraper = cloudscraper.create_scraper(browser={'browser': 'firefox','platform': 'windows','mobile': False})
+scraper = cloudscraper.create_scraper(browser={'browser': 'chrome','platform': 'linux','mobile': False})
 
 base_url = 'https://www.fanfiction.net/'
 
 if len(sys.argv) > 1:
         if sys.argv[1] == "ccs":
             output_filename = 'output_ccs'
-            urls = ['https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=4', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=4&p=2', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=4&p=6']
+            urls = ['https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=4', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=4&p=2', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=4&p=6', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=2', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=3', 'https://www.fanfiction.net/anime/Card-Captor-Sakura/?&srt=1&lan=1&r=103&p=4']
         
         elif sys.argv[1] == "op":
             output_filename = 'output_op'
