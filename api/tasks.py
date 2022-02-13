@@ -12,6 +12,7 @@ from fanfics.models import Fanfic
 from chapters.models import Chapter
 from comments.models import Comment
 from accounts.models import FollowStories, FollowUser
+from django.contrib.auth.models import User
 
 logger = get_task_logger(__name__)
 
@@ -23,6 +24,15 @@ def fanfic_created(fanfic_id):
     logger.info('******** CALLING ASYNC TASK WITH CELERY **********')
     
     fanfic = Fanfic.objects.get(id=fanfic_id, status='publié')
+    
+    """
+    get all followers of the author
+    """
+    followers = FollowUser.objects.filter(user_to=fanfic.author).values_list('user_from', flat=True)
+    users = User.objects.filter(id__in=followers).values_list('email', flat=True)
+    emaillists = []
+    for email in users:
+        emaillists.append(str(email))
     subject = 'Fanfiction id# {} - {}'.format(fanfic.id, fanfic.title)
     template = get_template('mail/fanfic_created_notification.txt')
     context = {'fanfic': fanfic}
@@ -30,7 +40,10 @@ def fanfic_created(fanfic_id):
     msg_html = render_to_string('mail/fanfic_created_notification.html', context)
     # message = 'Cher {},\n\nVotre fanfiction {} a été créer avec succès. Son identifiant est le numéro #{}.'.format(fanfic.author.username, fanfic.title, fanfic.id)
 
-    mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [fanfic.author.email], html_message=msg_html)
+    send_mail(subject, msg_text, "no-reply@fanfiction.com", [fanfic.author.email], html_message=msg_html)
+    message = (subject, f'{fanfic.author.username} a publié une nouvelle story', "no-reply@fanfiction.com", emaillists)
+    
+    mail_sent = send_mass_mail((message,), fail_silently=False)
     
     return mail_sent
 
@@ -38,13 +51,22 @@ def fanfic_created(fanfic_id):
 @shared_task
 def chapter_created(chapter_id):
     chapter = Chapter.objects.get(id=chapter_id, status='publié')
+    followers = FollowStories.objects.filter(to_fanfic=chapter.fanfic).values_list('from_user', flat=True)
+    users = User.objects.filter(id__in=followers).values_list('email', flat=True)
+    emaillists = []
+    logger.info(users)
+    for email in users:
+        emaillists.append(str(email))
     subject = 'Fanfiction : nouveau chapitre publié sur {}'.format(chapter.fanfic.title)
     template = get_template('mail/chapter_created_notification.txt')
     context = {'chapter': chapter}
     msg_text = template.render(context)
     msg_html = render_to_string('mail/chapter_created_notification.html', context)
         
-    mail_sent = send_mail(subject, msg_text, "no-reply@fanfiction.com", [chapter.fanfic.author.email], html_message=msg_html)
+    send_mail(subject, msg_text, "no-reply@fanfiction.com", [chapter.fanfic.author.email], html_message=msg_html)
+    message = (subject, f'{chapter.author.username} a publié un nouveau chapitre pour {chapter.fanfic.title}', "no-reply@fanfiction.com", emaillists)
+    
+    mail_sent = send_mass_mail((message,), fail_silently=False)
 
     return mail_sent
 
