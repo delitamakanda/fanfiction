@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 # https://www.geeksforgeeks.org/implementing-web-scraping-python-beautiful-soup/
 
 # create a cloudscraper instance
-scraper = cloudscraper.create_scraper(browser={'browser': 'chrome','platform': 'linux','mobile': False})
+scraper = cloudscraper.create_scraper(browser={'browser': 'firefox','platform': 'windows','mobile': False})
 
 base_url = 'https://www.fanfiction.net/'
 
