@@ -15,7 +15,7 @@ oauthlib==3.1.0
 Pillow==9.0.0
 pluggy==0.6.0
 py==1.10.0
-PyJWT==2.0.0
+PyJWT==2.3.0
 pytest==7.0.1
 pytest-django==3.1.2
 python-decouple==3.6
