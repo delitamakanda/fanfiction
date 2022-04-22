@@ -43,6 +43,6 @@ cairocffi==0.9.0
 bs4==0.0.1
 django-oauth-toolkit==1.7.1
 html5lib==1.1
-cloudscraper==1.2.58
+cloudscraper==1.2.60
 django-redis==5.2.0
 python-memcached==1.59
