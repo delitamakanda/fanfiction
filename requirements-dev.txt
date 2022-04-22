@@ -30,7 +30,7 @@ django-storages
 django-markdownx==2.0.23
 coreapi==2.3.3
 coverage
-WeasyPrint==52.5
+WeasyPrint==54.3
 redis==4.1.3
 social-auth-app-django==5.0.0
 django-rest-framework-social-oauth2==1.1.0
