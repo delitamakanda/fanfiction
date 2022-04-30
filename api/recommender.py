@@ -1,11 +1,13 @@
 import redis
+import os
 
 from django.conf import settings
 from fanfics.models import Fanfic
 
 # connect to redis
 
-url = settings.REDIS_URL
+# url = settings.REDIS_URL
+url = os.getenv('REDIS_URL', 'redis://localhost:6379')
 r = redis.StrictRedis.from_url(url)
 
 class Recommender(object):
