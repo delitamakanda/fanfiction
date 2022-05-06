@@ -86,7 +86,7 @@ REST_FRAMEWORK = {
 
 # Python Social Auth
 
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 # Asynchronous tasks
 
