@@ -57,6 +57,7 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter',
     ),
+	'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # #,
         'rest_framework.authentication.SessionAuthentication',
