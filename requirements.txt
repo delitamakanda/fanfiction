@@ -34,7 +34,7 @@ django-markdownx==2.0.23
 awsebcli==3.14.1
 coreapi==2.3.3
 WeasyPrint>=53.3
-redis==4.2.2
+redis==4.3.1
 social-auth-app-django==5.0.0
 django-rest-framework-social-oauth2==1.1.0
 django-cors-headers==2.5.2
