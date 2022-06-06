@@ -1,10 +1,12 @@
 <template>
     <div>
         <div class="flex flex-wrap list-reset -mx-2">
-            <div class="md:w-1/3 sm:w-1/2 w-full px-2 relative overflow mb-4" v-for="(category, i) in categories" :key="category.id" v-if="categories && categories.length > 0 && i <= limitationList"><a nohref class="cursor-pointer" @click="sortByCategories(category.id)">
+            <div class="md:w-1/3 sm:w-1/2 w-full px-2 relative overflow mb-4" v-for="(category, i) in categories" :key="category.id"><a nohref class="cursor-pointer" @click="sortByCategories(category.id)">
+            <div v-if="categories && categories.length > 0 && i <= limitationList">
                 <div v-if="category.logic_value !== ''" :style="{backgroundImage: 'url(' + require('./../../assets/img/categories/'+ category.logic_value + '.jpg') + ')' }" :alt="category.name" :title="category.name" class="img-thumbnail border border-grey-light shadow"></div>
                 <div v-else :style="{backgroundImage: 'url(' + require('./../../assets/img/categories/empty.jpg') + ')' }" class="img-thumbnail border border-grey-light shadow"></div>
                 <span class="caption">{{ category.name }}</span>
+            </div>
             </a></div>
         </div>
         <div class="flex">
@@ -31,13 +33,13 @@ export default {
     },
     methods: {
         sortByCategories (categoryId) {
-            for (let i = 0; i < this.categories.length; i++) {
-                if (this.categories[i].id == categoryId) {
-                    this.$emit('selectedCategory', this.categories[i])
+            for (const element of this.categories) {
+                if (element.id == categoryId) {
+                    this.$emit('selectedCategory', element)
                 }
             }
         },
-        readMore (limitationList) {
+        readMore () {
             if (this.limitationList == this.categories.length) {
                 this.limitationList = 5
             } else {

@@ -83,7 +83,7 @@
                 this.selectedCategoryId = val.id
                 this.isPrevIsShown = false
                 this.currentOffset = 0 // reset pagination
-                this.fetchFanficsPublishedCategory({ status: 'publié', categoryId: this.selectedCategoryId, offset: this.currentOffset })
+                this.fetchFanficsPublishedCategory({ status: 'publié', categoryId: this.selectedCategoryId ? this.selectedCategoryId : val.id, offset: this.currentOffset })
             },
             loadNext() {
                 this.currentOffset = this.currentOffset + 4;
