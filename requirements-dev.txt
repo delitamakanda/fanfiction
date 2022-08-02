@@ -27,7 +27,7 @@ six==1.11.0
 urllib3==1.26.11
 whitenoise==5.3.0
 django-storages
-django-markdownx==2.0.23
+django-markdownx==3.0.1
 coreapi==2.3.3
 coverage
 WeasyPrint==54.3
