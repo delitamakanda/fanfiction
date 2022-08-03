@@ -10,7 +10,7 @@ django-filter==2.4.0
 django-multiselectfield==0.1.12
 django-webpack-loader==0.7.0
 djangorestframework==3.13.1
-idna==3.3
+idna==2.10
 oauthlib==3.2.0
 Pillow==9.2.0
 pluggy==1.0.0
@@ -32,7 +32,7 @@ django-storages==1.12.3
 boto3==1.24.43
 django-markdownx==3.0.1
 coreapi==2.3.3
-WeasyPrint>=53.3
+WeasyPrint==53.3
 redis==4.3.4
 social-auth-app-django==5.0.0
 django-rest-framework-social-oauth2==1.1.0
