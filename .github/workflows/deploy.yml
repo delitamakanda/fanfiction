@@ -7,7 +7,7 @@ on:
 
 jobs:
   django:
-    uses: './django.yml'
+    uses: ./.github/workflows/django.yml
   build:
     needs: [ django ]
     runs-on: ubuntu-latest
