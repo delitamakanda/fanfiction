@@ -6,12 +6,13 @@ on:
       - master
 
 jobs:
-  django:
-    uses: ./.github/workflows/django.yml
   build:
-    needs: [ django ]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      - name: lint
+        uses: ./.github/workflows/django.yml
+        needs: [lint]
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
