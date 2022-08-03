@@ -1,4 +1,5 @@
 name: Django CI
+on: [ workflow_call ]
 
 on:
   push:

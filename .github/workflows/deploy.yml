@@ -1,19 +1,15 @@
 name: Deploy to Heroku
 
 on:
-  workflow_run:
-    workflows: ['Django CI']
-    branches: [master]
-    types:
-      - completed
-
-on:
   push:
     branches:
       - master
 
 jobs:
+  django:
+    uses: './.github/workflows/django.yml'
   build:
+    needs: [ django ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
