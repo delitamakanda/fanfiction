@@ -32,17 +32,18 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="mobile-web-app-capable" content="yes">
-    {% render_bundle 'app' 'css' %}
     </head>
     <body>
+      <noscript>
+        <strong>We're sorry but frontend doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      </noscript>
         {% block content %}
         {% endblock %}
-        {% render_bundle 'app' 'js' %}
         <script>
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker
-          .register("{% static 'sw.js' %}")
-          .then(function() {
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+            .register("{% static 'sw.js' %}")
+            .then(function() {
               console.log('Service Worker Registered');
             }).catch(function(error){
               console.log(error);
@@ -60,5 +61,8 @@
   gtag('config', 'G-HDRHK2MFDJ');
 </script>
 
+          }
+          </script>
+        {% render_bundle 'main' %}
     </body>
 </html>
