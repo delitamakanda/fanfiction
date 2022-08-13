@@ -1,4 +1,11 @@
 import { createApp } from 'vue';
-import App from './App.vue';
+import Root from './App.vue';
+export const app = createApp(Root);
+import { vueSelect } from './plugins/vue-select';
 
-createApp(App).mount('#app');
+import loadPlugins from './helpers/loadPlugins';
+loadPlugins(['vue-select'])
+app
+    .use(vueSelect)
+    .mount('#app');
+
