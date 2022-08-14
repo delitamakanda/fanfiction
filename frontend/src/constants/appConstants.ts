@@ -1,4 +1,5 @@
-export const APP_NAME: string = 'Fanfiction';
+export const APP_NAME = 'Fanfiction';
+export const APP_VERSION = 2;
 
 export const apiStatus = {
     IDLE: Symbol('IDLE'),

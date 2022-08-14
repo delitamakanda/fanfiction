@@ -26,3 +26,4 @@ celerybeat-schedule.db
 #dist/
 build/
 config/
+!frontend/src/config/

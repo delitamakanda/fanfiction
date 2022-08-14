@@ -1,6 +1,6 @@
 <template>
     <div>
-        vue 3
+        {{ $t("message.hello", {name: "dma"}) }}
         <button @click="increase">Clicked {{ count }} times.</button>
     </div>
 </template>
@@ -21,3 +21,13 @@ export default defineComponent({
     }
 })
 </script>
+
+<style lang="scss">
+* {
+    padding: 0;
+    margin: 0;
+}
+div {
+    background-color: red;
+}
+</style>
