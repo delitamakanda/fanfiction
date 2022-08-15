@@ -192,15 +192,14 @@ WEBPACK_LOADER = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'api.custompagination.LimitOffsetPaginationWithUpperBound',
-    'PAGE_SIZE': 4,
+    'DEFAULT_PAGINATION_CLASS': 'api.custompagination.StandardResultsSetPagination',
+    'PAGE_SIZE': 100,
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'api.customauthentication.CsrfExemptSessionAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
 		'rest_framework.authentication.BasicAuthentication',
@@ -237,7 +236,7 @@ OAUTH2_PROVIDER = {
     },
     'ACCESS_TOKEN_EXPIRE_SECONDS': 7*24*60*60,  # 60*60*60 : 3 hours
     'REFRESH_TOKEN_EXPIRE_SECONDS': 7*24*60*60,  # A week
-    'ROTATE_REFRESH_TOKEN': True,
+    'ROTATE_REFRESH_TOKEN': False,
     # 'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
 }
 
