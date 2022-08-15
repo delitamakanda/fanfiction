@@ -8,7 +8,7 @@ from accounts.models import FollowStories, FollowUser, Social, AccountProfile
 from fanfics.models import Fanfic
 from chapters.models import Chapter
 
-from chapters.api.serializers import ChapterFormattedSerializer
+from chapters.api.serializers import ChapterSerializer
 
 from api.recommender import Recommender
 from django.core.mail import mail_admins
@@ -179,11 +179,8 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
     genres = serializers.CharField(source='get_genres_display')
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
-    author = serializers.SerializerMethodField()
-    recommended_fanfics = serializers.SerializerMethodField()
-    most_liked_fanfics = FanficSerializer(many=True, read_only=True)
-    newest_fanfics = FanficSerializer(many=True, read_only=True)
-    chapters = serializers.SerializerMethodField()
+    author = serializers.CharField(source='author.username')
+    chapters_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Fanfic
@@ -210,13 +207,10 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
             'published',
             'category',
             'subcategory',
-            'recommended_fanfics',
-            'newest_fanfics',
-            'most_liked_fanfics',
             'views',
             'fanfic_is_scraped',
             'link_fanfic',
-            'chapters',
+            'chapters_count',
         )
         lookup_field = 'slug'
 
@@ -229,19 +223,10 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
     def get_status(self, obj):
         return obj.get_status_display()
 
-    def get_recommended_fanfics(self, obj):
-        r = Recommender()
-        recommended_fanfics = r.suggest_fanfics_for([obj], 10)
-        serializer = FanficSerializer(recommended_fanfics, many=True)
-        return serializer.data
-
-    def get_author(self, obj):
-        return UserSerializer(obj.author).data
-
-    def get_chapters(self, obj):
+    def get_chapters_count(self, obj):
         all_published_chapters = Chapter.objects.filter(
             fanfic=obj, status='publié')
-        return ChapterFormattedSerializer(all_published_chapters, many=True).data
+        return len(ChapterSerializer(all_published_chapters, many=True).data)
 
 
 class UserSerializer(serializers.ModelSerializer):

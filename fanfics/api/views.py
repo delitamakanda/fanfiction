@@ -11,7 +11,7 @@ from fanfics.models import Fanfic
 from fanfics.api.serializers import GenresSerializer, FanficSerializer, StatusSerializer, ClassementSerializer, FanficFormattedSerializer
 from fanfics.api.filters import FanficFilter
 
-from api import custompermission, recommender
+from api import custompermission, recommender, custompagination
 
 from api.tasks import fanfic_created
 
@@ -46,27 +46,33 @@ class StatusListView(generics.ListAPIView):
     name = 'status-list'
 
 
-class FanficCreateApiView(generics.ListCreateAPIView):
+class FanficCreateApiView(generics.CreateAPIView):
     serializer_class = FanficSerializer
     queryset = Fanfic.objects.all()
+    permission_classes = (
+        custompermission.IsCurrentAuthorOrReadOnly,
+    )
+    name = 'fanfic-create'
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+        # launch asynchronous tasks
+        fanfic_created.delay(serializer.data['id'])
+
+
+class FanficListApiView(generics.ListAPIView):
+    serializer_class = FanficFormattedSerializer
+    queryset = Fanfic.objects.all()
     filter_class = FanficFilter
+    pagination_class = custompagination.StandardResultsSetPagination
     permission_classes = (
         permissions.AllowAny,
-        custompermission.IsCurrentAuthorOrReadOnly
     )
     filter_backends = [
 		DjangoFilterBackend,
         filters.SearchFilter,
-        filters.OrderingFilter
+        filters.OrderingFilter,
 	]
-    # filter_fields = [
-        # 'category__slug',
-        # 'subcategory__slug',
-		# 'category',
-		# 'subcategory',
-		# 'genres',
-        # 'status'
-	# ]
     search_fields = [
         'title',
         '^description',
@@ -82,15 +88,10 @@ class FanficCreateApiView(generics.ListCreateAPIView):
         'updated'
 	]
     ordering = ['-id']
-    name = 'fanfic-create'
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return FanficSerializer
-        return FanficFormattedSerializer
+    name = 'fanfic-list'
 
     def get_queryset(self):
-        queryset = super(FanficCreateApiView, self).get_queryset()
+        queryset = super(FanficListApiView, self).get_queryset()
 
         try:
             username = self.kwargs['author']
@@ -100,11 +101,6 @@ class FanficCreateApiView(generics.ListCreateAPIView):
             return queryset
         except:
             return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-        # launch asynchronous tasks
-        fanfic_created.delay(serializer.data['id'])
 
 
 class FanficDetailView(generics.RetrieveAPIView):
