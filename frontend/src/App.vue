@@ -1,9 +1,9 @@
 <template>
     <div>
         <p v-if="fetchHomeFanficsStatusIdle">Welcome</p>
-        <p v-if="fetchHomeFanficsStatusPending">
-            Loading data
-        </p>
+        <BaseLazyLoad :show="fetchHomeFanficsStatusPending">
+            <p>Loading data</p>
+        </BaseLazyLoad>
         <p v-if="fetchHomeFanficsStatusError">There was a problem.</p>
         {{ $t("message.hello", {name: "dma"}) }}
         <button @click="increase">Clicked {{ count }} times.</button>
@@ -12,22 +12,36 @@
                 {{ fanfic.title }}
             </div>
         </template>
+
+        <form class="mb-8">
+        <fieldset class="flex flex-col">
+        <label class="mb-4 font-semibold" for="meal">Search fanfics</label> <input
+                class="px-4 py-2 border border-gray-300 rounded-lg"
+                type="text"
+                autocomplete="off"
+                v-model="fanficQuery"
+        id="fanfic" />
+        </fieldset> </form>
+        <div>
+        <h1 class="font-bold text-2xl mb-2">Fanfics</h1>
+        <div v-for="fanfic of fanfics" :key="fanfic.id" class="py-1"> <p>{{ fanfic.title }}</p>
+        </div> </div>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { fetchHomeFanfics, fetchFanfics } from './api/fanficApi'
+import { fetchHomeFanfics, searchFanfics } from './api/fanficApi'
 import { apiStatus } from './api/helpers/apiStatus';
 import { withAsync } from './api/helpers/withAsync';
 import { apiStatusComputedFactory } from './api/helpers/apiStatusComputedFactory';
-// import BaseLazyLoad from './components/base/BaseLazyLoad.vue';
+import BaseLazyLoad from './components/base/BaseLazyLoad.vue';
 
 const { IDLE, PENDING, SUCCESS, ERROR } = apiStatus;
 
 export default defineComponent({
     components: { 
-        // BaseLazyLoad
+        BaseLazyLoad
     },
     computed: {
         ...apiStatusComputedFactory(['fetchHomeFanficsStatus', 'updateHomeFanficsStatus'])
@@ -37,7 +51,14 @@ export default defineComponent({
             homeFanfics: null,
             fanfics: null,
             fetchHomeFanficsStatus: apiStatus.IDLE,
-            apiStatus: null
+            apiStatus: null,
+            fanficQuery: ''
+        }
+    },
+    watch: {
+        fanficQuery: {
+            immediate: true,
+            handler: 'initSearchFanfics'
         }
     },
     setup() {
@@ -61,15 +82,25 @@ export default defineComponent({
             this.homeFanfics = response.data.most_liked_fanfics;
             this.fetchHomeFanficsStatus = apiStatus.SUCCESS;
         },
-        async fetchFanfics() {
-            const response = await fetchFanfics();
-            this.fanfics = response.data
+        async initSearchFanfics(q) {
+            this.$options.abort?.();
+            const { response, error } = await withAsync(searchFanfics, q, {
+                abort: abort => (this.$options.abort = abort)
+            });
+            if (error as any) {
+            // Log the error
+            console.log('error', error);
+                if ((error as any).aborted) {
+                    console.warn("Aborted!");
+                }
+                return; 
+            }
+            this.fanfics = response.data.results;
         }
     },
     created() {
         apiStatus;
         this.fetchHomeFanfics();
-        this.fetchFanfics();
     }
 })
 </script>
