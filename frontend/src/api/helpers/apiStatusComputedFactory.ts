@@ -1,5 +1,5 @@
 import { upperFirst } from 'lodash-es';
-import { apiStatus } from './apiStatus';
+import { apiStatus } from '../constants/apiStatus';
 
 export const apiStatusComputedFactory = (reactivePropertyKeys = [""]) => {
     let computed  = {};
