@@ -32,7 +32,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { fetchHomeFanfics, searchFanfics } from './api/fanficApi'
-import { apiStatus } from './api/helpers/apiStatus';
+import { apiStatus } from './api/constants/apiStatus';
 import { withAsync } from './api/helpers/withAsync';
 import { apiStatusComputedFactory } from './api/helpers/apiStatusComputedFactory';
 import BaseLazyLoad from './components/base/BaseLazyLoad.vue';

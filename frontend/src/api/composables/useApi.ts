@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { upperFirst } from 'lodash-es';
-import { apiStatus } from '../helpers/apiStatus';
+import { apiStatus } from '../constants/apiStatus';
 
 const { IDLE, SUCCESS, ERROR, PENDING} = apiStatus;
 

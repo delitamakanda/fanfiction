@@ -26,12 +26,30 @@ const api = (axios) => {
             throw error;
          }
     }
+
+    const withLogger = async promise => 
+        promise.catch(error => {
+            if (!process.env.VUE_APP_DEBUG_API) throw error;
+
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('error', error.message);
+            }
+            console.log(error.config);
+            throw error;
+        });
+
     return {
-        get: (url, config = {}) => withAbort(axios.get)(url, config),
-        post: (url, body, config = {}) => withAbort(axios.post)(url, body, config),
-        put: (url, body, config = {}) => withAbort(axios.put)(url, body, config),
-        patch: (url, body, config = {}) => withAbort(axios.patch)(url, body, config),
-        delete: (url, config = {}) => withAbort(axios.delete)(url, config)
+        get: (url, config = {}) => withLogger(withAbort(axios.get)(url, config)),
+        post: (url, body, config = {}) => withLogger(withAbort(axios.post)(url, body, config)),
+        put: (url, body, config = {}) => withLogger(withAbort(axios.put)(url, body, config)),
+        patch: (url, body, config = {}) => withLogger(withAbort(axios.patch)(url, body, config)),
+        delete: (url, config = {}) => withLogger(withAbort(axios.delete)(url, config))
     };
 };
 
