@@ -1,4 +1,5 @@
 import api from './api';
+import { requiredParam } from '../helpers/requiredParam';
 
 const URLS = {
     fetchHomeFanficsUrl: 'browse-fanfics/',
@@ -11,8 +12,12 @@ export const fetchHomeFanfics = () => {
     })
 };
 
-export const fetchFanfics = () => {
+export const searchFanfics = (query, config = requiredParam('config')) => {
     return api.get(URLS.fetchFanficsUrl, {
-        baseURL: 'api/'
-    })
+        baseURL: 'api/',
+        params: {
+            q: query,
+        },
+        ...config as any,
+    });
 };
