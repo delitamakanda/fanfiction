@@ -1,4 +1,4 @@
-export const withAsync = async (fn, ...args: any[]) => {
+export const withAsync = async (fn, ...args) => {
     try {
         const response = await fn(...args);
         return {

@@ -34,7 +34,7 @@ export const useApi = (apiName, fn, config = {} as any) => {
             const response = await fn(...args);
             data.value = typeof responseAdapter === 'function' ? responseAdapter(response) : response;
             status.value = SUCCESS;
-        } catch (error) {
+        } catch (error: any) {
             error.value = error;
             status.value = ERROR;
             
