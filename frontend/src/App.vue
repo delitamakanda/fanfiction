@@ -4,6 +4,14 @@
         <BaseLazyLoad :show="fetchHomeFanficsStatusPending">
             <p>Loading data</p>
         </BaseLazyLoad>
+        <Select :options="$options.selectedOptions" v-model="value" label="label" caption="select at least 1 option">
+            <template v-slot:option="{ option }" >
+            <div class="option">
+                <img class="img" :src="option.src" :alt="option.label" />
+                <span> {{ option.label }}</span>
+            </div>
+            </template>
+        </Select>
         <p v-if="fetchHomeFanficsStatusError">There was a problem.</p>
         {{ $t("message.hello", {name: "dma"}) }}
         <button @click="increase">Clicked {{ count }} times.</button>
@@ -26,6 +34,8 @@
         <h1 class="font-bold text-2xl mb-2">Fanfics</h1>
         <div v-for="fanfic of fanfics" :key="fanfic.id" class="py-1"> <p>{{ fanfic.title }}</p>
         </div> </div>
+        <base-button>click</base-button>
+        <base-input></base-input>
     </div>
 </template>
 
@@ -36,12 +46,14 @@ import { apiStatus } from './api/constants/apiStatus';
 import { withAsync } from './api/helpers/withAsync';
 import { apiStatusComputedFactory } from './api/helpers/apiStatusComputedFactory';
 import BaseLazyLoad from './components/base/BaseLazyLoad.vue';
+import Select from './components/common/Select.vue';
 
 const { IDLE, PENDING, SUCCESS, ERROR } = apiStatus;
 
 export default defineComponent({
     components: { 
-        BaseLazyLoad
+        BaseLazyLoad,
+        Select,
     },
     computed: {
         ...apiStatusComputedFactory(['fetchHomeFanficsStatus', 'updateHomeFanficsStatus'])
@@ -52,7 +64,8 @@ export default defineComponent({
             fanfics: null,
             fetchHomeFanficsStatus: apiStatus.IDLE,
             apiStatus: null,
-            fanficQuery: ''
+            fanficQuery: '',
+            value: 'Option One'
         }
     },
     watch: {
@@ -101,6 +114,23 @@ export default defineComponent({
     created() {
         apiStatus;
         this.fetchHomeFanfics();
+        this.$options.selectedOptions = [
+            {
+                src: "https://picsum.photos/id/100/75/50",
+                label: "Option One",
+
+            },
+            {
+                src: "https://picsum.photos/id/10/75/50",
+                label: "Option Two",
+
+            },
+            {
+                src: "https://picsum.photos/id/20/75/50",
+                label: "Option Three",
+
+            },
+        ]
     }
 })
 </script>
@@ -112,5 +142,16 @@ export default defineComponent({
 }
 div {
     background-color: red;
+}
+
+.option {
+    display: flex;
+}
+
+.img {
+    display: block;
+    max-width: 75px;
+    max-height: 50px;
+    margin-right: 10px;
 }
 </style>
