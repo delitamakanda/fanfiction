@@ -1,6 +1,9 @@
 <template>
+    <slot></slot>
 </template>
-<script>
+
+<script lang="ts">
+
 export default {
     props: {
         on: {

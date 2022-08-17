@@ -34,6 +34,7 @@ export default {
     },
     methods: {
         addTag(val) {
+            if (val.text === '') return;
             (<any>this).tags.push(val);
             (<any>this).$emit('on-tag-added', { tags: (<any>this).tags, val });
         },

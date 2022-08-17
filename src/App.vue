@@ -2,6 +2,20 @@
     <div id="app" class="container mx-auto px-4">
         <app-header v-bind:title="title"></app-header>
         <transition name="fade" mode="out-in">
+                    <ToggleProvider :on="true">
+            <template  #default="{ isOn, turnOff, turnOn, toggle }">
+                <div>
+                    <div>
+                        <button @click.prevent="turnOn">ON</button>
+                        <button @click.prevent="turnOff">OFF</button>
+                        <button @click.prevent="toggle">TOGGLE</button>
+                    </div>
+                    <div v-if="isOn">
+                        ToggleProvider is working
+                    </div>
+                </div>
+            </template>
+        </ToggleProvider>
             <router-view :key="$route.fullPath" />
         </transition>
         <toggle-provider :on="true">
@@ -39,8 +53,7 @@ import '@/assets/styles/main.css'
 
 import Header from './components/ui/Header.vue';
 import Footer from './components/ui/Footer.vue';
-import ToggleProvider from './components/ToggleProvider';
-
+import ToggleProvider from './components/ToggleProvider.vue';
 import { mapGetters } from 'vuex'
 
 export default {

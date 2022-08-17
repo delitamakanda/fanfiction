@@ -1,10 +1,48 @@
 <template>
     <div>
+        <TagProvider
+            trackBy="id"
+            @on-tag-added="onTagAdded"
+            @on-tag-removed="onTagDeleted"
+            :options="$options.defaultTags"
+            >
+            <template #default="{ tags, addTag, removeTag }">
+            <div>
+            <!-- Vertical stack --> <div vertical class="mb-4">
+                    <!-- Label -->
+            <label class="mb-2" for="tag-input">Tags</label> <!-- Horizontal stack -->
+            <div
+                        v-if="tags.length"
+                        class="flex space-x-3 tagsContainer">
+                        <!-- Loop through tags -->
+            <Tag v-for="tag of tags" :key="tag.id" class="mb-2"> <div class="tagContent">
+                            <!-- Tag text -->
+            <span class="tagText"> {{ tag.text }}
+            </span>
+            <!-- Delete tag icon --> <button
+                            class="tagDeleteIcon"
+                            @click.prevent="removeTag(tag.id)"
+                            >
+            x </button>
+            </div> </Tag>
+            </div>
+            <!-- Add new tag input --> <input
+                        v-model="value"
+                        type="text"
+                        id="tag-input"
+                        placeholder="Add a tag..."
+            /> </div>
+                    <!-- Submit tag -->
+            <button @click.prevent="onAddTag(addTag)">Add tag</button> </div>
+            </template>
+        </TagProvider>
+
+        <br/><br/>
         <p v-if="fetchHomeFanficsStatusIdle">Welcome</p>
         <BaseLazyLoad :show="fetchHomeFanficsStatusPending">
             <p>Loading data</p>
         </BaseLazyLoad>
-        <Select :options="$options.selectedOptions" v-model="value" label="label" caption="select at least 1 option">
+        <Select :options="$options.selectedOptions" v-model="selected" label="label" caption="select at least 1 option">
             <template v-slot:option="{ option }" >
             <div class="option">
                 <img class="img" :src="option.src" :alt="option.label" />
@@ -47,6 +85,9 @@ import { withAsync } from './api/helpers/withAsync';
 import { apiStatusComputedFactory } from './api/helpers/apiStatusComputedFactory';
 import BaseLazyLoad from './components/base/BaseLazyLoad.vue';
 import Select from './components/common/Select.vue';
+import TagProvider from './components/common/TagProvider.vue';
+import Tag from './components/common/Tag.vue';
+import { getRandomUUID } from './helpers/utils';
 
 const { IDLE, PENDING, SUCCESS, ERROR } = apiStatus;
 
@@ -54,6 +95,8 @@ export default defineComponent({
     components: { 
         BaseLazyLoad,
         Select,
+        TagProvider,
+        Tag,
     },
     computed: {
         ...apiStatusComputedFactory(['fetchHomeFanficsStatus', 'updateHomeFanficsStatus'])
@@ -65,7 +108,8 @@ export default defineComponent({
             fetchHomeFanficsStatus: apiStatus.IDLE,
             apiStatus: null,
             fanficQuery: '',
-            value: 'Option One'
+            selected: '',
+            value: ''
         }
     },
     watch: {
@@ -109,7 +153,18 @@ export default defineComponent({
                 return; 
             }
             this.fanfics = response.data.results;
-        }
+        },
+        onTagAdded({ tags, val }) {
+            console.log("Tag added", { tags, val });
+        },
+        onTagDeleted({ tags, val }) {
+            console.log("Tag deleted", { tags, val });
+        },
+        onAddTag(addTag) {
+            // addTag is coming from the TagsProvider
+            addTag({ id: getRandomUUID(), text: this.value }); 
+            this.value = "";
+        },
     },
     created() {
         apiStatus;
@@ -130,7 +185,22 @@ export default defineComponent({
                 label: "Option Three",
 
             },
-        ]
+        ],
+
+        this.$options.defaultTags = [
+            {
+                id: getRandomUUID(),
+                text: "Apple",
+            },
+            {
+                id: getRandomUUID(),
+                text: "Orange",
+            }, 
+            {
+                id: getRandomUUID(),
+                text: "Banana",
+            },
+        ];
     }
 })
 </script>
@@ -141,7 +211,7 @@ export default defineComponent({
     margin: 0;
 }
 div {
-    background-color: red;
+    background-color: white;
 }
 
 .option {
@@ -153,5 +223,27 @@ div {
     max-width: 75px;
     max-height: 50px;
     margin-right: 10px;
+}
+
+.tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tagContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tagText{
+    font-weight: semibold;
+    color: purple;
+}
+
+.tagDeleteIcon {
+    margin-left: 2px;
+    color: purple;
+    cursor: pointer;
 }
 </style>
