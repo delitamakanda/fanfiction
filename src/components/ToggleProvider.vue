@@ -2,8 +2,8 @@
     <slot></slot>
 </template>
 
-<script lang="ts">
 
+<script>
 export default {
     props: {
         on: {
