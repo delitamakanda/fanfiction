@@ -1,3 +1,5 @@
+<template>
+</template>
 <script>
 export default {
     props: {
@@ -29,7 +31,7 @@ export default {
             toggle () {
                 this.isOn = !this.isOn;
             }
-        }
+        },
     }
 }
 </script>

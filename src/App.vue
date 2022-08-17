@@ -2,22 +2,22 @@
     <div id="app" class="container mx-auto px-4">
         <app-header v-bind:title="title"></app-header>
         <transition name="fade" mode="out-in">
-        <toggle-provider :on="true">
-            <template  #default="{ isOn, turnOff, turnOn, toggle }">
-                <div>
-                    <div>
-                        <button @click.prevent="turnOn">ON</button>
-                        <button @click.prevent="turnOff">OFF</button>
-                        <button @click.prevent="toggle">TOGGLE</button>
-                    </div>
-                    <div v-if="isOn">
-                        ToggleProvider is working
-                    </div>
-                </div>
-            </template>
-        </toggle-provider>
             <router-view :key="$route.fullPath" />
         </transition>
+        <toggle-provider :on="true">
+        <template #default="{ isOn, turnOff, turnOn, toggle }">
+            <div>
+                <div>
+                    <button @click.prevent="turnOn">ON</button>
+                    <button @click.prevent="turnOff">OFF</button>
+                    <button @click.prevent="toggle">TOGGLE</button>
+                </div>
+                <div v-if="isOn">
+                    ToggleProvider is working
+                </div>
+            </div>
+        </template>
+        </toggle-provider>
         <app-footer v-bind:title="title"></app-footer>
         <transition appear name="slideFromBottom">
             <div class="cookie bottom" v-if="isOpen">
@@ -39,6 +39,7 @@ import '@/assets/styles/main.css'
 
 import Header from './components/ui/Header.vue';
 import Footer from './components/ui/Footer.vue';
+import ToggleProvider from './components/ToggleProvider';
 
 import { mapGetters } from 'vuex'
 
