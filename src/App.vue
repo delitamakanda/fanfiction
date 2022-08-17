@@ -2,7 +2,7 @@
     <div id="app" class="container mx-auto px-4">
         <app-header v-bind:title="title"></app-header>
         <transition name="fade" mode="out-in">
-                    <ToggleProvider :on="true">
+        <toggle-provider :on="true">
             <template  #default="{ isOn, turnOff, turnOn, toggle }">
                 <div>
                     <div>
@@ -15,7 +15,7 @@
                     </div>
                 </div>
             </template>
-        </ToggleProvider>
+        </toggle-provider>
             <router-view :key="$route.fullPath" />
         </transition>
         <toggle-provider :on="true">
