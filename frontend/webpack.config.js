@@ -10,6 +10,7 @@ module.exports = (env = {}) => {
         entry: path.resolve(__dirname, './src/main.ts'),
         output: {
             path: path.resolve(__dirname, './dist'),
+            chunkFilename: '[name].bundle.js'
         },
         module: {
             rules: [
@@ -19,7 +20,13 @@ module.exports = (env = {}) => {
                 },
                 {
                     test: /\.(s(a|c)ss)|(css)$/,
-                    use: [MiniCssExtractPlugin.loader, 'css-loader','sass-loader', 'postcss-loader'],
+                    use: [
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: {}
+                        }, 
+                        'css-loader','sass-loader', 'postcss-loader'
+                    ],
                 },
                 {
                     test: /\.ts$/,

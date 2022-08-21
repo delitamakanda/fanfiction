@@ -1,6 +1,6 @@
 <template>
 <div>
-    dashboard
+    sign up
 </div>
 </template>
 
