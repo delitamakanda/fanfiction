@@ -188,6 +188,8 @@ WEBPACK_LOADER = {
         'CACHE': False,
         'BUNDLE_DIR_NAME': '/bundles/',
         'STATS_FILE': os.path.join(FRONTEND_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
     }
 }
 

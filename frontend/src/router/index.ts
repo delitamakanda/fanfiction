@@ -1,19 +1,19 @@
+import { createWebHashHistory, createRouter } from 'vue-router';
 import fanficRoutes from '../views/fanfics/fanficRoutes';
-import Signin from '../views/Signin.vue';
-import Signup from '../views/Signup.vue';
+import accountRoutes from '../views/account/accountRoutes';
+import authRoutes from '../views/auth/authRoutes';
 
-{
-    routes: [
-        {
-            path: '/signin',
-            name: 'Signin',
-            component: Signin
-        },
-        {
-            path: '/signup',
-            name: 'Signup',
-            component: Signup
-        },
-        ...fanficRoutes
-    ]
-}
+
+const routes = [
+    ...authRoutes,
+    ...fanficRoutes,
+    ...accountRoutes,
+]
+
+
+const router = createRouter({
+    history: createWebHashHistory(),
+    routes,
+});
+
+export default router;
