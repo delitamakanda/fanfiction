@@ -1,5 +1,5 @@
 import { apiStatus } from '../../../api/constants/apiStatus';
-
+import * as types from './types';
 const { PENDING, SUCCESS, ERROR } = apiStatus;
 
 export default {
