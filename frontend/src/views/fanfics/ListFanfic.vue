@@ -1,6 +1,6 @@
 <template>
 <div>
-        <form class="mb-8">
+    <form class="mb-8">
         <fieldset class="flex flex-col">
         <label class="mb-4 font-semibold" for="meal">Search fanfics</label>
         <input
@@ -9,20 +9,51 @@
                 autocomplete="off"
                 v-model="fanficQuery"
         id="fanfic" />
-        </fieldset> </form>
-        <div>
+        </fieldset> 
+    </form>
+    <div>
         <h1 class="font-bold text-2xl mb-2">Fanfics</h1>
-        <div v-for="fanfic of fanfics" :key="fanfic.id" class="py-1"> <p>{{ fanfic.title }}</p>
-        </div> </div>
+        <div class="space-x-4 mb-8 mx-auto flex justify-center items-center mt-4"> 
+            <button @click.prevent="setLayout(LAYOUTS.grid)">Layout grid</button>
+            <button @click.prevent="setLayout(LAYOUTS.list)">Layout list</button>
+        </div>
+        <FanficLayout class="mx-auto max-w-7-xl">
+            <component :is="fanficCardComponent" v-for="fanfic of fanfics" :key="fanfic.id" :fanfic="fanfic" /> 
+        </FanficLayout>
     </div>
+</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed } from 'vue';
 import { searchFanfics } from '../../api/fanficApi'
 import { withAsync } from '../../api/helpers/withAsync';
+import { useFanficLayout, FanficLayout} from '../../layout/composables/useFanficLayout';
+import FanficGridCard from './components/FanficGridCard.vue';
+import FanficListCard from './components/FanficListCard.vue';
 
-export default defineComponent({
+export default {
+    components: {
+        FanficLayout,
+    },
+    setup() {
+        const { layout, setLayout, LAYOUTS } = useFanficLayout();
+
+        const fanficLayoutComponents = {
+            [LAYOUTS.grid]: FanficGridCard,
+            [LAYOUTS.list]: FanficListCard,
+        };
+
+        const fanficCardComponent = computed(
+            () => fanficLayoutComponents[layout.value]
+        );
+
+        return {
+            fanficCardComponent,
+            LAYOUTS,
+            setLayout,
+        }
+    },
     data() {
         return {
             fanfics: null,
@@ -38,9 +69,9 @@ export default defineComponent({
     },
     methods: {
         async initSearchFanfics(q) {
-            this.$options.abort?.();
+            (<any>this).$options.abort?.();
             const { response, error } = await withAsync(searchFanfics, q, {
-                abort: abort => (this.$options.abort = abort)
+                abort: abort => ((<any>this).$options.abort = abort)
             });
             if (error as any) {
             // Log the error
@@ -50,10 +81,10 @@ export default defineComponent({
                 }
                 return; 
             }
-            this.fanfics = response.data.results;
+            (<any>this).fanfics = response.data.results;
         }
     }
-})
+}
 </script>
 
 <style lang="scss">
