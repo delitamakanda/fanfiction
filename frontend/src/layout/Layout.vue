@@ -16,22 +16,17 @@ import AuthLayout from './components/AuthLayout.vue';
 import { useLayout  } from './composables/useLayout';
 import { computed  } from 'vue';
 
+const layoutComponents = {
+    standard: StandardLayout,
+    auth: AuthLayout,
+};
+
 export default {
-    setup() {
-        const { layout, LAYOUTS } = useLayout();
-
-        const layoutComponents = {
-            [LAYOUTS.standard]: StandardLayout,
-            [LAYOUTS.auth]: AuthLayout,
-        };
-
-        const currentLayoutComponent = computed(
-            () => layoutComponents[layout.value],
-        );
-
-        return {
-            currentLayoutComponent,
+    computed: {
+        currentLayoutComponent() {
+            const layout = (<any>this).$router.currentRoute.value?.meta?.layout || 'standard';
+            return layoutComponents[layout];
         }
-    }
+    },
 };
 </script>
