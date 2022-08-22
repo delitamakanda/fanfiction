@@ -29,7 +29,7 @@ export default {}
 .aside,
 .content,
 .footer {
-    display: grid;
+    /* display: grid; */
     place-items: center;
 }
 
