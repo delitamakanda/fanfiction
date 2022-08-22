@@ -1,81 +1,79 @@
 <template>
-<div>
-    <div class="space-x-4 mb-8 mx-auto flex justify-center items-center mt-4"> 
-        <button @click.prevent="setLayout(LAYOUTS.standard)">Layout standard </button>
-        <button @click.prevent="setLayout(LAYOUTS.auth)"> Layout auth</button>
-    </div>
-    <Layout class="mx-auto max-w-7xl">
-        <template #header>
-            <p>Header</p>
+<!-- <div class="space-x-4 mb-8 mx-auto flex justify-center items-center mt-4"> 
+    <button @click.prevent="setLayout(LAYOUTS.standard)">Layout standard </button>
+    <button @click.prevent="setLayout(LAYOUTS.auth)"> Layout auth</button>
+</div> -->
+<Layout class="mx-auto max-w-7xl">
+    <template #header>
+        <p>Header</p>
+    </template>
+    <template #content>
+        <TagProvider
+        trackBy="id"
+        @on-tag-added="onTagAdded"
+        @on-tag-removed="onTagDeleted"
+        :options="$options.defaultTags"
+        >
+        <template #default="{ tags, addTag, removeTag }">
+        <div>
+        <!-- Vertical stack --> <div vertical class="mb-4">
+                <!-- Label -->
+        <label class="mb-2" for="tag-input">Tags</label> <!-- Horizontal stack -->
+        <div
+                    v-if="tags.length"
+                    class="flex space-x-3 tagsContainer">
+                    <!-- Loop through tags -->
+        <Tag v-for="tag of tags" :key="tag.id" class="mb-2"> <div class="tagContent">
+                        <!-- Tag text -->
+        <span class="tagText"> {{ tag.text }}
+        </span>
+        <!-- Delete tag icon --> <button
+                        class="tagDeleteIcon"
+                        @click.prevent="removeTag(tag.id)"
+                        >
+        x </button>
+        </div> </Tag>
+        </div>
+        <!-- Add new tag input --> <input
+                    v-model="value"
+                    type="text"
+                    id="tag-input"
+                    placeholder="Add a tag..."
+        /> </div>
+                <!-- Submit tag -->
+        <button @click.prevent="onAddTag(addTag)">Add tag</button> </div>
         </template>
-        <template #content>
-            <TagProvider
-            trackBy="id"
-            @on-tag-added="onTagAdded"
-            @on-tag-removed="onTagDeleted"
-            :options="$options.defaultTags"
-            >
-            <template #default="{ tags, addTag, removeTag }">
-            <div>
-            <!-- Vertical stack --> <div vertical class="mb-4">
-                    <!-- Label -->
-            <label class="mb-2" for="tag-input">Tags</label> <!-- Horizontal stack -->
-            <div
-                        v-if="tags.length"
-                        class="flex space-x-3 tagsContainer">
-                        <!-- Loop through tags -->
-            <Tag v-for="tag of tags" :key="tag.id" class="mb-2"> <div class="tagContent">
-                            <!-- Tag text -->
-            <span class="tagText"> {{ tag.text }}
-            </span>
-            <!-- Delete tag icon --> <button
-                            class="tagDeleteIcon"
-                            @click.prevent="removeTag(tag.id)"
-                            >
-            x </button>
-            </div> </Tag>
-            </div>
-            <!-- Add new tag input --> <input
-                        v-model="value"
-                        type="text"
-                        id="tag-input"
-                        placeholder="Add a tag..."
-            /> </div>
-                    <!-- Submit tag -->
-            <button @click.prevent="onAddTag(addTag)">Add tag</button> </div>
-            </template>
-        </TagProvider>
+    </TagProvider>
 
-        <br/><br/>
-        <p v-if="fetchHomeFanficsStatusIdle">Welcome</p>
-        <BaseLazyLoad :show="fetchHomeFanficsStatusPending">
-            <p>Loading data</p>
-        </BaseLazyLoad>
-        <Select :options="$options.selectedOptions" v-model="selected" label="label" caption="select at least 1 option">
-            <template v-slot:option="{ option }" >
-            <div class="option">
-                <img class="img" :src="option.src" :alt="option.label" />
-                <span> {{ option.label }}</span>
-            </div>
-            </template>
-        </Select>
-        <p v-if="fetchHomeFanficsStatusError">There was a problem.</p>
-        <template v-if="fetchHomeFanficsStatusSuccess">
-            <div v-for="fanfic of homeFanfics">
-                {{ fanfic.title }}
-            </div>
+    <br/><br/>
+    <p v-if="fetchHomeFanficsStatusIdle">Welcome</p>
+    <BaseLazyLoad :show="fetchHomeFanficsStatusPending">
+        <p>Loading data</p>
+    </BaseLazyLoad>
+    <Select :options="$options.selectedOptions" v-model="selected" label="label" caption="select at least 1 option">
+        <template v-slot:option="{ option }" >
+        <div class="option">
+            <img class="img" :src="option.src" :alt="option.label" />
+            <span> {{ option.label }}</span>
+        </div>
         </template>
-        <base-button>click</base-button>
-        <base-input></base-input>
-        </template>
-        <template #aside>
-            <p>Aside</p>
-        </template>
-        <template #footer>
-            <p>Footer</p>
-        </template>
-    </Layout>
-</div>
+    </Select>
+    <p v-if="fetchHomeFanficsStatusError">There was a problem.</p>
+    <template v-if="fetchHomeFanficsStatusSuccess">
+        <div v-for="fanfic of homeFanfics">
+            {{ fanfic.title }}
+        </div>
+    </template>
+    <base-button>click</base-button>
+    <base-input></base-input>
+    </template>
+    <template #aside>
+        <p>Aside</p>
+    </template>
+    <template #footer>
+        <p>Footer</p>
+    </template>
+</Layout>
 </template>
 
 <script lang="ts">

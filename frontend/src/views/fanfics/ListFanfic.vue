@@ -1,5 +1,9 @@
 <template>
-<div>
+<Layout class="mx-auto max-w-7xl">
+    <template #header>
+        <p>Header</p>
+    </template>
+    <template #content>
     <form class="mb-8">
         <fieldset class="flex flex-col">
         <label class="mb-4 font-semibold" for="meal">Search fanfics</label>
@@ -21,7 +25,14 @@
             <component :is="fanficCardComponent" v-for="fanfic of fanfics" :key="fanfic.id" :fanfic="fanfic" /> 
         </FanficLayout>
     </div>
-</div>
+    </template>
+    <template #aside>
+        <p>Aside</p>
+    </template>
+    <template #footer>
+        <p>Footer</p>
+    </template>
+</Layout>
 </template>
 
 <script lang="ts">
@@ -31,10 +42,12 @@ import { withAsync } from '../../api/helpers/withAsync';
 import { useFanficLayout, FanficLayout} from '../../layout/composables/useFanficLayout';
 import FanficGridCard from './components/FanficGridCard.vue';
 import FanficListCard from './components/FanficListCard.vue';
+import Layout from '../../layout/Layout.vue';
 
 export default {
     components: {
         FanficLayout,
+        Layout,
     },
     setup() {
         const { layout, setLayout, LAYOUTS } = useFanficLayout();
