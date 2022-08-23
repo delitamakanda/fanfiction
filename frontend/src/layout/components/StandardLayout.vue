@@ -1,5 +1,5 @@
 <template>
-<div class="container mx-auto standardLayout">
+<div class="standardLayout">
     <header class="header"><slot name="header"></slot></header>
     <aside class="aside">
         <slot name="aside"></slot>
@@ -22,27 +22,20 @@ export default {}
     display: grid;
     grid-template-rows: 4rem 1fr 4rem;
     grid-template-columns: 1fr 4fr;
-    height: 100vh;
 }
 
 .header,
 .aside,
 .content,
 .footer {
-    /* display: grid; */
-    place-items: center;
+    display: grid;
 }
 
 .header {
     grid-column: span 2;
-    @apply bg-green-200;
 }
 .footer {
     grid-column: span 2;
-    @apply bg-gray-400;
-}
-.aside {
-    @apply bg-indigo-200;
 }
 .content {
     @apply bg-purple-200;
