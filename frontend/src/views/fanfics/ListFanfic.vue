@@ -1,9 +1,5 @@
 <template>
-<Layout class="mx-auto max-w-7xl">
-    <template #header>
-        <p>Header</p>
-    </template>
-    <template #content>
+<div>
     <form class="mb-8">
         <fieldset class="flex flex-col">
         <label class="mb-4 font-semibold" for="meal">Search fanfics</label>
@@ -25,14 +21,7 @@
             <component :is="fanficCardComponent" v-for="fanfic of fanfics" :key="fanfic.id" :fanfic="fanfic" /> 
         </FanficLayout>
     </div>
-    </template>
-    <template #aside>
-        <p>Aside</p>
-    </template>
-    <template #footer>
-        <p>Footer</p>
-    </template>
-</Layout>
+</div>
 </template>
 
 <script lang="ts">

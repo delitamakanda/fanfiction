@@ -32,6 +32,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="mobile-web-app-capable" content="yes">
+    {% render_bundle 'main' 'css' %}
     </head>
     <body>
       <noscript>
@@ -63,6 +64,6 @@
 
           }
           </script>
-          {% render_bundle 'main' %}
+          {% render_bundle 'main' 'js' %}
     </body>
 </html>
