@@ -3,11 +3,7 @@
     <button @click.prevent="setLayout(LAYOUTS.standard)">Layout standard </button>
     <button @click.prevent="setLayout(LAYOUTS.auth)"> Layout auth</button>
 </div> -->
-<Layout class="mx-auto max-w-7xl">
-    <template #header>
-        <p>Header</p>
-    </template>
-    <template #content>
+<div>
         <TagProvider
         trackBy="id"
         @on-tag-added="onTagAdded"
@@ -66,14 +62,7 @@
     </template>
     <base-button>click</base-button>
     <base-input></base-input>
-    </template>
-    <template #aside>
-        <p>Aside</p>
-    </template>
-    <template #footer>
-        <p>Footer</p>
-    </template>
-</Layout>
+   </div>
 </template>
 
 <script lang="ts">

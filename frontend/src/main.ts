@@ -1,4 +1,4 @@
-import './styles/global.scss';
+import 'flowbite';
 import { createApp } from 'vue';
 import Root from './App.vue';
 export const app = createApp(Root);
@@ -13,6 +13,8 @@ registerBaseComponents(app);
 loadPlugins(['i18n']);
 
 app.config.performance = true;
+
+import './styles/global.scss';
 
 app
     .use(i18n)
