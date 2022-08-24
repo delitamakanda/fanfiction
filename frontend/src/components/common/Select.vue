@@ -27,7 +27,7 @@ export default {
         caption: String,
     },
     components: { 
-        vSelect
+        'v-select': vSelect
     },
 }
 </script>

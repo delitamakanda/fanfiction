@@ -4,23 +4,23 @@
     </span>
     <ul class="flex flex-wrap items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
         <li>
-            <a href="#" class="mr-4 hover:underline md:mr-6 ">{{ $t("message.footer.aboutLabel") }}</a>
+            <router-link to="/announcement"  class="mr-4 hover:underline md:mr-6 ">{{ $t("message.footer.announcementLabel") }}</router-link>
         </li>
         <li>
-            <a href="#" class="mr-4 hover:underline md:mr-6">{{ $t("message.footer.privacyPolicyLabel") }}</a>
+            <router-link to="/static-page/privacy" class="mr-4 hover:underline md:mr-6">{{ $t("message.footer.privacyPolicyLabel") }}</router-link>
         </li>
         <li>
-            <a href="#" class="mr-4 hover:underline md:mr-6">{{ $t("message.footer.licensingLabel") }}</a>
+            <router-link to="/static-page/licences" class="mr-4 hover:underline md:mr-6">{{ $t("message.footer.licensingLabel") }}</router-link>
         </li>
         <li>
-            <a href="#" class="hover:underline">{{ $t("message.footer.contactLabel") }}</a>
+            <router-link to="/contact" class="hover:underline">{{ $t("message.footer.contactLabel") }}</router-link>
         </li>
     </ul>
 </footer>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
     props: {
