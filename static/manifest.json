@@ -1,12 +1,7 @@
 {
-  "name": "Fanfiction",
-  "short_name": "fanfiction",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#4dc0b5",
-  "theme_color": "#4dc0b5",
-  "icons": [
+ "name": "Fanfiction App",
+ "short_name": "Fanfiction App",
+ "icons": [
   {
    "src": "/static/android-icon-36x36.png",
    "sizes": "36x36",
@@ -43,5 +38,12 @@
    "type": "image\/png",
    "density": "4.0"
   }
- ]
+ ],
+ "start_url": "/",
+ "scope": "/",
+ "display": "standalone",
+ "theme_color": "#4dc0b5",
+ "orientation": "landscape",
+ "background_color": "#ffffff",
+ "description": ""
 }

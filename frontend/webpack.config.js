@@ -12,6 +12,9 @@ module.exports = (env = {}) => {
             path: path.resolve(__dirname, './dist'),
             chunkFilename: '[name].bundle.js'
         },
+        optimization: {
+            minimize: env.prod ? true : false
+        },
         module: {
             rules: [
                 {
@@ -38,7 +41,10 @@ module.exports = (env = {}) => {
                 {
                     test: /\.(woff|woff2|eot|ttf|svg|jpg|png)$/,
                     use: {
-                      loader: 'url-loader',
+                      loader: 'file-loader',
+                      options: {
+                        name: '[path][name].[ext]',
+                        },
                     },
               },
             ]
