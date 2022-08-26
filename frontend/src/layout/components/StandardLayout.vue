@@ -38,6 +38,6 @@ export default {}
     grid-column: span 2;
 }
 .content {
-    @apply bg-purple-200;
+    @apply p-4;
 }
 </style>
