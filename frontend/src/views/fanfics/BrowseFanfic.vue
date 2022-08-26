@@ -105,15 +105,8 @@ export default defineComponent({
             fanfics: null,
             fetchHomeFanficsStatus: apiStatus.IDLE,
             apiStatus: null,
-            fanficQuery: '',
             selected: '',
             value: ''
-        }
-    },
-    watch: {
-        fanficQuery: {
-            immediate: true,
-            handler: 'initSearchFanfics'
         }
     },
     methods: {
