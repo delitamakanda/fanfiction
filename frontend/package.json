@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "serve": "webpack-dev-server",
+    "build": "webpack",
     "vuex:create-module": "node scripts/generateVuexModule.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

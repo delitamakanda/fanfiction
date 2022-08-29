@@ -6,12 +6,11 @@
         <li>
             <router-link to="/announcement"  class="mr-4 hover:underline md:mr-6 ">{{ $t("message.footer.announcementLabel") }}</router-link>
         </li>
-        <li>
-            <router-link to="/static-page/privacy" class="mr-4 hover:underline md:mr-6">{{ $t("message.footer.privacyPolicyLabel") }}</router-link>
-        </li>
-        <li>
-            <router-link to="/static-page/licences" class="mr-4 hover:underline md:mr-6">{{ $t("message.footer.licensingLabel") }}</router-link>
-        </li>
+        <template v-if="pages && pages.length">
+            <li v-for="page of pages" :key="page.id">
+                <router-link :to="`/static-page/${page.type}`" class="mr-4 hover:underline md:mr-6">{{ $t(`message.footer.${page.type}Label`) }}</router-link>
+            </li>
+        </template>
         <li>
             <router-link to="/contact" class="hover:underline">{{ $t("message.footer.contactLabel") }}</router-link>
         </li>
@@ -20,7 +19,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import { withAsync } from '../../../api/helpers/withAsync';
+import { fetchPages } from '../../../api/infoApi';
 
 export default defineComponent({
     props: {
@@ -35,8 +36,23 @@ export default defineComponent({
     },
     setup() {
         const fullYear = `© ${new Date().getFullYear()}`;
+        
+        const pages = ref<any[]>([]);
+
+        const getPages = async () => {
+            const { response, error } = await withAsync(fetchPages);
+            if (error) {
+                return;
+            }
+            pages.value = response.data;
+        }
+        onMounted(() => {
+            getPages();
+        });
         return {
             fullYear,
+            getPages,
+            pages,
         }
     }
 });

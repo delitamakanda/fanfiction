@@ -4,6 +4,8 @@
     <button @click.prevent="setLayout(LAYOUTS.auth)"> Layout auth</button>
 </div> -->
 <div>
+    {{ today }}
+
     <Splide :options="{
         rewind : true,
         gap : '1rem',
@@ -14,18 +16,45 @@
      <div style="position: relative; height: 250px;">
         <SplideTrack>
             <SplideSlide v-for="category of categories" :key="category.id"
-                class="img-thumbnail rounded-lg"
+                class="img-thumbnail border shadow-lg rounded-lg"
                 :style="{backgroundImage: 'url(' + require('./../../assets/images/categories/'+ category.logic_value + '.jpg').default + ')' }"
             >
                 <p>{{ category.name }}</p>
             </SplideSlide>
         </SplideTrack>
 
-        <div class="splide__progress">
-            <div class="splide__progress__bar" />
+        <div class="splide__arrows">
+            <button class="splide__arrow splide__arrow--prev">Prev</button>
+            <button class="splide__arrow splide__arrow--next">Next</button>
         </div>
      </div>
     </Splide>
+
+    <p v-if="fetchHomeFanficsStatusIdle">Welcome</p>
+    <BaseLazyLoad :show="fetchHomeFanficsStatusPending">
+        <p>Loading data</p>
+    </BaseLazyLoad>
+    <p v-if="fetchHomeFanficsStatusError">There was a problem.</p>
+    <template v-if="fetchHomeFanficsStatusSuccess">
+        <h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">Récentes</h2>
+        <template v-for="fanfic of newestFanfics">
+            <div>{{ fanfic.title }}</div>
+            <div>{{ readMore(fanfic.synopsis, '130', '...') }}</div>
+            <div>{{ formatDate(fanfic.publish) }}</div>
+        </template>
+        <h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">Les plus vues</h2>
+        <div v-for="fanfic of mostLikedFanfics">
+            {{ fanfic.title }}
+            <div>{{ readMore(fanfic.synopsis, '130', '...') }}</div>
+            <div>{{ formatDate(fanfic.publish) }}</div>
+        </div>
+        <h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">Recommendées</h2>
+        <div v-for="fanfic of recommendedFanfics">
+            {{ fanfic.title }}
+            <div>{{ readMore(fanfic.synopsis, '130', '...') }}</div>
+            <div>{{ formatDate(fanfic.publish) }}</div>
+        </div>
+    </template>
            
     <TagProvider
         trackBy="id"
@@ -64,11 +93,6 @@
         </template>
     </TagProvider>
 
-    <br/><br/>
-    <p v-if="fetchHomeFanficsStatusIdle">Welcome</p>
-    <BaseLazyLoad :show="fetchHomeFanficsStatusPending">
-        <p>Loading data</p>
-    </BaseLazyLoad>
     <Select :options="$options.selectedOptions" v-model="selected" label="label" caption="select at least 1 option">
         <template v-slot:option="{ option }" >
         <div class="option">
@@ -77,14 +101,6 @@
         </div>
         </template>
     </Select>
-    <p v-if="fetchHomeFanficsStatusError">There was a problem.</p>
-    <template v-if="fetchHomeFanficsStatusSuccess">
-        <div v-for="fanfic of newestFanfics">
-            {{ fanfic.title }}
-        </div>
-    </template>
-    <base-button>click</base-button>
-    {{ today }}
    </div>
 </template>
 
@@ -101,7 +117,7 @@ import Tag from '../../components/common/Tag.vue';
 import { getRandomUUID } from '../../helpers/utils';
 import Layout from '../../layout/Layout.vue';
 import { useLayout } from "../../layout/composables/useLayout";
-import { formatDate, options_FR } from '../../helpers/utils';
+import { formatDate, options_FR, readMore } from '../../helpers/utils';
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 
 import '@splidejs/vue-splide/css/sea-green';
@@ -147,6 +163,12 @@ export default defineComponent({
         }
     },
     methods: {
+        readMore(text, limit, suffix) {
+            return readMore(text, limit, suffix);
+        },
+        formatDate(date) {
+            return formatDate(new Date(date), options_FR);
+        },
         async fetchHomeFanfics() {
             this.fetchHomeFanficsStatus = apiStatus.PENDING;
             const { response, error } = await withAsync(fetchHomeFanfics);

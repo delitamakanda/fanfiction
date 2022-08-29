@@ -19,5 +19,8 @@ export const formatDate = (date, options) => {
     return new Intl.DateTimeFormat('fr-FR', options).format(date);
 };
 
+export const readMore = (text, length, suffix) => {
+    return text.substring(0, length) + suffix;
+};
 
 

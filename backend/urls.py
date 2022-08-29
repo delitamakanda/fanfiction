@@ -157,7 +157,7 @@ urlpatterns += [
     path('api/contact-mail/', ContactMailView.as_view(), name='contact-mail'),
     path('api/pages/<str:type>/',
          FlatPagesByTypeView.as_view(), name='pages-by-type'),
-    path('api/page/<str:type>/html/',
+    path('api/pages/<str:type>/html/',
          FlatPagesHTMLByTypeView.as_view(), name='pages-html-by-type'),
     path('api/pages/', FlatPagesView.as_view(), name='all-pages'),
     path('api/notifications/', NotificationListView.as_view(), name='notifications'),

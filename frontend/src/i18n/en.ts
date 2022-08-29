@@ -16,6 +16,8 @@ export default {
             announcementLabel: 'Announcements',
             privacyPolicyLabel: 'Privacy Policy',
             licensingLabel: 'Licencing',
+            rgpdLabel: 'Privacy Policy',
+            legalLabel: 'Terms of service',
             contactLabel: 'Contact'
         },
         header: {

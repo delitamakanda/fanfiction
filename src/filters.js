@@ -94,7 +94,7 @@ export function filterBy(list, value) {
   });
 }
 
-function findBy(list, value) {
+export function findBy(list, value) {
     return list.filter(function(item) {
         return item == value
     });
