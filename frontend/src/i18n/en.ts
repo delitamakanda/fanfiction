@@ -1,6 +1,7 @@
 export default {
     message: {
         hello: 'hello world {name}',
+        loading: 'Loading...',
         aside: {
             signinLabel: 'Sign in',
             signupLabel: 'Become a member',
