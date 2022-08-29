@@ -1,6 +1,7 @@
 export default {
     message: {
         hello: 'bonjour {name}',
+        loading: 'Chargement...',
         aside: {
             signinLabel: 'Se connecter',
             signupLabel: 'Devenir membre',

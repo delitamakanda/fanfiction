@@ -16,8 +16,13 @@
 
 <div>
     <template v-for="dico of dictionnary">
-        <div>{{ dico.title }}</div>
-        <div>{{ dico.definition }}</div>
+        <article class="mt-8 format lg:format-lg">
+            <h1>{{ dico.group }}</h1>
+            <template v-for="child of dico.children">
+                <h2>{{ child.title }}</h2>
+                <p class="mb-3 font-light text-gray-500 dark:text-gray-400">{{ child.definition }}</p>
+            </template>
+        </article>
     </template>
 </div>
 
@@ -56,8 +61,23 @@ export default {
                 }
                 return; 
             }
-            (<any>this).dictionnary = response.data;
+            let rawData = response.data;
+
+            let data = rawData.reduce((r, e) => {
+            // get first letter of name of current element
+            let group = e.title[0];
+            // if there is no property in accumulator with this letter create it
+            if(!r[group]) r[group] = {group, children: [e]}
+            // if there is push current element to children array for that letter
+            else r[group].children.push(e);
+            // return accumulator
+            return r;
+            }, {});
+            let children = [];    // since data at this point is an object, to get array of values
+            // we use Object.values method
+            let result = (<any>Object).values(data);
+            (<any>this).dictionnary = result;
+            }
         }
-    }
 }
 </script>
