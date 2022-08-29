@@ -4,7 +4,30 @@
     <button @click.prevent="setLayout(LAYOUTS.auth)"> Layout auth</button>
 </div> -->
 <div>
-        <TagProvider
+    <Splide :options="{
+        rewind : true,
+        gap : '1rem',
+        perPage : 3,
+        //autoplay : false,
+        //height : '15rem',
+    }" aria-label="" :has-track="false" class="splideDynamic">
+     <div style="position: relative; height: 250px;">
+        <SplideTrack>
+            <SplideSlide v-for="category of categories" :key="category.id"
+                class="img-thumbnail rounded-lg"
+                :style="{backgroundImage: 'url(' + require('./../../assets/images/categories/'+ category.logic_value + '.jpg').default + ')' }"
+            >
+                <p>{{ category.name }}</p>
+            </SplideSlide>
+        </SplideTrack>
+
+        <div class="splide__progress">
+            <div class="splide__progress__bar" />
+        </div>
+     </div>
+    </Splide>
+           
+    <TagProvider
         trackBy="id"
         @on-tag-added="onTagAdded"
         @on-tag-removed="onTagDeleted"
@@ -56,12 +79,12 @@
     </Select>
     <p v-if="fetchHomeFanficsStatusError">There was a problem.</p>
     <template v-if="fetchHomeFanficsStatusSuccess">
-        <div v-for="fanfic of homeFanfics">
+        <div v-for="fanfic of newestFanfics">
             {{ fanfic.title }}
         </div>
     </template>
     <base-button>click</base-button>
-    <base-input></base-input>
+    {{ today }}
    </div>
 </template>
 
@@ -78,6 +101,10 @@ import Tag from '../../components/common/Tag.vue';
 import { getRandomUUID } from '../../helpers/utils';
 import Layout from '../../layout/Layout.vue';
 import { useLayout } from "../../layout/composables/useLayout";
+import { formatDate, options_FR } from '../../helpers/utils';
+import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
+
+import '@splidejs/vue-splide/css/sea-green';
 
 const { IDLE, PENDING, SUCCESS, ERROR } = apiStatus;
 
@@ -88,6 +115,9 @@ export default defineComponent({
         TagProvider,
         Tag,
         Layout,
+        Splide,
+        SplideSlide,
+        SplideTrack,
     },
     setup() {
         const { setLayout, LAYOUTS } = useLayout();
@@ -97,16 +127,23 @@ export default defineComponent({
         }
     },
     computed: {
-        ...apiStatusComputedFactory(['fetchHomeFanficsStatus', 'updateHomeFanficsStatus'])
+        ...apiStatusComputedFactory(['fetchHomeFanficsStatus', 'updateHomeFanficsStatus']),
+        today() {
+            return formatDate(new Date(), options_FR);
+        },
     },
     data() {
         return {
             homeFanfics: null,
+            categories: null,
+            recommendedFanfics: null,
+            mostLikedFanfics: null,
+            newestFanfics: null,
             fanfics: null,
             fetchHomeFanficsStatus: apiStatus.IDLE,
             apiStatus: null,
             selected: '',
-            value: ''
+            value: '',
         }
     },
     methods: {
@@ -117,7 +154,10 @@ export default defineComponent({
                 this.fetchHomeFanficsStatus = apiStatus.ERROR;
                 return;
             }
-            this.homeFanfics = response.data.most_liked_fanfics;
+            this.mostLikedFanfics = response.data.most_liked_fanfics;
+            this.newestFanfics = response.data.newest_fanfics;
+            this.recommendedFanfics = response.data.recommended_fanfics;
+            this.categories = response.data.all_categories;
             this.fetchHomeFanficsStatus = apiStatus.SUCCESS;
         },
         onTagAdded({ tags, val }) {
@@ -171,7 +211,15 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.splideDynamic {
+    padding: 0;
+}
+
+.splideDynamic ul > li {
+    background-size: cover;
+}
+
 .option {
     display: flex;
 }

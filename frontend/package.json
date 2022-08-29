@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/delitamakanda/fanfiction#readme",
   "dependencies": {
+    "@splidejs/vue-splide": "^0.6.7",
     "@vuelidate/core": "^2.0.0-alpha.44",
     "@vuelidate/validators": "^2.0.0-alpha.31",
     "axios": "^0.27.2",
@@ -50,6 +51,7 @@
     "cypress": "^10.4.0",
     "eslint": "^8.21.0",
     "file-loader": "^6.2.0",
+    "flowbite-typography": "^1.0.2",
     "mini-css-extract-plugin": "^2.6.1",
     "postcss": "^8.4.14",
     "postcss-extend": "^1.0.5",
