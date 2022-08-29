@@ -32,7 +32,6 @@ export default {
     },
     setup() {
         const faqs = ref<any>();
-        const isShown = ref(false);
 
         const fetchFaqs = async () => {
             const { response, error } = await withAsync(fetchFaq);
@@ -57,7 +56,6 @@ export default {
             faqs,
             fetchFaqs,
             toggleItem,
-            isShown,
         }
     }
 }
