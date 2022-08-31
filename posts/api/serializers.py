@@ -15,21 +15,28 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')
+    username_author = serializers.ReadOnlyField(source='user.username')
+    email_author = serializers.ReadOnlyField(source='user.email')
     tags = TagSerializer(read_only=True, many=True)
+    category = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Post
         fields = (
             'id',
-            'user',
+            'username_author',
+            'email_author',
             'header',
             'title',
             'slug',
             'content',
             'created',
             'tags',
+            'category',
         )
+    
+    def get_category(self, obj):
+        return obj.get_category_display()
 
 
 class PostCreateSerializer(serializers.ModelSerializer):

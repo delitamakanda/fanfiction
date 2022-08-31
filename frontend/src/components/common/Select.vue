@@ -24,7 +24,10 @@ export default {
             type: Boolean,
             default: false
         },
-        caption: String,
+        caption: {
+            type: String,
+            default: ''
+        }
     },
     components: { 
         'v-select': vSelect
