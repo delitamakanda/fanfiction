@@ -4,6 +4,12 @@ from django.template.defaultfilters import slugify
 
 from markdownx.models import MarkdownxField
 
+CATEGORY_POST = (
+    ('TU', 'Tutorial'),
+    ('AR', 'Article'),
+    ('IN', 'Information'),
+)
+
 class Tag(models.Model):
     word = models.CharField(max_length=35, db_index=True)
     slug = models.CharField(max_length=250)
@@ -25,6 +31,7 @@ class Post(models.Model):
     content = MarkdownxField()
     created = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
+    category = models.CharField(max_length=2, choices=CATEGORY_POST, default='AR')
 
     class Meta:
         ordering = ('created',)

@@ -14,7 +14,7 @@ export default {
 
         const page = ref<any>();
 
-        const getPages = async () => {
+        const getPages = () => {
            fetchPage($route.params.legal)
             .then(response => {
                 page.value = response.data;

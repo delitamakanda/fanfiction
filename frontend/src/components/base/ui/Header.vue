@@ -18,11 +18,11 @@
         <lazy-panel-content v-if="loadPanelContent" @close-panel="closeNotificationModal" @retry="onRetry"></lazy-panel-content>
       </panel-modal>
 
-      <router-link to="/dashboard" type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false">
+      <button to="/dashboard" type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false">
         <span class="sr-only">Open user menu</span>
         <!-- <img class="w-8 h-8 rounded-full" src="./../../../assets/images/logo.png" alt="user photo"> -->
         <avatar ref="avatar" email="name@flowbite.com" />
-      </router-link>
+      </button>
     </div>
   </div>
 </nav>
