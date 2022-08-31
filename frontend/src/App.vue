@@ -4,6 +4,7 @@
             <Header :title="appTitle" />
         </template>
         <template #content>
+            <Loader :isVisible="loading"/>
             <router-view></router-view>
             <!--{{ $t("message.hello", {name: "dma"}) }}
             <button @click="increase">Clicked {{ count }} times.</button> -->
@@ -18,20 +19,22 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { ref, computed, } from 'vue';
+import { useStore } from 'vuex'
 import Layout from './layout/Layout.vue';
 import Footer from './components/base/ui/Footer.vue';
 import Aside from './components/base/ui/Aside.vue';
 import Header from './components/base/ui/Header.vue';
 import { APP_NAME, APP_BASE_URL } from './constants/appConstants';
+import Loader from './components/base/Loader.vue';
 
-// https://adrien.poupa.net/creating-a-global-loader-component-in-vue-js/
 export default {
     components: {
         Layout,
         Footer,
         Aside,
         Header,
+        Loader,
     },
     setup() {
         const count = ref(0);
@@ -42,11 +45,16 @@ export default {
         const appTitle = APP_NAME;
         const appBaseUrl = APP_BASE_URL;
 
+        const store = useStore();
+        const loading = computed(() => store.state['loader'].loading,);
+
         return {
             count,
             increase,
             appTitle,
             appBaseUrl,
+            store,
+            loading,
         }
     }
 }

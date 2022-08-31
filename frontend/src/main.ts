@@ -6,11 +6,13 @@ import { registerBaseComponents } from './helpers/registerBaseComponents';
 import VuelidatePlugin from '@vuelidate/core';
 import { i18n } from './plugins/i18n';
 import store from './store/store';
+import { setupInterceptors } from './api/api';
 
 import router from './router';
 import loadPlugins from './helpers/loadPlugins';
 registerBaseComponents(app);
 loadPlugins(['i18n']);
+setupInterceptors(store);
 
 app.config.performance = true;
 
