@@ -24,6 +24,11 @@ export default {
             dashboardLabel: 'Tableau de bord',
             settingsLabel: 'Paramètres',
             logoutLabel: 'Se déconnecter',
+        },
+        blog: {
+            title: 'Le Blog',
+            baseLine: 'Blog de Fanfiction et annonces',
+            readMoreLabel: 'Lire la suite',
         }
     }
 }

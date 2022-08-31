@@ -24,6 +24,11 @@ export default {
             dashboardLabel: 'Dashboard',
             settingsLabel: 'Settings',
             logoutLabel: 'Logout',
+        },
+        blog: {
+            title: 'The Blog',
+            baseLine: 'Fanfiction\'s Blog and announcements',
+            readMoreLabel: 'Read more',
         }
     }
 }

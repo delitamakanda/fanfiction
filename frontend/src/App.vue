@@ -18,14 +18,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
 import Layout from './layout/Layout.vue';
 import Footer from './components/base/ui/Footer.vue';
 import Aside from './components/base/ui/Aside.vue';
 import Header from './components/base/ui/Header.vue';
 import { APP_NAME, APP_BASE_URL } from './constants/appConstants';
 
-export default defineComponent({
+// https://adrien.poupa.net/creating-a-global-loader-component-in-vue-js/
+export default {
     components: {
         Layout,
         Footer,
@@ -48,7 +49,7 @@ export default defineComponent({
             appBaseUrl,
         }
     }
-})
+}
 </script>
 
 <style lang="scss">

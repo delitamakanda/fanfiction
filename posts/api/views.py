@@ -40,7 +40,6 @@ class PostListAPIView(generics.ListAPIView):
     permission_classes = (
         permissions.AllowAny,
     )
-    pagination_class = None
     name='post-list'
 
 
