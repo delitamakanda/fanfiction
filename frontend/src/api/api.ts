@@ -71,4 +71,44 @@ export const abortable = fn => {
     }
 }
 
+const actionScope = `loader`;
+
+export const setupInterceptors = ({dispatch}) => {
+    let requestPending = 0;
+
+    const req = {
+        pending: () => {
+            requestPending++;
+            dispatch(`${actionScope}/show`);
+        },
+        done: () => {
+            requestPending--;
+            if (requestPending <= 0) {
+                dispatch(`${actionScope}/hide`);
+            }
+        }
+    };
+
+    axiosInstance.interceptors.request.use(
+        config => {
+            req.pending();
+            return config;
+        }, error => {
+            req.done();
+            return Promise.reject(error);
+        }
+    );
+
+    axiosInstance.interceptors.response.use(
+        (response) => {
+            req.done();
+            return Promise.resolve(response);
+        },
+        error => {
+            req.done();
+            return Promise.reject(error);
+        }
+    );
+}
+
 export default api(axiosInstance);
