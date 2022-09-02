@@ -22,6 +22,7 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 from markdownx import urls as markdownx
 
+from rest_framework_simplejwt import views as jwt_views
 from rest_framework.documentation import include_docs_urls
 
 from accounts.api.views import (
@@ -110,9 +111,6 @@ from api.api_auth import (
     RemovePhotoFromAccount,
 )
 
-from api.api_session import (
-    get_csrf,
-)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -129,8 +127,6 @@ urlpatterns = [
 urlpatterns += [
     path('api/', ApiRootView.as_view(), name=ApiRootView.name),
     path('api/docs/', include_docs_urls(title='Fanfiction API', public=False)),
-
-    path('api/csrf/', get_csrf, name='csrf'),
 
     path('api/user/', CheckoutUserView.as_view(), name='user'),
     path('api/signup/', UserCreateView.as_view(), name='signup'),
@@ -219,6 +215,9 @@ urlpatterns += [
     path('api/chapters/create/', ChapterCreateApiView.as_view(), name='chapter-list'),
     path('api/chapters/<int:pk>/',
          ChapterDetailView.as_view(), name='chapter-detail'),
+
+     path('api/token', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+     path('api/token/refresh', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 if settings.DEBUG:

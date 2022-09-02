@@ -27,7 +27,6 @@ export default {}
 
 .content {
     grid-area: 1 / 1 / 2 / 2;
-    @apply bg-purple-200;
 }
 
 .footer {
