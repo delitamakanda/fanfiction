@@ -10,6 +10,7 @@ export default {
             fanficsLabel: 'Fanfictions',
             inboxLabel: 'Messages',
             dashboardLabel: 'Tableau de bord',
+            forumLabel: 'Forum'
         },
         footer: {
             baseLine: 'Tous droits réservés',

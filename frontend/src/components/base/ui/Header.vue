@@ -3,8 +3,7 @@
 <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
   <div class="container flex flex-wrap justify-between items-center mx-auto">
   <router-link to="/" class="flex items-center">
-      <img src="./../../../assets/images/logo.png" class="mr-3 h-6 sm:h-9" :alt="title">
-      <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">{{title}}</span>
+      <logo :title="title" />
   </router-link>
   <div class="flex items-center md:order-2">
       <button type="button" @click.prevent="openNotificationModal" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-300">
@@ -35,6 +34,7 @@ import { ref, onMounted, getCurrentInstance, defineAsyncComponent } from 'vue';
 import PanelModal from '../../base/PanelModal.vue';
 import LoadingComponent from '../../base/LoadingComponent.vue';
 import ErrorComponent from '../../base/ErrorComponent.vue';
+import Logo from '../../base/Logo.vue';
 
 const LazyPanelContentLoader = () => 
   new Promise<any>((resolve, reject) => {
@@ -64,6 +64,7 @@ export default {
     'avatar': Avatar,
     'panel-modal': PanelModal,
     'lazy-panel-content': lazyPanelContent,
+    'logo': Logo,
   },
   props: {
     title: {

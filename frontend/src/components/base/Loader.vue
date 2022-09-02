@@ -58,10 +58,10 @@ export default {
     left: 0;
     width: 117px;
     height: 117px;
-    border-bottom-color: #212121;
     border-right-color: #212121;
-    border-top-color: rgba(33, 33, 33, 0);
     border-left-color: rgba(33, 33, 33, 0);
+    border-bottom-color: #212121;
+    border-top-color: rgba(33, 33, 33, 0);
     animation: rotate-animation 1s linear 0s infinite;
 }
 .spinner.spinner1::after {
@@ -69,9 +69,9 @@ export default {
     left: 17.55px;
     width: 81.9px;
     height: 81.9px;
-    border-bottom-color: #212121;
     border-right-color: #212121;
     border-top-color: rgba(33, 33, 33, 0);
+    border-bottom-color: #212121;
     border-left-color: rgba(33, 33, 33, 0);
     animation: anti-rotate-animation 0.85s linear 0s infinite;
 }

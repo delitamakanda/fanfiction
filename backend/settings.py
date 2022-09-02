@@ -202,7 +202,7 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
 		'rest_framework.authentication.BasicAuthentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
@@ -236,7 +236,7 @@ OAUTH2_PROVIDER = {
         'write': 'Write scope',
         'groups': 'Access to your groups',
     },
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 7*24*60*60,  # 60*60*60 : 3 hours
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 60*60*60,  # 60*60*60 : 3 hours
     'REFRESH_TOKEN_EXPIRE_SECONDS': 7*24*60*60,  # A week
     'ROTATE_REFRESH_TOKEN': False,
     # 'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
