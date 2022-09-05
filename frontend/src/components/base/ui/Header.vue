@@ -5,7 +5,7 @@
   <router-link to="/" class="flex items-center">
       <logo :title="title" />
   </router-link>
-  <div class="flex items-center md:order-2">
+  <div v-if="isLoggedIn" class="flex items-center md:order-2">
       <button type="button" @click.prevent="openNotificationModal" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-gray-300">
               <span class="sr-only">View notifications</span>
               <!-- Heroicon name: outline/bell -->
@@ -17,11 +17,11 @@
         <lazy-panel-content v-if="loadPanelContent" @close-panel="closeNotificationModal" @retry="onRetry"></lazy-panel-content>
       </panel-modal>
 
-      <button to="/dashboard" type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false">
+      <router-link to="/profile" type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false">
         <span class="sr-only">Open user menu</span>
         <!-- <img class="w-8 h-8 rounded-full" src="./../../../assets/images/logo.png" alt="user photo"> -->
         <avatar ref="avatar" email="name@flowbite.com" />
-      </button>
+      </router-link>
     </div>
   </div>
 </nav>
@@ -30,11 +30,12 @@
 <script lang="ts">
 import { useRouter } from 'vue-router';
 import Avatar from '../../common/Avatar.vue';
-import { ref, onMounted, getCurrentInstance, defineAsyncComponent } from 'vue';
+import { ref, onMounted, getCurrentInstance, defineAsyncComponent, computed } from 'vue';
 import PanelModal from '../../base/PanelModal.vue';
 import LoadingComponent from '../../base/LoadingComponent.vue';
 import ErrorComponent from '../../base/ErrorComponent.vue';
 import Logo from '../../base/Logo.vue';
+import { useStore } from 'vuex';
 
 const LazyPanelContentLoader = () => 
   new Promise<any>((resolve, reject) => {
@@ -47,7 +48,7 @@ const lazyPanelContent = defineAsyncComponent({
   loader: LazyPanelContentLoader,
   loadingComponent: LoadingComponent,
   errorComponent: ErrorComponent,
-  delay: 200,
+  delay: 150,
   timeout: 15000,
   onError: (error, retry, fail, attemps) => {
     if (error.message.match(/fetch/) && attemps <= 3) {
@@ -74,9 +75,14 @@ export default {
     },
   setup() {
     const $router = useRouter();
+    const store = useStore();
     const isPanelOpen = ref(false);
     const loadPanelContent = ref(false);
     
+    const isLoggedIn = computed(() => store.state['auth'].status.loggedIn);
+    const currentUser = computed(() => store.state['user'].user);
+    console.log(currentUser.value);
+
     const openNotificationModal = () => {
       isPanelOpen.value = true;
       loadPanelContent.value = true;
@@ -105,6 +111,9 @@ export default {
       isPanelOpen,
       loadPanelContent,
       onRetry,
+      store,
+      isLoggedIn,
+      currentUser,
     };
   }
 }

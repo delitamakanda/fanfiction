@@ -236,8 +236,8 @@ OAUTH2_PROVIDER = {
         'write': 'Write scope',
         'groups': 'Access to your groups',
     },
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 60*60*60,  # 60*60*60 : 3 hours
-    'REFRESH_TOKEN_EXPIRE_SECONDS': 7*24*60*60,  # A week
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 7*24*60*60, # 1 week
+    'REFRESH_TOKEN_EXPIRE_SECONDS': 60*60*60,  # 3 hours
     'ROTATE_REFRESH_TOKEN': False,
     # 'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
 }

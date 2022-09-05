@@ -13,7 +13,8 @@ const fanficRoutes = [
         name: 'AddFanfic',
         component: AddFanfic,
         meta: {
-            layout: 'standard'
+            layout: 'standard',
+            requiresAuth: true
         }
     },
     {
@@ -29,7 +30,8 @@ const fanficRoutes = [
         name: 'EditFanfic',
         component: EditFanfic,
         meta: {
-            layout: 'standard'
+            layout: 'standard',
+            requiresAuth: true
         }
     },
     {
@@ -37,7 +39,8 @@ const fanficRoutes = [
         name: 'DeleteFanfic',
         component: DeleteFanfic,
         meta: {
-            layout: 'standard'
+            layout: 'standard',
+            requiresAuth: true
         }
     },
     {

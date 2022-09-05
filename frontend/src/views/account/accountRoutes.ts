@@ -10,7 +10,8 @@ const accountRoutes = [
         name: 'Dashboard',
         component: Dashboard,
         meta: {
-            layout: 'standard'
+            layout: 'standard',
+            requiresAuth: true
         }
     },
     {
@@ -18,7 +19,8 @@ const accountRoutes = [
         name: 'Profile',
         component: Profile,
         meta: {
-            layout: 'standard'
+            layout: 'standard',
+            requiresAuth: true
         }
     },
     {
@@ -26,7 +28,8 @@ const accountRoutes = [
         name: 'Inbox',
         component: Inbox,
         meta: {
-            layout: 'standard'
+            layout: 'standard',
+            requiresAuth: true
         }
     },
     {
@@ -34,7 +37,8 @@ const accountRoutes = [
         name: 'Settings',
         component: Settings,
         meta: {
-            layout: 'standard'
+            layout: 'standard',
+            requiresAuth: true
         }
     }
 ];

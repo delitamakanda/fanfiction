@@ -3,7 +3,6 @@ import { createApp } from 'vue';
 import Root from './App.vue';
 export const app = createApp(Root);
 import { registerBaseComponents } from './helpers/registerBaseComponents';
-import VuelidatePlugin from '@vuelidate/core';
 import { i18n } from './plugins/i18n';
 import store from './store/store';
 import { setupInterceptors } from './api/api';
@@ -20,7 +19,6 @@ import './styles/global.scss';
 
 app
     .use(i18n)
-    .use(VuelidatePlugin)
     .use(router)
     .use(store)
     .mount('#app');

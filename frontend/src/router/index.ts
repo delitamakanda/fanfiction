@@ -31,4 +31,19 @@ const router = createRouter({
     },
 });
 
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!localStorage.getItem('token')) {
+            next({
+                path: '/signin',
+                query: { redirect: to.fullPath }
+            })
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
+});
+
 export default router;
