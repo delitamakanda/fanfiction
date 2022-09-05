@@ -136,8 +136,6 @@ class LogoutView(views.APIView):
     """
     Logout user
     """
-    permission_classes = []
-    authentication_classes = []
 
     def get(self, request):
         logout(request)
@@ -149,10 +147,9 @@ class CheckoutUserView(views.APIView):
     Checkout current user
     """
     serializer_class = UserSerializer
-    permission_classes = []
-    authentication_classes = []
 
     def get(self, request):
+        print(request.user)
         serializer = UserSerializer(request.user)
         if request.user:
             return Response(serializer.data, status=status.HTTP_200_OK)
