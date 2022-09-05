@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from 'vuex'
 import Layout from './layout/Layout.vue';
 import Footer from './components/base/ui/Footer.vue';
@@ -47,10 +47,6 @@ export default {
 
         const store = useStore();
         const loading = computed(() => store.state['loader'].loading,);
-        
-        onMounted(() => {
-            // store.dispatch('user/fetchCurrentUser');
-        });
 
         return {
             count,

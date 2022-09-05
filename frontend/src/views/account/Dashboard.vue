@@ -7,6 +7,7 @@
 
 <script lang="ts">
 import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
 import { useStore } from 'vuex';
 import BaseButton from '../../components/base/BaseButton.vue';
 
@@ -23,6 +24,11 @@ export default {
             store.dispatch('auth/logout');
             $router.push({ name: 'Signin' });
         };
+
+        onMounted(() => {
+            store.dispatch('user/fetchCurrentUser');
+            
+        });
         
         return {
             store,
