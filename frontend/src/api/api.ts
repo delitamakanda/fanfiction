@@ -1,7 +1,12 @@
 import axios from 'axios';
+import TokenService from './services/token.service';
+import AuthService from './services/auth.service';
 
 const axiosParams = {
     baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : '/',
+    headers: {
+        'Content-Type': 'application/json',
+    }
 };
 
 const axiosInstance = axios.create(axiosParams);
@@ -92,6 +97,10 @@ export const setupInterceptors = ({dispatch}) => {
     axiosInstance.interceptors.request.use(
         config => {
             req.pending();
+            /* const token = TokenService.getAccessToken();
+            if (token) {
+                (config as any).headers['Authorization'] = `AccessToken ${token}` ;
+            } */
             return config;
         }, error => {
             req.done();
@@ -104,8 +113,27 @@ export const setupInterceptors = ({dispatch}) => {
             req.done();
             return Promise.resolve(response);
         },
-        error => {
+        async error => {
             req.done();
+            /* const originalConfig = error.config;
+            if (originalConfig.url !== '/api/token' && error.response) {
+                if (error.response.status === 401 && !originalConfig._retry) {
+                    originalConfig._retry = true;
+                }
+                try {
+                    const rs = await AuthService.refresh(TokenService.getRefreshToken());
+                    if (rs) {
+                        TokenService.updateAccessToken(rs.response.data.refresh);
+
+                        return axiosInstance(originalConfig);
+                    }
+                    if (error) {
+                        console.error(error);
+                    }
+                } catch (_error) {
+                    return Promise.reject(error);
+                }
+            } */
             return Promise.reject(error);
         }
     );

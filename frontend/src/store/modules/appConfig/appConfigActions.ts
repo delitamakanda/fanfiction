@@ -30,6 +30,7 @@ export default {
         context.commit('SET_FETCH_APP_CONFIG_STATE', apiPendingFactory());
 
         const { response, error } = await withAsync(fetchAppConfig);
+        console.log('response', { response, error });
 
         if (error) {
             context.commit('SET_FETCH_APP_CONFIG_ERROR', apiErrorFactory(error, (error as any).message));

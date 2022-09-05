@@ -7,6 +7,7 @@
 import { useRoute } from 'vue-router';
 import { ref, onMounted, watch } from 'vue';
 import { fetchPage } from '../../api/infoApi';
+import { withAsync } from '../../api/helpers/withAsync';
 
 export default {
     setup() {
@@ -14,13 +15,9 @@ export default {
 
         const page = ref<any>();
 
-        const getPages = () => {
-           fetchPage($route.params.legal)
-            .then(response => {
-                page.value = response.data;
-            }, error => {
-                console.log(error);
-            });
+        const getPages = async () => {
+           const { response, error } = await withAsync(fetchPage, $route.params.legal, {});
+           page.value = response.data;
         }
 
         watch($route, (val, oldVal) => { 

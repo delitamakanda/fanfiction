@@ -3,6 +3,7 @@ import appConfig from './modules/appConfig/appConfig';
 import user from './modules/user/user';
 import fanfic from './modules/fanfic/fanfic';
 import loader from './modules/loader/loader';
+import auth from './modules/auth/auth';
 
 const store = createStore({
     strict: process.env.NODE_ENV !== 'production',
@@ -11,6 +12,7 @@ const store = createStore({
         user,
         fanfic,
         loader,
+        auth,
     },
 });
 
