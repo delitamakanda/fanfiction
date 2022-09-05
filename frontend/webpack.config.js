@@ -2,6 +2,7 @@ const path = require('path')
 const { VueLoaderPlugin } = require('vue-loader')
 const BundleTracker = require('webpack-bundle-tracker')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const webpack = require('webpack');
 
 module.exports = (env = {}) => {
     return {
@@ -64,7 +65,10 @@ module.exports = (env = {}) => {
             new MiniCssExtractPlugin({
                 filename: '[name].css',
                 chunkFilename: '[id].css',
-            })
+            }),
+            new webpack.ProvidePlugin({
+                process: 'process/browser',
+            }),
         ],
         devServer: {
             headers: {

@@ -1,8 +1,9 @@
 import api from './api';
+import { requiredParam } from '../helpers/requiredParam';
 
 const URLS = {
     fetchPagesUrl: 'pages/',
-    fetchPageUrl: (slug) => `pages/${slug}/html/`,
+    fetchPageUrl: (slug) =>`pages/${slug}/html/`,
     fetchPoststUrl: 'posts/',
     fetchPostUrl: (slug) => `posts/${slug}/`,
 };
@@ -28,5 +29,5 @@ export const fetchPosts = () => {
 export const fetchPost = (slug) => {
     return api.get(URLS.fetchPostUrl(slug), {
         baseURL: 'api/',
-    })
+    } )
 };

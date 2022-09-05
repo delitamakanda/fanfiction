@@ -21,6 +21,7 @@ import Avatar from '../../../../components/common/Avatar.vue';
 import Markdown from 'vue3-markdown-it';
 import { fetchPost } from '../../../../api/infoApi';
 import { ref, onMounted } from 'vue';
+import { withAsync } from '../../../../api/helpers/withAsync';
 
 export default {
     components: {
@@ -35,13 +36,10 @@ export default {
             return formatRelativeDate(date);
         }
         
-        const getPost = () => {
-            fetchPost($route.params.slug)
-                .then(response => {
-                    post.value = response.data;
-                }, error => {
-                    console.log(error);
-                });            
+        const getPost = async () => {
+            const { response, error } = await withAsync(fetchPost, $route.params.slug, {});
+
+            post.value = response.data;
         }
 
         onMounted(() => {
