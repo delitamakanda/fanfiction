@@ -6,37 +6,37 @@ export const menuDashboard = [
     {
         name: 'Add',
         title: 'create',
-        icon: 'home',
+        icon: 'add',
         route: '/add-fanfic',
         navigation: true,
     }, {
         name: 'List',
         title: 'list',
-        icon: 'home',
+        icon: 'collection',
         route: '/your-fanfic',
         navigation: true,
     },{
         name: 'Profile',
         title: 'profile',
-        icon: 'users',
+        icon: 'user-circle',
         route: '/profile',
         navigation: true,
     },{
         name: 'Settings',
         title: 'settings',
-        icon: 'custom',
+        icon: 'cog',
         route: '/settings',
         navigation: true,
     }, {
         name: 'Inbox',
         title: 'inbox',
-        icon: 'custom',
+        icon: 'inbox',
         route: '/inbox',
         navigation: true,
     }, {
         name: 'Logout',
         title: 'logout',
-        icon: 'custom',
+        icon: 'logout',
         route: 'disconnect',
         navigation: false,
     }

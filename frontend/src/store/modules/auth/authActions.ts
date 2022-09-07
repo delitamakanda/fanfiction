@@ -7,9 +7,9 @@ export default {
     login({ commit}, { username, password }) {
         return AuthService.connect(username, password)
             .then(({ response, error }) => {
-                if (response && response.data && response.data.access) {
+                if (response && response.data) {
                     commit(authTypes.loginSuccess, response.data.access);
-                    return Promise.resolve(response.data.access);
+                    return Promise.resolve(response.data);
                 }
                 if (error) {
                     commit(authTypes.loginFailure);
@@ -35,16 +35,9 @@ export default {
             });
     },
     refreshToken({ commit }, token) {
-        return AuthService.refresh(token)
-            .then(({response, error}) => {
-                if (response && response.data && response.data.refresh) {
-                    commit(authTypes.refreshTokenSuccess, response.data.refresh);
-                    return Promise.resolve(response.data.refresh);
-                }
-                if (error) {
-                    commit(authTypes.refreshTokenFailure);
-                    return Promise.reject(error);
-                }
-            });
+        commit(authTypes.refreshTokenSuccess, token);
+    },
+    refreshTokenFailure({ commit }, error) {
+        commit(authTypes.refreshTokenFailure, error);
     },
 };

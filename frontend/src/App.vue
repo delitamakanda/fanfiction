@@ -5,6 +5,7 @@
         </template>
         <template #content>
             <Loader :isVisible="loading"/>
+            <div v-if="errors">{{ errors }}</div>
             <router-view></router-view>
             <!--{{ $t("message.hello", {name: "dma"}) }}
             <button @click="increase">Clicked {{ count }} times.</button> -->
@@ -47,6 +48,7 @@ export default {
 
         const store = useStore();
         const loading = computed(() => store.state['loader'].loading,);
+        const errors = computed(() => store.state['auth'].error,);
 
         return {
             count,
@@ -55,6 +57,7 @@ export default {
             appBaseUrl,
             store,
             loading,
+            errors,
         }
     }
 }

@@ -16,23 +16,23 @@ export const getCancelSource = () => axios.CancelToken.source();
 const api = (axios) => {
     const withAbort = fn => async (...args) => {
         const originalConfig = args[args.length - 1];
-        let {abort, ...config} = originalConfig;
+        let { abort, ...config } = originalConfig;
 
         if (typeof abort === 'function') {
-            const { cancel, token} = getCancelSource();
+            const { cancel, token } = getCancelSource();
             config.cancelToken = token;
             abort(cancel, token);
-         }
+        }
 
-         try {
+        try {
             return await fn(...args.slice(0, args.length - 1), config);
-         } catch (error: any) {
+        } catch (error: any) {
             didAbort(error) && (error.aborted = true);
             throw error;
-         }
+        }
     }
 
-    const withLogger = async promise => 
+    const withLogger = async promise =>
         promise.catch(error => {
             if (!process.env.VUE_APP_DEBUG_API) throw error;
 
@@ -78,7 +78,7 @@ export const abortable = fn => {
 
 const actionScope = `loader`;
 
-export const setupInterceptors = ({dispatch}) => {
+export const setupInterceptors = ({ dispatch }) => {
     let requestPending = 0;
 
     const req = {
@@ -97,10 +97,10 @@ export const setupInterceptors = ({dispatch}) => {
     axiosInstance.interceptors.request.use(
         config => {
             req.pending();
-            /* const token = TokenService.getAccessToken();
+            const token = TokenService.getAccessToken();
             if (token) {
-                (config as any).headers['Authorization'] = `AccessToken ${token}` ;
-            } */
+                (config as any).headers['Authorization'] = `Bearer ${token}`;
+            }
             return config;
         }, error => {
             req.done();
@@ -113,27 +113,32 @@ export const setupInterceptors = ({dispatch}) => {
             req.done();
             return Promise.resolve(response);
         },
-        async error => {
+        error => {
             req.done();
-            /* const originalConfig = error.config;
-            if (originalConfig.url !== '/api/token' && error.response) {
+            const originalConfig = error.config;
+            if (originalConfig.url !== 'token' && error.response) {
                 if (error.response.status === 401 && !originalConfig._retry) {
                     originalConfig._retry = true;
-                }
-                try {
-                    const rs = await AuthService.refresh(TokenService.getRefreshToken());
-                    if (rs) {
-                        TokenService.updateAccessToken(rs.response.data.refresh);
 
+                    try {
+                        AuthService.refresh(TokenService.getRefreshToken())
+                            .then(({ response, error }) => {
+                                if (response) {
+                                    const { access } = response.data;
+                                    TokenService.updateAccessToken(access);
+                                    dispatch('auth/refreshToken', access);
+                                }
+                                if (error) {
+                                    console.error(error);
+                                    dispatch('auth/refreshTokenFailure', (error as any).response.data.detail);
+                                }
+                            });
                         return axiosInstance(originalConfig);
+                    } catch (_error) {
+                        return Promise.reject(error);
                     }
-                    if (error) {
-                        console.error(error);
-                    }
-                } catch (_error) {
-                    return Promise.reject(error);
                 }
-            } */
+            }
             return Promise.reject(error);
         }
     );

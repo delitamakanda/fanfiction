@@ -21,9 +21,11 @@ export default {
     },
     refreshTokenSuccess(state, token) {
         state.status.loggedIn = true;
-        state.token = { ...state.token, ...token };
+        state.token = { ...state.token, token };
     },
-    refreshTokenFailure(state) {
+    refreshTokenFailure(state, error) {
         state.status.loggedIn = false;
+        state.token = null;
+        state.error = error;
     },
 };
