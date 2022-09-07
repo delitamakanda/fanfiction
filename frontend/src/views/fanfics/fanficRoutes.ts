@@ -5,6 +5,7 @@ import AdvancedFanficDetails from './viewFanfic/views/AdvancedFanficDetails.vue'
 import BasicFanficDetails from './viewFanfic/views/BasicFanficDetails.vue';
 import ListFanfic from './ListFanfic.vue';
 import BrowseFanfic from './BrowseFanfic.vue';
+import YourFanfic from './YourFanfic.vue';
 
 
 const fanficRoutes = [
@@ -26,7 +27,16 @@ const fanficRoutes = [
         }
     },
     {
-        path: '/edit-fanfic',
+        path: '/your-fanfic',
+        name: 'YourFanfic',
+        component: YourFanfic,
+        meta: {
+            layout: 'standard',
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/edit-fanfic/:slug',
         name: 'EditFanfic',
         component: EditFanfic,
         meta: {
@@ -35,7 +45,7 @@ const fanficRoutes = [
         }
     },
     {
-        path: '/delete-fanfic',
+        path: '/delete-fanfic/:id',
         name: 'DeleteFanfic',
         component: DeleteFanfic,
         meta: {
@@ -44,15 +54,16 @@ const fanficRoutes = [
         }
     },
     {
-        path: '/advanced-fanfic-details',
+        path: '/advanced-fanfic-details/:slug',
         name: 'AdvancedFanficDetails',
         component: AdvancedFanficDetails,
         meta: {
-            layout: 'standard'
+            layout: 'standard',
+            requiresAuth: true
         }
     },
     {
-        path: '/basic-fanfic-details',
+        path: '/basic-fanfic-details/:slug',
         name: 'BasicFanficDetails',
         component: BasicFanficDetails,
         meta: {

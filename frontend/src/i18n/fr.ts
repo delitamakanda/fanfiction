@@ -1,6 +1,6 @@
 export default {
     message: {
-        hello: 'bonjour {name}',
+        hello: 'Bonjour {name} !',
         loading: 'Chargement...',
         aside: {
             signinLabel: 'Se connecter',
@@ -24,12 +24,19 @@ export default {
         header: {
             dashboardLabel: 'Tableau de bord',
             settingsLabel: 'Paramètres',
-            logoutLabel: 'Se déconnecter',
         },
         blog: {
             title: 'Le Blog',
             baseLine: 'Blog de Fanfiction et annonces',
             readMoreLabel: 'Lire la suite',
-        }
+        },
+        dashboard: {
+            create: 'Créer une fanfiction',
+            list: 'Liste de vos fanfictions',
+            profile: 'Votre profil',
+            settings: 'Paramètres',
+            inbox: 'Messages',
+            logout: 'Se déconnecter',
+        },
     }
 }
