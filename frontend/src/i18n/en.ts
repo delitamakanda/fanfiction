@@ -30,6 +30,14 @@ export default {
             title: 'The Blog',
             baseLine: 'Fanfiction\'s Blog and announcements',
             readMoreLabel: 'Read more',
-        }
+        },
+        dashboard: {
+            create: 'Add a fanfiction',
+            list: 'List of your fanfictions',
+            profile: 'Your profile',
+            settings: 'Settings',
+            inbox: 'Inbox',
+            logout: 'Logout',
+        },
     }
 }
