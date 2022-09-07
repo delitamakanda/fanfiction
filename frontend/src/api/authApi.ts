@@ -4,7 +4,7 @@ const URLS = {
     signinUrl: 'token',
     signupUrl: 'signup/',
     logoutUrl: 'logout/',
-    refreshTokenUrl: 'token/refresh',
+    refreshTokenUrl: 'refresh-token',
 };
 
 export const login = ({ username, password }) => {
@@ -31,9 +31,8 @@ export const logout = () => {
 };
 
 export const refreshToken = (token) => {
-    return api.post(URLS.refreshTokenUrl, { token }, {
+    return api.post(URLS.refreshTokenUrl, { refresh: token }, {
         baseURL: 'api/',
-        headers: authHeader()
     })
 };
 

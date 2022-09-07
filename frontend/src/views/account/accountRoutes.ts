@@ -11,7 +11,10 @@ const accountRoutes = [
         component: Dashboard,
         meta: {
             layout: 'standard',
-            requiresAuth: true
+            requiresAuth: true,
+            breadcrumb: [
+                { name: 'Dashboard'}
+            ]
         }
     },
     {
@@ -20,7 +23,11 @@ const accountRoutes = [
         component: Profile,
         meta: {
             layout: 'standard',
-            requiresAuth: true
+            requiresAuth: true,
+            breadcrumb: [
+                { name: 'Dashboard', link: '/dashboard' },
+                { name: 'Profile', link: '/profile' }
+            ]
         }
     },
     {
@@ -29,7 +36,11 @@ const accountRoutes = [
         component: Inbox,
         meta: {
             layout: 'standard',
-            requiresAuth: true
+            requiresAuth: true,
+            breadcrumb: [
+                { name: 'Dashboard', link: '/dashboard' },
+                { name: 'Inbox', link: '/inbox' }
+            ]
         }
     },
     {
@@ -38,7 +49,11 @@ const accountRoutes = [
         component: Settings,
         meta: {
             layout: 'standard',
-            requiresAuth: true
+            requiresAuth: true,
+            breadcrumb: [
+                { name: 'Dashboard', link: '/dashboard' },
+                { name: 'Settings', link: '/settings' }
+            ]
         }
     }
 ];
