@@ -54,5 +54,3 @@ export const formatRelativeDate = (date) => {
 export const readMore = (text, length = 150, suffix = '...') => {
     return text.substring(0, length) + suffix;
 };
-
-

@@ -19,11 +19,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
-import { withAsync } from '../../../api/helpers/withAsync';
-import { fetchPages } from '../../../api/infoApi';
+import { ref } from 'vue';
+import { footerPages } from '../../../constants/appConstants';
 
-export default defineComponent({
+export default {
     props: {
         title: {
             type: String,
@@ -38,22 +37,12 @@ export default defineComponent({
         const fullYear = `© ${new Date().getFullYear()}`;
         
         const pages = ref<any[]>([]);
+        pages.value = footerPages;
 
-        const getPages = async () => {
-            const { response, error } = await withAsync(fetchPages);
-            if (error) {
-                return;
-            }
-            pages.value = response.data;
-        }
-        onMounted(() => {
-            getPages();
-        });
         return {
             fullYear,
-            getPages,
             pages,
         }
     }
-});
+};
 </script>

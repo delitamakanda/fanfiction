@@ -13,7 +13,7 @@ class AuthService {
     }
     async logout() {
         const { response, error } = await withAsync(logout);
-        if (response && response.data) {
+        if (response && response.data && response.data.status === 'ok') {
             localStorage.removeItem('token');
             localStorage.removeItem('refreshToken');
         }
