@@ -19,7 +19,7 @@ export default {
             licensingLabel: 'Licences',
             rgpdLabel: 'Politique de confidentialité',
             legalLabel: 'Mentions légales',
-            contactLabel: 'Contact'
+            contactLabel: 'Contactez - nous'
         },
         header: {
             dashboardLabel: 'Tableau de bord',
@@ -38,5 +38,35 @@ export default {
             inbox: 'Messages',
             logout: 'Se déconnecter',
         },
+        contact: {
+            title: 'Contactez - nous',
+            baseline: 'Vous avez une question ? Vous avez besoin d\'aide ?',
+            fromEmailLabel: 'E-mail',
+            placeholderEmail: "email{'@'}domaine.com",
+            subjectLabel: 'Objet de votre message',
+            subjectPlaceholder: 'Comment pouvons - nous vous aider ?',
+            messageLabel: 'Votre message',
+            messagePlaceholder: 'Votre message...',
+            sendButton: 'Envoyer',
+        },
+        settings: {
+            title: 'Paramètres',
+            baseline: 'Gérez vos paramètres',
+            emailChange: 'Changer d\'adresse e-mail',
+            passwordChange: 'Changer le mot de passe',
+            profileChange: 'Modification du profil',
+            snsChange: 'Modification des réseaux sociaux',
+            accountDelete: 'Supprimer le compte',
+            clearCache: 'Vider le cache',
+            legalLabel: 'Mentions légales',
+            rgpdLabel: 'Politique de confidentialité',
+            licensingLabel: 'Licences',
+            darkModeLabel: 'Dark Mode',
+            switchLanguageLabel: {
+                en: 'English',
+                fr: 'Français',
+            }
+
+        }
     }
 }

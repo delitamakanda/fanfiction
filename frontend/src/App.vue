@@ -5,7 +5,9 @@
         </template>
         <template #content>
             <Loader :isVisible="loading"/>
-            <div v-if="errors">{{ errors }}</div>
+            <div v-if="toaster.open">
+                <Toaster :msg="toaster.message" :type="toaster.type" />
+            </div>
             <router-view></router-view>
             <!--{{ $t("message.hello", {name: "dma"}) }}
             <button @click="increase">Clicked {{ count }} times.</button> -->
@@ -28,6 +30,7 @@ import Aside from './components/base/ui/Aside.vue';
 import Header from './components/base/ui/Header.vue';
 import { APP_NAME, APP_BASE_URL } from './constants/appConstants';
 import Loader from './components/base/Loader.vue';
+import Toaster from './components/common/Toaster.vue';
 
 export default {
     components: {
@@ -36,6 +39,7 @@ export default {
         Aside,
         Header,
         Loader,
+        Toaster,
     },
     setup() {
         const count = ref(0);
@@ -48,7 +52,12 @@ export default {
 
         const store = useStore();
         const loading = computed(() => store.state['loader'].loading,);
-        const errors = computed(() => store.state['auth'].error,);
+        const toaster = computed(() => store.state['snackbar'].snackbar,);
+
+        if (store.state['auth'].status.loggedIn) {
+            store.dispatch('user/fetchCurrentUser'); 
+        }
+
 
         return {
             count,
@@ -57,7 +66,7 @@ export default {
             appBaseUrl,
             store,
             loading,
-            errors,
+            toaster,
         }
     }
 }

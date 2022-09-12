@@ -15,7 +15,11 @@ const fanficRoutes = [
         component: AddFanfic,
         meta: {
             layout: 'standard',
-            requiresAuth: true
+            requiresAuth: true,
+            breadcrumb: [
+                { name: 'Dashboard', link: '/dashboard' },
+                { name: 'Créer une fanfiction', link: '/add-fanfic' },
+            ]
         }
     },
     {
@@ -32,7 +36,11 @@ const fanficRoutes = [
         component: YourFanfic,
         meta: {
             layout: 'standard',
-            requiresAuth: true
+            requiresAuth: true,
+            breadcrumb: [
+                { name: 'Dashboard', link: '/dashboard' },
+                { name: 'Vos fanfictions', link: '/your-fanfic' },
+            ]
         }
     },
     {
@@ -41,7 +49,12 @@ const fanficRoutes = [
         component: EditFanfic,
         meta: {
             layout: 'standard',
-            requiresAuth: true
+            requiresAuth: true,
+            breadcrumb: [
+                { name: 'Dashboard', link: '/dashboard' },
+                { name: 'Vos fanfictions', link: '/your-fanfic' },
+                { name: 'Modification d\'une fanfiction', link: '/your-edit-fanfic/:slug' },
+            ]
         }
     },
     {
@@ -50,7 +63,12 @@ const fanficRoutes = [
         component: DeleteFanfic,
         meta: {
             layout: 'standard',
-            requiresAuth: true
+            requiresAuth: true,
+            breadcrumb: [
+                { name: 'Dashboard', link: '/dashboard' },
+                { name: 'Vos fanfictions', link: '/your-fanfic' },
+                { name: 'Suppression d\'une fanfiction', link: '/delete-fanfic/:id' },
+            ]
         }
     },
     {
@@ -59,7 +77,10 @@ const fanficRoutes = [
         component: AdvancedFanficDetails,
         meta: {
             layout: 'standard',
-            requiresAuth: true
+            breadcrumb: [
+                { name: 'ListFanfic', link: '/fanfics' },
+                { name: 'AdvancedFanficDetails', link: '/advanced-fanfic-details/:slug' },
+            ]
         }
     },
     {
@@ -67,7 +88,11 @@ const fanficRoutes = [
         name: 'BasicFanficDetails',
         component: BasicFanficDetails,
         meta: {
-            layout: 'standard'
+            layout: 'standard',
+            breadcrumb: [
+                { name: 'ListFanfic', link: '/fanfics' },
+                { name: 'BasicFanficDetails', link: '/basic-fanfic-details/:slug' },
+            ]
         }
     },
     {

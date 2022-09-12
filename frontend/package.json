@@ -7,6 +7,7 @@
     "serve": "webpack-dev-server",
     "build": "webpack",
     "vuex:create-module": "node scripts/generateVuexModule.js",
+    "postinstall": "node scripts/version.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -53,6 +54,7 @@
     "eslint": "^8.21.0",
     "file-loader": "^6.2.0",
     "flowbite-typography": "^1.0.2",
+    "git-describe": "^4.1.1",
     "mini-css-extract-plugin": "^2.6.1",
     "postcss": "^8.4.14",
     "postcss-extend": "^1.0.5",

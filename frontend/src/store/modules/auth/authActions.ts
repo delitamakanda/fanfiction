@@ -37,7 +37,7 @@ export default {
     refreshToken({ commit }, token) {
         commit(authTypes.refreshTokenSuccess, token);
     },
-    refreshTokenFailure({ commit }, error) {
-        commit(authTypes.refreshTokenFailure, error);
+    refreshTokenFailure({ commit }) {
+        commit(authTypes.refreshTokenFailure);
     },
 };

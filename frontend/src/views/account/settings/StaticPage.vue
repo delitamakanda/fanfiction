@@ -1,15 +1,20 @@
 <template>
+<Breadcrumb />
 <div v-html="page">
 </div>
 </template>
 
 <script lang="ts">
 import { useRoute } from 'vue-router';
-import { ref, onMounted, watch } from 'vue';
-import { fetchPage } from '../../api/infoApi';
-import { withAsync } from '../../api/helpers/withAsync';
+import { ref, onMounted } from 'vue';
+import { fetchPage } from '../../../api/infoApi';
+import { withAsync } from '../../../api/helpers/withAsync';
+import Breadcrumb from '../../../components/base/Breadcrumb.vue';
 
 export default {
+    components: {
+        Breadcrumb,
+    },
     setup() {
         const $route = useRoute();
 
@@ -19,12 +24,6 @@ export default {
            const { response, error } = await withAsync(fetchPage, $route.params.legal, {});
            page.value = response.data;
         }
-
-        watch($route, (val, oldVal) => { 
-            if ((val.params.legal && oldVal.params.legal) || (val.params.legal !== $route.params.legal)) {
-                getPages();
-            }
-        });
 
         onMounted(() => {
             getPages();

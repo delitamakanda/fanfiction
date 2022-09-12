@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import fanficRoutes from '../views/fanfics/fanficRoutes';
 import accountRoutes from '../views/account/accountRoutes';
+import settingsRoutes from '../views/account/settings/settingsRoutes';
 import authRoutes from '../views/auth/authRoutes';
 import miscRoutes from '../views/misc/miscRoutes';
 import infoRoutes from '../views/info/infoRoutes';
@@ -10,6 +11,7 @@ const routes = [
     ...authRoutes,
     ...fanficRoutes,
     ...accountRoutes,
+    ...settingsRoutes,
     ...miscRoutes,
     ...infoRoutes,
 ]

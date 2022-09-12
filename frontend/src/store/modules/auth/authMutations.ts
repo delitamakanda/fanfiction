@@ -23,9 +23,8 @@ export default {
         state.status.loggedIn = true;
         state.token = { ...state.token, token };
     },
-    refreshTokenFailure(state, error) {
+    refreshTokenFailure(state) {
         state.status.loggedIn = false;
         state.token = null;
-        state.error = error;
     },
 };

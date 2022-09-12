@@ -73,6 +73,7 @@ export default {
                 .then((response) => {
                     console.log(response);
                     $router.push({ name: 'Dashboard' });
+                    store.dispatch('user/fetchCurrentUser'); // Fetch current user
                 })
                 .catch((error) => {
                     console.log(error)
