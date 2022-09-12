@@ -30,6 +30,7 @@ export default {
 
         const disconnect = () => {
             store.dispatch('auth/logout');
+            store.dispatch('user/clearUser');
             $router.push({ name: 'Signin' });
         };
 
@@ -38,15 +39,11 @@ export default {
         const menus = ref([]) as any;
         menus.value  = menuDashboard;
 
-
-
-        onMounted(() => {
-            store.dispatch('user/fetchCurrentUser'); 
-        });
-
         const navigate = (objMenu: any) => {
             if (!objMenu.navigation && objMenu.route === 'disconnect') {
                 disconnect();
+            } else if (objMenu.name === 'Profile') {
+                $router.push(`/profile/${currentUser.value.username}`);
             } else {
                 $router.push(objMenu.route);
             }

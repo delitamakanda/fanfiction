@@ -17,11 +17,13 @@
         <lazy-panel-content v-if="loadPanelContent" @close-panel="closeNotificationModal" @retry="onRetry"></lazy-panel-content>
       </panel-modal>
 
-      <router-link to="/profile" type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false">
-        <span class="sr-only">Open user menu</span>
-        <!-- <img class="w-8 h-8 rounded-full" src="./../../../assets/images/logo.png" alt="user photo"> -->
-        <avatar v-if="currentUser" ref="avatar" :email="currentUser.email" />
-      </router-link>
+      <template v-if="currentUser">
+        <router-link :to="'/profile/' + currentUser.username" type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false">
+          <span class="sr-only">Open user menu</span>
+          <!-- <img class="w-8 h-8 rounded-full" src="./../../../assets/images/logo.png" alt="user photo"> -->
+          <avatar ref="avatar" :email="currentUser.email" />
+        </router-link>
+      </template>
     </div>
   </div>
 </nav>

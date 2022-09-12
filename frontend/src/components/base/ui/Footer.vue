@@ -6,13 +6,11 @@
         <li>
             <router-link to="/announcement"  class="mr-4 hover:underline md:mr-6 ">{{ $t("message.footer.announcementLabel") }}</router-link>
         </li>
-        <template v-if="pages && pages.length">
-            <li v-for="page of pages" :key="page.id">
-                <router-link :to="`/static-page/${page.type}`" class="mr-4 hover:underline md:mr-6">{{ $t(`message.footer.${page.type}Label`) }}</router-link>
-            </li>
-        </template>
-        <li>
+        <li class="mr-4 hover:underline md:mr-6 ">
             <router-link to="/contact" class="hover:underline">{{ $t("message.footer.contactLabel") }}</router-link>
+        </li>
+        <li>
+            {{ VERSION.tag }}
         </li>
     </ul>
 </footer>
@@ -20,7 +18,7 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { footerPages } from '../../../constants/appConstants';
+import { VERSION } from '../../../constants/version';
 
 export default {
     props: {
@@ -36,12 +34,9 @@ export default {
     setup() {
         const fullYear = `© ${new Date().getFullYear()}`;
         
-        const pages = ref<any[]>([]);
-        pages.value = footerPages;
-
         return {
             fullYear,
-            pages,
+            VERSION,
         }
     }
 };

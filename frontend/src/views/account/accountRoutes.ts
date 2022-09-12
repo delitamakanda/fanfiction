@@ -2,6 +2,7 @@ import Dashboard from './Dashboard.vue';
 import Profile from './Profile.vue';
 import Inbox from './Inbox.vue';
 import Settings from './Settings.vue';
+import settingsRoutes from './settings/settingsRoutes';
 
 
 const accountRoutes = [
@@ -18,15 +19,15 @@ const accountRoutes = [
         }
     },
     {
-        path: '/profile',
+        path: '/profile/:username',
         name: 'Profile',
         component: Profile,
         meta: {
             layout: 'standard',
-            requiresAuth: true,
+            requiresAuth: false,
             breadcrumb: [
                 { name: 'Dashboard', link: '/dashboard' },
-                { name: 'Profile', link: '/profile' }
+                { name: 'Profil', link: '/profile/:username' }
             ]
         }
     },
@@ -54,7 +55,8 @@ const accountRoutes = [
                 { name: 'Dashboard', link: '/dashboard' },
                 { name: 'Settings', link: '/settings' }
             ]
-        }
+        },
+        children: settingsRoutes
     }
 ];
 

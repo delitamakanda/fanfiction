@@ -2,6 +2,61 @@ export const APP_NAME = 'Fanfiction';
 export const APP_BASE_URL = 'https://fanfiction-fr.herokuapp.com/';
 export const APP_VERSION = 2;
 
+export const menuSettings = [
+    {
+        name: 'EmailChange',
+        title: 'emailChange',
+        route: '/settings/email-change',
+        navigation: true,
+    },
+    {
+        name: 'PasswordChange',
+        title: 'passwordChange',
+        route: '/settings/password-change',
+        navigation: true,
+    },
+    {
+        name: 'ProfileChange',
+        title: 'profileChange',
+        route: '/settings/profile-change',
+        navigation: true,
+    },
+    {
+        name: 'SNS',
+        title: 'snsChange',
+        route: '/settings/sns-change',
+        navigation: true,
+    },
+    {
+        name: 'AccountDelete',
+        title: 'accountDelete',
+        route: '/account-delete',
+        navigation: false,
+    },
+    {
+        name: 'ClearCache',
+        title: 'clearCache',
+        route: '/clear-cache',
+        navigation: false,
+    },
+    {
+        type: 'legal',
+        title: 'legalLabel',
+        route: '/settings/static-page/legal',
+        navigation: true,
+    }, {
+        type: 'rgpd',
+        title: 'rgpdLabel',
+        route: '/settings/static-page/rgpd',
+        navigation: true,
+    },{
+        type: 'licensing',
+        title: 'licensingLabel',
+        route: '/settings/static-page/licensing',
+        navigation: true,
+    }
+];
+
 export const menuDashboard = [
     {
         name: 'Add',
@@ -19,7 +74,7 @@ export const menuDashboard = [
         name: 'Profile',
         title: 'profile',
         icon: 'user-circle',
-        route: '/profile',
+        route: '/profile/:username',
         navigation: true,
     },{
         name: 'Settings',
@@ -41,17 +96,6 @@ export const menuDashboard = [
         navigation: false,
     }
 ];
-
-export const footerPages = [{
-    type: 'legal',
-    title: 'legalLabel',
-}, {
-    type: 'rgpd',
-    title: 'rgpdLabel',
-},{
-    type: 'licensing',
-    title: 'licensingLabel',
-}];
 
 export const menuAsideConnected = [
     {

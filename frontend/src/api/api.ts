@@ -130,7 +130,10 @@ export const setupInterceptors = ({ dispatch }) => {
                                 }
                                 if (error) {
                                     console.error(error);
-                                    dispatch('auth/refreshTokenFailure', (error as any).response.data.detail);
+                                    dispatch('snackbar/showSnackbar', {
+                                        message:  (error as any).response.data.detail ? (error as any).response.data.detail : (error as any).response.data.refresh[0],
+                                        type: 'danger',
+                                    });
                                 }
                             });
                         return axiosInstance(originalConfig);

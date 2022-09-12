@@ -11,5 +11,8 @@ export default {
         if (error) {
             commit('fetchUserFailure');
         }
+    },
+    clearUser({ commit }) {
+        commit('fetchUserFailure');
     }
 }
