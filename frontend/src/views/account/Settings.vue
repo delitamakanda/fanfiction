@@ -11,7 +11,7 @@
     <div class="block py-2 px-4 w-full border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
         
         <label for="default-toggle" class="inline-flex relative items-center cursor-pointer">
-        <input type="checkbox" value="" id="default-toggle" class="sr-only peer">
+        <input type="checkbox" @change="toggleTheme($event)" value="" id="default-toggle" class="sr-only peer">
         <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
         <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $t('message.settings.darkModeLabel')}}</span>
         </label>
@@ -39,13 +39,19 @@ import Breadcrumb from '../../components/base/Breadcrumb.vue';
 import { menuSettings } from '../../constants/appConstants';
 import Select from '../../components/common/Select.vue';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { withAsync } from '../../api/helpers/withAsync';
+import { disableAccount } from '../../api/accountApi';
+import mixins from '../../mixins';
+import { useI18n } from 'vue-i18n';
 
 export default {
     components: {
         Breadcrumb,
         Select,
     },
+    mixins: [mixins],
     data() {
         return {
             selected: 'Français'
@@ -54,13 +60,44 @@ export default {
     setup() {
         const router = useRouter();
         const store = useStore();
+        const { t } = useI18n();
+
+        const currentUser = computed(() => store.getters['user/user']);
+
+        const deactivateAccount = async () => {
+            const { response, error } = await withAsync(disableAccount);
+            if (response) {
+                console.log(response);
+                store.commit('auth/logout');
+                store.dispatch('user/clearUser');
+                store.dispatch('snackbar/showSnackbar', {
+                    message: 'Votre compte a été désactivé',
+                    type: 'success',
+                });
+                router.push({ name: 'Signin' });
+            }
+        }
+
+        const clearCache = () => {
+            // todo: cache clear
+        }
+
+        const toggleTheme = (event) => {
+            console.log(event);
+        }
+
         const navigate = (menu: any) => {
             if (menu.navigation) {
                 router.push(menu.route);
             } else if (menu.name === 'AccountDelete') {
-                console.log('AccountDelete');
+                mixins.confirm(t('message.settings.deleteAccountLabel'), () => {
+                    deactivateAccount();
+                });
             } else if (menu.name === 'ClearCache') {
-                console.log('ClearCache');
+                clearCache();
+                mixins.confirm(t('message.settings.clearCacheLabel'), () => {
+                    clearCache();
+                });
             }
         }
 
@@ -69,6 +106,9 @@ export default {
             menuSettings,
             navigate,
             store,
+            clearCache,
+            deactivateAccount,
+            toggleTheme,
         }
     },
     created() {

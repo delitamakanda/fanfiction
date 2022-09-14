@@ -298,8 +298,6 @@ class DeleteAccountView(views.APIView):
     Disable user account
     """
     serializer_class = UserSerializer()
-    authentication_classes = ()
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         user = request.user

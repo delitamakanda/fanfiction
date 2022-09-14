@@ -9,6 +9,7 @@ import { setupInterceptors } from './api/api';
 
 import router from './router';
 import loadPlugins from './helpers/loadPlugins';
+import mixins from './mixins';
 registerBaseComponents(app);
 loadPlugins(['i18n']);
 setupInterceptors(store);
@@ -21,4 +22,5 @@ app
     .use(i18n)
     .use(router)
     .use(store)
+    .mixin(mixins)
     .mount('#app');
