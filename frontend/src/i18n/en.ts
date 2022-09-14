@@ -66,7 +66,9 @@ export default {
             switchLanguageLabel: {
                 en: 'English',
                 fr: 'Français',
-            }
+            },
+            deleteAccountLabel: 'Are you sure you want to delete your account? \n You can\'t go back!',
+            clearCacheLabel: 'Are you sure you want to clear your cache ?'
         }
     }
 }

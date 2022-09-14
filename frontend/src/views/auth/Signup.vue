@@ -26,7 +26,7 @@
         <div class="flex items-center h-5">
         <input id="terms" type="checkbox" value="" class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" required="">
         </div>
-        <label for="terms" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
+        <label for="terms" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <span @click="openModal" class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</span></label>
     </div>
     <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             <span
@@ -46,6 +46,10 @@
 
     <router-link to="/signin">Signin</router-link>
     <router-link to="/">Home</router-link>
+    <Modal ref="modal">
+        <template v-slot:header>header</template>
+        <template v-slot:body>body</template>
+    </Modal>
 </div>
 </template>
 
@@ -56,6 +60,7 @@ import * as yup from 'yup';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import Modal from "../../components/common/Modal.vue";
 
 export default {
     components: {
@@ -63,6 +68,15 @@ export default {
         Form,
         Field,
         ErrorMessage,
+        Modal,
+    },
+    mounted() {
+        (<any>this).$root.$modal = (<any>this).$refs.modal.open;
+    },
+    methods: {
+        openModal() {
+            (<any>this).$root.$modal()
+        }
     },
     setup() {
         const store = useStore();
