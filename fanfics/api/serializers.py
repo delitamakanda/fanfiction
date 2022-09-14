@@ -230,7 +230,7 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    fanfics = FanficSerializer(many=True, read_only=True)
+    # fanfics = FanficSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -239,7 +239,7 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'first_name',
             'last_name',
-            'fanfics',
+            # 'fanfics',
             'password',
             'email',
             'is_active',

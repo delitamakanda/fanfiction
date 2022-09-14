@@ -34,27 +34,29 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    lookup_field = 'username'
     permission_classes = (
-        permissions.IsAuthenticated,
         custompermission.IsUserOrReadonly,
+        # permissions.AllowAny,
     )
 
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
 
-class AccountProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
+class AccountProfileDetailView(generics.RetrieveAPIView):
     """
-    Retrieve and update a profile account
+    Retrieve a profile account
     """
     queryset = AccountProfile.objects.all()
     serializer_class = AccountProfileSerializer
     permission_classes = (
         permissions.AllowAny,
-        custompermission.IsCurrentUserOrReadonly,
+        # custompermission.IsCurrentUserOrReadonly,
     )
+    # authentication_classes = ()
     lookup_field = ('user__username')
-    parser_classes = (MultiPartParser, FormParser, JSONParser,)
+    # parser_classes = (MultiPartParser, FormParser, JSONParser,)
 
 
 class SocialListApiView(generics.ListCreateAPIView):
