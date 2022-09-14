@@ -8,7 +8,7 @@ from rest_framework.validators import UniqueValidator
 from accounts.models import Social, AccountProfile, FollowStories, FollowUser
 from fanfics.models import Fanfic
 
-from fanfics.api.serializers import FanficSerializer, UserSerializer, SocialSerializer
+from fanfics.api.serializers import FanficSerializer, UserSerializer, SocialSerializer, UserFanficSerializer
 
 from api.customserializer import Base64ImageField
 
@@ -16,7 +16,6 @@ from api.utils import create_notification
 
 
 class AccountProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
     social = serializers.SerializerMethodField(read_only=True)
     # photo =  serializers.ImageField(max_length=None, use_url=True)
     photo = Base64ImageField(max_length=None, use_url=True,
@@ -26,7 +25,6 @@ class AccountProfileSerializer(serializers.ModelSerializer):
         model = AccountProfile
         fields = (
             'id',
-            'user',
             'date_of_birth',
             'photo',
             'bio',

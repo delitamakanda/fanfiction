@@ -164,7 +164,7 @@ urlpatterns += [
 
     path('api/users/<str:username>/account/',
          UserFanficDetailView.as_view(), name='user-list'),
-    path('api/users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
+    path('api/users/<str:username>/', UserDetailView.as_view(), name='user-detail'),
     path('api/users/<str:user__username>/profile/',
          AccountProfileDetailView.as_view(), name='user-edit-account-profile'),
     path('api/users/<int:account>/socialaccount/',
