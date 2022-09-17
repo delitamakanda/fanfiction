@@ -20,6 +20,8 @@ class AccountProfileSerializer(serializers.ModelSerializer):
     # photo =  serializers.ImageField(max_length=None, use_url=True)
     photo = Base64ImageField(max_length=None, use_url=True,
                              allow_empty_file=True, allow_null=True, required=False)
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.CharField(source='user.email', read_only=True)
 
     class Meta:
         model = AccountProfile
@@ -28,6 +30,9 @@ class AccountProfileSerializer(serializers.ModelSerializer):
             'date_of_birth',
             'photo',
             'bio',
+            'username',
+            'location',
+            'email',
             'social',
         )
 

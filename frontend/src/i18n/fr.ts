@@ -68,7 +68,13 @@ export default {
             },
             deleteAccountLabel: 'Voulez - vous vraiment supprimer votre compte ? \n Vous ne pourrez pas revenir en arrière !',
             clearCacheLabel: 'Voulez - vous vraiment vider le cache ?',
-
+        },
+        profilePage: {
+            followButtonLabel: 'Suivre',
+            unfollowButtonLabel: 'Ne plus suivre',
+            fanficsLabel: 'Fanfictions',
+            favAuthorsLabel: 'Auteurs favoris',
+            favFanficsLabel: 'Fanfictions favorites',
         }
     }
 }
