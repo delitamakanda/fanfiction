@@ -10,6 +10,7 @@ class AccountProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_of_birth = models.DateField(blank=True, null=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True, null=True)
+    location = models.CharField(max_length=30, blank=True)
     bio = models.TextField(blank=True)
 
     class Meta:

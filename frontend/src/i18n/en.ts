@@ -69,6 +69,13 @@ export default {
             },
             deleteAccountLabel: 'Are you sure you want to delete your account? \n You can\'t go back!',
             clearCacheLabel: 'Are you sure you want to clear your cache ?'
+        },
+        profilePage: {
+            followButtonLabel: 'Follow',
+            unfollowButtonLabel: 'Unfollow',
+            fanficsLabel: 'Fanfictions',
+            favAuthorsLabel: 'Favorite authors',
+            favFanficsLabel: 'Favorite fanfictions',
         }
     }
 }
