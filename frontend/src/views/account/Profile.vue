@@ -12,7 +12,7 @@
               </div>
             </div>
             <div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-              <div class="py-6 px-3 mt-32 sm:mt-0">
+              <div class="py-6 px-3 mt-32 sm:mt-0" v-if="store.state['auth'].status.loggedIn">
                 <button class="bg-pink-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
                   {{ $t('message.profilePage.followButtonLabel') }}
                 </button>
@@ -24,18 +24,18 @@
             <div class="w-full lg:w-4/12 px-4 lg:order-1">
               <div class="flex justify-center py-4 lg:pt-4 pt-8">
                 <div class="mr-4 p-3 text-center">
-                  <span class="text-xl font-bold block uppercase tracking-wide text-blueGray-600">22</span><span class="text-sm text-blueGray-400">
-                    {{ $t('message.profilePage.fanficsLabel') }}
+                  <span class="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{{ countFanfics }}</span><span class="text-sm text-blueGray-400">
+                    {{ $t('message.profilePage.fanficsLabel', countFanfics) }}
                 </span>
                 </div>
                 <div class="mr-4 p-3 text-center">
-                  <span class="text-xl font-bold block uppercase tracking-wide text-blueGray-600">10</span><span class="text-sm text-blueGray-400">
-                    {{ $t('message.profilePage.favAuthorsLabel') }}
+                  <span v-if="followAuthors" class="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{{ followAuthors.length }}</span><span class="text-sm text-blueGray-400">
+                    {{ $t('message.profilePage.favAuthorsLabel', followAuthors.length) }}
                   </span>
                 </div>
                 <div class="lg:mr-4 p-3 text-center">
-                  <span class="text-xl font-bold block uppercase tracking-wide text-blueGray-600">89</span><span class="text-sm text-blueGray-400">
-                    {{ $t('message.profilePage.favFanficsLabel') }}
+                  <span v-if="followStories" class="text-xl font-bold block uppercase tracking-wide text-blueGray-600">{{ followStories.length }}</span><span class="text-sm text-blueGray-400">
+                    {{ $t('message.profilePage.favFanficsLabel', followStories.length) }}
                 </span>
                 </div>
               </div>
@@ -70,7 +70,7 @@
 import Breadcrumb from '../../components/base/Breadcrumb.vue';
 import Avatar from '../../components/common/Avatar.vue';
 import { useRoute } from 'vue-router';
-import { getCurrentProfile } from '../../api/accountApi';
+import { getCurrentProfile, getFollowAuthors, getFollowStories, getFanficsByAuthor } from '../../api/accountApi';
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { withAsync } from '../../api/helpers/withAsync';
@@ -85,18 +85,58 @@ export default {
         const route = useRoute();
         const store = useStore();
         const profile = ref<any>();
+        const followAuthors = ref<any>();
+        const followStories = ref<any>();
+        const authorFanfics = ref<any>();
+        const countFanfics = ref<number>(0);
+          
+          const getAuthors = async () => {
+            const { response, error } = await withAsync(getFollowAuthors, route.params.username);
+            return response;
+          }
 
-        onMounted( async() => {
+          const getStories = async () => {
+            const { response, error } = await withAsync(getFollowStories, route.params.username);
+            return response;
+          }
+
+          const getUserProfile = async () => {
             const { response, error } = await withAsync(getCurrentProfile, route.params.username);
-            if (response) {
-                profile.value = response.data;
-            }
+            return response;
+          }
+
+          const getAuthorFanfics = async () => {
+            const { response, error } = await withAsync(getFanficsByAuthor, route.params.username, 'publié');
+            return response;
+          }
+
+          const getProfile = async () => {
+              const [userProfile, followAuthorsResponse, followStoriesResponse, authorFanficsResponse] = await Promise.all([
+                getUserProfile(),
+                getAuthors(),
+                getStories(),
+                getAuthorFanfics(),
+              ]);
+
+              profile.value = userProfile.data;
+              followAuthors.value = followAuthorsResponse.data;
+              followStories.value = followStoriesResponse.data;
+              authorFanfics.value = authorFanficsResponse.data.results;
+              countFanfics.value = authorFanficsResponse.data.count;
+          };
+          
+        onMounted( async() => {
+          getProfile();
         });
 
         return {
             route,
             store,
             profile,
+            followAuthors,
+            followStories,
+            authorFanfics,
+            countFanfics,
         };
     }
 }

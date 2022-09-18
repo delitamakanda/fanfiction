@@ -22,6 +22,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
                              allow_empty_file=True, allow_null=True, required=False)
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.CharField(source='user.email', read_only=True)
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
 
     class Meta:
         model = AccountProfile
@@ -34,6 +35,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
             'location',
             'email',
             'social',
+            'user_id',
         )
 
     def create(self, validated_data):

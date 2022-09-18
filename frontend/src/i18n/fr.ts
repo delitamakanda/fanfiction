@@ -72,9 +72,9 @@ export default {
         profilePage: {
             followButtonLabel: 'Suivre',
             unfollowButtonLabel: 'Ne plus suivre',
-            fanficsLabel: 'Fanfictions',
-            favAuthorsLabel: 'Auteurs favoris',
-            favFanficsLabel: 'Fanfictions favorites',
+            fanficsLabel: 'Fanfiction | Fanfiction | Fanfictions',
+            favAuthorsLabel: 'Auteur favoris | Auteur favoris | Auteurs favoris',
+            favFanficsLabel: 'Fanfiction favorite | Fanfiction favorite | Fanfictions favorites',
         }
     }
 }
