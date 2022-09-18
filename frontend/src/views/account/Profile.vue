@@ -12,7 +12,7 @@
               </div>
             </div>
             <div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-              <div class="py-6 px-3 mt-32 sm:mt-0" v-if="store.state['auth'].status.loggedIn">
+              <div class="py-6 px-3 mt-32 sm:mt-0" v-if="store.state['auth'].status.loggedIn && !isUserProfile">
                 <button class="bg-pink-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
                   {{ $t('message.profilePage.followButtonLabel') }}
                 </button>
@@ -59,6 +59,9 @@
               </div>
             </div>
           </div>
+          <div v-if="authorFanfics">
+            <BaseCard v-for="fanfic in authorFanfics" :fanfic="fanfic" />
+          </div>
         </div>
       </div>
     </div>
@@ -70,8 +73,8 @@
 import Breadcrumb from '../../components/base/Breadcrumb.vue';
 import Avatar from '../../components/common/Avatar.vue';
 import { useRoute } from 'vue-router';
-import { getCurrentProfile, getFollowAuthors, getFollowStories, getFanficsByAuthor } from '../../api/accountApi';
-import { ref, onMounted } from 'vue';
+import { getCurrentProfile, getFollowAuthors, getFollowStories, getFanficsByAuthor, followAuthor, unfollowAuthor } from '../../api/accountApi';
+import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 import { withAsync } from '../../api/helpers/withAsync';
 
@@ -124,7 +127,18 @@ export default {
               authorFanfics.value = authorFanficsResponse.data.results;
               countFanfics.value = authorFanficsResponse.data.count;
           };
+        
           
+        const isUserProfile = computed(() => {
+
+          if (store.state['auth'].status.loggedIn) {
+            // console.log('user', store.state['user'].user);
+            // console.log('profile', profile.value);
+            return store.state['user'].user?.id === profile?.value?.user_id;
+          }
+          return false;
+        });        
+
         onMounted( async() => {
           getProfile();
         });
@@ -137,6 +151,7 @@ export default {
             followStories,
             authorFanfics,
             countFanfics,
+            isUserProfile,
         };
     }
 }

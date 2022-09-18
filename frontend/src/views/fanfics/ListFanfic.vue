@@ -1,5 +1,51 @@
 <template>
 <div>
+    <TagProvider
+        trackBy="id"
+        @on-tag-added="onTagAdded"
+        @on-tag-removed="onTagDeleted"
+        :options="$options.defaultTags"
+        >
+        <template #default="{ tags, addTag, removeTag }">
+        <div>
+        <!-- Vertical stack --> <div vertical class="mb-4">
+                <!-- Label -->
+        <label class="mb-2" for="tag-input">Tags</label> <!-- Horizontal stack -->
+        <div
+                    v-if="tags.length"
+                    class="flex space-x-3 tagsContainer">
+                    <!-- Loop through tags -->
+        <Tag v-for="tag of tags" :key="tag.id" class="mb-2"> <div class="tagContent">
+                        <!-- Tag text -->
+        <span class="tagText"> {{ tag.text }}
+        </span>
+        <!-- Delete tag icon --> <button
+                        class="tagDeleteIcon"
+                        @click.prevent="removeTag(tag.id)"
+                        >
+        x </button>
+        </div> </Tag>
+        </div>
+        <!-- Add new tag input --> <input
+                    v-model="value"
+                    type="text"
+                    id="tag-input"
+                    placeholder="Add a tag..."
+        /> </div>
+                <!-- Submit tag -->
+        <BaseButton @click.prevent="onAddTag(addTag)">Add tag</BaseButton> </div>
+        </template>
+    </TagProvider>
+
+    <Select :options="$options.selectedOptions" v-model="selected" label="label" caption="select at least 1 option">
+        <template v-slot:option="{ option }" >
+        <div class="option">
+            <img class="img" :src="option.src" :alt="option.label" />
+            <span> {{ option.label }}</span>
+        </div>
+        </template>
+    </Select>
+
     <form class="flex items-center">   
         <label for="simple-search" class="sr-only">Search</label>
         <div class="relative w-full">
@@ -31,11 +77,18 @@ import { useFanficLayout, FanficLayout} from '../../layout/composables/useFanfic
 import FanficGridCard from './components/FanficGridCard.vue';
 import FanficListCard from './components/FanficListCard.vue';
 import Layout from '../../layout/Layout.vue';
+import { getRandomUUID } from '../../helpers/utils';
+import Select from '../../components/common/Select.vue';
+import TagProvider from '../../components/common/TagProvider.vue';
+import Tag from '../../components/common/Tag.vue';
 
 export default {
     components: {
         FanficLayout,
         Layout,
+        Select,
+        TagProvider,
+        Tag,
     },
     setup() {
         const { layout, setLayout, LAYOUTS } = useFanficLayout();
@@ -59,7 +112,9 @@ export default {
         return {
             fanfics: null,
             apiStatus: null,
-            fanficQuery: ''
+            fanficQuery: '',
+            selected: '',
+            value: '',
         }
     },
     watch: {
@@ -83,10 +138,85 @@ export default {
                 return; 
             }
             (<any>this).fanfics = response.data.results;
-        }
+        },
+        onTagAdded({ tags, val }) {
+            console.log("Tag added", { tags, val });
+        },
+        onTagDeleted({ tags, val }) {
+            console.log("Tag deleted", { tags, val });
+        },
+        onAddTag(addTag) {
+            // addTag is coming from the TagsProvider
+            addTag({ id: getRandomUUID(), text: (<any>this).value }); 
+            (<any>this).value = "";
+        },
+    },
+    created() {
+        (<any>this).$options.selectedOptions = [
+            {
+                src: "https://picsum.photos/id/100/75/50",
+                label: "Option One",
+
+            },
+            {
+                src: "https://picsum.photos/id/10/75/50",
+                label: "Option Two",
+
+            },
+            {
+                src: "https://picsum.photos/id/20/75/50",
+                label: "Option Three",
+
+            },
+        ];
+
+        (<any>this).$options.defaultTags = [
+            {
+                id: getRandomUUID(),
+                text: "Apple",
+            },
+            {
+                id: getRandomUUID(),
+                text: "Orange",
+            }, 
+            {
+                id: getRandomUUID(),
+                text: "Banana",
+            },
+        ];
     }
 }
 </script>
 
 <style lang="scss">
+.option {
+    display: flex;
+}
+
+.img {
+    display: block;
+    max-width: 75px;
+    max-height: 50px;
+    margin-right: 10px;
+}
+
+.tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tagContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tagText{
+    font-weight: semibold;
+}
+
+.tagDeleteIcon {
+    margin-left: 2px;
+    cursor: pointer;
+}
 </style>
