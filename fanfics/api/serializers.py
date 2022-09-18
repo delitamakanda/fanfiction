@@ -180,6 +180,7 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
     classement = serializers.CharField(source='get_classement_display')
     status = serializers.CharField(source='get_status_display')
     author = serializers.CharField(source='author.username')
+    author_email = serializers.CharField(source='author.email')
     chapters_count = serializers.SerializerMethodField()
 
     class Meta:
@@ -187,6 +188,7 @@ class FanficFormattedSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'author',
+            'author_email',
             'picture',
             'title',
             'slug',

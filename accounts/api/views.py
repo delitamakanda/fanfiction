@@ -7,7 +7,7 @@ from rest_framework import generics, permissions, status, views
 from rest_framework.response import Response
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 
-from api import custompermission
+from api import custompermission, custompagination
 
 from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, SignupSerializer, GroupSerializer
 from fanfics.api.serializers import UserFanficSerializer, SocialSerializer, FanficSerializer, UserSerializer
@@ -170,11 +170,29 @@ class UnfavoritedFanficView(views.APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class postFollowAuthor(generics.CreateAPIView):
+    """
+    Follow an author
+    """
+    serializer_class = FollowUserSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+
+class unFollowAuthor(generics.DestroyAPIView):
+    """
+    Unfollow an author
+    """
+    serializer_class = FollowUserSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    lookup_field = 'user_from__username'
+
+
 class FollowUserView(views.APIView):
     """
     Users followed
     """
     serializer_class = FollowUserSerializer
+    pagination_class = custompagination.StandardResultsSetPagination
     authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
 
@@ -189,12 +207,6 @@ class FollowUserView(views.APIView):
         except:
             return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
 
-    def post(self, request, *args, **kwargs):
-        serializer = FollowUserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk=None):
         follow_user_id = request.data.get('id')

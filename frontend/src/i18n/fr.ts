@@ -75,6 +75,11 @@ export default {
             fanficsLabel: 'Fanfiction | Fanfiction | Fanfictions',
             favAuthorsLabel: 'Auteur favoris | Auteur favoris | Auteurs favoris',
             favFanficsLabel: 'Fanfiction favorite | Fanfiction favorite | Fanfictions favorites',
+        },
+        browseFanfics: {
+            mostRecentLabel: 'Les plus récentes',
+            mostPopularLabel: 'Les plus populaires',
+            mostRecommendedLabel: 'Les plus recommandées',
         }
     }
 }

@@ -3,11 +3,18 @@ import { requiredParam } from '../helpers/requiredParam';
 
 const URLS = {
     fetchHomeFanficsUrl: 'browse-fanfics/',
-    fetchFanficsUrl: 'fanfics/',
+    fetchFanficsUrl: 'fanfics/?status=publié',
+    fetchFanficDetailUrl: (slug) => `fanfics/${slug}/detail/`,
 };
 
 export const fetchHomeFanfics = () => {
     return api.get(URLS.fetchHomeFanficsUrl, {
+        baseURL: 'api/'
+    })
+};
+
+export const fetchFanficDetail = (slug) => {
+    return api.get(URLS.fetchFanficDetailUrl(slug), {
         baseURL: 'api/'
     })
 };

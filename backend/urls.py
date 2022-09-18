@@ -36,6 +36,8 @@ from accounts.api.views import (
     FavoritedFanficView,
     UnfavoritedFanficView,
     FollowUserView,
+    postFollowAuthor,
+    unFollowAuthor,
     FollowStoriesView,
     DeleteAccountView,
     FollowAuthorDeleteView,
@@ -145,6 +147,8 @@ urlpatterns += [
     path('api/unfavorite/', UnfavoritedFanficView.as_view(), name='unfavorite'),
     path('api/follow-stories/<str:username>/', FollowStoriesView.as_view(), name='follow-stories'),
     path('api/follow-user/<str:username>/', FollowUserView.as_view(), name='follow-user'),
+    path('api/unfollow-user/<str:user_from__username>/', unFollowAuthor.as_view(), name='unfollow-user'),
+    path('api/follow-user/', postFollowAuthor.as_view(), name='post-follow-user'),
 
     path('api/story-followed/<int:to_fanfic>/', FollowStoriesDeleteView.as_view()),
     path('api/author-followed/<int:user_to>/', FollowAuthorDeleteView.as_view()),

@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from api.serializers import FlatPagesSerializer, ContentTypeSerializer, NotificationSerializer
-from fanfics.api.serializers import FanficSerializer
+from fanfics.api.serializers import FanficFormattedSerializer
 from categories.api.serializers import CategorySerializer
 
 from api.models import FlatPages, Notification
@@ -166,9 +166,9 @@ class BrowseFanfictionListView(views.APIView):
         recommended_fanfics = r.suggest_fanfics_for([fanfic for fanfic in Fanfic.objects.filter(status='publié')], 10)
         categories = Category.objects.all()
 
-        LikedSerializerData = FanficSerializer(liked_fanfics, many=True)
-        newSerializerData = FanficSerializer(newest_fanfics, many=True)
-        recoSerializerData = FanficSerializer(recommended_fanfics, many=True)
+        LikedSerializerData = FanficFormattedSerializer(liked_fanfics, many=True)
+        newSerializerData = FanficFormattedSerializer(newest_fanfics, many=True)
+        recoSerializerData = FanficFormattedSerializer(recommended_fanfics, many=True)
         categorySerializerData = CategorySerializer(categories, many=True)
 
         return Response({'recommended_fanfics': recoSerializerData.data, 'most_liked_fanfics': LikedSerializerData.data, 'newest_fanfics': newSerializerData.data, 'all_categories': categorySerializerData.data})
