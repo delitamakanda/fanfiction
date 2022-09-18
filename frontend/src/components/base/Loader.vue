@@ -60,8 +60,8 @@ export default {
     height: 117px;
     border-top-color: #21212100;
     border-right-color: #212121;
-    border-left-color: #21212100;
     border-bottom-color: #212121;
+    border-left-color: #21212100;
     animation: rotate-animation 1s linear 0s infinite;
 }
 .spinner.spinner1::after {

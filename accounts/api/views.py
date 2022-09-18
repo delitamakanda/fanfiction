@@ -174,16 +174,16 @@ class FollowUserView(views.APIView):
     """
     Users followed
     """
-    serializer_class = FollowUserSerializer()
+    serializer_class = FollowUserSerializer
     authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, format=None):
+    def get(self, request, username, format=None):
         """
         return list of all authors followed
         """
         try:
-            follow_users = FollowUser.objects.all()
+            follow_users = FollowUser.objects.filter(user_from__username=username)
             serializer = FollowUserSerializer(follow_users, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
@@ -262,16 +262,16 @@ class FollowStoriesView(views.APIView):
     """
     Stories followed
     """
-    serializer_class = FollowStoriesSerializer()
+    serializer_class = FollowStoriesSerializer
     authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request, format=None):
+    def get(self, request, username, format=None):
         """
         return list of all stories followed
         """
         try:
-            stories = FollowStories.objects.all()
+            stories = FollowStories.objects.filter(from_user__username=username)
             serializer = FollowStoriesSerializer(stories, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:

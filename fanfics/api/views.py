@@ -85,7 +85,7 @@ class FanficListApiView(generics.ListAPIView):
         'created',
 		'total_likes',
 		'views',
-        'updated'
+        'updated',
 	]
     ordering = ['-id']
     name = 'fanfic-list'

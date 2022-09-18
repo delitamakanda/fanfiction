@@ -143,8 +143,8 @@ urlpatterns += [
     path('api/feedback/', EmailFeedbackView.as_view(), name='feedback'),
     path('api/favorite/', FavoritedFanficView.as_view(), name='favorite'),
     path('api/unfavorite/', UnfavoritedFanficView.as_view(), name='unfavorite'),
-    path('api/follow-stories/', FollowStoriesView.as_view(), name='follow-stories'),
-    path('api/follow-user/', FollowUserView.as_view(), name='follow-user'),
+    path('api/follow-stories/<str:username>/', FollowStoriesView.as_view(), name='follow-stories'),
+    path('api/follow-user/<str:username>/', FollowUserView.as_view(), name='follow-user'),
 
     path('api/story-followed/<int:to_fanfic>/', FollowStoriesDeleteView.as_view()),
     path('api/author-followed/<int:user_to>/', FollowAuthorDeleteView.as_view()),
