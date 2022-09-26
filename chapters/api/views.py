@@ -1,25 +1,23 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, response, status
 
-from chapters.api.serializers import ChapterSerializer
+from chapters.api.serializers import ChapterSerializer, ChapterFormattedSerializer
 
 from chapters.models import Chapter
 
-from api import custompermission
+from api import custompermission, custompagination
 
 from api.tasks import chapter_created
 
-class ChapterCreateApiView(generics.ListCreateAPIView):
+class ChapterListApiView(generics.ListAPIView):
     queryset = Chapter.objects.all()
-    serializer_class = ChapterSerializer
-    name='chapter-create'
+    serializer_class = ChapterFormattedSerializer
     permission_classes = (
         permissions.AllowAny,
-        custompermission.IsCurrentAuthorOrReadOnly
     )
+    pagination_class = custompagination.StandardResultsSetPagination
     filter_fields = (
         'status',
     )
-    pagination_class = None
 
     def get_queryset(self):
         try:
@@ -28,7 +26,15 @@ class ChapterCreateApiView(generics.ListCreateAPIView):
                 return Chapter.objects.filter(fanfic=fanfic)
         except:
             fanfic = None
-            return Chapter.objects.all()
+            return response.Response({'error': 'No fanfic found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class ChapterCreateApiView(generics.CreateAPIView):
+    queryset = Chapter.objects.all()
+    serializer_class = ChapterSerializer
+    permission_classes = (
+        custompermission.IsCurrentAuthorOrReadOnly
+    )
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -38,9 +44,9 @@ class ChapterCreateApiView(generics.ListCreateAPIView):
 class ChapterDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
+    lookup_field = 'id'
     name='chapter-detail'
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
         custompermission.IsCurrentAuthorOrReadOnly
     )
 

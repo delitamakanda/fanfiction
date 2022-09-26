@@ -65,6 +65,8 @@
         <FanficLayout class="mx-auto max-w-7-xl">
             <component :is="fanficCardComponent" v-for="fanfic of fanfics" :key="fanfic.id" :fanfic="fanfic" /> 
         </FanficLayout>
+
+        <BaseButton v-if="more_exist" @click="loadMore">Load more</BaseButton>
     </div>
 </div>
 </template>
@@ -84,12 +86,12 @@ import Tag from '../../components/common/Tag.vue';
 
 export default {
     components: {
-        FanficLayout,
-        Layout,
-        Select,
-        TagProvider,
-        Tag,
-    },
+    FanficLayout,
+    Layout,
+    Select,
+    TagProvider,
+    Tag,
+},
     setup() {
         const { layout, setLayout, LAYOUTS } = useFanficLayout();
 
@@ -115,6 +117,10 @@ export default {
             fanficQuery: '',
             selected: '',
             value: '',
+            next_url: '',
+            pageNumber: null,
+            more_exist: false,
+            count: null,
         }
     },
     watch: {
@@ -126,10 +132,10 @@ export default {
     methods: {
         async initSearchFanfics(q) {
             (<any>this).$options.abort?.();
-            const { response, error } = await withAsync(searchFanfics, q, {
-                abort: abort => ((<any>this).$options.abort = abort)
-            });
-            if (error as any) {
+                const { response, error } = await withAsync(searchFanfics, q, {
+                    abort: abort => ((<any>this).$options.abort = abort)
+                    });
+                    if (error as any) {
             // Log the error
             console.log('error', error);
                 if ((error as any).aborted) {
@@ -137,7 +143,40 @@ export default {
                 }
                 return; 
             }
+            let hasMore = false;
+            (<any>this).count = response?.data?.count;
+            if (response?.data?.next) {
+                hasMore = true;
+                (<any>this).next_url = response?.data?.next;
+                const url = new URL(response?.data?.next);
+                const params = url.searchParams;
+                (<any>this).pageNumber = params.get('page');
+                (<any>this).more_exist = hasMore;
+            }
             (<any>this).fanfics = response.data.results;
+            (<any>this).more_exist = hasMore;
+        },
+        async loadMore() {
+            // load more button
+            let hasMore = false;
+            const { response, error } = await withAsync(searchFanfics, (<any>this).fanficQuery, {}, (<any>this).pageNumber);
+            if (error as any) {
+                // Log the error
+                console.log('error', error);
+                return; 
+            }
+            (<any>this).count = response.data.count;
+            if (response.data.next) {
+                hasMore = true;
+                (<any>this).next_url = response.data.next;
+                const url = new URL(response.data.next);
+                const params = url.searchParams;
+                (<any>this).pageNumber = params.get('page');
+                (<any>this).more_exist = hasMore;
+                (<any>this).fanfics = (<any>this).fanfics.concat(response.data.results);
+            }
+            (<any>this).more_exist = hasMore;
+
         },
         onTagAdded({ tags, val }) {
             console.log("Tag added", { tags, val });

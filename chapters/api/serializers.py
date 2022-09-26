@@ -5,6 +5,7 @@ from chapters.models import Chapter
 from fanfics.models import Fanfic
 
 class ChapterFormattedSerializer(serializers.ModelSerializer):
+    status = serializers.ChoiceField(choices=Fanfic.STATUS_CHOICES, default='publié')
 
     class Meta:
         model = Chapter
@@ -21,7 +22,6 @@ class ChapterFormattedSerializer(serializers.ModelSerializer):
         )
     
 class ChapterSerializer(serializers.ModelSerializer):
-    status = serializers.ChoiceField(choices=Fanfic.STATUS_CHOICES, default='publié')
 
     class Meta:
         model = Chapter
@@ -40,7 +40,8 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         fanfic = validated_data['fanfic']
-        if fanfic.status == 'publié':
+        status = validated_data['status']
+        if status == 'publié':
             fanfic.updated = timezone.now()
             fanfic.save()
         return Chapter.objects.create(**validated_data)
@@ -50,7 +51,7 @@ class ChapterSerializer(serializers.ModelSerializer):
         return super().save(**kwargs)
 
     def update(self, instance, validated_data):
-        if instance.fanfic.status == 'publié':
+        if instance.status == 'publié':
             instance.fanfic.updated = timezone.now()
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)

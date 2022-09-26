@@ -6,6 +6,8 @@ import BasicFanficDetails from './viewFanfic/views/BasicFanficDetails.vue';
 import ListFanfic from './ListFanfic.vue';
 import BrowseFanfic from './BrowseFanfic.vue';
 import YourFanfic from './YourFanfic.vue';
+import EditChapter from './EditChapter.vue';
+import BrowseChapter from './viewChapter/views/BrowseChapter.vue';
 
 
 const fanficRoutes = [
@@ -93,7 +95,19 @@ const fanficRoutes = [
                 { name: 'ListFanfic', link: '/fanfics' },
                 { name: 'BasicFanficDetails', link: '/basic-fanfic-details/:slug' },
             ]
-        }
+        },
+        children: [
+            { 
+                path: '/fanfic/:fanficId/chapter/:chapterId', 
+                name: 'BrowseChapter', 
+                component: BrowseChapter
+            },
+            { 
+                path: 'edit-chapter/:id',
+                name: 'EditChapter',
+                component: EditChapter
+            },
+        ]
     },
     {
         path: '/',
