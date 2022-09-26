@@ -80,8 +80,9 @@ from comments.api.views import (
 )
 
 from chapters.api.views import (
-    ChapterCreateApiView,
-    ChapterDetailView
+     ChapterListApiView,
+     ChapterCreateApiView,
+     ChapterDetailView
 )
 
 from api.views import (
@@ -215,7 +216,7 @@ urlpatterns += [
     path('api/comments-list/', CommentListApiView.as_view(), name='comment-list'),
 
     path('api/chapters/<int:fanfic>/list/',
-         ChapterCreateApiView.as_view(), name='chapter-list-by-fanfic'),
+         ChapterListApiView.as_view(), name='chapter-list-by-fanfic'),
     path('api/chapters/create/', ChapterCreateApiView.as_view(), name='chapter-list'),
     path('api/chapters/<int:pk>/',
          ChapterDetailView.as_view(), name='chapter-detail'),
