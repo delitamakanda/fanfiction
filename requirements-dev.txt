@@ -5,7 +5,7 @@ chardet==3.0.4
 defusedxml
 django==3.2.16
 django-allauth==0.50.0
-django-embed-video==1.4.7
+django-embed-video==1.4.8
 django-filter==2.4.0
 django-multiselectfield==0.1.12
 django-webpack-loader==0.7.0
