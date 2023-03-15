@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from helpcenter.models import Topic
 from helpcenter.models import Message
 

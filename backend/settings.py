@@ -51,8 +51,8 @@ INSTALLED_APPS = [
     'storages',
     'markdownx',
     'oauth2_provider',
-    'social_django',
-    'rest_framework_social_oauth2',
+    # 'social_django',
+    # 'rest_framework_social_oauth2',
     'django_celery_beat',
     'corsheaders',
     'rest_framework',
@@ -261,15 +261,15 @@ Authenticate with username or email
 
 AUTHENTICATION_BACKENDS = (
     'oauth2_provider.backends.OAuth2Backend',
-    'social_core.backends.facebook.FacebookAppOAuth2',
-    'social_core.backends.facebook.FacebookOAuth2',
+    # 'social_core.backends.facebook.FacebookAppOAuth2',
+    # 'social_core.backends.facebook.FacebookOAuth2',
 
-    'social_core.backends.google.GoogleOAuth2',
+    # 'social_core.backends.google.GoogleOAuth2',
 
-    'social_core.backends.twitter.TwitterOAuth',
-    'social_core.backends.github.GithubOAuth2',
+    # 'social_core.backends.twitter.TwitterOAuth',
+    # 'social_core.backends.github.GithubOAuth2',
 
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    # 'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',
     'api.authentication.EmailAuthBackend',
 )
@@ -343,3 +343,4 @@ CACHES = {
     }
 }
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

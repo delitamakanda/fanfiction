@@ -20,7 +20,8 @@ from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.decorators.cache import cache_page
-# from django.views.decorators.csrf import csrf_exempt
+from markdownx import urls as markdownx
+
 from rest_framework.documentation import include_docs_urls
 
 from accounts.api.views import (
@@ -225,7 +226,7 @@ if settings.DEBUG:
                           document_root=settings.STATIC_ROOT)
 
 urlpatterns += [
-    path('markdownx/', include('markdownx.urls')),
-    path('api/oauth2-social/', include('rest_framework_social_oauth2.urls')),
+    path('markdownx/', include(markdownx)),
+    # path('api/oauth2-social/', include('rest_framework_social_oauth2.urls')),
     path('api/oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
