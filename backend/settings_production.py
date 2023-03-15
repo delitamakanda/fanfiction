@@ -107,4 +107,8 @@ CACHES = {
 }
 
 # CSRF
-CSRF_TRUSTED_ORIGINS = ["fanfiction-fr.netlify.app", "fanfiction-fr.herokuapp.com", "localhost:8080"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://fanfiction-fr.netlify.app",
+    "https://fanfiction-fr.herokuapp.com",
+    "http://localhost:8080"
+]
