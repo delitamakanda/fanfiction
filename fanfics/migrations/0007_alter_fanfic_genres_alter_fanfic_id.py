@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='fanfic',
             name='genres',
-            field=multiselectfield.db.fields.MultiSelectField(choices=[('RO', 'Romance'), ('SU', 'Surnaturel'), ('ER', 'Erotique'), ('DR', 'Drame'), ('AM', 'Amitié'), ('AC', 'Action-Aventure'), ('SC', 'School-Fic'), ('MY', 'Mystère'), ('GE', 'Général'), ('DCED', "De cape et d'épée"), ('LE', 'Lemon'), ('HU', 'Humour'), ('OS', 'One-Shot'), ('SUS', 'Suspense'), ('TH', 'Thriller'), ('HO', 'Horreur'), ('HF', 'Heroic Fantasy'), ('TR', 'Tragédie'), ('CO', 'Cross-Over')], max_length=4),
+            field=multiselectfield.db.fields.MultiSelectField(choices=[('RO', 'Romance'), ('SU', 'Surnaturel'), ('ER', 'Erotique'), ('DR', 'Drame'), ('AM', 'Amitié'), ('AC', 'Action-Aventure'), ('SC', 'School-Fic'), ('MY', 'Mystère'), ('GE', 'Général'), ('DCED', "De cape et d'épée"), ('LE', 'Lemon'), ('HU', 'Humour'), ('OS', 'One-Shot'), ('SUS', 'Suspense'), ('TH', 'Thriller'), ('HO', 'Horreur'), ('HF', 'Heroic Fantasy'), ('TR', 'Tragédie'), ('CO', 'Cross-Over')], max_length=255),
         ),
         migrations.AlterField(
             model_name='fanfic',
