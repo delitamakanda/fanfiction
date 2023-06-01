@@ -33,7 +33,7 @@ boto3==1.26.104
 django-markdownx==4.0.0b1
 coreapi==2.3.3
 WeasyPrint==53.3
-redis==4.3.4
+redis==4.5.5
 social-auth-app-django==5.0.0
 django-rest-framework-social-oauth2==1.1.0
 django-cors-headers==3.13.0
