@@ -64,7 +64,7 @@
         "url-loader": "^2.3.0",
         "vue-i18n": "^8.15.3",
         "vue-jest": "^3.0.5",
-        "vue-loader": "^15.11.1",
+        "vue-loader": "^17.3.0",
         "vue-style-loader": "^3.0.1",
         "vue-svgicon": "^3.2.6",
         "vue-template-compiler": "^2.6.11",
