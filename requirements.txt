@@ -10,7 +10,7 @@ django-filter==23.2
 django-multiselectfield==0.1.12
 django-webpack-loader==0.7.0
 djangorestframework==3.14.0
-idna==2.10
+idna==3.4
 oauthlib==3.2.2
 Pillow==10.0.1
 pluggy==1.0.0
