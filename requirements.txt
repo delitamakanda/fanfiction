@@ -1,6 +1,6 @@
 attrs>=19.2.0
 celery==5.3.4
-certifi==2023.11.17
+certifi==2024.2.2
 chardet==5.2.0
 defusedxml==0.7.1
 django==4.2.10
