@@ -50,7 +50,7 @@
     "@vue/compiler-sfc": "^3.2.37",
     "chalk": "^4.1.0",
     "css-loader": "^6.7.1",
-    "cypress": "^10.4.0",
+    "cypress": "^13.6.4",
     "eslint": "^8.21.0",
     "file-loader": "^6.2.0",
     "flowbite-typography": "^1.0.2",
