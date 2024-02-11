@@ -28,7 +28,7 @@
   "homepage": "https://github.com/delitamakanda/fanfiction#readme",
   "dependencies": {
     "@splidejs/vue-splide": "^0.6.7",
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "flowbite": "^1.5.2",
     "lodash-es": "^4.17.21",
     "md5": "^2.3.0",
