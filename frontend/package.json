@@ -56,7 +56,7 @@
     "flowbite-typography": "^1.0.2",
     "git-describe": "^4.1.1",
     "mini-css-extract-plugin": "^2.6.1",
-    "postcss": "^8.4.14",
+    "postcss": "^8.4.31",
     "postcss-extend": "^1.0.5",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "^14.1.0",
