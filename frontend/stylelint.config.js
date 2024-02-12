@@ -7,8 +7,8 @@ module.exports = {
         'stylelint-config-recommended-vue',
         'stylelint-config-prettier',
         // Uncomment out the below if you want to use scss
-        // 'stylelint-config-standard-scss',
-        // 'stylelint-config-recommended-scss'
+        'stylelint-config-standard-scss',
+        'stylelint-config-recommended-scss'
     ],
     plugins: ['stylelint-scss'],
     ignoreFiles: ['./node_modules/**/*.css', './coverage/**/*.css'],

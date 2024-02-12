@@ -3,9 +3,9 @@
     /* tslint:disable */
     export const VERSION = {
   "dirty": true,
-  "raw": "v1.4.0-160-g8f4d70b-dirty",
-  "hash": "g8f4d70b",
-  "distance": 160,
+  "raw": "v1.4.0-161-gb44dd18-dirty",
+  "hash": "gb44dd18",
+  "distance": 161,
   "tag": "v1.4.0",
   "semver": {
     "options": {
@@ -21,7 +21,7 @@
     "build": [],
     "version": "1.4.0"
   },
-  "suffix": "160-g8f4d70b-dirty",
-  "semverString": "1.4.0+160.g8f4d70b"
+  "suffix": "161-gb44dd18-dirty",
+  "semverString": "1.4.0+161.gb44dd18"
 };
     /* tslint:enable */

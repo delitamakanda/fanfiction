@@ -12,7 +12,6 @@
     "sourceMap": true,
     "strict": true,
     "strictPropertyInitialization": false,
-    "suppressImplicitAnyIndexErrors": true,
     "target": "es2015",
     "baseUrl": ".",
     "types": [

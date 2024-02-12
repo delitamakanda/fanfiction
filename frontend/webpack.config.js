@@ -7,7 +7,7 @@ const webpack = require('webpack');
 module.exports = (env = {}) => {
     return {
         mode: env.prod ? 'production' : 'development',
-        devtool: env.prod ? 'source-map' : 'eval-cheap-module-source-map',
+        devtool: env.prod ? 'source-map' : 'inline-source-map',
         entry: path.resolve(__dirname, './src/main.ts'),
         output: {
             path: path.resolve(__dirname, './dist'),
