@@ -4,7 +4,7 @@ certifi==2024.2.2
 chardet==5.2.0
 defusedxml==0.7.1
 django==4.2.10
-django-allauth==0.50.0
+django-allauth==0.61.1
 django-embed-video==1.4.9
 django-filter==23.2
 django-multiselectfield==0.1.12
