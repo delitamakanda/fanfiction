@@ -35,7 +35,7 @@ django-markdownx==4.0.0b1
 coreapi==2.3.3
 WeasyPrint==53.3
 redis==5.0.1
-social-auth-app-django==5.0.0
+social-auth-app-django==5.4.1
 django-rest-framework-social-oauth2==1.2.0
 django-cors-headers==3.13.0
 django-celery-beat==2.5.0
