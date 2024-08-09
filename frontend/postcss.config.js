@@ -9,7 +9,7 @@ module.exports = {
         require('postcss-extend'),
         require('postcss-mixins'),
         // Comment out postcss-nested if you're using tailwindcss/nesting
-        // require('postcss-nested'),
+        require('postcss-nested'),
         require('tailwindcss/nesting'),
         require('tailwindcss')('tailwind.config.js'),
         require('postcss-preset-env', {

@@ -1,0 +1,116 @@
+{% extends "forum/base.html" %}
+{% load humanize %}
+{% load i18n %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'forum:communities_view' %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{% trans 'Communautés' %}</a></li>
+    <li class="breadcrumb-item actif">{{ board.name }}</li>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="mb-4">
+    <a href="{% url 'forum:board_topics_new' board.pk %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{% trans 'Nouveau sujet' %}</a>
+</div>
+{% endif %}
+
+<table border="1" class="table table-collapse w-full">
+    <thead class="thead-inverse">
+        <tr>
+            <th>{% trans 'Sujet'%}</th>
+            <th>{% trans 'Starter'%}</th>
+            <th>{% trans 'Réponses'%}</th>
+            <th>{% trans 'Vues'%}</th>
+            <th>{% trans 'Dernier message'%}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for topic in topics %}
+        {% url 'forum:board_topic_message' board.pk topic.pk as topic_url %}
+            <tr>
+                <td>
+                    <p>
+                        <a href="{{ topic_url }}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ topic.subject }}</a>
+                    </p>
+                    <small>
+                        {% trans 'Pages' %} :
+                        {% for i in topic.get_page_range %}
+                            <a class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" href="{{ topic_url }}?page={{ i }}">{{ i }}</a>
+                        {% endfor %}
+                        {% if topic.has_many_pages %}
+                            <a class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker" href="{{ topic_url }}?page={{ topic.get_page_count }}">{% trans 'Dernière page' %}</a>
+                        {% endif %}
+                    </small>
+                </td>
+                <td>{{ topic.starter.username }}</td>
+                <td class="align-middle">{{ topic.replies }}</td>
+                <td class="align-middle">{{ topic.views }}</td>
+                <td>{{ topic.last_updated|naturaltime }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if topics.has_other_pages %}
+<ul class="list-reset flex">
+    {% if topics.number > 1 %}
+        <li class="mr-6">
+          <a class="text-teal hover:text-teal-darker" href="/help/forum/{{ board.pk }}?page=1">{% trans 'Premier' %}</a>
+        </li>
+    {% else %}
+        <li class="mr-6">
+          <span class="text-teal">{% trans 'Premier' %}</span>
+        </li>
+    {% endif %}
+
+    {% if topics.has_previous %}
+        <li class="mr-6">
+          <a class="text-teal hover:text-teal-darker" href="/help/forum/{{ board.pk }}?page={{ topics.previous_page_number }}">{% trans 'Précédent' %}</a>
+        </li>
+    {% else %}
+        <li class="mr-6">
+          <span class="text-teal">{% trans 'Précédent' %}</span>
+        </li>
+    {% endif %}
+
+    {% for page_num in topics.paginator.page_range %}
+        {% if topics.number == page_num %}
+            <li class="mr-6">
+              <span class="text-teal">{{ page_num }}</span>
+            </li>
+        {% elif page_num > topics.number|add:'-3' and page_num < topics.number|add:'3' %}
+            <li class="mr-6">
+              <a class="text-teal hover:text-teal-darker" href="/help/forum/{{ board.pk }}?page={{ page_num }}">{{ page_num }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+
+    {% if topics.has_next %}
+        <li class="mr-6">
+          <a class="text-teal hover:text-teal-darker" href="/help/forum/{{ board.pk }}?page={{ topics.next_page_number }}">{% trans 'Suivant' %}</a>
+        </li>
+    {% else %}
+        <li class="mr-6">
+          <span class="text-teal">{% trans 'Suivant' %}</span>
+        </li>
+    {% endif %}
+
+    {% if topics.number != paginator.num_pages %}
+        <li class="mr-6">
+          <a class="text-teal hover:text-teal-darker" href="/help/forum/{{ board.pk }}?page={{ topics.paginator.num_pages }}">{% trans 'Dernier' %}</a>
+        </li>
+    {% else %}
+        <li class="mr-6">
+          <span class="text-teal">{% trans 'Dernier' %}</span>
+        </li>
+    {% endif %}
+</ul>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+</script>
+{% endblock %}

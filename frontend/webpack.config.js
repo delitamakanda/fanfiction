@@ -20,7 +20,7 @@ module.exports = (env = {}) => {
             rules: [
                 {
                     test: /\.vue$/,
-                    loader: 'vue-loader'
+                    loader: 'vue-loader',
                 },
                 {
                     test: /\.(s(a|c)ss)|(css)$/,
@@ -28,8 +28,8 @@ module.exports = (env = {}) => {
                         {
                             loader: MiniCssExtractPlugin.loader,
                             options: {}
-                        }, 
-                        'css-loader','sass-loader', 'postcss-loader'
+                        },
+                        'css-loader', 'sass-loader', 'postcss-loader'
                     ],
                 },
                 {
@@ -42,12 +42,12 @@ module.exports = (env = {}) => {
                 {
                     test: /\.(woff|woff2|eot|ttf|svg|jpg|png)$/,
                     use: {
-                      loader: 'file-loader',
-                      options: {
-                        name: '[path][name].[ext]',
+                        loader: 'file-loader',
+                        options: {
+                            name: '[path][name].[ext]',
                         },
                     },
-              },
+                },
             ]
         },
         resolve: {
