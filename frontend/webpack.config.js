@@ -20,21 +20,50 @@ module.exports = (env = {}) => {
             rules: [
                 {
                     test: /\.vue$/,
+                    exclude: /node_modules/,
                     loader: 'vue-loader',
                 },
                 {
-                    test: /\.(s(a|c)ss)|(css)$/,
+                    test: /\.(s(a|c)ss|css)$/,
                     use: [
                         {
                             loader: MiniCssExtractPlugin.loader,
-                            options: {}
+                            options: {
+                                // you can specify a publicPath here
+                                // if you're using a different publicPath for your assets, you can specify it here
+                                publicPath: './',
+                            },
                         },
-                        'css-loader', 'sass-loader', 'postcss-loader'
-                    ],
+                        {
+                            loader: 'style-loader',
+                        },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                importLoaders: 1,
+                                sourceMap: true,
+                            }
+                        },
+                        {
+                            loader: 'postcss-loader'
+                        },
+                        {
+                            loader: 'sass-loader',
+                        },
+                    ]
                 },
                 {
-                    test: /\.ts$/,
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],
+                    },
+                },
+                {
+                    test: /\.(ts|tsx)$/,
                     loader: 'ts-loader',
+                    exclude: /node_modules/,
                     options: {
                         appendTsSuffixTo: [/\.vue$/],
                     }
