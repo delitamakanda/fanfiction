@@ -25,13 +25,13 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .fanficListCard {
     @apply bg-white p-4 rounded-md shadow-md flex justify-start;
+}
 
-    &:hover {
-        @apply shadow-lg cursor-pointer;
-    }
+.fanficListCard:hover {
+    @apply shadow-lg cursor-pointer;
 }
 
 .fanficImageContainer {

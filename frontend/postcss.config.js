@@ -24,8 +24,5 @@ module.exports = {
     }),
     require('autoprefixer')(),
     require('postcss-reporter'),
-    require('postcss-pseudo-classes'),
-    require('@csstools/postcss-is-pseudo-class'),
-    require('postcss-pseudo-is'),
   ],
 };

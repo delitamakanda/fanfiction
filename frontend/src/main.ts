@@ -1,4 +1,4 @@
-import './styles/global.scss';
+import './styles/global.css';
 import 'flowbite';
 import { createApp } from 'vue';
 import Root from './App.vue';

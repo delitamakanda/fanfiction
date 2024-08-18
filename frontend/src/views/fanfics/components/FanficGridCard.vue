@@ -21,13 +21,13 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .fanficGridCard {
   @apply bg-white p-4 rounded-md shadow-md flex flex-col;
+}
 
-  &:hover {
-    @apply shadow-lg cursor-pointer;
-  }
+.fanficGridCard:hover {
+  @apply shadow-lg cursor-pointer;
 }
 
 .fanficImageContainer {

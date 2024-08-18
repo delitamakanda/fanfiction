@@ -60,7 +60,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .modalContainer {
   position: fixed;
   top: 0;

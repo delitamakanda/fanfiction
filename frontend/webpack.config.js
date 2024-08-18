@@ -3,6 +3,8 @@ const { VueLoaderPlugin } = require('vue-loader')
 const BundleTracker = require('webpack-bundle-tracker')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env = {}) => {
     return {
@@ -24,32 +26,22 @@ module.exports = (env = {}) => {
                     loader: 'vue-loader',
                 },
                 {
-                    test: /\.(s(a|c)ss|css)$/,
+                    test: /\.css$/,
                     use: [
+                        'style-loader',
                         {
                             loader: MiniCssExtractPlugin.loader,
                             options: {
-                                // you can specify a publicPath here
-                                // if you're using a different publicPath for your assets, you can specify it here
-                                publicPath: './',
-                            },
-                        },
-                        {
-                            loader: 'style-loader',
+                                esModule: false
+                            }
                         },
                         {
                             loader: 'css-loader',
                             options: {
-                                importLoaders: 1,
-                                sourceMap: true,
+                                importLoaders: 1
                             }
                         },
-                        {
-                            loader: 'postcss-loader'
-                        },
-                        {
-                            loader: 'sass-loader',
-                        },
+                        'postcss-loader'
                     ]
                 },
                 {
@@ -87,6 +79,9 @@ module.exports = (env = {}) => {
         },
         plugins: [
             new VueLoaderPlugin(),
+            new HtmlWebpackPlugin({
+                template: path.resolve(__dirname, 'public/index.html')
+            }),
             new BundleTracker({
                 filename: './webpack-stats.json',
                 publicPath: 'http://0.0.0.0:8080/'
@@ -106,12 +101,23 @@ module.exports = (env = {}) => {
             host: '0.0.0.0',
             port: '8080',
             hot: true,
-            static: __dirname,
+            open: false,
+            devMiddleware: {
+                writeToDisk: false
+            },
+            static: {
+                watch: true
+            },
             client: {
                 overlay: true,
                 logging: 'info',
                 progress: true,
             },
+        },
+        optimization: {
+            minimizer: [
+                new CssMinimizerPlugin(),
+            ]
         }
     }
 }

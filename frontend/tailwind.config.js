@@ -2,7 +2,7 @@
 module.exports = {
   darkMode: 'class',
   content: [
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./src/**/*.{vue,js,ts,jsx,tsx,html}",
     "./node_modules/flowbite/**/*.js",
   ],
   theme: {

@@ -46,9 +46,12 @@ module.exports = {
         'order/properties-order': null,
         'declaration-block-no-redundant-longhand-properties': null,
         'selector-list-comma-newline-after': null,
+        'indentation': null,
         // Limit the number of universal selectors in a selector, // to avoid very slow selectors
         'selector-max-universal': 1,
         'selector-class-pattern': '^[a-z][a-zA-Z0-9]+$',
+        'selector-combinator-space-before': null,
+        'selector-combinator-space-after': null,
         // --------
         // SCSS rules
         // --------
