@@ -25,7 +25,7 @@ python3-openid==3.2.0
 pytz==2023.4
 requests[security]
 six==1.16.0
-urllib3==1.26.19
+urllib3==2.2.3
 whitenoise==6.6.0
 django-storages
 django-markdownx==4.0.0b1
