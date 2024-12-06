@@ -49,7 +49,7 @@ export const menuSettings = [
         title: 'rgpdLabel',
         route: '/settings/static-page/rgpd',
         navigation: true,
-    },{
+    }, {
         type: 'licensing',
         title: 'licensingLabel',
         route: '/settings/static-page/licensing',
@@ -70,13 +70,13 @@ export const menuDashboard = [
         icon: 'collection',
         route: '/your-fanfic',
         navigation: true,
-    },{
+    }, {
         name: 'Profile',
         title: 'profile',
         icon: 'user-circle',
         route: '/profile/:username',
         navigation: true,
-    },{
+    }, {
         name: 'Settings',
         title: 'settings',
         icon: 'cog',
@@ -147,7 +147,7 @@ export const menuAside = [
         name: 'Forum',
         icon: 'forum',
         title: 'forumLabel',
-        route: 'https://forum-fanfiction-fr.azurewebsites.net',
+        route: '/forum/',
         navigation: false,
         isLoggedIn: null,
     },

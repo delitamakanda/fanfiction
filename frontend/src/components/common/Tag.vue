@@ -1,27 +1,27 @@
 <template>
     <component :is="component" class="tag" v-bind="$attrs">
-        <slot /> 
+        <slot />
     </component>
 </template>
 
 <script lang="ts">
 export default {
-    inheritAttrs: false, 
+    inheritAttrs: false,
     props: {
-        component: { 
-            type: String, 
+        component: {
+            type: String,
             default: 'div',
         },
     },
 }
 </script>
 
-<style lang="scss"> 
+<style>
 .tag {
     padding: 3px 2px;
     font-weight: bold;
     color: white;
     background-color: purple;
     border-radius: 8px;
-} 
+}
 </style>

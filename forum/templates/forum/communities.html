@@ -1,0 +1,50 @@
+{% extends "forum/base.html" %}
+{% load i18n %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item actif">{% trans 'Communautés' %}</li>
+{% endblock %}
+
+{% block content %}
+<table border="1" class="table table-collapse w-full">
+    <thead class="thead-inverse">
+        <tr>
+            <th>{% trans 'Discussion'%}</th>
+            <th>{% trans 'Messages'%}</th>
+            <th>{% trans 'Sujets'%}</th>
+            <th>{% trans 'Dernier message'%}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for board in boards %}
+            <tr>
+                <td>
+                    <a href="{% url 'forum:board_topics' board.pk %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{{ board.name }}</a><br/>
+                    <small class="text-muted d-block">{{ board.description }}</small>
+                </td>
+                <td class="align-middle">{{ board.get_messages_count }}</td>
+                <td class="align-middle">{{ board.topics.count }}</td>
+                <td class="align-middle">
+                    {% with message=board.get_last_message %}
+                    {% if message %}
+                        <small>
+                            <a href="{% url 'forum:board_topic_message' board.pk message.topic.pk %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">
+                                {% trans 'Par' %} {{ message.created_by.username }} {% trans 'à' %} {{ message.created_at }}
+                            </a>
+                        </small>
+                    {% else %}
+                        <small>{% trans 'Cette discussion est vide' %}.</small>
+                    {% endif %}
+                    {% endwith %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+</script>
+{% endblock %}

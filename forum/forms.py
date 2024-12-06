@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import gettext as _
-from helpcenter.models import Topic
-from helpcenter.models import Message
+from forum.models import Topic, Message
+from django.contrib.auth.models import User
 
 class NewTopicForm(forms.ModelForm):
     text = forms.CharField(

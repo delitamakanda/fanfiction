@@ -120,6 +120,7 @@ urlpatterns = [
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
     path('help/', include(('helpcenter.urls', 'helpcenter'), namespace='helpcenter')),
     path('posts/', include(('posts.urls', 'posts'), namespace='posts')),
+    path('forum/', include(('forum.urls', 'forum'), namespace='forum')),
     path('offline.html', (TemplateView.as_view(template_name="offline.html")), name='offline.html'),
     # path('', cache_page(60 * 5)(TemplateView.as_view(
     #     template_name='frontend/index.html')), name='index'),
