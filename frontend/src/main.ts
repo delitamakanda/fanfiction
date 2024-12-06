@@ -1,3 +1,4 @@
+import './styles/global.css';
 import 'flowbite';
 import { createApp } from 'vue';
 import Root from './App.vue';
@@ -15,8 +16,6 @@ loadPlugins(['i18n']);
 setupInterceptors(store);
 
 app.config.performance = true;
-
-import './styles/global.scss';
 
 app
     .use(i18n)

@@ -24,7 +24,7 @@ const layoutComponents = {
 export default {
     computed: {
         currentLayoutComponent() {
-            const layout = (<any>this).$router.currentRoute.value?.meta?.layout || 'standard';
+            const layout = (<any>this).$router?.currentRoute?.value?.meta?.layout || 'standard';
             return layoutComponents[layout];
         }
     },

@@ -1,0 +1,30 @@
+{% extends "forum/base.html" %}
+{% load i18n %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'forum:communities_view' %}">{% trans 'Communautés' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'forum:board_topics' message.topic.board.pk %}">{{ message.topic.board.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'forum:board_topic_message' message.topic.board.pk message.topic.pk %}">{{ message.topic.subject }}</a></li>
+    <li class="breadcrumb-item actif">{% trans 'Editer le message' %}</li>
+{% endblock %}
+
+{% block content %}
+<form method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" novalidate>
+     <section class="content">
+         {% csrf_token %}
+         {{ form.as_p }}
+        <div class="actions">
+            <div class="flex items-center justify-between">
+                <button type="submit" name="button" class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded">{% trans 'Editer' %}</button>
+                <a href="{% url 'forum:board_topic_message' message.topic.board.pk message.topic.pk %}" class="block mt-4 lg:inline-block lg:mt-0 text-teal hover:text-teal-darker">{% trans 'Annuler' %}</a>
+            </div>
+        </div>
+    </section>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+</script>
+{% endblock %}

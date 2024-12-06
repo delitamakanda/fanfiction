@@ -3,6 +3,8 @@ const { VueLoaderPlugin } = require('vue-loader')
 const BundleTracker = require('webpack-bundle-tracker')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env = {}) => {
     return {
@@ -20,21 +22,40 @@ module.exports = (env = {}) => {
             rules: [
                 {
                     test: /\.vue$/,
-                    loader: 'vue-loader'
+                    exclude: /node_modules/,
+                    loader: 'vue-loader',
                 },
                 {
-                    test: /\.(s(a|c)ss)|(css)$/,
+                    test: /\.css$/,
                     use: [
+                        'style-loader',
                         {
                             loader: MiniCssExtractPlugin.loader,
-                            options: {}
-                        }, 
-                        'css-loader','sass-loader', 'postcss-loader'
-                    ],
+                            options: {
+                                esModule: false
+                            }
+                        },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                importLoaders: 1
+                            }
+                        },
+                        'postcss-loader'
+                    ]
                 },
                 {
-                    test: /\.ts$/,
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],
+                    },
+                },
+                {
+                    test: /\.(ts|tsx)$/,
                     loader: 'ts-loader',
+                    exclude: /node_modules/,
                     options: {
                         appendTsSuffixTo: [/\.vue$/],
                     }
@@ -42,12 +63,12 @@ module.exports = (env = {}) => {
                 {
                     test: /\.(woff|woff2|eot|ttf|svg|jpg|png)$/,
                     use: {
-                      loader: 'file-loader',
-                      options: {
-                        name: '[path][name].[ext]',
+                        loader: 'file-loader',
+                        options: {
+                            name: '[path][name].[ext]',
                         },
                     },
-              },
+                },
             ]
         },
         resolve: {
@@ -58,6 +79,9 @@ module.exports = (env = {}) => {
         },
         plugins: [
             new VueLoaderPlugin(),
+            new HtmlWebpackPlugin({
+                template: path.resolve(__dirname, 'public/index.html')
+            }),
             new BundleTracker({
                 filename: './webpack-stats.json',
                 publicPath: 'http://0.0.0.0:8080/'
@@ -77,12 +101,23 @@ module.exports = (env = {}) => {
             host: '0.0.0.0',
             port: '8080',
             hot: true,
-            static: __dirname,
+            open: false,
+            devMiddleware: {
+                writeToDisk: false
+            },
+            static: {
+                watch: true
+            },
             client: {
                 overlay: true,
                 logging: 'info',
                 progress: true,
             },
+        },
+        optimization: {
+            minimizer: [
+                new CssMinimizerPlugin(),
+            ]
         }
     }
 }

@@ -1,19 +1,19 @@
 <template>
-<div class="authLayout">
-    <main class="content">
-        <slot name="content"></slot>
-    </main>
-    <footer class="footer">
-        <slot name="footer"></slot>
-    </footer>
-</div>
+    <div class="authLayout">
+        <main class="content">
+            <slot name="content"></slot>
+        </main>
+        <footer class="footer">
+            <slot name="footer"></slot>
+        </footer>
+    </div>
 </template>
 
 <script lang="ts">
 export default {}
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .authLayout {
     display: grid;
     grid-template-rows: 1fr 4rem;
@@ -32,5 +32,4 @@ export default {}
 .footer {
     grid-area: 2 / 1 / 3 / 2;
 }
-
 </style>

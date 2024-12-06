@@ -1,5 +1,5 @@
 <template>
-    <div class="lazyModal" :class="{'open' : open}">
+    <div class="lazyModal" :class="{ 'open': open }">
         <slot></slot>
     </div>
 </template>
@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .lazyModal {
     position: fixed;
     top: 0;
@@ -24,9 +24,9 @@ export default {
     width: 40vw;
     min-height: 100vh;
     @apply bg-gray-100 shadow-lg transition-transform transform translate-x-full duration-500;
+}
 
-    &.open {
-        @apply translate-x-0;
-    }
+.lazyModal.open {
+    @apply translate-x-0;
 }
 </style>

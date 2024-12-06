@@ -1,25 +1,24 @@
 <template>
-<div class="loading" :class="{'visible': isVisible }">
-    <div class="spinner spinner1"></div>
-</div>
- </template>
+    <div class="loading" :class="{ 'visible': isVisible }">
+        <div class="spinner spinner1"></div>
+    </div>
+</template>
 
- <script lang="ts">
+<script lang="ts">
 export default {
     props: ['isVisible'],
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style scoped>
 .loading {
     display: none;
+}
 
-
-    &.visible {
-        display: block;
-        pointer-events: all;
-    }
+.loading.visible {
+    display: block;
+    pointer-events: all;
 }
 
 .spinner {
@@ -28,7 +27,8 @@ export default {
     height: 125px;
 }
 
-.spinner::before, .spinner::after {
+.spinner::before,
+.spinner::after {
     position: absolute;
     display: block;
     content: "";
@@ -41,18 +41,22 @@ export default {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
 }
+
 @keyframes anti-rotate-animation {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(-360deg);
     }
 }
+
 .spinner.spinner1::before {
     top: 0;
     left: 0;
@@ -64,6 +68,7 @@ export default {
     border-left-color: #21212100;
     animation: rotate-animation 1s linear 0s infinite;
 }
+
 .spinner.spinner1::after {
     top: 17.55px;
     left: 17.55px;
@@ -84,6 +89,4 @@ export default {
     width: auto;
     transform: translate(-50%, -50%);
 }
-    
 </style>
-    
