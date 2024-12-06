@@ -1,49 +1,51 @@
 <template>
-<div>
+    <div>
 
-    <Splide :options="{
-        rewind : true,
-        gap : '1rem',
-        perPage : 3,
-        autoplay : false,
-    }" aria-label="" :has-track="false" class="splideDynamic">
-     <div style="position: relative; height: 250px;">
-        <SplideTrack>
-            <SplideSlide v-for="category of categories" :key="category.id"
-                class="img-thumbnail border shadow-lg rounded-lg"
-                :style="{backgroundImage: 'url(' + require('./../../assets/images/categories/'+ category.logic_value + '.jpg').default + ')' }"
-            >
-                <p>{{ category.name }}</p>
-            </SplideSlide>
-        </SplideTrack>
+        <Splide :options="{
+            rewind: true,
+            gap: '1rem',
+            perPage: 3,
+            autoplay: false,
+        }" aria-label="" :has-track="false" class="splideDynamic">
+            <div style="position: relative; height: 250px;">
+                <SplideTrack>
+                    <SplideSlide v-for="category of categories" :key="category.id"
+                        class="img-thumbnail border shadow-lg rounded-lg"
+                        :style="{ backgroundImage: 'url(' + require('./../../assets/images/categories/' + category.logic_value + '.jpg').default + ')' }">
+                        <p>{{ category.name }}</p>
+                    </SplideSlide>
+                </SplideTrack>
 
-        <div class="splide__arrows">
-            <button class="splide__arrow splide__arrow--prev">Prev</button>
-            <button class="splide__arrow splide__arrow--next">Next</button>
-        </div>
-     </div>
-    </Splide>
+                <div class="splide__arrows">
+                    <button class="splide__arrow splide__arrow--prev">Prev</button>
+                    <button class="splide__arrow splide__arrow--next">Next</button>
+                </div>
+            </div>
+        </Splide>
 
-    <p v-if="fetchHomeFanficsStatusIdle">Welcome</p>
-    <BaseLazyLoad :show="fetchHomeFanficsStatusPending">
-        <p>Loading data</p>
-    </BaseLazyLoad>
-    <p v-if="fetchHomeFanficsStatusError">There was a problem.</p>
-    <template v-if="fetchHomeFanficsStatusSuccess">
-        <h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">
-            {{ $t('message.browseFanfics.mostRecentLabel')}}
-        </h2>
-        <BaseCard v-for="fanfic of newestFanfics" :fanfic="fanfic" />
-        <h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">
-            {{ $t('message.browseFanfics.mostPopularLabel')}}
-        </h2>
-        <BaseCard v-for="fanfic of mostLikedFanfics" :fanfic="fanfic" />
-        <h2 class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">
-            {{ $t('message.browseFanfics.mostRecommendedLabel') }}
-        </h2>
-        <BaseCard v-for="fanfic of recommendedFanfics" :fanfic="fanfic" />
-    </template>
-   </div>
+        <p v-if="fetchHomeFanficsStatusIdle">Welcome</p>
+        <BaseLazyLoad :show="fetchHomeFanficsStatusPending">
+            <p>Loading data</p>
+        </BaseLazyLoad>
+        <p v-if="fetchHomeFanficsStatusError">There was a problem.</p>
+        <template v-if="fetchHomeFanficsStatusSuccess">
+            <h2
+                class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">
+                {{ $t('message.browseFanfics.mostRecentLabel') }}
+            </h2>
+            <BaseCard v-for="fanfic of newestFanfics" :fanfic="fanfic" />
+            <h2
+                class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">
+                {{ $t('message.browseFanfics.mostPopularLabel') }}
+            </h2>
+            <BaseCard v-for="fanfic of mostLikedFanfics" :fanfic="fanfic" />
+            <h2
+                class="mb-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl dark:text-white">
+                {{ $t('message.browseFanfics.mostRecommendedLabel') }}
+            </h2>
+            <BaseCard v-for="fanfic of recommendedFanfics" :fanfic="fanfic" />
+        </template>
+    </div>
 </template>
 
 <script lang="ts">
@@ -57,12 +59,12 @@ import Layout from '../../layout/Layout.vue';
 import { useLayout } from "../../layout/composables/useLayout";
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 
-import '@splidejs/vue-splide/css/sea-green';
+import '@splidejs/vue-splide/css';
 
 const { IDLE, PENDING, SUCCESS, ERROR } = apiStatus;
 
 export default defineComponent({
-    components: { 
+    components: {
         BaseLazyLoad,
         Layout,
         Splide,
@@ -113,12 +115,12 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .splideDynamic {
     padding: 0;
 }
 
-.splideDynamic ul > li {
+.splideDynamic ul>li {
     background-size: cover;
 }
 </style>

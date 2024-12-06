@@ -72,6 +72,7 @@ INSTALLED_APPS += [
     'accounts',
     'posts',
     'api.apps.ApiConfig',
+    'forum.apps.ForumConfig',
 ]
 
 SITE_ID = 1
@@ -85,7 +86,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-	# 'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
