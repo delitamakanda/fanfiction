@@ -94,6 +94,8 @@ from fanfics.api.views import (
     FanficUpdateDetailView,
 )
 
+from fanfics.views import fanfic_detail
+
 from comments.api.views import (
     CommentCreateApiView,
     CommentListApiView,
@@ -245,6 +247,7 @@ urlpatterns += [
 
      path('api/token', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
      path('api/refresh-token', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+	path('fanfic/<int:id>/<str:slug>/', fanfic_detail, name='fanfic_detail'),
 ]
 
 if settings.DEBUG:
@@ -255,6 +258,5 @@ if settings.DEBUG:
 
 urlpatterns += [
     path('markdownx/', include(markdownx)),
-    # path('api/oauth2-social/', include('rest_framework_social_oauth2.urls')),
     path('api/oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]

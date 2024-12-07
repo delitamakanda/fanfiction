@@ -101,5 +101,5 @@ class Fanfic(models.Model):
 		return Fanfic.objects.filter(status='publié').order_by('-publish')[:10]
 
 	def get_absolute_url(self):
-		return reverse('fanfic_detail', args=[str(self.id), self.slug])
+		return reverse('fanfic_detail', args=[self.id, self.slug])
 
