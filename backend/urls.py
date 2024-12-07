@@ -19,11 +19,31 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
-from django.views.decorators.cache import cache_page
+from drf_spectacular.views import (
+SpectacularAPIView,
+SpectacularRedocView,
+SpectacularSwaggerView,
+)
+from django.contrib.sitemaps.views import sitemap
+from django.contrib.sitemaps import Sitemap
+from django.contrib.flatpages.sitemaps import FlatPageSitemap
+from fanfics.models import Fanfic
 from markdownx import urls as markdownx
 
 from rest_framework_simplejwt import views as jwt_views
 from rest_framework.documentation import include_docs_urls
+
+
+class FanficSitemap(Sitemap):
+    changefreq = "daily"
+    priority = 0.5
+
+    def items(self):
+        return Fanfic.objects.all()
+
+    @staticmethod
+    def lastmod(obj):
+        return obj.publish
 
 from accounts.api.views import (
     UserFanficDetailView,
@@ -120,14 +140,16 @@ urlpatterns = [
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
     path('help/', include(('helpcenter.urls', 'helpcenter'), namespace='helpcenter')),
     path('posts/', include(('posts.urls', 'posts'), namespace='posts')),
+    path('forum/', include(('forum.urls', 'forum'), namespace='forum')),
     path('offline.html', (TemplateView.as_view(template_name="offline.html")), name='offline.html'),
-    # path('', cache_page(60 * 5)(TemplateView.as_view(
-    #     template_name='frontend/index.html')), name='index'),
-    path('', TemplateView.as_view(template_name='frontend/index.html'), name='index'),
-    path('service-worker.js', (TemplateView.as_view(template_name="pwa/service-worker.js", content_type='application/javascript', )), name='service-worker.js'),
 ]
 
 urlpatterns += [
+	path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+	path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+	path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger'),
+    path('sitemap.xml', sitemap, {'sitemaps': {'fanfics': FanficSitemap}}, name='sitemap'),
+    path('sitemap2.xml', sitemap, {'sitemaps': {'flatpages': FlatPageSitemap}}, name='sitemap2'),
     path('api/', ApiRootView.as_view(), name=ApiRootView.name),
     path('api/docs/', include_docs_urls(title='Fanfiction API', public=False)),
 
