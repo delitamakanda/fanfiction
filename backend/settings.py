@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import logging
+import logging.config
+from pathlib import Path
+import structlog
+from pythonjsonlogger import jsonlogger
 from decouple import config
 
 from django.urls import reverse
@@ -21,7 +26,6 @@ from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -47,20 +51,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+	'django.contrib.sitemaps',
+	'django.contrib.flatpages',
     'multiselectfield',
     'embed_video',
     'django_filters',
     'storages',
     'markdownx',
     'oauth2_provider',
-    # 'social_django',
-    # 'rest_framework_social_oauth2',
-    'django_celery_beat',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt',
-    'webpack_loader',
+    'rest_framework_simplejwt.token_blacklist',
+	'drf_spectacular',
 ]
 
 INSTALLED_APPS += [
@@ -76,6 +78,8 @@ INSTALLED_APPS += [
 ]
 
 SITE_ID = 1
+
+SITE_NAME = 'Fanfiction API'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -154,13 +158,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Paris'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
-USE_L10N = True
 
 USE_TZ = True
 
@@ -186,19 +188,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'CACHE': False,
-        'BUNDLE_DIR_NAME': '/bundles/',
-        'STATS_FILE': os.path.join(FRONTEND_DIR, 'webpack-stats.json'),
-        'POLL_INTERVAL': 0.1,
-        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-    }
-}
-
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'api.custompagination.StandardResultsSetPagination',
-    'PAGE_SIZE': 100,
+    'PAGE_SIZE': 99,
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
@@ -206,34 +198,28 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-		'rest_framework.authentication.BasicAuthentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        # 'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
         'anon': '5000/days',
-        'user': '10000/days',
-        'fanfic': '10000/days',
     },
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     'SEARCH_PARAM': 'q',
     'ORDERING_PARAM': 'ordering',
+	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # OAuth settings
 
 OAUTH2_PROVIDER = {
-    # 'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
     'SCOPES': {
         'read': 'Read scope',
         'write': 'Write scope',
@@ -242,7 +228,6 @@ OAUTH2_PROVIDER = {
     'ACCESS_TOKEN_EXPIRE_SECONDS': 7*24*60*60, # 1 week
     'REFRESH_TOKEN_EXPIRE_SECONDS': 60*60*60,  # 3 hours
     'ROTATE_REFRESH_TOKEN': False,
-    # 'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -253,15 +238,6 @@ Authenticate with username or email
 
 AUTHENTICATION_BACKENDS = (
     'oauth2_provider.backends.OAuth2Backend',
-    # 'social_core.backends.facebook.FacebookAppOAuth2',
-    # 'social_core.backends.facebook.FacebookOAuth2',
-
-    # 'social_core.backends.google.GoogleOAuth2',
-
-    # 'social_core.backends.twitter.TwitterOAuth',
-    # 'social_core.backends.github.GithubOAuth2',
-
-    # 'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',
     'api.authentication.EmailAuthBackend',
 )
@@ -315,9 +291,25 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 }
 
 # corsheaders
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_HEADERS = (
+	'Content-Type',
+    'Accept',
+    'Authorization',
+    'X-Requested-With',
+    'X-CSRFToken',
+    'X-Custom-Header',
+    'Range',
+)
+CORS_ORIGIN_WHITELIST = [
+	'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+
 
 # cache
 CACHE_MIDDLEWARE_ALIAS = 'default'
@@ -342,8 +334,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKEN': False,
-    'BLACKLIST_AFTER_ROTATION': False,
+    'ROTATE_REFRESH_TOKEN': True,
+    'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
 
     'ALGORITHM': 'HS256',
@@ -369,4 +361,33 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+# logging
+
+logger = logging.getLogger()
+logHandler = logging.StreamHandler()
+formatter = jsonlogger.JsonFormatter()
+logHandler.setFormatter(formatter)
+logger.addHandler(logHandler)
+
+logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
+
+structlog.configure(
+	processors=[
+		structlog.processors.add_log_level,
+        structlog.processors.format_exc_info,
+        structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S", utc=True),
+        structlog.dev.ConsoleRenderer(),
+	],
+	wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
+	cache_logger_on_first_use=True,
+)
+
+SPECTACULAR_SETTINGS = {
+	"TITLE": "Fanfiction API",
+	"DESCRIPTION": "API for managing fanfiction content",
+    "VERSION": "1.0.0",
+	"SERVE_INCLUDE_SCHEMA": False,
+	"COMPONENT_SPLIT_REQUESTS": False,
 }
