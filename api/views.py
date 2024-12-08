@@ -1,21 +1,21 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
 
 class ApiRootView(generics.GenericAPIView):
-    name = 'api-root'
+	name = 'api-root'
+	permission_classes = [permissions.AllowAny,]
 
-    def get(self, request, *args, **kwargs):
-        return Response({
-            'comments': reverse('comment-list', request=request),
-            'category': reverse('category-list', request=request),
-            'subcategory': reverse('subcategory-list', request=request),
-            'tags': reverse('tag-list', request=request),
-            'posts': reverse('post-list', request=request),
-            'pages': reverse('all-pages', request=request),
-            'genres': reverse('genre-list', request=request),
-            'classement': reverse('classement-list', request=request),
-            'status': reverse('status-list', request=request),
-            'notifications': reverse('notifications', request=request),
-            'fanfics': reverse('fanfic-list', request=request)
-        })
+	def get(self, request, *args, **kwargs):
+		return Response({
+			'comments': 'http://localhost:8000/api/comments/',
+			'categories': 'http://localhost:8000/api/categories/',
+			'subcategory': 'http://localhost:8000/api/categories/subcategory/',
+			'tags': 'http://localhost:8000/api/posts/tags/',
+			'posts': 'http://localhost:8000/api/posts/',
+			'pages': 'http://localhost:8000/api/pages/',
+			'genres': 'http://localhost:8000/api/fanfics/genres/',
+			'classement': 'http://localhost:8000/api/fanfics/classement/',
+			'status': 'http://localhost:8000/api/fanfics/status/',
+			'notifications': 'http://localhost:8000/api/notifications/',
+			'fanfics': 'http://localhost:8000/api/fanfics/',
+		})

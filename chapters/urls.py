@@ -1,4 +1,14 @@
-from django.urls import path, include
+from django.urls import path
+from chapters.api.views import (
+     ChapterListApiView,
+     ChapterCreateApiView,
+     ChapterDetailView
+)
 
-
-urlpatterns = []
+urlpatterns = [
+path('<int:fanfic>/list/',
+         ChapterListApiView.as_view(), name='chapter-list-by-fanfic'),
+    path('create/', ChapterCreateApiView.as_view(), name='chapter-list'),
+    path('<int:pk>/',
+         ChapterDetailView.as_view(), name='chapter-detail'),
+]

@@ -6,14 +6,14 @@ from accounts.models import FollowStories, FollowUser, AccountProfile, Social
 
 @admin.register(FollowStories)
 class FollowStoriesAdmin(admin.ModelAdmin):
-    pass
+	pass
 
 @admin.register(FollowUser)
 class FollowUserAdmin(admin.ModelAdmin):
-    pass
+	pass
 
 class SocialInline(admin.StackedInline):
-    model = Social
+	model = Social
 
 class AccountProfileInline(admin.StackedInline):
 	model = AccountProfile
@@ -23,9 +23,9 @@ class AccountProfileInline(admin.StackedInline):
 
 class UserAdmin(BaseUserAdmin):
 	inlines = (
-        AccountProfileInline, 
-        SocialInline,
-    )
+		AccountProfileInline,
+		SocialInline,
+	)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

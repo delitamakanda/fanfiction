@@ -1,9 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from django.http import Http404
 
-from rest_framework import generics, permissions, filters, status, views
+from rest_framework import generics, permissions, filters, status
 from rest_framework.throttling import ScopedRateThrottle
-from rest_framework.reverse import reverse
 from rest_framework.response import Response
 
 from fanfics.models import Fanfic
