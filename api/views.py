@@ -12,7 +12,6 @@ class ApiRootView(generics.GenericAPIView):
 			'subcategory': 'http://localhost:8000/api/categories/subcategory/',
 			'tags': 'http://localhost:8000/api/posts/tags/',
 			'posts': 'http://localhost:8000/api/posts/',
-			'pages': 'http://localhost:8000/api/pages/',
 			'genres': 'http://localhost:8000/api/fanfics/genres/',
 			'classement': 'http://localhost:8000/api/fanfics/classement/',
 			'status': 'http://localhost:8000/api/fanfics/status/',

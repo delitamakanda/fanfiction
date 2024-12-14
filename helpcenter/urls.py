@@ -6,12 +6,15 @@ from helpcenter import views
 from helpcenter.api.views import (
     FoireAuxQuestionsApiView,
     LexiqueApiView,
+FlatPageApiView,
+FlatPagesHTMLByIDView,
 )
 
 routers = DefaultRouter()
 
 routers.register(r'lexique', LexiqueApiView, basename='lexique')
-routers.register(r'faq', FoireAuxQuestionsApiView, basename='faq')
+routers.register(r'faq', FoireAuxQuestionsApiView, basename='faq'),
+routers.register(r'pages', FlatPageApiView, basename='pages')
 
 urlpatterns = routers.urls
 urlpatterns += [
@@ -21,4 +24,5 @@ urlpatterns += [
     path('search-ajax-submit', views.SearchAjaxSubmitView.as_view(), name='search-ajax-submit'),
     path('foire-aux-questions', views.foire_aux_questions_view, name='foire_aux_questions'),
     path('fanfic/<int:fanfic_id>/pdf', views.fanfic_pdf, name='fanfic_pdf'),
+	path('flatpages/<int:id>', FlatPagesHTMLByIDView.as_view(), name='flatpage'),
 ]

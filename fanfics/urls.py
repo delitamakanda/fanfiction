@@ -7,6 +7,8 @@ from fanfics.api.views import (
     FanficCreateApiView,
     FanficViewSet,
 RecommendedFanficViewSet,
+ShareFanficAPIView,
+EmailFeedbackView,
 )
 
 from fanfics.views import fanfic_detail
@@ -21,6 +23,8 @@ router.register(r'recommended', RecommendedFanficViewSet, basename='recommended'
 
 urlpatterns = [
     path('fanfics-create/', FanficCreateApiView.as_view(), name='fanfic-create'),
+	path('share/', ShareFanficAPIView.as_view(), name='share'),
+	path('feedback/', EmailFeedbackView.as_view(), name='feedback'),
 ]
 
 urlpatterns += router.urls

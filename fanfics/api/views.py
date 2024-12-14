@@ -1,10 +1,15 @@
+from django.http import BadHeaderError
+from django.template.loader import render_to_string, get_template
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import generics, permissions, filters, status
+from rest_framework import generics, permissions, filters, status, views
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 
+from django.core.mail import send_mail
 from fanfics.models import Fanfic
 
 from fanfics.api.serializers import  FanficSerializer
@@ -115,3 +120,58 @@ class RecommendedFanficViewSet(TemplateViewSet):
 
 		return Response({'recommended_fanfics': reco_serializer_data.data})
 
+
+class ShareFanficAPIView(views.APIView):
+	"""
+	Share fanfiction with e-mail
+	"""
+	permission_classes = (permissions.AllowAny,)
+	authentication_classes = ()
+	def post(self, request, *args, **kwargs):
+		fanfic_id = request.data.get('id')
+		fanfic = Fanfic.objects.get(id=fanfic_id)
+		current_site = get_current_site(request)
+
+		name = request.data.get('name')
+		email = request.data.get('email')
+		to_email = request.data.get('to_email')
+		comments = request.data.get('comments')
+
+		try:
+			fanfic_url = current_site.domain + '/' + 'fanfic/detail/' + fanfic.slug
+			subject = '{} ({}) recommends you reading "{}"'.format(name, email, fanfic.title)
+			message = 'Read "{}" at {}\n\n{}\'s comments: {}'.format(fanfic.title, fanfic_url, name, comments)
+			send_mail(subject, message, settings.SERVER_EMAIL, [to_email])
+			sent = True
+			return Response({"message": sent}, status=status.HTTP_200_OK)
+		except BadHeaderError as e:
+			return Response({"status": f"{str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EmailFeedbackView(views.APIView):
+	"""
+	Feedback email
+	"""
+	authentication_classes = ()
+	permission_classes = ()
+
+	@staticmethod
+	def post(request, *args, **kwargs):
+		fanfic_id = request.data.get('id')
+		fanfic = Fanfic.objects.get(id=fanfic_id)
+
+		template = get_template('mail/feedback.txt')
+		context = {'fanfic': fanfic}
+
+		msg_text = template.render(context)
+		msg_html = render_to_string('mail/feedback.html', context)
+
+		if fanfic:
+			try:
+				send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com',
+						  [settings.SERVER_EMAIL], html_message=msg_html, fail_silently=False)
+			except BadHeaderError:
+				return Response({"status": "invalid header"}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"status": "ok"}, status=status.HTTP_200_OK)
+		else:
+			return Response({"status": "nok"}, status=status.HTTP_400_BAD_REQUEST)

@@ -84,5 +84,6 @@ if settings.DEBUG:
 
 urlpatterns += [
 	path('markdownx/', include(markdownx)),
+	path('pages/', include('django.contrib.flatpages.urls')),
 	path('api/oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]

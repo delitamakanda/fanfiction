@@ -2,7 +2,13 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from accounts.models import FollowStories, FollowUser, AccountProfile, Social
+from accounts.models import FollowStories, FollowUser, AccountProfile, Social, Notification
+
+
+class NotificationAdmin(admin.ModelAdmin):
+	list_display = ('user', 'verb', 'target', 'created',)
+	list_filter = ('created',)
+	search_fields = ('verb',)
 
 @admin.register(FollowStories)
 class FollowStoriesAdmin(admin.ModelAdmin):
@@ -29,3 +35,4 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+admin.site.register(Notification, NotificationAdmin)

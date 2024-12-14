@@ -1,5 +1,3 @@
-import json
-
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 

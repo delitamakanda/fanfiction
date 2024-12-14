@@ -1,7 +1,7 @@
 import datetime
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
-from api.models import Notification
+from accounts.models import Notification
 
 
 def create_notification(user, verb, target=None):

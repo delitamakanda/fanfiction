@@ -7,9 +7,9 @@ from accounts.models import AccountProfile
 
 @receiver(m2m_changed, sender=Fanfic.users_like.through)
 def users_like_changed(sender, instance, **kwargs):
-    instance.total_likes = instance.users_like.count()
-    instance.save()
-	
+	instance.total_likes = instance.users_like.count()
+	instance.save()
+
 @receiver(post_save, sender=User)
 def build_profile_on_user_creation(sender, instance, created, **kwargs):
 	if created:
