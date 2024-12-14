@@ -387,7 +387,24 @@ structlog.configure(
 SPECTACULAR_SETTINGS = {
 	"TITLE": "Fanfiction API",
 	"DESCRIPTION": "API for managing fanfiction content",
-    "VERSION": "1.0.0",
-	"SERVE_INCLUDE_SCHEMA": False,
-	"COMPONENT_SPLIT_REQUESTS": False,
+	"VERSION": "1.0.0",
+	"SERVE_INCLUDE_SCHEMA": True,
+	"COMPONENT_SPLIT_REQUEST": True,
+	"URL_CONFIG": {
+		"DEFAULT_VERSION": "v1",
+        "ALLOWED_VERSIONS": ["v1"],
+        "DEFAULT_VERSIONING_TYPE": "namespace",
+        "VERSIONING_PARAM": "api_version",
+	},
+	"SWAGGER_AUTO_SCHEMA": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTO_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+			"name": "Authorization",
+            "in": "header",
+            "description": "JWT Bearer Authorization header using the Bearer scheme.",
+			"scheme": "Bearer",
+		}
+	},
 }

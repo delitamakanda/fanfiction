@@ -12,7 +12,6 @@ from api.api import (
     FlatPagesHTMLByTypeView,
     ContentTypeView,
     NotificationListView,
-    BrowseFanfictionListView,
 )
 
 from api.api_fanfic import (
@@ -55,6 +54,4 @@ urlpatterns = [
 	path('notifications/', NotificationListView.as_view(), name='notifications'),
 	path('contenttype/<int:pk>/',
 		 ContentTypeView.as_view(), name='contenttype-detail'),
-	path('browse-fanfics/',
-		 BrowseFanfictionListView.as_view(), name='browse-fanfics'),
 ]

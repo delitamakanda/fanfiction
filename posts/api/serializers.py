@@ -6,12 +6,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Tag
-		fields = (
-			'id',
-			'word',
-			'slug',
-			'created_at',
-		)
+		fields = '__all__'
 
 
 class PostSerializer(serializers.ModelSerializer):

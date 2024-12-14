@@ -6,13 +6,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Category
-        fields = (
-          'id',
-          'name',
-          'slug',
-          'description',
-          'logic_value',
-        )
+        fields = '__all__'
 
 
 class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -20,11 +14,4 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = SubCategory
-        fields = (
-          'id',
-          'category',
-          'name',
-          'slug',
-          'image',
-          'description',
-        )
+        fields = '__all__'

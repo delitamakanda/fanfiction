@@ -25,7 +25,6 @@ class ChapterListApiView(generics.ListAPIView):
             if fanfic:
                 return Chapter.objects.filter(fanfic=fanfic)
         except:
-            fanfic = None
             return response.Response({'error': 'No fanfic found'}, status=status.HTTP_404_NOT_FOUND)
 
 

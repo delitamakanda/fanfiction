@@ -8,7 +8,7 @@ from chapters.api.views import (
 urlpatterns = [
 path('<int:fanfic>/list/',
          ChapterListApiView.as_view(), name='chapter-list-by-fanfic'),
-    path('create/', ChapterCreateApiView.as_view(), name='chapter-list'),
+    path('create/', ChapterCreateApiView.as_view(), name='chapter-create'),
     path('<int:pk>/',
          ChapterDetailView.as_view(), name='chapter-detail'),
 ]
