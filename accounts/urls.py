@@ -2,6 +2,8 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
+from rest_framework.routers import DefaultRouter
+
 from accounts.api.views import (
     UserFanficDetailView,
     UserDetailView,
@@ -30,6 +32,8 @@ CheckoutUserView,
 	ContentTypeView,
 	NotificationListView,
 )
+
+routers = DefaultRouter()
 
 urlpatterns = [
 path('users/<str:username>/account/',
@@ -74,5 +78,6 @@ path('contact-mail/', ContactMailView.as_view(), name='contact-mail'),
 	path('notifications/', NotificationListView.as_view(), name='notifications'),
 	path('contenttype/<int:pk>/',
 		 ContentTypeView.as_view(), name='contenttype-detail'),
-
 ]
+
+urlpatterns += routers.urls

@@ -17,7 +17,7 @@ from fanfics.models import Fanfic
 
 
 class UserSerializer(serializers.ModelSerializer):
-
+	password2 = serializers.CharField(required=True, write_only=True)
 	class Meta:
 		model = User
 		fields = (
@@ -31,8 +31,15 @@ class UserSerializer(serializers.ModelSerializer):
 			'is_staff',
 			'is_superuser',
 			'date_joined',
+			'password2',
 		)
 		extra_kwargs = {'password': {'write_only': True}}
+
+	@staticmethod
+	def validate_password2(password2, validated_data):
+		if validated_data['password'] != password2:
+			raise serializers.ValidationError('Les mots de passe ne correspondent pas.')
+		return validated_data
 
 	def create(self, validated_data):
 		user = User(
@@ -46,11 +53,11 @@ class UserSerializer(serializers.ModelSerializer):
 		return user
 
 	@staticmethod
-	def validate_email(value):
-		if User.objects.filter(email=value).exists():
+	def validate_email(email):
+		if User.objects.filter(email=email).exists():
 			raise serializers.ValidationError(
 				'Cette e-mail est déja utilisée.')
-		return value
+		return email
 
 
 class AccountProfileSerializer(serializers.ModelSerializer):
@@ -62,6 +69,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
 	user_follows_stories = serializers.SerializerMethodField()
 	user_follows_authors = serializers.SerializerMethodField()
 	user_favorites_stories = serializers.SerializerMethodField()
+	user = UserSerializer(read_only=True)
 
 	class Meta:
 		model = AccountProfile
@@ -93,7 +101,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
 
 	@staticmethod
 	def get_user_stories(obj):
-		fanfics = Fanfic.objects.filter(user=obj.user).all()
+		fanfics = Fanfic.objects.filter(author=obj.user).all()
 		stories = [FanficSerializer(f).data for f in fanfics]
 		return stories
 
@@ -196,7 +204,8 @@ class SignupSerializer(serializers.ModelSerializer):
 			'last_name': {'required': False}
 		}
 
-	def validate(self, attrs):
+	@staticmethod
+	def validate_password2(attrs):
 		if attrs['password'] != attrs['password2']:
 			raise serializers.ValidationError(
 				{'password': 'Passwords did not match'})
@@ -268,10 +277,19 @@ class NotificationObjectRelatedField(serializers.RelatedField):
 		raise Exception('Unexpected type of object')
 
 
-class NotificationSerializer(serializers.HyperlinkedModelSerializer):
+class NotificationSerializer(serializers.ModelSerializer):
 	user = UserSerializer(read_only=True)
 	target = NotificationObjectRelatedField(read_only=True)
 
 	class Meta:
 		model = Notification
 		fields = '__all__'
+		extra_kwargs = {
+			'user': {'read_only': True},
+			'target': {'read_only': True},
+		}
+
+	def create(self, validated_data):
+		notification = Notification.objects.create(**validated_data)
+		notification.save()
+		return notification

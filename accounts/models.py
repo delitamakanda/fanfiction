@@ -1,7 +1,6 @@
 from PIL import Image
 
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -33,7 +32,7 @@ class Notification(models.Model):
 
 
 class AccountProfile(models.Model):
-	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	date_of_birth = models.DateField(blank=True, null=True)
 	photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True, null=True)
 	location = models.CharField(max_length=30, blank=True)
@@ -70,7 +69,7 @@ class Social(models.Model):
 	network = models.CharField(max_length=255, choices=SOCIAL_TYPES)
 	nichandle = models.CharField(max_length=255)
 	account = models.ForeignKey(AccountProfile, related_name="social_network", on_delete=models.CASCADE)
-	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 	class Meta:
 		ordering = ('network',)

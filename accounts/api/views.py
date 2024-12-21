@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.http import BadHeaderError
 from django.http.response import Http404
 
-from rest_framework import generics, permissions, status, views
+from rest_framework import generics, permissions, status, views, viewsets
 from rest_framework.response import Response
 from oauth2_provider.contrib.rest_framework import TokenHasScope
 from rest_framework_simplejwt.token_blacklist.models import (
