@@ -15,9 +15,21 @@ from chapters.models import Chapter
 from fanfics.api.serializers import FanficSerializer
 from fanfics.models import Fanfic
 
+def validate_password_confirmation(password1, password2):
+	if password1 != password2:
+		raise serializers.ValidationError('Passwords do not match.')
+	return password1
+
 
 class UserSerializer(serializers.ModelSerializer):
 	password2 = serializers.CharField(required=True, write_only=True)
+	password = serializers.CharField(write_only=True)
+	email = serializers.EmailField(
+		required=True,
+		validators=[
+			UniqueValidator(queryset=User.objects.all())
+		])
+	username = serializers.CharField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
 	class Meta:
 		model = User
 		fields = (
@@ -34,30 +46,19 @@ class UserSerializer(serializers.ModelSerializer):
 			'password2',
 		)
 		extra_kwargs = {'password': {'write_only': True}}
-
-	@staticmethod
-	def validate_password2(password2, validated_data):
-		if validated_data['password'] != password2:
-			raise serializers.ValidationError('Les mots de passe ne correspondent pas.')
-		return validated_data
+		read_only_fields = ('date_joined',)
 
 	def create(self, validated_data):
 		user = User(
 			email=validated_data["email"],
 			username=validated_data["username"]
 		)
+		validate_password_confirmation(validated_data["password"], validated_data["password2"])
 		user.set_password(validated_data["password"])
 		user.save()
 		create_notification(user, 'a créé un compte')
 		mail_admins("Account creation", "An user has created an account.")
 		return user
-
-	@staticmethod
-	def validate_email(email):
-		if User.objects.filter(email=email).exists():
-			raise serializers.ValidationError(
-				'Cette e-mail est déja utilisée.')
-		return email
 
 
 class AccountProfileSerializer(serializers.ModelSerializer):
@@ -205,12 +206,20 @@ class SignupSerializer(serializers.ModelSerializer):
 		}
 
 	@staticmethod
-	def validate_password2(attrs):
+	def validate_password2(self, attrs):
 		if attrs['password'] != attrs['password2']:
 			raise serializers.ValidationError(
 				{'password': 'Passwords did not match'})
 		return attrs
 
+	@staticmethod
+	def validate_email(self, attrs):
+		if User.objects.filter(email=attrs).exists():
+			raise serializers.ValidationError(
+				{'email': 'Email already exists'})
+		return attrs
+
+	@staticmethod
 	def create(self, validated_data):
 		user = User.objects.create(
 			username=validated_data['username'],
@@ -222,6 +231,13 @@ class SignupSerializer(serializers.ModelSerializer):
 		user.save()
 
 		return user
+
+	@staticmethod
+	def validate_username(self, attrs):
+		if User.objects.filter(username=attrs).exists():
+			raise serializers.ValidationError(
+				{'username': 'Username already exists'})
+		return attrs
 
 
 class SocialSerializer(serializers.ModelSerializer):
