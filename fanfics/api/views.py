@@ -75,7 +75,7 @@ class FanficViewSet(TemplateViewSet):
 	pagination_class = custompagination.StandardResultsSetPagination
 	lookup_field = 'slug'
 	lookup_url_kwarg = 'slug'
-	throttle_scope = 'fanfic'
+	throttle_scope = 'anon'
 	throttle_classes = (ScopedRateThrottle,)
 	filter_backends = [
 		DjangoFilterBackend,
