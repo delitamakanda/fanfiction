@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import mail_admins
 
@@ -14,6 +15,7 @@ from api.utils import create_notification
 from chapters.models import Chapter
 from fanfics.api.serializers import FanficSerializer
 from fanfics.models import Fanfic
+
 
 def validate_password_confirmation(password1, password2):
 	if password1 != password2:
@@ -30,6 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
 			UniqueValidator(queryset=User.objects.all())
 		])
 	username = serializers.CharField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+
 	class Meta:
 		model = User
 		fields = (
@@ -116,7 +119,6 @@ class AccountProfileSerializer(serializers.ModelSerializer):
 
 
 class DeleteProfilePhotoSerializer(serializers.ModelSerializer):
-
 	class Meta:
 		model = AccountProfile
 		fields = ('photo',)
@@ -146,7 +148,6 @@ class SocialSignUpSerializer(serializers.ModelSerializer):
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
-
 	class Meta:
 		model = FollowUser
 		fields = (
@@ -163,7 +164,6 @@ class FollowUserSerializer(serializers.ModelSerializer):
 
 
 class FollowStoriesSerializer(serializers.ModelSerializer):
-
 	class Meta:
 		model = FollowStories
 		fields = (
@@ -258,9 +258,12 @@ class UserFanficSerializer(serializers.ModelSerializer):
 			'email',
 		)
 
+
 """
 Serializer for password change endpoint
 """
+
+
 class ChangePasswordSerializer(serializers.Serializer):
 	old_password = serializers.CharField(required=True)
 	new_password = serializers.CharField(required=True)
@@ -270,12 +273,13 @@ class ChangePasswordSerializer(serializers.Serializer):
 		validate_password(value)
 		return value
 
+
 """
 Notification serializer
 """
 
-class ContentTypeSerializer(serializers.ModelSerializer):
 
+class ContentTypeSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = ContentType
 		fields = '__all__'
@@ -309,3 +313,22 @@ class NotificationSerializer(serializers.ModelSerializer):
 		notification = Notification.objects.create(**validated_data)
 		notification.save()
 		return notification
+
+
+class PasswordResetSerializer(serializers.Serializer):
+	email = serializers.EmailField(required=True)
+
+	class Meta:
+		fields = ('email',)
+
+	@staticmethod
+	def validate_email(value):
+		if not User.objects.filter(email=value).exists():
+			raise serializers.ValidationError('User with this email does not exist')
+		return value
+
+	def save(self):
+		email = self.validated_data['email']
+		user = User.objects.get(email=email)
+		token = default_token_generator.make_token(user)
+		return {'token': token, 'user': user}

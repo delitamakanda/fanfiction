@@ -4,6 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail
 from django.http import BadHeaderError
 from django.http.response import Http404
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode
 
 from rest_framework import generics, permissions, status, views, viewsets
 from rest_framework.response import Response
@@ -23,12 +25,37 @@ from api import custompermission, custompagination
 from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, \
 	SignupSerializer, GroupSerializer, UserFanficSerializer, SocialSerializer, UserSerializer, \
 	DeleteProfilePhotoSerializer, ChangePasswordSerializer, SocialSignUpSerializer, NotificationSerializer, \
-	ContentTypeSerializer
+	ContentTypeSerializer, PasswordResetSerializer
 from api.custompermission import IsAuthenticatedOrCreate
 
 from fanfics.api.serializers import FanficSerializer
 from accounts.models import AccountProfile, FollowUser, FollowStories, Social, Notification
 from fanfics.models import Fanfic
+
+
+class PasswordResetView(views.APIView):
+	"""
+	Allows users to reset their passwords.
+	"""
+	permission_classes = (permissions.AllowAny,)
+	@staticmethod
+	def post(request):
+		serializer = PasswordResetSerializer(data=request.data)
+		if serializer.is_valid():
+			result = serializer.save()
+			user = result['user']
+			token = result['token']
+			uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+			protocol = request.is_secure() and 'https' or 'http'
+			link = f'{protocol}://{request.get_host()}/api/accounts/password_reset/{uidb64}/{token}/'
+			send_mail(
+				'Password reset request',
+                f'To reset your password, visit this link: {link}',
+                settings.EMAIL_HOST_USER,
+                [user.email],
+			)
+			return Response({'message': 'Password reset email has been sent.'}, status=status.HTTP_200_OK)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserFanficDetailView(generics.RetrieveAPIView):

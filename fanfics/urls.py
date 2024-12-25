@@ -19,7 +19,7 @@ router.register(r'genres', GenresViewSet, basename='genres'),
 router.register(r'classement', ClassementViewSet, basename='classement')
 router.register(r'status', StatusViewSet, basename='status')
 router.register(r'', FanficViewSet, basename='fanfics')
-router.register(r'recommended', RecommendedFanficViewSet, basename='recommended')
+router.register(r'recommended/list', RecommendedFanficViewSet, basename='recommended')
 
 urlpatterns = [
     path('fanfics-create/', FanficCreateApiView.as_view(), name='fanfic-create'),

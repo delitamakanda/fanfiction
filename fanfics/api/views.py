@@ -84,6 +84,7 @@ class FanficViewSet(TemplateViewSet):
 	]
 	search_fields = [
 		'title',
+		'status',
 		'^description',
 		'^synopsis',
 		'author__username',
@@ -94,6 +95,9 @@ class FanficViewSet(TemplateViewSet):
 		'views',
 		'updated',
 	]
+	permission_classes = (
+        custompermission.IsCurrentAuthorOrReadOnly,
+    )
 
 	def retrieve(self, request, *args, **kwargs):
 		instance = self.get_object()
