@@ -20,7 +20,7 @@ pytest==8.0.2
 pytest-django==4.8.0
 python-decouple==3.6
 python3-openid==3.2.0
-pytz==2024.2
+pytz==2025.1
 requests[security]
 six==1.16.0
 urllib3==2.2.3
