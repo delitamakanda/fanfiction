@@ -29,7 +29,7 @@ dj-database-url==1.2.0
 gunicorn==22.0.0
 psycopg2-binary==2.9.10
 django-storages==1.13.2
-boto3==1.36.11
+boto3==1.37.4
 django-markdownx==4.0.7
 coreapi==2.3.3
 WeasyPrint==53.3
