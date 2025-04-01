@@ -24,7 +24,7 @@ pytz==2025.1
 requests[security]
 six==1.16.0
 urllib3==2.3.0
-whitenoise==6.6.0
+whitenoise==6.9.0
 dj-database-url==1.2.0
 gunicorn==23.0.0
 psycopg2-binary==2.9.10
