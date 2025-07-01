@@ -30,7 +30,7 @@ gunicorn==23.0.0
 psycopg2-binary==2.9.10
 django-storages==1.14.6
 boto3==1.37.4
-django-markdownx==4.0.7
+django-markdownx==4.0.9
 coreapi==2.3.3
 WeasyPrint==53.3
 redis==6.2.0
