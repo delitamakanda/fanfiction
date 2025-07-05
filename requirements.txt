@@ -46,4 +46,4 @@ django-redis==5.4.0
 python-memcached==1.62
 drf-spectacular==0.28.0
 structlog==24.4.0
-python-json-logger==2.0.7
+python-json-logger==3.3.0
