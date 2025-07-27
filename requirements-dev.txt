@@ -46,3 +46,5 @@ drf-spectacular==0.28.0
 structlog==24.4.0
 python-json-logger==3.3.0
 psutil==7.0.0
+django-celery-beat==2.8.1
+django-celery-results==2.6.0

@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
 	'drf_spectacular',
+	'django_celery_results',
+	'django_celery_beat',
 ]
 
 INSTALLED_APPS += [
@@ -249,15 +251,17 @@ LOGOUT_REDIRECT_URL = '/'
 # Asynchronous tasks
 
 CELERY_BROKER_URL = config('REDIS_URL', cast=str,
-                           default='redis://localhost:6379/0')
+                           default='django://')
 CELERY_RESULT_BACKEND = config(
-    'REDIS_URL', cast=str, default='redis://localhost:6379/0')
-REDIS_URL = config('REDIS_URL', cast=str, default='redis://localhost:6379/0')
+    'CELERY_BACKEND_DB', cast=str, default='django-db')
+# REDIS_URL = config('REDIS_URL', cast=str, default='redis://localhost:6379/0')
 CELEY_BROKER_POOL_LIMIT = 3
 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # Session cookie
 
@@ -319,15 +323,24 @@ CACHE_MIDDLEWARE_SECONDS = 0
 CACHE_MIDDLEWARE_KEY_PREFIX = ''
 CACHE_TTL = 0 # 60 * 5
 
+# CACHES = {
+    # 'default': {
+        # 'BACKEND': 'django_redis.cache.RedisCache',
+        # 'LOCATION': config('REDIS_URL', cast=str, default='redis://localhost:6379/0'),
+        # 'OPTIONS': {
+            # 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        # }
+    # }
+
+# }
+
 CACHES = {
     'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': config('REDIS_URL', cast=str, default='redis://localhost:6379/0'),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
+		'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'fanfiction-cache',
     }
 }
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
