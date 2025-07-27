@@ -58,7 +58,7 @@ REDIS_URL = config('HEROKU_REDIS_OLIVE_URL')
 CACHES = {
     'default': {
 		'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-		'LOCATION': '/tmp/fanfiction-cache',
+		'LOCATION': '/tmp/fanfiction-recommendations-cache',
         'TIMEOUT': 60 * 5,  # 5 minutes
     }
 }
