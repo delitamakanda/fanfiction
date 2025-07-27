@@ -1,3 +1,5 @@
+from pydoc import synopsis
+
 from django.http import BadHeaderError, JsonResponse
 from django.template.loader import render_to_string, get_template
 from django_filters.rest_framework import DjangoFilterBackend
@@ -5,13 +7,15 @@ from django.core.cache import cache
 
 from rest_framework import generics, permissions, filters, status, views
 from rest_framework.throttling import ScopedRateThrottle
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 
 from django.core.mail import send_mail
-from fanfics.models import Fanfic
+from fanfics.models import Fanfic, Recommendation
 
 from fanfics.api.serializers import  FanficSerializer
 from fanfics.api.filters import FanficFilter
@@ -23,15 +27,23 @@ from api.tasks import fanfic_created
 from fanfics.services import compute_recommendations
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_recommendation_list(request):
-    user_id = request.GET.get('user_id')
-    cache_key = f"recs-user-{user_id}"
-    cached = cache.get(cache_key)
-    if cached:
-        return JsonResponse({ 'recommendations': cached })
-    result = compute_recommendations(user_id)
-    cache.set(cache_key, result, timeout=3600)
-    return JsonResponse({ 'recommendations': result })
+    try:
+        recos = Recommendation.objects.get(user=request.user)
+        serializer = FanficSerializer(recos.fanfictions.all(), many=True)
+        return Response({ 'recommendations': serializer.data }, status=status.HTTP_200_OK)
+    except Recommendation.DoesNotExist:
+        recos = compute_recommendations(request.user.id)
+        reco = Recommendation.objects.create(user=request.user)
+        for fanfic_id in recos:
+            reco.fanfictions.add(Fanfic.objects.get(id=fanfic_id))
+        serializer = FanficSerializer(recos, many=True)
+        return Response({ 'recommendations': serializer.data }, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 

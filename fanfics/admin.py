@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 
-from fanfics.models import Fanfic
+from fanfics.models import Fanfic, Recommendation
 from chapters.models import Chapter
 
 @mark_safe
@@ -25,3 +25,11 @@ class FanficAdmin(admin.ModelAdmin):
     search_fields = ['title', 'synopsis']
     prepopulated_fields = {'slug': ('title',)}
     inlines = [ChapterInline, ]
+
+
+@admin.register(Recommendation)
+class RecommendationAdmin(admin.ModelAdmin):
+    list_display = ['user', 'generated_at']
+    list_filter = ('generated_at',)
+    search_fields = ('user__username',)
+    filter_horizontal = ('fanfictions',)
