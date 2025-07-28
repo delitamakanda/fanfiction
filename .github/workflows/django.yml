@@ -27,9 +27,7 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Run migrations
       run: |
-        python manage.py makemigrations django_celery_beat
-        python manage.py migrate django_celery_beat
-        python manage.py migrate
+        python manage.py migrate --run-syncdb
     - name: Run Tests
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
