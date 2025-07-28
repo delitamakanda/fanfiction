@@ -28,6 +28,7 @@ jobs:
     - name: Run migrations
       run: |
         python manage.py makemigrations django_celery_beat
+        python manage.py migrate django_celery_beat
         python manage.py migrate
     - name: Run Tests
       env:
