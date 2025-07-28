@@ -26,7 +26,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements-dev.txt
     - name: Run migrations
-      run: python manage.py migrate
+      run: |
+        python manage.py makemigrations django_celery_beat
+        python manage.py migrate
     - name: Run Tests
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
