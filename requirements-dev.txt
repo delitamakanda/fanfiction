@@ -10,7 +10,7 @@ django-filter==25.1
 django-multiselectfield==0.1.12
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.2.0
-idna==3.10
+idna==3.11
 oauthlib==3.2.2
 Pillow==11.0.0
 pluggy==1.6.0
