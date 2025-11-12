@@ -35,6 +35,7 @@ A live demo of the mobile web application is available at
 - Redis-backed recommendation engine based on user co-likes.
 - Admin and moderation tooling for managing content and users.
 - Internationalisation support and automated translation compilation.
+- Modern stack targeting Django 5.1 and Python 3.12 deployments.
 
 ## Architecture
 ```
@@ -48,7 +49,7 @@ A live demo of the mobile web application is available at
 ```
 
 ## Requirements
-- Python 3.10+
+- Python 3.12+
 - Node.js 16+ and npm
 - Redis (for Celery/recommendations) – optional during development
 - A PostgreSQL database in production (SQLite is used by default for local dev)

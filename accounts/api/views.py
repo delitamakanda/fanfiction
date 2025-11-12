@@ -370,7 +370,7 @@ class SocialSignUp(generics.CreateAPIView):
 
 		# If this request was made with an authenticated user, try to associate this social
 		# account with it
-		authed_user = request.user if not request.user.is_anonymous() else None
+		authed_user = request.user if not request.user.is_anonymous else None
 
 		# `strategy` is a python-social-auth concept referencing the Python framework to
 		# be used (Django, Flask, etc.). By passing `request` to `load_strategy`, PSA
