@@ -23,7 +23,7 @@ python3-openid==3.2.0
 pytz==2025.2
 requests[security]
 six==1.16.0
-urllib3==2.5.0
+urllib3==2.6.0
 whitenoise==6.9.0
 dj-database-url==3.0.1
 gunicorn==23.0.0
