@@ -20,8 +20,7 @@ from fanfics.models import Fanfic, Recommendation
 from fanfics.api.serializers import  FanficSerializer
 from fanfics.api.filters import FanficFilter
 
-from api import custompermission, recommender, custompagination
-from api.recommender import Recommender
+from api import custompermission, custompagination
 
 from api.tasks import fanfic_created
 from fanfics.services import compute_recommendations
@@ -132,11 +131,9 @@ class FanficViewSet(TemplateViewSet):
             instance.views += 1
             instance.save()
             self.request.session[session_key] = True
-        r = recommender.Recommender()
+
         most_liked_fanfics = Fanfic.objects.filter(
                 status='publié').order_by('-total_likes')[:10]
-        for most_liked_fanfic in most_liked_fanfics:
-            r.fanfics_liked([instance, most_liked_fanfic])
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
@@ -154,7 +151,6 @@ class RecommendedFanficViewSet(TemplateViewSet):
     permission_classes = (permissions.AllowAny,)
 
     def list(self, request, *args, **kwargs):
-        r = Recommender()
         recommended_fanfics = r.suggest_fanfics_for([fanfic for fanfic in Fanfic.objects.filter(status='publié')], 10)
 
         reco_serializer_data = FanficSerializer(recommended_fanfics, many=True)

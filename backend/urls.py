@@ -33,7 +33,6 @@ from fanfics.models import Fanfic
 from markdownx import urls as markdownx
 
 from rest_framework_simplejwt import views as jwt_views
-from rest_framework.documentation import include_docs_urls
 
 
 class FanficSitemap(Sitemap):
@@ -66,7 +65,6 @@ urlpatterns += [
 	path('api/comments/', include(('comments.urls', 'comments'), namespace='comments')),
 	path('api/fanfics/', include(('fanfics.urls', 'fanfics'), namespace='fanfics')),
 	path('offline.html', (TemplateView.as_view(template_name="offline.html")), name='offline.html'),
-	path('docs/', include_docs_urls(title='Fanfiction API', public=False)),
 ]
 
 urlpatterns += [
@@ -85,5 +83,4 @@ if settings.DEBUG:
 urlpatterns += [
 	path('markdownx/', include(markdownx)),
 	path('pages/', include('django.contrib.flatpages.urls')),
-	path('api/oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
