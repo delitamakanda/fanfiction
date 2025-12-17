@@ -14,9 +14,20 @@ import os
 import logging
 import logging.config
 from pathlib import Path
-import structlog
-from pythonjsonlogger import jsonlogger
 from decouple import config
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+STORAGES = {
+	"default": {
+		"BACKEND": "django.core.files.storage.FileSystemStorage",
+	},
+	"staticfiles": {
+		"BACKEND": "whitenoise.storage.CompressedManifestStaticStorage",
+	}
+}
 
 from django.urls import reverse
 
@@ -24,8 +35,6 @@ from django.utils.translation import gettext_lazy as _
 
 from datetime import timedelta
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -54,17 +63,13 @@ INSTALLED_APPS = [
 	'django.contrib.sitemaps',
 	'django.contrib.flatpages',
     'multiselectfield',
-    'embed_video',
     'django_filters',
     'storages',
     'markdownx',
-    'oauth2_provider',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
 	'drf_spectacular',
-	'django_celery_results',
-	'django_celery_beat',
 ]
 
 INSTALLED_APPS += [
@@ -84,20 +89,15 @@ SITE_ID = 1
 SITE_NAME = 'Fanfiction API'
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-	'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'api.middleware.AutoLogout',
     'api.middleware.metric_middleware',
     'django.middleware.locale.LocaleMiddleware',
 ]
@@ -118,8 +118,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -201,8 +199,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -240,60 +236,12 @@ Authenticate with username or email
 """
 
 AUTHENTICATION_BACKENDS = (
-    'oauth2_provider.backends.OAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
     'api.authentication.EmailAuthBackend',
 )
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 LOGOUT_REDIRECT_URL = '/'
-
-# Asynchronous tasks
-
-CELERY_BROKER_URL = config('REDIS_URL', cast=str,
-                           default='django://')
-CELERY_RESULT_BACKEND = config(
-    'CELERY_BACKEND_DB', cast=str, default='django-db')
-# REDIS_URL = config('REDIS_URL', cast=str, default='redis://localhost:6379/0')
-CELEY_BROKER_POOL_LIMIT = 3
-
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-
-# Session cookie
-
-AUTO_LOGOUT_DELAY = 5
-
-# Python Socia Auth
-
-SOCIAL_AUTH_URL_NAMESPACE = 'social'
-
-SOCIAL_AUTH_PIPELINE = (
-    'social_core.pipeline.social_auth.social_details',
-    'social_core.pipeline.social_auth.social_uid',
-    'social_core.pipeline.social_auth.social_user',
-    'social_core.pipeline.user.get_username',
-    'social_core.pipeline.user.create_user',
-    'social_core.pipeline.social_auth.associate_user',
-    'social_core.pipeline.social_auth.load_extra_data',
-    'social_core.pipeline.user.user_details',
-    'social_core.pipeline.social_auth.associate_by_email',
-)
-
-SOCIAL_AUTH_RAISE_EXCEPTIONS = True
-RAISE_EXCEPTIONS = True
-
-# Facebook configuration
-SOCIAL_AUTH_FACEBOOK_KEY = ''
-SOCIAL_AUTH_FACEBOOK_SECRET = ''
-
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id, name, email'
-}
 
 # corsheaders
 CORS_ORIGIN_ALLOW_ALL = False
@@ -309,30 +257,10 @@ CORS_ALLOW_HEADERS = (
     'Range',
 )
 CORS_ORIGIN_WHITELIST = [
-	'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
 	'http://localhost:5173',
 ]
 
-
 # cache
-CACHE_MIDDLEWARE_ALIAS = 'default'
-CACHE_MIDDLEWARE_SECONDS = 0
-CACHE_MIDDLEWARE_KEY_PREFIX = ''
-CACHE_TTL = 0 # 60 * 5
-
-# CACHES = {
-    # 'default': {
-        # 'BACKEND': 'django_redis.cache.RedisCache',
-        # 'LOCATION': config('REDIS_URL', cast=str, default='redis://localhost:6379/0'),
-        # 'OPTIONS': {
-            # 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        # }
-    # }
-
-# }
 
 CACHES = {
     'default': {
@@ -341,18 +269,14 @@ CACHES = {
     }
 }
 
-
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-
 # simple_jwt
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
     'ROTATE_REFRESH_TOKEN': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
-
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
@@ -360,44 +284,36 @@ SIMPLE_JWT = {
     'ISSUER': None,
     'JWK_URL': None,
     'LEEWAY': 0,
-
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
     'TOKEN_USER_CLASS': 'django.contrib.auth.models.User',
-
     'JTI_CLAIM': 'jti',
-
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=30),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
 # logging
 
-logger = logging.getLogger()
-logHandler = logging.StreamHandler()
-formatter = jsonlogger.JsonFormatter()
-logHandler.setFormatter(formatter)
-logger.addHandler(logHandler)
+LOGGING = {
+   'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
 
-logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
-
-structlog.configure(
-	processors=[
-		structlog.processors.add_log_level,
-        structlog.processors.format_exc_info,
-        structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S", utc=True),
-        structlog.dev.ConsoleRenderer(),
-	],
-	wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
-	cache_logger_on_first_use=True,
-)
+# api schema settings
 
 SPECTACULAR_SETTINGS = {
 	"TITLE": "Fanfiction API",
