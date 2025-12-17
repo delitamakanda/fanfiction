@@ -32,7 +32,7 @@ django-storages==1.14.6
 boto3==1.37.4
 django-markdownx==4.0.9
 coreapi==2.3.3
-WeasyPrint==53.3
+WeasyPrint==66.0
 redis==6.2.0
 social-auth-app-django==5.4.3
 django-rest-framework-social-oauth2==1.2.0
