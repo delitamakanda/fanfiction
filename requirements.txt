@@ -9,7 +9,7 @@ django-embed-video==1.4.9
 django-filter==25.1
 django-multiselectfield==0.1.12
 djangorestframework==3.16.0
-djangorestframework_simplejwt==5.2.0
+djangorestframework_simplejwt==5.5.1
 idna==3.10
 oauthlib==3.2.2
 Pillow==11.0.0
