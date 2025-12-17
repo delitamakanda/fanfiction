@@ -1,112 +1,172 @@
-# fanfiction
+# Fanfiction
 
 [![Django CI](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml/badge.svg?branch=master)](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml)
 
-> A fanfic application in vue.js and django
+> A fanfiction platform powered by a Django REST backend and a Vue.js/Ionic frontend.
 
-### Demo Live App
-[ionic app](https://fanfiction-fr.netlify.app/)
+## Table of contents
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Requirements](#requirements)
+- [Quick start](#quick-start)
+  - [Backend (Django)](#backend-django)
+  - [Frontend (Vue.js/Ionic)](#frontend-vuejsionic)
+- [Background tasks](#background-tasks)
+- [Translations](#translations)
+- [Recommendation engine](#recommendation-engine)
+- [Scraper](#scraper)
+- [Testing](#testing)
+- [Additional resources](#additional-resources)
 
-## Build Setup
+## Overview
+This repository contains the source code for a bilingual fanfiction community. The Django
+backend exposes a REST API, background workers and administrative interfaces, while the
+Vue.js/Ionic application delivers the user-facing experience. Supporting utilities provide
+recommendations, content import and automated notifications.
 
-``` bash
-# install dependencies
+A live demo of the mobile web application is available at
+[fanfiction-fr.netlify.app](https://fanfiction-fr.netlify.app/).
+
+## Features
+- Fanfiction catalogue with categories, tags, chapters, comments and user favourites.
+- JWT/OAuth2-secured REST API built with Django REST Framework and Spectacular.
+- Celery workers for scheduled notifications and account maintenance.
+- Redis-backed recommendation engine based on user co-likes.
+- Admin and moderation tooling for managing content and users.
+- Internationalisation support and automated translation compilation.
+- Modern stack targeting Django 5.1 and Python 3.12 deployments.
+
+## Architecture
+```
+├── backend/        # Django project configuration and Celery entrypoint
+├── api/            # REST API endpoints, serializers and services
+├── fanfics/        # Core fanfiction models, scraping utilities, recommendation engine
+├── chapters/, comments/, categories/, helpcenter/, posts/, forum/  # Domain apps
+├── templates/, static/   # Django templates and static assets
+├── docs/           # Additional documentation and guidelines
+└── frontend (Vue.js/Ionic)  # Separate project served from the same repository
+```
+
+## Requirements
+- Python 3.12+
+- Node.js 16+ and npm
+- Redis (for Celery/recommendations) – optional during development
+- A PostgreSQL database in production (SQLite is used by default for local dev)
+
+## Quick start
+Clone the repository and create the environment files (`.env`, `.env.production`, etc.) as
+needed. Example configuration for local development:
+
+```dotenv
+SECRET_KEY=change-me
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+DATABASE_URL=sqlite:///db.sqlite3
+EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+CELERY_BROKER_URL=redis://localhost:6379/0
+```
+
+### Backend (Django)
+```bash
+# Create and activate a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements-dev.txt
+
+# Apply migrations and create a superuser
+python manage.py migrate
+python manage.py createsuperuser
+
+# Start the development server
+python manage.py runserver
+```
+
+### Frontend (Vue.js/Ionic)
+```bash
+cd frontend
+
+# Install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# Serve with hot reload at http://localhost:8080
 npm run dev
 
-# build for production with minification
+# Build for production
 npm run build
 
-# build for production and view the bundle analyzer report
+# Build with bundle analysis report
 npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Background tasks
+Celery workers power scheduled emails and periodic clean-up jobs. Run them alongside the web
+server after configuring the broker URL:
 
-
-``` bash
-# set an virtual env
-python3 -m venv fanfiction
-
-source fanfiction/bin/activate
-
-pip install -r requirements-dev.txt
-
-python3 manage.py migrate
-
-python3 manage.py runserver
+```bash
+celery -A backend worker -l info
+celery -A backend beat -l info
 ```
 
-## Tests
+You can also combine worker and scheduler in a single process if required:
 
-``` bash
-coverage run --source=api ---omit=*/migrations/*  manage.py test
-
-coverage report -m
-```
-
-## Asynchronous tasks
-
-``` bash
+```bash
 celery -A backend worker -l info -B
 ```
 
-## Translation
+## Translations
+The project ships with localisation resources. To update message files and compile them:
 
 ```bash
-django-admin makemessages --ignore=venv/*
+# Extract new strings (ignoring the virtual environment directory)
+django-admin makemessages --ignore=.venv/*
+
+# Compile the message catalogues
 django-admin compilemessages
 ```
 
-## Recommandation engine
+## Recommendation engine
+The recommendation engine leverages Redis to track user likes and compute co-occurrence scores.
+You can experiment with it from the Django shell:
 
-```bash
+```python
 >>> from api.models import Fanfic
->>> fanfic_1 = Fanfic.objects.get(id=1)
->>> fanfic_2 = Fanfic.objects.get(id=2)
->>> fanfic_3 = Fanfic.objects.get(id=3)
->>> fanfic_4 = Fanfic.objects.get(id=4)
 >>> from api.recommender import Recommender
->>> print(fanfic_1)
-Acchi Kocchi - Ben-To Crossover
->>> print(fanfic_2)
-Jusqu'à ce que la mort nous sépare...
->>> print(fanfic_3)
-Nature
->>> print(fanfic_4)
-Elementary
->>> r = Recommender()
->>> print(r)
-<api.recommender.Recommender object at 0x10f5de1d0>
->>> r.fanfics_liked([fanfic_1, fanfic_2])
->>> r.fanfics_liked([fanfic_2, fanfic_3])
->>> r.fanfics_liked([fanfic_4, fanfic_1])
->>> r.fanfics_liked([fanfic_1, fanfic_3])
->>> r.fanfics_liked([fanfic_3, fanfic_4])
->>> r.suggest_fanfics_for([fanfic_1])
-[<Fanfic: Elementary>, <Fanfic: Nature>, <Fanfic: Jusqu'à ce que la mort nous sépare...>]
->>> r.suggest_fanfics_for([fanfic_2])
-[<Fanfic: Nature>, <Fanfic: Acchi Kocchi - Ben-To Crossover>]
->>> r.suggest_fanfics_for([fanfic_3])
-[<Fanfic: Elementary>, <Fanfic: Jusqu'à ce que la mort nous sépare...>, <Fanfic: Acchi Kocchi - Ben-To Crossover>]
->>> r.suggest_fanfics_for([fanfic_4])
-[<Fanfic: Nature>, <Fanfic: Acchi Kocchi - Ben-To Crossover>]
->>> r.suggest_fanfics_for([fanfic_4, fanfic_1])
-[<Fanfic: Nature>, <Fanfic: Jusqu'à ce que la mort nous sépare...>]
->>> r.suggest_fanfics_for([fanfic_1, fanfic_2])
-[<Fanfic: Nature>, <Fanfic: Elementary>]
+>>> favourites = Fanfic.objects.filter(id__in=[1, 2])
+>>> Recommender().suggest_fanfics_for(favourites)
+[<Fanfic: Elementary>, <Fanfic: Nature>, ...]
 ```
 
 ## Scraper
+Import fanfiction content from external sources using the scraper utilities:
 
 ```bash
-python3 fanfics/scraper.py ccs
-python3 fanfics/scraper.py op
-python3 fanfics/scraper.py marvel
-
-python3 manage.py import_from_fanfiction_as_csv output_ccs.csv
-python3 manage.py import_from_fanfiction_as_csv output_op.csv
-python3 manage.py import_from_fanfiction_as_csv output_marvel.csv
+python manage.py import_from_fanfiction_as_csv output_ccs.csv
+python manage.py import_from_fanfiction_as_csv output_op.csv
+python manage.py import_from_fanfiction_as_csv output_marvel.csv
 ```
+
+See `fanfics/scraper.py` for commands that generate these CSV files.
+
+## Testing
+Run the test suite with coverage reporting:
+
+```bash
+coverage run --source=api --omit=*/migrations/* manage.py test
+coverage report -m
+```
+
+For a quicker feedback loop you can also use Django's built-in test runner directly:
+
+```bash
+python manage.py test
+```
+
+## Additional resources
+- [Django documentation](https://docs.djangoproject.com/)
+- [Django REST Framework](https://www.django-rest-framework.org/)
+- [Celery task queue](https://docs.celeryq.dev/)
+- [Vue.js guide](https://vuejs.org/v2/guide/)
+- [Ionic documentation](https://ionicframework.com/docs)

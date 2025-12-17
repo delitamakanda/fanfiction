@@ -1,8 +1,5 @@
 from __future__ import absolute_import, unicode_literals
 
-from celery import shared_task
-from celery.utils.log import get_task_logger
-
 from django.template.loader import get_template, render_to_string
 from django.core.mail import send_mail
 from django.core.mail import send_mass_mail
@@ -10,21 +7,15 @@ from django.core import management
 
 from fanfics.models import Fanfic
 from chapters.models import Chapter
-from comments.models import Comment
 from accounts.models import FollowStories, FollowUser
 from django.contrib.auth.models import User
 
-logger = get_task_logger(__name__)
-
-@shared_task
 def fanfic_created(fanfic_id):
     """
     Task to send an e-mail notification when a fanfic is successfully created.
     """
-    logger.info('******** CALLING ASYNC TASK WITH CELERY **********')
-    
     fanfic = Fanfic.objects.get(id=fanfic_id, status='publié')
-    
+
     """
     get all followers of the author
     """
@@ -42,19 +33,17 @@ def fanfic_created(fanfic_id):
 
     send_mail(subject, msg_text, "no-reply@fanfiction.com", [fanfic.author.email], html_message=msg_html)
     message = (subject, f'{fanfic.author.username} a publié une nouvelle story', "no-reply@fanfiction.com", emaillists)
-    
+
     mail_sent = send_mass_mail((message,), fail_silently=False)
-    
+
     return mail_sent
 
 
-@shared_task
 def chapter_created(chapter_id):
     chapter = Chapter.objects.get(id=chapter_id, status='publié')
     followers = FollowStories.objects.filter(to_fanfic=chapter.fanfic).values_list('from_user', flat=True)
     users = User.objects.filter(id__in=followers).values_list('email', flat=True)
     emaillists = []
-    logger.info(users)
     for email in users:
         emaillists.append(str(email))
     subject = 'Fanfiction : nouveau chapitre publié sur {}'.format(chapter.fanfic.title)
@@ -62,31 +51,29 @@ def chapter_created(chapter_id):
     context = {'chapter': chapter}
     msg_text = template.render(context)
     msg_html = render_to_string('mail/chapter_created_notification.html', context)
-        
+
     send_mail(subject, msg_text, "no-reply@fanfiction.com", [chapter.fanfic.author.email], html_message=msg_html)
     message = (subject, f'{chapter.author.username} a publié un nouveau chapitre pour {chapter.fanfic.title}', "no-reply@fanfiction.com", emaillists)
-    
+
     mail_sent = send_mass_mail((message,), fail_silently=False)
 
     return mail_sent
 
-@shared_task
 def user_email_reminder():
-	try:
-		"""
-		envoie un email aux users ne s'étant pas connecté depuis 2 semaines
-		"""
-		management.call_command("email_reminder", verbosity=0)
-	except:
-		print("error")
-		
-		
-@shared_task
+    try:
+        """
+        envoie un email aux users ne s'étant pas connecté depuis 2 semaines
+        """
+        management.call_command("email_reminder", verbosity=0)
+    except:
+        print("error")
+
+
 def deactivate_inactive_user():
-	try:
-		"""
-		desactive les users non connectés pendant 1 an
-		"""
-		management.call_command("deactivateuser", "1year", verbosity=0)
-	except:
-		print("error")
+    try:
+        """
+        desactive les users non connectés pendant 1 an
+        """
+        management.call_command("deactivateuser", "1year", verbosity=0)
+    except:
+        print("error")
