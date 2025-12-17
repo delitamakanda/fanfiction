@@ -5,9 +5,6 @@ from rest_framework.response import Response
 import platform
 import psutil
 import django
-import socket
-import os
-from django.utils.timezone import now
 
 START_TIME = datetime.now()
 

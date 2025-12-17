@@ -16,6 +16,7 @@ yarn-error.log*
 .env
 db.sqlite3
 venv/
+fanfiction_venv/
 fanfiction/
 webpack-stats.json
 svg-icons/
