@@ -1,6 +1,6 @@
 # Fanfiction
 
-[![Django CI](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml/badge.svg?branch=master)](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml)
+[![Django CI](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml/badge.svg?branch=main)](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml)
 
 > A fanfiction platform powered by a Django REST backend and a Vue.js/Ionic frontend.
 
