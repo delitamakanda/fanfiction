@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 import platform
@@ -9,6 +10,11 @@ import django
 START_TIME = datetime.now()
 
 
+@extend_schema(
+	summary="Check the server's health status",
+	description="Returns a simple 'ok' response along with the current server's timestamp",
+    tags=['System'],
+)
 class HealthAPIResponse(generics.ListAPIView):
     name = 'health-api'
     permission_classes = [permissions.AllowAny,]
@@ -22,6 +28,11 @@ class HealthAPIResponse(generics.ListAPIView):
         })
 
 
+@extend_schema(
+	summary="Get system information",
+    description="Returns system information such as uptime, disk usage, memory usage, and database connection status",
+    tags=['System'],
+)
 class SystemAPIView(generics.ListAPIView):
     name = 'system-api'
     permission_classes = [permissions.AllowAny,]
