@@ -25,7 +25,7 @@ STORAGES = {
 		"BACKEND": "django.core.files.storage.FileSystemStorage",
 	},
 	"staticfiles": {
-		"BACKEND": "whitenoise.storage.CompressedManifestStaticStorage",
+		"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
 	}
 }
 
@@ -46,7 +46,7 @@ SECRET_KEY = config('SECRET_KEY', cast=str,
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
 
 
 # Application definition
@@ -190,8 +190,9 @@ STATICFILES_DIRS = [
 ]
 
 REST_FRAMEWORK = {
+	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'api.custompagination.StandardResultsSetPagination',
-    'PAGE_SIZE': 99,
+    'PAGE_SIZE': 50,
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
@@ -213,7 +214,6 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     'SEARCH_PARAM': 'q',
     'ORDERING_PARAM': 'ordering',
-	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # OAuth settings
@@ -318,17 +318,17 @@ LOGGING = {
 SPECTACULAR_SETTINGS = {
 	"TITLE": "Fanfiction API",
 	"DESCRIPTION": "API for managing fanfiction content",
+	"CONTACT": {
+        "name": "Fanfiction API Team",
+        "url": "https://github.com/delitamakanda/fanfiction",
+        "email": "api@fanfiction.com",
+    },
+	"LICENSE": {
+        "name": "MIT License",
+        "url": "https://github.com/delitamakanda/fanfiction/blob/master/LICENSE",
+    },
+    "DEFAULT_VERSION": "v1",
 	"VERSION": "1.0.0",
-	"SERVE_INCLUDE_SCHEMA": True,
-	"COMPONENT_SPLIT_REQUEST": True,
-	"URL_CONFIG": {
-		"DEFAULT_VERSION": "v1",
-        "ALLOWED_VERSIONS": ["v1"],
-        "DEFAULT_VERSIONING_TYPE": "namespace",
-        "VERSIONING_PARAM": "api_version",
-	},
-	"SWAGGER_AUTO_SCHEMA": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_AUTO_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "SECURITY_DEFINITIONS": {
         "Bearer": {
             "type": "apiKey",
@@ -338,4 +338,21 @@ SPECTACULAR_SETTINGS = {
 			"scheme": "Bearer",
 		}
 	},
+	'SERVE_INCLUDE_SCHEMA': False,
 }
+
+# Multi threads brokers
+
+CELERY_BROKER_URL = "django://"
+CELERY_RESULT_BACKEND = "fanfiction-db"
+
+INSTALLED_APPS += [
+	'django_celery_results',
+	'django_celery_beat',
+]
+
+# debug toolbar
+
+INSTALLED_APPS += ['debug_toolbar']
+MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+INTERNAL_IPS = ["127.0.0.1", "localhost"]
