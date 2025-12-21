@@ -40,3 +40,16 @@ class SubCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class EntityCategory(models.Model):
+    category = models.ForeignKey(Category, related_name="entity_categories", on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(SubCategory, related_name="entity_subcategories", on_delete=models.CASCADE)
+    entity = models.CharField(max_length=200, db_index=True)
+    logic_value = models.CharField(max_length=60, blank=True, default='')
+
+    class Meta:
+        ordering = ('entity',)
+
+    def __str__(self):
+        return self.entity
