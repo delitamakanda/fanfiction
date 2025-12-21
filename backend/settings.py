@@ -184,7 +184,6 @@ STATICFILES_DIRS = [
 ]
 
 REST_FRAMEWORK = {
-	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 	'DEFAULT_PAGINATION_CLASS': 'api.custompagination.StandardResultsSetPagination',
 	'PAGE_SIZE': 50,
 	'DEFAULT_FILTER_BACKENDS': (
@@ -194,9 +193,6 @@ REST_FRAMEWORK = {
 	),
 	'DEFAULT_AUTHENTICATION_CLASSES': (
 		'rest_framework_simplejwt.authentication.JWTAuthentication',
-	),
-	'DEFAULT_PERMISSION_CLASSES': (
-		'rest_framework.permissions.IsAuthenticated',
 	),
 	'DEFAULT_THROTTLE_CLASSES': (
 		'rest_framework.throttling.AnonRateThrottle',
@@ -208,6 +204,7 @@ REST_FRAMEWORK = {
 	'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 	'SEARCH_PARAM': 'q',
 	'ORDERING_PARAM': 'ordering',
+	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # OAuth settings
@@ -312,6 +309,7 @@ LOGGING = {
 SPECTACULAR_SETTINGS = {
 	"TITLE": "Fanfiction API",
 	"DESCRIPTION": "API for managing fanfiction content",
+	"SERVE_INCLUDE_SCHEMA": False,
 	"VERSION": "1.0.0",
 	"CONTACT": {
 		"name": "Fanfiction API Team",
@@ -322,13 +320,12 @@ SPECTACULAR_SETTINGS = {
 		"name": "MIT License",
 		"url": "https://github.com/delitamakanda/fanfiction/blob/master/LICENSE",
 	},
-	'SERVE_INCLUDE_SCHEMA': True,
-	'SWAGGER_UI_SETTINGS': {
-		'deepLinking': True,
-		'displayOperationId': True,
-		'defaultModelsExpandDepth': 1,
-		'defaultModelExpandDepth': 1,
-	},
+	'PREPROCESSING_HOOKS': [
+		'drf_spectacular.hooks.preprocess_exclude_path_format',
+    ],
+	'POSTPROCESSING_HOOKS': [
+		'drf_spectacular.hooks.postprocess_schema_enums',
+    ],
 }
 
 # Multi threads brokers

@@ -34,6 +34,8 @@ CheckoutUserView,
 PasswordResetView,
 )
 
+app_name = 'accounts'
+
 routers = DefaultRouter()
 
 urlpatterns = [

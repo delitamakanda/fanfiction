@@ -1,6 +1,7 @@
 from django.utils.decorators import method_decorator
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema_view
 
 from rest_framework import permissions, filters, generics
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -21,6 +22,7 @@ class FoireAuxQuestionsApiView(ModelViewSet):
 	http_method_names = ['get']
 
 
+@extend_schema_view()
 class LexiqueApiView(ModelViewSet):
 	serializer_class = LexiqueSerializer
 	filter_backends = (

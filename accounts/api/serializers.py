@@ -11,7 +11,7 @@ from accounts.models import Social, AccountProfile, FollowStories, FollowUser, N
 
 from api.customserializer import Base64ImageField
 
-from api.utils import create_notification
+# from api.utils import create_notification
 from chapters.models import Chapter
 from fanfics.api.serializers import FanficSerializer
 from fanfics.models import Fanfic
@@ -59,7 +59,7 @@ class UserSerializer(serializers.ModelSerializer):
 		validate_password_confirmation(validated_data["password"], validated_data["password2"])
 		user.set_password(validated_data["password"])
 		user.save()
-		create_notification(user, 'a créé un compte')
+		# create_notification(user, 'a créé un compte')
 		mail_admins("Account creation", "An user has created an account.")
 		return user
 
@@ -80,7 +80,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 	def create(self, validated_data):
-		create_notification(validated_data['user'], 'a crée un compte')
+		# create_notification(validated_data['user'], 'a crée un compte')
 		return AccountProfile.objects.create(**validated_data)
 
 	@staticmethod
@@ -158,8 +158,8 @@ class FollowUserSerializer(serializers.ModelSerializer):
 		)
 
 	def create(self, validated_data):
-		create_notification(
-			validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
+		# create_notification(
+			# validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
 		return FollowUser.objects.create(**validated_data)
 
 
@@ -174,8 +174,8 @@ class FollowStoriesSerializer(serializers.ModelSerializer):
 		)
 
 	def create(self, validated_data):
-		create_notification(
-			validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
+		# create_notification(
+			# validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
 		return FollowStories.objects.create(**validated_data)
 
 

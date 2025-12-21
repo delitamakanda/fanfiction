@@ -5,6 +5,7 @@ from comments.api.views import (
 CommentUpdateApiView,
 )
 
+app_name = 'comments'
 
 urlpatterns = [
 	path('create/', CommentCreateApiView.as_view(), name='comment-create'),

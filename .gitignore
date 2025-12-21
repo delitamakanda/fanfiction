@@ -29,3 +29,4 @@ dist/
 build/
 config/
 !frontend/src/config/
+schema.yml

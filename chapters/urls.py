@@ -5,6 +5,8 @@ from chapters.api.views import (
      ChapterDetailView
 )
 
+app_name = 'chapters'
+
 urlpatterns = [
 path('<int:fanfic>/list/',
          ChapterListApiView.as_view(), name='chapter-list-by-fanfic'),

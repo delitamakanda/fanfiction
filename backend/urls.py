@@ -34,14 +34,11 @@ sitemaps = {
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
-
-	path('api/', include('api.urls', namespace='api')),
-
-	path('docs/', include('backend.docs_urls', namespace='docs')),
-	path('forum/', include(('forum.urls', 'forum'), namespace='forum')),
+	path('api/', include('api.urls')),
+	path('docs/', include('backend.docs_urls')),
+	path('forum/', include(('forum.urls', 'forum'))),
 
 	path('markdownx/', include(markdownx)),
-
 	path('pages/', include('django.contrib.flatpages.urls')),
 
 	path('offline.html', TemplateView.as_view(template_name="offline.html"), name='offline.html'),

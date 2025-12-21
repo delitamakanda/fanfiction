@@ -10,10 +10,12 @@ FlatPageApiView,
 FlatPagesHTMLByIDView,
 )
 
+app_name = 'helpcenter'
+
 routers = DefaultRouter()
 
 routers.register(r'lexique', LexiqueApiView, basename='lexique')
-routers.register(r'faq', FoireAuxQuestionsApiView, basename='faq'),
+routers.register(r'faq', FoireAuxQuestionsApiView, basename='faq')
 routers.register(r'pages', FlatPageApiView, basename='pages')
 
 urlpatterns = routers.urls
