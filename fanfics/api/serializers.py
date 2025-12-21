@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from api.customserializer import TemplateSerializer
 from fanfics.models import Fanfic
@@ -22,6 +23,7 @@ class FanficSerializer(TemplateSerializer):
 		lookup_field = 'slug'
 
 	@staticmethod
+	@extend_schema_field(ChapterSerializer(many=True, read_only=True))
 	def get_chapters_count(obj):
 		all_published_chapters = Chapter.objects.filter(
 			fanfic=obj, status='publié')

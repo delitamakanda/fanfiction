@@ -21,7 +21,7 @@ from api import custompermission, custompagination
 from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, \
 	SignupSerializer, GroupSerializer, UserFanficSerializer, SocialSerializer, UserSerializer, \
 	DeleteProfilePhotoSerializer, ChangePasswordSerializer, SocialSignUpSerializer, NotificationSerializer, \
-	ContentTypeSerializer, PasswordResetSerializer
+	ContentTypeSerializer, PasswordResetSerializer, ContactMailSerializer
 from api.custompermission import IsAuthenticatedOrCreate
 
 from fanfics.api.serializers import FanficSerializer
@@ -29,7 +29,7 @@ from accounts.models import AccountProfile, FollowUser, FollowStories, Social, N
 from fanfics.models import Fanfic
 
 
-class PasswordResetView(views.APIView):
+class PasswordResetView(generics.GenericAPIView):
 	"""
 	Allows users to reset their passwords.
 	"""
@@ -152,11 +152,11 @@ def liked_fanfic(request):
 			return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FavoritedFanficView(views.APIView):
+class FavoritedFanficView(generics.GenericAPIView):
 	"""
 	Favorite fanfic
 	"""
-	# serializer_class = FanficSerializer()
+	serializer_class = FanficSerializer()
 	authentication_classes = ()
 	permission_classes = ()
 
@@ -184,7 +184,7 @@ def unliked_fanfic(request):
 			return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UnfavoritedFanficView(views.APIView):
+class UnfavoritedFanficView(generics.GenericAPIView):
 	"""
 	Unfavorite fanfic
 	"""
@@ -216,7 +216,7 @@ class unFollowAuthor(generics.DestroyAPIView):
 	lookup_field = 'user_from__username'
 
 
-class FollowUserView(views.APIView):
+class FollowUserView(generics.GenericAPIView):
 	"""
 	Users followed
 	"""
@@ -247,7 +247,7 @@ class FollowUserView(views.APIView):
 		except:
 			return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
-class FollowAuthorDeleteView(views.APIView):
+class FollowAuthorDeleteView(generics.GenericAPIView):
 	"""
 	Author followed
 	"""
@@ -273,7 +273,7 @@ class FollowAuthorDeleteView(views.APIView):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class FollowStoriesDeleteView(views.APIView):
+class FollowStoriesDeleteView(generics.GenericAPIView):
 	"""
 	Author followed
 	"""
@@ -299,7 +299,7 @@ class FollowStoriesDeleteView(views.APIView):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class FollowStoriesView(views.APIView):
+class FollowStoriesView(generics.GenericAPIView):
 	"""
 	Stories followed
 	"""
@@ -336,7 +336,7 @@ class FollowStoriesView(views.APIView):
 			return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DeleteAccountView(views.APIView):
+class DeleteAccountView(generics.GenericAPIView):
 	"""
 	Disable user account
 	"""
@@ -367,7 +367,7 @@ class UserCreateView(generics.CreateAPIView):
 	permission_classes = (permissions.AllowAny,)
 
 
-class LoginView(views.APIView):
+class LoginView(generics.GenericAPIView):
 	"""
 	Login user
 	"""
@@ -391,7 +391,7 @@ class LoginView(views.APIView):
 		return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
 
-class LogoutView(views.APIView):
+class LogoutView(generics.GenericAPIView):
 	"""
 	Logout user
 	"""
@@ -409,7 +409,7 @@ class LogoutView(views.APIView):
 		return Response({"status": 204})
 
 
-class CheckoutUserView(views.APIView):
+class CheckoutUserView(generics.GenericAPIView):
 	"""
 	Checkout current user
 	"""
@@ -422,11 +422,12 @@ class CheckoutUserView(views.APIView):
 
 
 
-class ChangePasswordView(views.APIView):
+class ChangePasswordView(generics.GenericAPIView):
 	"""
 	Change password view
 	"""
 	permission_classes = (permissions.IsAuthenticated,)
+	serializer_class = ChangePasswordSerializer
 
 	def get_object(self, queryset=None):
 		return self.request.user
@@ -446,7 +447,7 @@ class ChangePasswordView(views.APIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class RemovePhotoFromAccount(views.APIView):
+class RemovePhotoFromAccount(generics.GenericAPIView):
 	"""
 	Photo Profile
 	"""
@@ -468,12 +469,13 @@ class RemovePhotoFromAccount(views.APIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ContactMailView(views.APIView):
+class ContactMailView(generics.GenericAPIView):
 	"""
 	Send an email to webmaster
 	"""
 	permission_classes = (permissions.AllowAny,)
 	authentication_classes = ()
+	serializer_class = ContactMailSerializer
 
 	@staticmethod
 	def post(request, *args, **kwargs):
