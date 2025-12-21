@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.mail import mail_admins
 
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 from rest_framework.validators import UniqueValidator
 
 from accounts.models import Social, AccountProfile, FollowStories, FollowUser, Notification
@@ -84,6 +85,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
 		return AccountProfile.objects.create(**validated_data)
 
 	@staticmethod
+	@extend_schema_field(FanficSerializer(many=True))
 	def get_user_follows_stories(obj):
 		follows = FollowStories.objects.filter(from_user=obj.user).all()
 		return [FanficSerializer(f.to_fanfic).data for f in follows]

@@ -427,6 +427,7 @@ class ChangePasswordView(views.APIView):
 	Change password view
 	"""
 	permission_classes = (permissions.IsAuthenticated,)
+	serializer_class = ChangePasswordSerializer
 
 	def get_object(self, queryset=None):
 		return self.request.user
