@@ -313,6 +313,9 @@ SPECTACULAR_SETTINGS = {
 	"TITLE": "Fanfiction API",
 	"DESCRIPTION": "API for managing fanfiction content",
 	"SERVE_INCLUDE_SCHEMA": False,
+	"SERVE_PERMISSIONS": [
+		"rest_framework.permissions.AllowAny",
+	],
 	"VERSION": "1.0.0",
 	"CONTACT": {
 		"name": "Fanfiction API Team",

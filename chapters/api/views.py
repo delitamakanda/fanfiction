@@ -32,7 +32,7 @@ class ChapterCreateApiView(generics.CreateAPIView):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
     permission_classes = (
-        custompermission.IsCurrentAuthorOrReadOnly
+        custompermission.IsCurrentAuthorOrReadOnly,
     )
 
     def perform_create(self, serializer):
@@ -46,7 +46,7 @@ class ChapterDetailView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     name='chapter-detail'
     permission_classes = (
-        custompermission.IsCurrentAuthorOrReadOnly
+        custompermission.IsCurrentAuthorOrReadOnly,
     )
 
     def perform_update(self, serializer):
