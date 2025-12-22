@@ -25,9 +25,9 @@ resources_patterns = [
 	path('help/', include(('helpcenter.urls', 'helpcenter'), namespace='helpcenter')),
 	path('posts/', include(('posts.urls', 'posts'), namespace='posts')),
 	path('categories/', include(('categories.urls', 'categories'), namespace='categories')),
-	# path('chapters/', include(('chapters.urls', 'chapters'), namespace='chapters')),
+	path('chapters/', include(('chapters.urls', 'chapters'), namespace='chapters')),
 	path('comments/', include(('comments.urls', 'comments'), namespace='comments')),
-	#path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
+	path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
 	path('fanfics/', include(('fanfics.urls', 'fanfics'), namespace='fanfics')),
 ]
 
