@@ -3,6 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import mail_admins
+from drf_spectacular.utils import extend_schema_field
 
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
@@ -22,6 +23,28 @@ def validate_password_confirmation(password1, password2):
 	if password1 != password2:
 		raise serializers.ValidationError('Passwords do not match.')
 	return password1
+
+
+class NotificationObjectRelatedField(serializers.RelatedField):
+
+	def to_representation(self, value):
+		if isinstance(value, User):
+			return value.username
+		elif isinstance(value, Chapter):
+			return value.title
+		elif isinstance(value, Fanfic):
+			return value.title
+		raise Exception('Unexpected type of object')
+
+
+
+class SocialSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Social
+		fields = '__all__'
+
+	def create(self, validated_data):
+		return Social.objects.create(**validated_data)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -64,6 +87,57 @@ class UserSerializer(serializers.ModelSerializer):
 		mail_admins("Account creation", "An user has created an account.")
 		return user
 
+	@staticmethod
+	@extend_schema_field(FanficSerializer(many=True))
+	def get_user_follows_stories(obj):
+		follows = FollowStories.objects.filter(from_user=obj.user).all()
+		return [FanficSerializer(f.to_fanfic).data for f in follows]
+
+	# @staticmethod
+	# @extend_schema_field(UserSerializer(many=True))
+	# def get_user_follows_authors(obj):
+	# 	follows = FollowUser.objects.filter(user_from=obj.user).all()
+	# 	return [UserSerializer(f.user_to).data for f in follows]
+	#
+	# @staticmethod
+	# @extend_schema_field(UserSerializer(many=True))
+	# def get_user_favorites_stories(obj):
+	# 	fanfics_liked = Fanfic.objects.filter(users_like=obj.user).all()
+	# 	return [FanficSerializer(f).data for f in fanfics_liked]
+	#
+	# @staticmethod
+	# @extend_schema_field(NotificationSerializer(many=True))
+	# def get_notifications(obj):
+	# 	notifications = Notification.objects.filter(user=obj.user).all()
+	# 	return [NotificationSerializer(n).data for n in notifications]
+
+	@staticmethod
+	@extend_schema_field(FanficSerializer(many=True))
+	def get_user_stories(obj):
+		fanfics = Fanfic.objects.filter(author=obj.user).all()
+		stories = [FanficSerializer(f).data for f in fanfics]
+		return stories
+
+	@staticmethod
+	@extend_schema_field(SocialSerializer(many=True))
+	def get_social_network(obj):
+		social = Social.objects.filter(user=obj.user).all()
+		if social:
+			social_networks = [{'network': s.network, 'nichandle': s.nichandle} for s in social]
+			return social_networks
+		return None
+
+class NotificationSerializer(serializers.ModelSerializer):
+	user = UserSerializer(read_only=True)
+	target = NotificationObjectRelatedField(read_only=True)
+
+	class Meta:
+		model = Notification
+		fields = '__all__'
+		extra_kwargs = {
+			'user': {'read_only': True},
+			'target': {'read_only': True},
+		}
 
 class AccountProfileSerializer(serializers.ModelSerializer):
 	photo = Base64ImageField(max_length=None, use_url=True,
@@ -83,41 +157,6 @@ class AccountProfileSerializer(serializers.ModelSerializer):
 	def create(self, validated_data):
 		# create_notification(validated_data['user'], 'a crée un compte')
 		return AccountProfile.objects.create(**validated_data)
-
-	@staticmethod
-	@extend_schema_field(FanficSerializer(many=True))
-	def get_user_follows_stories(obj):
-		follows = FollowStories.objects.filter(from_user=obj.user).all()
-		return [FanficSerializer(f.to_fanfic).data for f in follows]
-
-	@staticmethod
-	def get_user_follows_authors(obj):
-		follows = FollowUser.objects.filter(user_from=obj.user).all()
-		return [UserSerializer(f.user_to).data for f in follows]
-
-	@staticmethod
-	def get_user_favorites_stories(obj):
-		fanfics_liked = Fanfic.objects.filter(users_like=obj.user).all()
-		return [FanficSerializer(f).data for f in fanfics_liked]
-
-	@staticmethod
-	def get_notifications(obj):
-		notifications = Notification.objects.filter(user=obj.user).all()
-		return [NotificationSerializer(n).data for n in notifications]
-
-	@staticmethod
-	def get_user_stories(obj):
-		fanfics = Fanfic.objects.filter(author=obj.user).all()
-		stories = [FanficSerializer(f).data for f in fanfics]
-		return stories
-
-	@staticmethod
-	def get_social_network(obj):
-		social = Social.objects.filter(user=obj.user).all()
-		if social:
-			social_networks = [{'network': s.network, 'nichandle': s.nichandle} for s in social]
-			return social_networks
-		return None
 
 
 class DeleteProfilePhotoSerializer(serializers.ModelSerializer):
@@ -242,14 +281,6 @@ class SignupSerializer(serializers.ModelSerializer):
 		return attrs
 
 
-class SocialSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Social
-		fields = '__all__'
-
-	def create(self, validated_data):
-		return Social.objects.create(**validated_data)
-
 
 class UserFanficSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -287,30 +318,6 @@ class ContentTypeSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 
-class NotificationObjectRelatedField(serializers.RelatedField):
-
-	def to_representation(self, value):
-		if isinstance(value, User):
-			return value.username
-		elif isinstance(value, Chapter):
-			return value.title
-		elif isinstance(value, Fanfic):
-			return value.title
-		raise Exception('Unexpected type of object')
-
-
-class NotificationSerializer(serializers.ModelSerializer):
-	user = UserSerializer(read_only=True)
-	target = NotificationObjectRelatedField(read_only=True)
-
-	class Meta:
-		model = Notification
-		fields = '__all__'
-		extra_kwargs = {
-			'user': {'read_only': True},
-			'target': {'read_only': True},
-		}
-
 	def create(self, validated_data):
 		notification = Notification.objects.create(**validated_data)
 		notification.save()
@@ -334,3 +341,12 @@ class PasswordResetSerializer(serializers.Serializer):
 		user = User.objects.get(email=email)
 		token = default_token_generator.make_token(user)
 		return {'token': token, 'user': user}
+
+
+class ContactMailSerializer(serializers.Serializer):
+	name = serializers.CharField(required=True)
+	email = serializers.EmailField(required=True)
+	message = serializers.CharField(required=True)
+
+	class Meta:
+		fields = ('name', 'email','message')

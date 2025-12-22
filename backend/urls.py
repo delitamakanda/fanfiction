@@ -34,8 +34,8 @@ sitemaps = {
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
-	path('api/', include('api.urls')),
-	path('docs/', include('backend.docs_urls')),
+	path('api/', include(('api.urls', 'api'), namespace='api')),
+	path('docs/', include(('backend.docs_urls', 'docs'), namespace='docs')),
 	path('forum/', include(('forum.urls', 'forum'))),
 
 	path('markdownx/', include(markdownx)),

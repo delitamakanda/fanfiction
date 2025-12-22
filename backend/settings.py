@@ -14,6 +14,7 @@ import os
 import logging
 import logging.config
 from pathlib import Path
+
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -200,8 +201,10 @@ REST_FRAMEWORK = {
 	'DEFAULT_THROTTLE_RATES': {
 		'anon': '5000/days',
 	},
+	'DEFAULT_PERMISSION_CLASSES': (
+		'rest_framework.permissions.AllowAny',
+	),
 	'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
-	'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 	'SEARCH_PARAM': 'q',
 	'ORDERING_PARAM': 'ordering',
 	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
