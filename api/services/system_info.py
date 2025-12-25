@@ -61,7 +61,7 @@ class ServerStatusService:
             return {
                 'total_gb': round(disk_info.total / BYTES_PER_GB, 2),
                 'used_gb': round(disk_info.used / BYTES_PER_GB, 2),
-                'free_gb': round(disk_info.percent / BYTES_PER_GB, 2),
+                'free_gb': round(disk_info.free / BYTES_PER_GB, 2),
                 'percent_gb': round(disk_info.percent, 2),
             }
         except Exception as e:
@@ -84,7 +84,7 @@ class ServerStatusService:
             return {
                 'total_gb': round(memory_info.total / BYTES_PER_GB, 2),
                 'used_gb': round(memory_info.used / BYTES_PER_GB, 2),
-                'free_gb': round(memory_info.percent / BYTES_PER_GB, 2),
+                'free_gb': round(memory_info.free / BYTES_PER_GB, 2),
                 'percent_gb': round(memory_info.percent, 2),
             }
         except Exception as e:
