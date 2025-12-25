@@ -337,7 +337,7 @@ SPECTACULAR_SETTINGS = {
 # Multi threads brokers
 
 CELERY_BROKER_URL = "django://"
-CELERY_RESULT_BACKEND = "fanfiction-db"
+CELERY_RESULT_BACKEND = "django-db"
 
 INSTALLED_APPS += [
 	'django_celery_results',

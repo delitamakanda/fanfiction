@@ -6,7 +6,6 @@ from django.core.mail import mail_admins
 from drf_spectacular.utils import extend_schema_field
 
 from rest_framework import serializers
-from drf_spectacular.utils import extend_schema_field
 from rest_framework.validators import UniqueValidator
 
 from accounts.models import Social, AccountProfile, FollowStories, FollowUser, Notification

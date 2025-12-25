@@ -22,10 +22,10 @@ class ServerStatusService:
     @staticmethod
     def get_python_info() -> Dict[str, str]:
         """
-        Get the Python version and Django version.
+        Get the Python version information.
 
         Returns:
-            Dict[str, str]: The Python and Django versions.
+            Dict[str, str]: The Python version information.
         """
         return {
             'version': platform.python_version(),
@@ -51,11 +51,11 @@ class ServerStatusService:
         Get disk usage information.
 
         Args:
-            path (str): The path to get disk usage information for.
-            Defaults to '/'.
-            Returns:
+            path (str): The path to get disk usage information for. Defaults to '/'.
+
+        Returns:
             Dict[str, Any]: The disk usage information.
-            """
+        """
         try:
             disk_info = psutil.disk_usage(path)
             return {
