@@ -37,8 +37,13 @@ class CpuInfoSerializer(serializers.Serializer):
 	architecture = serializers.CharField()
 	processor_type = serializers.CharField()
 
-class SystemInfoSerializer(serializers.Serializer):
+class SystemDetailsSerializer(serializers.Serializer):
 	system = serializers.CharField()
+	release = serializers.CharField()
+	version = serializers.CharField()
+
+class SystemInfoSerializer(serializers.Serializer):
+	system = SystemDetailsSerializer()
 	status = serializers.CharField()
 	timestamp = serializers.DateTimeField()
 	uptime_server = serializers.CharField()

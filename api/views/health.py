@@ -29,7 +29,7 @@ class HealthCheckApiView(generics.GenericAPIView):
 
 
 class DetailHealthCheckApiView(generics.GenericAPIView):
-    permission_classes = [permissions.AllowAny,]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser,]
     @extend_schema(
         responses={
             200: OpenApiResponse(

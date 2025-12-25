@@ -11,7 +11,7 @@ from api.utils.constants import STATUS
 
 class SystemInfoApiView(generics.GenericAPIView):
 	serializer_class = SystemInfoSerializer
-	permission_classes = [permissions.AllowAny, ]
+	permission_classes = [permissions.IsAdminUser, ]
 
 	@extend_schema(
 		responses={
@@ -19,7 +19,7 @@ class SystemInfoApiView(generics.GenericAPIView):
 				description="System information response",
 				response=SystemInfoSerializer),
 			403: OpenApiResponse(
-				description="Authentication required",
+				description="Forbidden",
 			)
 		},
 		tags=['System'],
