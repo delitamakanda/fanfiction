@@ -51,11 +51,11 @@ class ServerStatusService:
         Get disk usage information.
 
         Args:
-            path (str): The path to get disk usage information for.
-            Defaults to '/'.
-            Returns:
+            path (str): The path to get disk usage information for. Defaults to '/'.
+
+        Returns:
             Dict[str, Any]: The disk usage information.
-            """
+        """
         try:
             disk_info = psutil.disk_usage(path)
             return {
