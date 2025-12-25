@@ -14,6 +14,7 @@ import os
 import logging
 import logging.config
 from pathlib import Path
+
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ STORAGES = {
 		"BACKEND": "django.core.files.storage.FileSystemStorage",
 	},
 	"staticfiles": {
-		"BACKEND": "whitenoise.storage.CompressedManifestStaticStorage",
+		"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
 	}
 }
 
@@ -35,53 +36,51 @@ from django.utils.translation import gettext_lazy as _
 
 from datetime import timedelta
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', cast=str,
-                    default='dummy_secret_key')  # hack for CI
+					default='dummy_secret_key')  # hack for CI
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
 
-ALLOWED_HOSTS = ['*',]
-
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.sites',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.sites',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'django.contrib.humanize',
 	'django.contrib.sitemaps',
 	'django.contrib.flatpages',
-    'multiselectfield',
-    'django_filters',
-    'storages',
-    'markdownx',
-    'corsheaders',
-    'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
+	'multiselectfield',
+	'django_filters',
+	'storages',
+	'markdownx',
+	'corsheaders',
+	'rest_framework',
+	'rest_framework_simplejwt.token_blacklist',
 	'drf_spectacular',
 ]
 
 INSTALLED_APPS += [
-    'fanfics',
-    'comments',
-    'categories',
-    'chapters',
-    'helpcenter',
-    'accounts',
-    'posts',
-    'api.apps.ApiConfig',
-    'forum.apps.ForumConfig',
+	'fanfics',
+	'comments',
+	'categories',
+	'chapters',
+	'helpcenter',
+	'accounts',
+	'posts',
+	'api.apps.ApiConfig',
+	'forum.apps.ForumConfig',
 ]
 
 SITE_ID = 1
@@ -89,72 +88,68 @@ SITE_ID = 1
 SITE_NAME = 'Fanfiction API'
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
 	'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+	'django.middleware.common.CommonMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'api.middleware.metric_middleware',
-    'django.middleware.locale.LocaleMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'api.middleware.metric_middleware',
+	'django.middleware.locale.LocaleMiddleware',
 ]
-
 
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
-        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [
+			os.path.join(BASE_DIR, 'templates'),
+		],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+	}
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -168,12 +163,12 @@ USE_I18N = True
 USE_TZ = True
 
 LANGUAGES = (
-    ('en-us', _('Anglais')),
-    ('fr-fr', _('Français')),
+	('en-us', _('Anglais')),
+	('fr-fr', _('Français')),
 )
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale/'),
+	os.path.join(BASE_DIR, 'locale/'),
 )
 
 # Static files (CSS, JavaScript, Images)
@@ -186,47 +181,46 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+	os.path.join(BASE_DIR, 'static'),
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'api.custompagination.StandardResultsSetPagination',
-    'PAGE_SIZE': 99,
-    'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.OrderingFilter',
-        'rest_framework.filters.SearchFilter',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
-    ),
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '5000/days',
-    },
-    'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
-    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-    'SEARCH_PARAM': 'q',
-    'ORDERING_PARAM': 'ordering',
+	'DEFAULT_PAGINATION_CLASS': 'api.custompagination.StandardResultsSetPagination',
+	'PAGE_SIZE': 50,
+	'DEFAULT_FILTER_BACKENDS': (
+		'django_filters.rest_framework.DjangoFilterBackend',
+		'rest_framework.filters.OrderingFilter',
+		'rest_framework.filters.SearchFilter',
+	),
+	'DEFAULT_AUTHENTICATION_CLASSES': (
+		'rest_framework_simplejwt.authentication.JWTAuthentication',
+	),
+	'DEFAULT_THROTTLE_CLASSES': (
+		'rest_framework.throttling.AnonRateThrottle',
+	),
+	'DEFAULT_THROTTLE_RATES': {
+		'anon': '5000/days',
+	},
+	'DEFAULT_PERMISSION_CLASSES': (
+		'rest_framework.permissions.AllowAny',
+	),
+	'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
+	'SEARCH_PARAM': 'q',
+	'ORDERING_PARAM': 'ordering',
 	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # OAuth settings
 
 OAUTH2_PROVIDER = {
-    'SCOPES': {
-        'read': 'Read scope',
-        'write': 'Write scope',
-        'groups': 'Access to your groups',
-    },
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 7*24*60*60, # 1 week
-    'REFRESH_TOKEN_EXPIRE_SECONDS': 60*60*60,  # 3 hours
-    'ROTATE_REFRESH_TOKEN': False,
+	'SCOPES': {
+		'read': 'Read scope',
+		'write': 'Write scope',
+		'groups': 'Access to your groups',
+	},
+	'ACCESS_TOKEN_EXPIRE_SECONDS': 7 * 24 * 60 * 60,  # 1 week
+	'REFRESH_TOKEN_EXPIRE_SECONDS': 60 * 60 * 60,  # 3 hours
+	'ROTATE_REFRESH_TOKEN': False,
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -236,8 +230,8 @@ Authenticate with username or email
 """
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'api.authentication.EmailAuthBackend',
+	'django.contrib.auth.backends.ModelBackend',
+	'api.authentication.EmailAuthBackend',
 )
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
@@ -249,12 +243,12 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_HEADERS = (
 	'Content-Type',
-    'Accept',
-    'Authorization',
-    'X-Requested-With',
-    'X-CSRFToken',
-    'X-Custom-Header',
-    'Range',
+	'Accept',
+	'Authorization',
+	'X-Requested-With',
+	'X-CSRFToken',
+	'X-Custom-Header',
+	'Range',
 )
 CORS_ORIGIN_WHITELIST = [
 	'http://localhost:5173',
@@ -263,54 +257,54 @@ CORS_ORIGIN_WHITELIST = [
 # cache
 
 CACHES = {
-    'default': {
+	'default': {
 		'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'fanfiction-cache',
-    }
+		'LOCATION': 'fanfiction-cache',
+	}
 }
 
 # simple_jwt
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
-    'ROTATE_REFRESH_TOKEN': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': True,
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-    'JWK_URL': None,
-    'LEEWAY': 0,
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-    'TOKEN_USER_CLASS': 'django.contrib.auth.models.User',
-    'JTI_CLAIM': 'jti',
+	'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+	'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
+	'ROTATE_REFRESH_TOKEN': True,
+	'BLACKLIST_AFTER_ROTATION': True,
+	'UPDATE_LAST_LOGIN': True,
+	'ALGORITHM': 'HS256',
+	'SIGNING_KEY': SECRET_KEY,
+	'VERIFYING_KEY': None,
+	'AUDIENCE': None,
+	'ISSUER': None,
+	'JWK_URL': None,
+	'LEEWAY': 0,
+	'AUTH_HEADER_TYPES': ('Bearer',),
+	'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+	'USER_ID_FIELD': 'id',
+	'USER_ID_CLAIM': 'user_id',
+	'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+	'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+	'TOKEN_TYPE_CLAIM': 'token_type',
+	'TOKEN_USER_CLASS': 'django.contrib.auth.models.User',
+	'JTI_CLAIM': 'jti',
 }
 
 # logging
 
 LOGGING = {
-   'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        },
-    },
+	'version': 1,
+	'disable_existing_loggers': False,
+	'handlers': {
+		'console': {
+			'class': 'logging.StreamHandler',
+		},
+	},
+	'loggers': {
+		'django': {
+			'handlers': ['console'],
+			'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+		},
+	},
 }
 
 # api schema settings
@@ -318,24 +312,40 @@ LOGGING = {
 SPECTACULAR_SETTINGS = {
 	"TITLE": "Fanfiction API",
 	"DESCRIPTION": "API for managing fanfiction content",
+	"SERVE_INCLUDE_SCHEMA": False,
+	"SERVE_PERMISSIONS": [
+		"rest_framework.permissions.AllowAny",
+	],
 	"VERSION": "1.0.0",
-	"SERVE_INCLUDE_SCHEMA": True,
-	"COMPONENT_SPLIT_REQUEST": True,
-	"URL_CONFIG": {
-		"DEFAULT_VERSION": "v1",
-        "ALLOWED_VERSIONS": ["v1"],
-        "DEFAULT_VERSIONING_TYPE": "namespace",
-        "VERSIONING_PARAM": "api_version",
+	"CONTACT": {
+		"name": "Fanfiction API Team",
+		"url": "https://github.com/delitamakanda/fanfiction",
+		"email": "api@fanfiction.com",
 	},
-	"SWAGGER_AUTO_SCHEMA": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_AUTO_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "SECURITY_DEFINITIONS": {
-        "Bearer": {
-            "type": "apiKey",
-			"name": "Authorization",
-            "in": "header",
-            "description": "JWT Bearer Authorization header using the Bearer scheme.",
-			"scheme": "Bearer",
-		}
+	"LICENSE": {
+		"name": "MIT License",
+		"url": "https://github.com/delitamakanda/fanfiction/blob/master/LICENSE",
 	},
+	'PREPROCESSING_HOOKS': [
+		'drf_spectacular.hooks.preprocess_exclude_path_format',
+    ],
+	'POSTPROCESSING_HOOKS': [
+		'drf_spectacular.hooks.postprocess_schema_enums',
+    ],
 }
+
+# Multi threads brokers
+
+CELERY_BROKER_URL = "django://"
+CELERY_RESULT_BACKEND = "django-db"
+
+INSTALLED_APPS += [
+	'django_celery_results',
+	'django_celery_beat',
+]
+
+# debug toolbar
+
+INSTALLED_APPS += ['debug_toolbar']
+MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+INTERNAL_IPS = ["127.0.0.1", "localhost"]

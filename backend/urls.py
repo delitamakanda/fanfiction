@@ -13,65 +13,39 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from sys import api_version
-
 from django.contrib import admin
-
 from django.urls import path, include
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
-from drf_spectacular.views import (
-	SpectacularAPIView,
-	SpectacularRedocView,
-	SpectacularSwaggerView,
-)
 from django.contrib.sitemaps.views import sitemap
-from django.contrib.sitemaps import Sitemap
 from django.contrib.flatpages.sitemaps import FlatPageSitemap
-from fanfics.models import Fanfic
+
+from backend.sitemaps import FanficSitemap, CategorySitemap, SubCategorySitemap
+
 from markdownx import urls as markdownx
 
-from rest_framework_simplejwt import views as jwt_views
-
-
-class FanficSitemap(Sitemap):
-	changefreq = "daily"
-	priority = 0.5
-
-	def items(self):
-		return Fanfic.objects.all()
-
-	@staticmethod
-	def lastmod(obj):
-		return obj.publish
-
+sitemaps = {
+	'fanfics': FanficSitemap,
+	'categories': CategorySitemap,
+    'subcategories': SubCategorySitemap,
+	'flatpages': FlatPageSitemap,
+}
 
 urlpatterns = [
-	path('schema/', SpectacularAPIView.as_view(), name='schema'),
-	path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-	path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger'),
-]
-
-urlpatterns += [
-	path('api/', include(('api.urls', 'api'), namespace='api')),
 	path('admin/', admin.site.urls),
-	path('api/accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
-	path('api/help/', include(('helpcenter.urls', 'helpcenter'), namespace='helpcenter')),
-	path('api/posts/', include(('posts.urls', 'posts'), namespace='posts')),
-	path('forum/', include(('forum.urls', 'forum'), namespace='forum')),
-	path('api/categories/', include(('categories.urls', 'categories'), namespace='categories')),
-	path('api/chapters/', include(('chapters.urls', 'chapters'), namespace='chapters')),
-	path('api/comments/', include(('comments.urls', 'comments'), namespace='comments')),
-	path('api/fanfics/', include(('fanfics.urls', 'fanfics'), namespace='fanfics')),
-	path('offline.html', (TemplateView.as_view(template_name="offline.html")), name='offline.html'),
+	path('api/', include(('api.urls', 'api'), namespace='api')),
+	path('docs/', include(('backend.docs_urls', 'docs'), namespace='docs')),
+	path('forum/', include(('forum.urls', 'forum'))),
+
+	path('markdownx/', include(markdownx)),
+	path('pages/', include('django.contrib.flatpages.urls')),
+
+	path('offline.html', TemplateView.as_view(template_name="offline.html"), name='offline.html'),
 ]
 
 urlpatterns += [
-	path('sitemap.xml', sitemap, {'sitemaps': {'fanfics': FanficSitemap}}, name='sitemap'),
-	path('sitemap2.xml', sitemap, {'sitemaps': {'flatpages': FlatPageSitemap}}, name='sitemap2'),
-	path('api/token', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-	path('api/refresh-token', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+	path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
 ]
 
 if settings.DEBUG:
@@ -80,7 +54,8 @@ if settings.DEBUG:
 	urlpatterns += static(settings.STATIC_URL,
 						  document_root=settings.STATIC_ROOT)
 
-urlpatterns += [
-	path('markdownx/', include(markdownx)),
-	path('pages/', include('django.contrib.flatpages.urls')),
-]
+	# django debug toolbar
+	if 'debug_toolbar' in settings.INSTALLED_APPS:
+		urlpatterns += [
+            path('__debug__/', include('debug_toolbar.urls')),
+        ]

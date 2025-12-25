@@ -9,6 +9,8 @@ from posts.api.views import (
     TagListAPIView,
 )
 
+app_name = 'posts'
+
 urlpatterns = [
     path('list/', views.PostsListView.as_view(), name='list-posts'),
     path('fake/', views.generate_fake_data, name='generate_fake_data'),

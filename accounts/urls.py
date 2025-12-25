@@ -23,7 +23,6 @@ from accounts.api.views import (
     FollowStoriesDeleteView,
 CheckoutUserView,
     UserCreateView,
-    LoginView,
     LogoutView,
     SocialSignUp,
     ChangePasswordView,
@@ -33,6 +32,8 @@ CheckoutUserView,
 	NotificationListView,
 PasswordResetView,
 )
+
+app_name = 'accounts'
 
 routers = DefaultRouter()
 
@@ -68,7 +69,6 @@ path('users/<str:username>/account/',
     path('old-logout/', auth_views.LogoutView.as_view(), {'next_page': reverse_lazy('index')}, name='logout_auth'),
 path('user/', CheckoutUserView.as_view(), name='user'),
 	path('signup/', UserCreateView.as_view(), name='signup'),
-	path('login/', LoginView.as_view(), name='login'),
 	path('logout/', LogoutView.as_view(), name='logout'),
 	path('social_sign_up/', SocialSignUp.as_view(), name="social_sign_up"),
 	path('change-password/', ChangePasswordView.as_view(),

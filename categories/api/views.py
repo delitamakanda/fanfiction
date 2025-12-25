@@ -1,8 +1,8 @@
 from rest_framework import generics, permissions
 
-from categories.api.serializers import SubCategorySerializer, CategorySerializer
+from categories.api.serializers import SubCategorySerializer, CategorySerializer, EntityCategorySerializer
 
-from categories.models import Category, SubCategory
+from categories.models import Category, SubCategory, EntityCategory
 
 class CategoryListView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
@@ -23,15 +23,6 @@ class CategoryListView(generics.ListCreateAPIView):
     pagination_class = None
 
 
-class CategoryDetailView(generics.RetrieveAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    name='category-detail'
-
-
 class SubCategoryListView(generics.ListAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
@@ -48,4 +39,15 @@ class SubCategoryDetailView(generics.RetrieveAPIView):
     permission_classes = (
         permissions.AllowAny,
     )
+    lookup_field = 'slug'
+
     name='subcategory-detail'
+
+
+class EntityCategoryListView(generics.ListAPIView):
+    queryset = EntityCategory.objects.all()
+    serializer_class = EntityCategorySerializer
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    name='entitycategory-list'

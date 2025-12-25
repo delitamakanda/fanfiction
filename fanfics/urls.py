@@ -15,6 +15,8 @@ get_recommendation_list
 from fanfics.views import fanfic_detail
 from rest_framework import routers
 
+app_name = 'fanfics'
+
 router = routers.DefaultRouter()
 router.register(r'genres', GenresViewSet, basename='genres'),
 router.register(r'classement', ClassementViewSet, basename='classement')
