@@ -26,7 +26,7 @@ class CategorySitemap(Sitemap):
         return Category.objects.all()
 
     def location(self, obj):
-        return f'/categories/{obj.slug}/'
+        return obj.get_absolute_url()
 
 
 class SubCategorySitemap(Sitemap):
@@ -37,4 +37,4 @@ class SubCategorySitemap(Sitemap):
         return SubCategory.objects.select_related('category')
 
     def location(self, obj):
-        return f'/categories/{obj.category.slug}/{obj.slug}/'
+        return obj.get_absolute_url()
