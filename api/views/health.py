@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiResponse
