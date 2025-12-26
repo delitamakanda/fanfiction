@@ -54,6 +54,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = AccountProfileSerializer(source='accountprofile', read_only=False, required=False)
+    social_nichandles = SocialSerializer(source='social', many=True, read_only=True)
 
     class Meta:
         model = User
@@ -65,6 +66,7 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'date_joined',
             'profile',
+            'social_nichandles',
         )
         read_only_fields = ('id', 'username', 'email',)
         extra_kwargs = {
@@ -104,17 +106,6 @@ class NotificationSerializer(serializers.ModelSerializer):
             'user': {'read_only': True},
             'target': {'read_only': True},
         }
-
-class DeleteProfilePhotoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AccountProfile
-        fields = ('photo',)
-
-    def update(self, instance, validated_data):
-        instance.photo.delete()
-        instance.save()
-        return instance
-
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
@@ -239,9 +230,69 @@ class PasswordResetSerializer(serializers.Serializer):
 
 
 class ContactMailSerializer(serializers.Serializer):
-    name = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True)
-    message = serializers.CharField(required=True)
+    name = serializers.CharField(required=True, min_length=2, max_length=100, trim_whitespace=True, error_messages={
+            'invalid': 'Le nom doit contenir entre 2 et 100 caractères',
+            'min_length': 'Le nom doit contenir entre 2 et 100 caractères',
+            'max_length': 'Le nom doit contenir entre 2 et 100 caractères',
+            'required': 'Le nom est requis',
+        'blank': 'Le nom est requis',
+    })
+    email = serializers.EmailField(required=True, max_length=254, error_messages={
+            'invalid': 'Veuillez entrer une adresse email valide',
+            'required': 'L\'adresse email est requise',
+        'blank': 'L\'adresse email est requise',
+    })
+    message = serializers.CharField(required=True, min_length=10, max_length=5000, trim_whitespace=True, error_messages={
+            'invalid': 'Le message doit contenir entre 10 et 5000 caractères',
+            'min_length': 'Le message doit contenir entre 10 et 5000 caractères',
+            'max_length': 'Le message doit contenir entre 10 et 5000 caractères',
+           'required': 'Le message est requis',
+    })
+    subject = serializers.CharField(required=True, max_length=200, trim_whitespace=True, error_messages={
+            'invalid': 'Le sujet doit contenir entre 1 et 200 caractères',
+            'min_length': 'Le sujet doit contenir entre 1 et 200 caractères',
+            'max_length': 'Le sujet doit contenir entre 1 et 200 caractères',
+           'required': 'Le sujet est requis',
+    })
+    captcha_token = serializers.CharField(required=True, write_only=True, error_messages={
+        'required': 'Le token de captcha est requis',
+    })
 
-    class Meta:
-        fields = ('name', 'email','message')
+    def validate_captcha_token(self, value):
+        import requests
+        response = requests.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            data={
+               'secret': 'YOUR_RECAPTCHA_SECRET_KEY',
+               'response': value
+            }
+        )
+        result = response.json()
+        if not result['success'] or result['score'] < 0.5:
+            raise serializers.ValidationError('Veuillez valider le captcha')
+        return value
+
+    def validate_name(self, value):
+        if not value.replace(' ', '').replace('-', '').isalpha():
+            raise serializers.ValidationError('Le nom ne peut contenir que des lettres et des espaces')
+        return value
+
+    def validate_message(self, value):
+        if 'http://' in value.lower() or 'https://' in value.lower():
+            raise serializers.ValidationError('Le message ne peut pas contenir de liens')
+        return value
+
+    def validate(self, data):
+        if not data.get('subject'):
+            data['subject'] = f"Message de contact - {data['name']}"
+        return data
+
+
+class DeleteAccountSerializer(serializers.Serializer):
+    password = serializers.CharField(required=True, write_only=True)
+    delete_all_tokens = serializers.BooleanField(default=True, required=False)
+
+    def validate_password(self, value):
+        if not value or not value.strip():
+            raise serializers.ValidationError('Password is required')
+        return value

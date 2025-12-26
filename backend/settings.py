@@ -200,6 +200,7 @@ REST_FRAMEWORK = {
 	),
 	'DEFAULT_THROTTLE_RATES': {
 		'anon': '5000/days',
+		'contact_form': '5/hour',
 	},
 	'DEFAULT_PERMISSION_CLASSES': (
 		'rest_framework.permissions.AllowAny',
