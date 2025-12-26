@@ -1,33 +1,34 @@
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.db import transaction
 from django.http import BadHeaderError
 from django.http.response import Http404
+from django.template.loader import render_to_string
+from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, serializers
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.token_blacklist.models import (
     OutstandingToken,
     BlacklistedToken,
 )
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.exceptions import TokenError
-from django.db import transaction
-from django.contrib.auth import authenticate
-
-from api import custompermission, custompagination
 
 from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, \
-    SignupSerializer,  SocialSerializer, UserSerializer, \
-    DeleteProfilePhotoSerializer, ChangePasswordSerializer, NotificationSerializer, \
-	PasswordResetSerializer, ContactMailSerializer
-from api.custompermission import IsAuthenticatedOrCreate
-
+    SignupSerializer, SocialSerializer, UserSerializer, ChangePasswordSerializer, NotificationSerializer, \
+    PasswordResetSerializer, ContactMailSerializer, DeleteAccountSerializer
+from accounts.models import FollowUser, FollowStories, Social, Notification
+from api import custompermission, custompagination
 from fanfics.api.serializers import FanficSerializer
-from accounts.models import AccountProfile, FollowUser, FollowStories, Social, Notification
 from fanfics.models import Fanfic
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class PasswordResetView(generics.GenericAPIView):
@@ -54,33 +55,29 @@ class PasswordResetView(generics.GenericAPIView):
             return Response({'message': 'Password reset email has been sent.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class SocialListApiView(generics.ListCreateAPIView):
-    """
-    Retrieve a social account
-    """
-    serializer_class = SocialSerializer
-    pagination_class = None
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-    )
 
-    def get_queryset(self):
-        account = self.kwargs['account']
-        if account:
-            return Social.objects.filter(account=account)
-        else:
-            return Social.objects.all()
-
-
-class SocialDestroyApiView(generics.DestroyAPIView):
+class SocialDestroyApiView(generics.UpdateAPIView,generics.DestroyAPIView):
     """
     Destroy a social account
     """
-    queryset = Social.objects.all()
     serializer_class = SocialSerializer
     permission_classes = (
         permissions.IsAuthenticated,
+        custompermission.IsCurrentUserOrReadonly,
     )
+    authentication_classes = ()
+
+    def get_queryset(self):
+        try:
+            return Social.objects.filter(account=self.request.user.accountprofile)
+        except Social.DoesNotExist:
+            raise Http404("Social account not found.")
+
+    def get_object(self):
+        try:
+            return self.get_queryset().get(id=self.kwargs.get('pk'))
+        except Social.DoesNotExist:
+            raise Http404("Social account not found.")
 
 
 class SignupView(generics.CreateAPIView):
@@ -177,7 +174,7 @@ class UnfavoritedFanficView(generics.GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class postFollowAuthor(generics.CreateAPIView):
+class PostFollowAuthor(generics.CreateAPIView):
     """
     Follow an author
     """
@@ -185,7 +182,7 @@ class postFollowAuthor(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
 
-class unFollowAuthor(generics.DestroyAPIView):
+class UnFollowAuthor(generics.DestroyAPIView):
     """
     Unfollow an author
     """
@@ -318,13 +315,84 @@ class DeleteAccountView(generics.GenericAPIView):
     """
     Disable user account
     """
-    serializer_class = UserSerializer()
+    serializer_class = DeleteAccountSerializer
+    permission_classes = (permissions.IsAuthenticated, custompermission.IsUserOrReadonly,)
+    authentication_classes = ()
 
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        user.is_active = False
-        user.save()
-        return Response({"status": "ok"}, status=status.HTTP_200_OK)
+    def get_object(self):
+        return self.request.user
+
+    def _validate_password(self, user, password):
+        if not password:
+            raise serializers.ValidationError("Password is required")
+
+        if not user.check_password(password):
+            raise serializers.ValidationError("Password is incorrect")
+
+    def _blacklist(self, user):
+        try:
+            outstanding_token = OutstandingToken.objects.filter(user=user)
+            for token in outstanding_token:
+                BlacklistedToken.objects.get_or_create(token=token)
+            return outstanding_token.count()
+        except Exception as e:
+            logger.error("Error while blacklisting tokens: %s", str(e))
+            return 0
+
+    @transaction.atomic
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        password = request.data.get('password')
+        delete_all_tokens = request.data.get('delete_all_tokens', False)
+        try:
+            self._validate_password(user, password)
+            tokens_blacklisted = 0
+            if delete_all_tokens:
+                tokens_blacklisted = self._blacklist(user)
+            user.is_active = False
+            user.save()
+            email_sent = self._send_confirmation_email(user)
+            logger.info(
+                f"User {user.username} has been deleted. {tokens_blacklisted} tokens have been blacklisted. Token deletion: {delete_all_tokens}. email: {'ok' if email_sent else 'failed'}."
+            )
+            return Response({
+                "message": "User deleted successfully",
+                "username": user.username,
+                "deactivation_date": timezone.now().isoformat(),
+                "tokens_blacklisted": tokens_blacklisted
+            }, status=status.HTTP_200_OK)
+        except serializers.ValidationError as e:
+            logger.warning("Error while validating password: %s", str(e)  )
+            return Response({'status': 'ko','message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error("Error while deleting user: %s", str(e))
+            return Response({'status': 'ko'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    def _send_confirmation_email(self, user):
+        try:
+            subject = 'Account deactivation'
+            context = {
+                'username': user.username,
+                'email': user.email,
+                'deactivation_date': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+            }
+
+            html_template = render_to_string('mail/account_deletion.html', context)
+
+            send_mail(
+                subject,
+                f'Account deactivation - {user.username}',
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                html_message=html_template,
+                fail_silently=False,
+            )
+            return True
+        except Exception as e:
+            logger.error("Error while sending confirmation email: %s", str(e))
+            return False
+
 
 
 class LoginView(generics.GenericAPIView):
@@ -433,6 +501,7 @@ class CheckoutUserView(generics.RetrieveUpdateAPIView):
             {
                 'user': serializer.data,
                 'profile': AccountProfileSerializer(user.accountprofile).data,
+                'social_nichandles': SocialSerializer(Social.objects.filter(account=user.accountprofile), many=True).data,
             }, status=status.HTTP_200_OK,
         )
 
@@ -464,27 +533,11 @@ class ChangePasswordView(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class RemovePhotoFromAccount(generics.GenericAPIView):
-    """
-    Photo Profile
-    """
-    permission_classes = (permissions.IsAuthenticated,)
 
-    @staticmethod
-    def get_object(pk):
-        try:
-            return AccountProfile.objects.get(pk=pk)
-        except AccountProfile.DoesNotExist:
-            raise Http404
-
-    def put(self, request, pk):
-        photo = self.get_object(pk)
-        serializer = DeleteProfilePhotoSerializer(photo, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+class ContactFormThrottle(AnonRateThrottle):
+    scope = 'contact_form'
+    rate = '5/hour'
+    description = '5 emails per hour'
 
 class ContactMailView(generics.GenericAPIView):
     """
@@ -493,22 +546,32 @@ class ContactMailView(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     serializer_class = ContactMailSerializer
+    throttle_classes = [ContactFormThrottle,]
 
-    @staticmethod
-    def post(request, *args, **kwargs):
-        from_email = request.data.get('from_email')
-        subject = request.data.get('subject')
-        message = request.data.get('message')
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if subject and message and from_email:
-            try:
-                send_mail(subject, message, from_email,
-                          [settings.SERVER_EMAIL])
-            except BadHeaderError:
-                return Response({"status": "invalid headers"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            email = serializer.validated_data['email']
+            subject = serializer.validated_data['subject']
+            message = serializer.validated_data['message']
+            name = serializer.validated_data['name']
+
+            formatted_message = f"De: {name} <{email}>\n\nSujet: {subject}\n\nMessage:\n{message}"
+
+            send_mail(subject, formatted_message, from_email=email,
+                      recipient_list=[settings.SERVER_EMAIL], fail_silently=False)
+            logger.info(f"Email sent from {email} with subject {subject}")
             return Response({"status": "ok"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"status": "nok"}, status=status.HTTP_400_BAD_REQUEST)
+        except BadHeaderError as e:
+            logger.warning(f"Invalid header in email: {str(e)}")
+            return Response({"status": "invalid headers"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"An error occurred while sending email: {str(e)}")
+            return Response({"status": "error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 """
