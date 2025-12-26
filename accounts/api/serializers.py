@@ -1,19 +1,11 @@
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import mail_admins
-from drf_spectacular.utils import extend_schema_field
-
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
 from accounts.models import Social, AccountProfile, FollowStories, FollowUser, Notification
-
-from api.customserializer import Base64ImageField
-
 from api.utils.notification import create_notification
 from chapters.models import Chapter
-from fanfics.api.serializers import FanficSerializer
 from fanfics.models import Fanfic
 
 
@@ -124,23 +116,6 @@ class DeleteProfilePhotoSerializer(serializers.ModelSerializer):
         return instance
 
 
-class SocialSignUpSerializer(serializers.ModelSerializer):
-    client_id = serializers.SerializerMethodField()
-    client_secret = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = ('email', 'username', 'client_id', 'client_secret')
-        read_only_fields = ('username',)
-
-    @staticmethod
-    def get_client_id(obj):
-        return obj.application_set.first().client_id
-
-    @staticmethod
-    def get_client_secret(obj):
-        return obj.application_set.first().client_secret
-
 
 class FollowUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -172,12 +147,6 @@ class FollowStoriesSerializer(serializers.ModelSerializer):
         create_notification(
             validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
         return FollowStories.objects.create(**validated_data)
-
-
-class GroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = '__all__'
 
 
 class SignupSerializer(serializers.ModelSerializer):
@@ -215,7 +184,6 @@ class SignupSerializer(serializers.ModelSerializer):
                 {'email': 'Email already exists'})
         return attrs
 
-    @staticmethod
     def create(self, validated_data):
         validated_data.pop('password2')
         user = User.objects.create_user(**validated_data)
