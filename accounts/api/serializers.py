@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.contenttypes.models import ContentType
 from django.core.mail import mail_admins
 from drf_spectacular.utils import extend_schema_field
 
@@ -251,19 +250,6 @@ class ChangePasswordSerializer(serializers.Serializer):
 """
 Notification serializer
 """
-
-
-class ContentTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ContentType
-        fields = '__all__'
-
-
-    def create(self, validated_data):
-        notification = Notification.objects.create(**validated_data)
-        notification.save()
-        return notification
-
 
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
