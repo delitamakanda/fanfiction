@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib.auth.models import User, Group
-from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail
 from django.http import BadHeaderError
 from django.http.response import Http404
@@ -24,7 +23,7 @@ from api import custompermission, custompagination
 from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, \
     SignupSerializer, GroupSerializer, UserFanficSerializer, SocialSerializer, UserSerializer, \
     DeleteProfilePhotoSerializer, ChangePasswordSerializer, SocialSignUpSerializer, NotificationSerializer, \
-    ContentTypeSerializer, PasswordResetSerializer, ContactMailSerializer
+	PasswordResetSerializer, ContactMailSerializer
 from api.custompermission import IsAuthenticatedOrCreate
 
 from fanfics.api.serializers import FanficSerializer
@@ -426,9 +425,8 @@ class LogoutView(generics.GenericAPIView):
     """
     Logout user
     """
-    permission_classes = (custompermission.IsAuthenticatedOrCreate,)
+    permission_classes = (custompermission.IsAuthenticatedOrCreate, permissions.IsAuthenticated,)
 
-    @staticmethod
     def post(self, request, *args, **kwargs):
         try:
             if request.data.get("all"):
@@ -454,7 +452,7 @@ class CheckoutUserView(generics.RetrieveUpdateAPIView):
     Checkout current user
     """
     serializer_class = UserSerializer
-    permission_classes = (custompermission.IsAuthenticatedOrCreate,)
+    permission_classes = (custompermission.IsAuthenticatedOrCreate, custompermission.IsUserOrReadonly,)
     authentication_classes = ()
 
     def get_object(self):
@@ -465,6 +463,7 @@ class CheckoutUserView(generics.RetrieveUpdateAPIView):
         context['profile'] = self.request.user.accountprofile
         return context
 
+    @transaction.atomic
     def update(self, request, *args, **kwargs):
         user = self.get_object()
         user_data = request.data.get('user', {})
@@ -571,15 +570,6 @@ class ContactMailView(generics.GenericAPIView):
 """
 Notification generics views
 """
-
-
-class ContentTypeView(generics.RetrieveAPIView):
-    queryset = ContentType.objects.all()
-    serializer_class = ContentTypeSerializer
-    permission_classes = (
-        permissions.IsAuthenticated,
-    )
-
 
 class NotificationListView(generics.ListAPIView):
     queryset = Notification.objects.all()

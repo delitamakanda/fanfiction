@@ -26,7 +26,6 @@ CheckoutUserView,
     ChangePasswordView,
     RemovePhotoFromAccount,
 	ContactMailView,
-	ContentTypeView,
 	NotificationListView,
 PasswordResetView,
 )
@@ -79,8 +78,6 @@ path('users/<str:username>/account/',
 		 RemovePhotoFromAccount.as_view(), name='remove-photo'),
 path('contact-mail/', ContactMailView.as_view(), name='contact-mail'),
 	path('notifications/', NotificationListView.as_view(), name='notifications'),
-	path('contenttype/<int:pk>/',
-		 ContentTypeView.as_view(), name='contenttype-detail'),
 	path('password-reset/', PasswordResetView.as_view(), name='password-reset'),
 ]
 
