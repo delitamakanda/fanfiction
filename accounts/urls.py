@@ -10,7 +10,6 @@ from accounts.api.views import (
     AccountProfileDetailView,
     SocialListApiView,
     SocialDestroyApiView,
-    GroupListView,
     SignupView,
     FavoritedFanficView,
     UnfavoritedFanficView,
@@ -22,7 +21,6 @@ from accounts.api.views import (
     FollowAuthorDeleteView,
     FollowStoriesDeleteView,
 CheckoutUserView,
-    UserCreateView,
     LogoutView,
     SocialSignUp,
     ChangePasswordView,
@@ -37,6 +35,13 @@ app_name = 'accounts'
 
 routers = DefaultRouter()
 
+
+AUTHENTICATION_ROUTES = []
+
+PROFILE_ROUTES = []
+
+FOLLOW_ROUTES = []
+
 urlpatterns = [
 path('users/<str:username>/account/',
          UserFanficDetailView.as_view(), name='user-list'),
@@ -49,7 +54,6 @@ path('users/<str:username>/account/',
          name='socialaccount-createview'),
     path('users/social-account/<int:pk>/delete/',
          SocialDestroyApiView.as_view(), name='socialaccount-destroy'),
-    path('groups/', GroupListView.as_view()),
     path('sign_up/', SignupView.as_view(), name="sign_up"),
 	path('favorite/', FavoritedFanficView.as_view(), name='favorite'),
     path('unfavorite/', UnfavoritedFanficView.as_view(), name='unfavorite'),
@@ -66,9 +70,7 @@ path('users/<str:username>/account/',
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('password_reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(success_url=reverse_lazy('accounts:password_reset_complete')), name='password_reset_confirm'),
     path('password_reset/complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-    path('old-logout/', auth_views.LogoutView.as_view(), {'next_page': reverse_lazy('index')}, name='logout_auth'),
-path('user/', CheckoutUserView.as_view(), name='user'),
-	path('signup/', UserCreateView.as_view(), name='signup'),
+	path('user/', CheckoutUserView.as_view(), name='user'),
 	path('logout/', LogoutView.as_view(), name='logout'),
 	path('social_sign_up/', SocialSignUp.as_view(), name="social_sign_up"),
 	path('change-password/', ChangePasswordView.as_view(),

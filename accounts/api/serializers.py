@@ -19,276 +19,218 @@ from fanfics.models import Fanfic
 
 
 def validate_password_confirmation(password1, password2):
-	if password1 != password2:
-		raise serializers.ValidationError('Passwords do not match.')
-	return password1
+    if password1 != password2:
+        raise serializers.ValidationError('Passwords do not match.')
+    return password1
 
 
 class NotificationObjectRelatedField(serializers.RelatedField):
 
-	def to_representation(self, value):
-		if isinstance(value, User):
-			return value.username
-		elif isinstance(value, Chapter):
-			return value.title
-		elif isinstance(value, Fanfic):
-			return value.title
-		raise Exception('Unexpected type of object')
+    def to_representation(self, value):
+        if isinstance(value, User):
+            return value.username
+        elif isinstance(value, Chapter):
+            return value.title
+        elif isinstance(value, Fanfic):
+            return value.title
+        raise Exception('Unexpected type of object')
 
 
 
 class SocialSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Social
-		fields = '__all__'
+    class Meta:
+        model = Social
+        fields = '__all__'
 
-	def create(self, validated_data):
-		return Social.objects.create(**validated_data)
+    def create(self, validated_data):
+        return Social.objects.create(**validated_data)
 
-
-class UserSerializer(serializers.ModelSerializer):
-	password2 = serializers.CharField(required=True, write_only=True)
-	password = serializers.CharField(write_only=True)
-	email = serializers.EmailField(
-		required=True,
-		validators=[
-			UniqueValidator(queryset=User.objects.all())
-		])
-	username = serializers.CharField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
-
-	class Meta:
-		model = User
-		fields = (
-			'id',
-			'username',
-			'first_name',
-			'last_name',
-			'password',
-			'email',
-			'is_active',
-			'is_staff',
-			'is_superuser',
-			'date_joined',
-			'password2',
-		)
-		extra_kwargs = {'password': {'write_only': True}}
-		read_only_fields = ('date_joined',)
-
-	def create(self, validated_data):
-		user = User(
-			email=validated_data["email"],
-			username=validated_data["username"]
-		)
-		validate_password_confirmation(validated_data["password"], validated_data["password2"])
-		user.set_password(validated_data["password"])
-		user.save()
-		create_notification(user, 'a créé un compte')
-		mail_admins("Account creation", "An user has created an account.")
-		return user
-
-	@staticmethod
-	@extend_schema_field(FanficSerializer(many=True))
-	def get_user_follows_stories(obj):
-		follows = FollowStories.objects.filter(from_user=obj.user).all()
-		return [FanficSerializer(f.to_fanfic).data for f in follows]
-
-	# @staticmethod
-	# @extend_schema_field(UserSerializer(many=True))
-	# def get_user_follows_authors(obj):
-	# 	follows = FollowUser.objects.filter(user_from=obj.user).all()
-	# 	return [UserSerializer(f.user_to).data for f in follows]
-	#
-	# @staticmethod
-	# @extend_schema_field(UserSerializer(many=True))
-	# def get_user_favorites_stories(obj):
-	# 	fanfics_liked = Fanfic.objects.filter(users_like=obj.user).all()
-	# 	return [FanficSerializer(f).data for f in fanfics_liked]
-	#
-	# @staticmethod
-	# @extend_schema_field(NotificationSerializer(many=True))
-	# def get_notifications(obj):
-	# 	notifications = Notification.objects.filter(user=obj.user).all()
-	# 	return [NotificationSerializer(n).data for n in notifications]
-
-	@staticmethod
-	@extend_schema_field(FanficSerializer(many=True))
-	def get_user_stories(obj):
-		fanfics = Fanfic.objects.filter(author=obj.user).all()
-		stories = [FanficSerializer(f).data for f in fanfics]
-		return stories
-
-	@staticmethod
-	@extend_schema_field(SocialSerializer(many=True))
-	def get_social_network(obj):
-		social = Social.objects.filter(user=obj.user).all()
-		if social:
-			social_networks = [{'network': s.network, 'nichandle': s.nichandle} for s in social]
-			return social_networks
-		return None
-
-class NotificationSerializer(serializers.ModelSerializer):
-	user = UserSerializer(read_only=True)
-	target = NotificationObjectRelatedField(read_only=True)
-
-	class Meta:
-		model = Notification
-		fields = '__all__'
-		extra_kwargs = {
-			'user': {'read_only': True},
-			'target': {'read_only': True},
-		}
 
 class AccountProfileSerializer(serializers.ModelSerializer):
-	photo = Base64ImageField(max_length=None, use_url=True,
-							 allow_empty_file=True, allow_null=True, required=False)
-	social_network = serializers.SerializerMethodField()
-	user_stories = serializers.SerializerMethodField()
-	notifications = serializers.SerializerMethodField()
-	user_follows_stories = serializers.SerializerMethodField()
-	user_follows_authors = serializers.SerializerMethodField()
-	user_favorites_stories = serializers.SerializerMethodField()
-	user = UserSerializer(read_only=True)
 
-	class Meta:
-		model = AccountProfile
-		fields = '__all__'
+    class Meta:
+        model = AccountProfile
+        fields = (
+            'id', 'bio', 'photo', 'date_of_birth', 'location',
+        )
+        read_only_fields = ('id',)
 
-	def create(self, validated_data):
-		create_notification(validated_data['user'], 'a crée un compte')
-		return AccountProfile.objects.create(**validated_data)
+    @staticmethod
+    def validate_photo(self, value):
+        if value and value.size > (5 * 1024 * 1024):
+            raise serializers.ValidationError('Image file too large. Maximum size is 5MB.')
+        return value
 
+class UserSerializer(serializers.ModelSerializer):
+    profile = AccountProfileSerializer(source='accountprofile', read_only=False, required=False)
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'date_joined',
+            'profile',
+        )
+        read_only_fields = ('id', 'username', 'email',)
+        extra_kwargs = {
+            'email': {'required': False},
+            'first_name': {'required': False},
+            'last_name': {'required': False},
+        }
+
+    def validate_email(self, value):
+        user = self.instance
+        if User.objects.filter(email=value).exclude(id=user.id).exists():
+            raise serializers.ValidationError('Email address already exists.')
+        return value
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('accountprofile', {})
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if profile_data:
+            profile = instance.accountprofile
+            for attr, value in profile_data.items():
+                setattr(profile, attr, value)
+            profile.save()
+        return instance
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    target = NotificationObjectRelatedField(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = '__all__'
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'target': {'read_only': True},
+        }
 
 class DeleteProfilePhotoSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = AccountProfile
-		fields = ('photo',)
+    class Meta:
+        model = AccountProfile
+        fields = ('photo',)
 
-	def update(self, instance, validated_data):
-		instance.photo.delete()
-		instance.save()
-		return instance
+    def update(self, instance, validated_data):
+        instance.photo.delete()
+        instance.save()
+        return instance
 
 
 class SocialSignUpSerializer(serializers.ModelSerializer):
-	client_id = serializers.SerializerMethodField()
-	client_secret = serializers.SerializerMethodField()
+    client_id = serializers.SerializerMethodField()
+    client_secret = serializers.SerializerMethodField()
 
-	class Meta:
-		model = User
-		fields = ('email', 'username', 'client_id', 'client_secret')
-		read_only_fields = ('username',)
+    class Meta:
+        model = User
+        fields = ('email', 'username', 'client_id', 'client_secret')
+        read_only_fields = ('username',)
 
-	@staticmethod
-	def get_client_id(obj):
-		return obj.application_set.first().client_id
+    @staticmethod
+    def get_client_id(obj):
+        return obj.application_set.first().client_id
 
-	@staticmethod
-	def get_client_secret(obj):
-		return obj.application_set.first().client_secret
+    @staticmethod
+    def get_client_secret(obj):
+        return obj.application_set.first().client_secret
 
 
 class FollowUserSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = FollowUser
-		fields = (
-			'id',
-			'user_from',
-			'user_to',
-			'created',
-		)
+    class Meta:
+        model = FollowUser
+        fields = (
+            'id',
+            'user_from',
+            'user_to',
+            'created',
+        )
 
-	def create(self, validated_data):
-		create_notification(
-			validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
-		return FollowUser.objects.create(**validated_data)
+    def create(self, validated_data):
+        create_notification(
+            validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
+        return FollowUser.objects.create(**validated_data)
 
 
 class FollowStoriesSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = FollowStories
-		fields = (
-			'id',
-			'from_user',
-			'to_fanfic',
-			'created'
-		)
+    class Meta:
+        model = FollowStories
+        fields = (
+            'id',
+            'from_user',
+            'to_fanfic',
+            'created'
+        )
 
-	def create(self, validated_data):
-		create_notification(
-			validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
-		return FollowStories.objects.create(**validated_data)
+    def create(self, validated_data):
+        create_notification(
+            validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
+        return FollowStories.objects.create(**validated_data)
 
 
 class GroupSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Group
-		fields = '__all__'
+    class Meta:
+        model = Group
+        fields = '__all__'
 
 
 class SignupSerializer(serializers.ModelSerializer):
-	email = serializers.EmailField(
-		required=True,
-		validators=[UniqueValidator(queryset=User.objects.all())]
-	)
+    password = serializers.CharField(
+        write_only=True, required=True, validators=[validate_password], style={'input_type': 'password'})
+    password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
-	password = serializers.CharField(
-		write_only=True, required=True, validators=[validate_password])
-	password2 = serializers.CharField(write_only=True, required=True)
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password',
+                  'password2',)
+        write_only_fields = ('password',)
+        extra_kwargs = {
+            'email': {'required': True},
+            'username': {'required': True}
+        }
 
-	class Meta:
-		model = User
-		fields = ('username', 'email', 'password',
-				  'password2', 'first_name', 'last_name')
-		write_only_fields = ('password',)
-		extra_kwargs = {
-			'first_name': {'required': False},
-			'last_name': {'required': False}
-		}
+    @staticmethod
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError(
+                {'password': 'Passwords did not match'})
+        return data
 
-	@staticmethod
-	def validate_password2(self, attrs):
-		if attrs['password'] != attrs['password2']:
-			raise serializers.ValidationError(
-				{'password': 'Passwords did not match'})
-		return attrs
+    @staticmethod
+    def validate_username(self, attrs):
+        if User.objects.filter(username=attrs).exists():
+            raise serializers.ValidationError(
+                {'username': 'Username already exists'})
 
-	@staticmethod
-	def validate_email(self, attrs):
-		if User.objects.filter(email=attrs).exists():
-			raise serializers.ValidationError(
-				{'email': 'Email already exists'})
-		return attrs
+    @staticmethod
+    def validate_email(self, attrs):
+        if User.objects.filter(email=attrs).exists():
+            raise serializers.ValidationError(
+                {'email': 'Email already exists'})
+        return attrs
 
-	@staticmethod
-	def create(self, validated_data):
-		user = User.objects.create(
-			username=validated_data['username'],
-			email=validated_data['email'],
-			first_name=validated_data['first_name'],
-			last_name=validated_data['last_name']
-		)
-		user.set_password(validated_data['password'])
-		user.save()
-
-		return user
-
-	@staticmethod
-	def validate_username(self, attrs):
-		if User.objects.filter(username=attrs).exists():
-			raise serializers.ValidationError(
-				{'username': 'Username already exists'})
-		return attrs
-
+    @staticmethod
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        user = User.objects.create_user(**validated_data)
+        return user
 
 
 class UserFanficSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = User
-		fields = (
-			'id',
-			'username',
-			'email',
-		)
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+        )
 
 
 """
@@ -297,13 +239,13 @@ Serializer for password change endpoint
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-	old_password = serializers.CharField(required=True)
-	new_password = serializers.CharField(required=True)
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
 
-	@staticmethod
-	def validate_new_password(value):
-		validate_password(value)
-		return value
+    @staticmethod
+    def validate_new_password(value):
+        validate_password(value)
+        return value
 
 
 """
@@ -312,40 +254,40 @@ Notification serializer
 
 
 class ContentTypeSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = ContentType
-		fields = '__all__'
+    class Meta:
+        model = ContentType
+        fields = '__all__'
 
 
-	def create(self, validated_data):
-		notification = Notification.objects.create(**validated_data)
-		notification.save()
-		return notification
+    def create(self, validated_data):
+        notification = Notification.objects.create(**validated_data)
+        notification.save()
+        return notification
 
 
 class PasswordResetSerializer(serializers.Serializer):
-	email = serializers.EmailField(required=True)
+    email = serializers.EmailField(required=True)
 
-	class Meta:
-		fields = ('email',)
+    class Meta:
+        fields = ('email',)
 
-	@staticmethod
-	def validate_email(value):
-		if not User.objects.filter(email=value).exists():
-			raise serializers.ValidationError('User with this email does not exist')
-		return value
+    @staticmethod
+    def validate_email(value):
+        if not User.objects.filter(email=value).exists():
+            raise serializers.ValidationError('User with this email does not exist')
+        return value
 
-	def save(self):
-		email = self.validated_data['email']
-		user = User.objects.get(email=email)
-		token = default_token_generator.make_token(user)
-		return {'token': token, 'user': user}
+    def save(self):
+        email = self.validated_data['email']
+        user = User.objects.get(email=email)
+        token = default_token_generator.make_token(user)
+        return {'token': token, 'user': user}
 
 
 class ContactMailSerializer(serializers.Serializer):
-	name = serializers.CharField(required=True)
-	email = serializers.EmailField(required=True)
-	message = serializers.CharField(required=True)
+    name = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+    message = serializers.CharField(required=True)
 
-	class Meta:
-		fields = ('name', 'email','message')
+    class Meta:
+        fields = ('name', 'email','message')
