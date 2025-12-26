@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.http import BadHeaderError
 from django.http.response import Http404
@@ -15,14 +15,13 @@ from rest_framework_simplejwt.token_blacklist.models import (
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
-from django.contrib.auth import authenticate, login
-from yaml import serialize
+from django.contrib.auth import authenticate
 
 from api import custompermission, custompagination
 
 from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, \
-    SignupSerializer, GroupSerializer, UserFanficSerializer, SocialSerializer, UserSerializer, \
-    DeleteProfilePhotoSerializer, ChangePasswordSerializer, SocialSignUpSerializer, NotificationSerializer, \
+    SignupSerializer,  SocialSerializer, UserSerializer, \
+    DeleteProfilePhotoSerializer, ChangePasswordSerializer, NotificationSerializer, \
 	PasswordResetSerializer, ContactMailSerializer
 from api.custompermission import IsAuthenticatedOrCreate
 
@@ -55,46 +54,6 @@ class PasswordResetView(generics.GenericAPIView):
             return Response({'message': 'Password reset email has been sent.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class UserFanficDetailView(generics.RetrieveAPIView):
-    """
-    Retrieve an user formatted
-    """
-    queryset = User.objects.all()
-    serializer_class = UserFanficSerializer
-    lookup_field = 'username'
-    permission_classes = (
-        permissions.AllowAny,
-    )
-
-
-class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve an user
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    lookup_field = 'username'
-    permission_classes = (
-        custompermission.IsUserOrReadonly,
-    )
-
-    def put(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
-
-
-class AccountProfileDetailView(generics.RetrieveAPIView):
-    """
-    Retrieve a profile account
-    """
-    queryset = AccountProfile.objects.all()
-    serializer_class = AccountProfileSerializer
-    permission_classes = (
-        permissions.AllowAny,
-    )
-    lookup_field = 'user__username'
-
-
 class SocialListApiView(generics.ListCreateAPIView):
     """
     Retrieve a social account
@@ -122,13 +81,6 @@ class SocialDestroyApiView(generics.DestroyAPIView):
     permission_classes = (
         permissions.IsAuthenticated,
     )
-
-
-class GroupListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    required_scopes = ['groups']
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
 
 
 class SignupView(generics.CreateAPIView):
@@ -373,14 +325,6 @@ class DeleteAccountView(generics.GenericAPIView):
         user.is_active = False
         user.save()
         return Response({"status": "ok"}, status=status.HTTP_200_OK)
-
-class SocialSignUp(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = SocialSignUpSerializer
-    permission_classes = (IsAuthenticatedOrCreate,)
-
-    def create(self, request, *args, **kwargs):
-        pass
 
 
 class LoginView(generics.GenericAPIView):

@@ -5,9 +5,6 @@ from django.urls import reverse_lazy
 from rest_framework.routers import DefaultRouter
 
 from accounts.api.views import (
-    UserFanficDetailView,
-    UserDetailView,
-    AccountProfileDetailView,
     SocialListApiView,
     SocialDestroyApiView,
     SignupView,
@@ -22,7 +19,6 @@ from accounts.api.views import (
     FollowStoriesDeleteView,
 CheckoutUserView,
     LogoutView,
-    SocialSignUp,
     ChangePasswordView,
     RemovePhotoFromAccount,
 	ContactMailView,
@@ -42,18 +38,13 @@ PROFILE_ROUTES = []
 FOLLOW_ROUTES = []
 
 urlpatterns = [
-path('users/<str:username>/account/',
-         UserFanficDetailView.as_view(), name='user-list'),
-    path('users/<str:username>/', UserDetailView.as_view(), name='user-detail'),
-    path('users/<str:user__username>/profile/',
-         AccountProfileDetailView.as_view(), name='user-edit-account-profile'),
     path('users/<int:account>/socialaccount/',
          SocialListApiView.as_view(), name='socialaccount-view'),
     path('users/social-account/', SocialListApiView.as_view(),
          name='socialaccount-createview'),
     path('users/social-account/<int:pk>/delete/',
          SocialDestroyApiView.as_view(), name='socialaccount-destroy'),
-    path('sign_up/', SignupView.as_view(), name="sign_up"),
+    path('signup/', SignupView.as_view(), name="sign_up"),
 	path('favorite/', FavoritedFanficView.as_view(), name='favorite'),
     path('unfavorite/', UnfavoritedFanficView.as_view(), name='unfavorite'),
     path('follow-stories/<str:username>/', FollowStoriesView.as_view(), name='follow-stories'),
@@ -71,7 +62,6 @@ path('users/<str:username>/account/',
     path('password_reset/complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 	path('user/', CheckoutUserView.as_view(), name='user'),
 	path('logout/', LogoutView.as_view(), name='logout'),
-	path('social_sign_up/', SocialSignUp.as_view(), name="social_sign_up"),
 	path('change-password/', ChangePasswordView.as_view(),
 		 name='change-password'),
 	path('remove-photo/<int:pk>/',
