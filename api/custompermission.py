@@ -19,6 +19,7 @@ class IsCurrentSessionOrReadOnly(permissions.BasePermission):
 	def has_permission(self, request, view):
 		if request.method in ['PUT'] and request.session.get('comment_session_id'):
 			return True
+		return None
 
 
 class IsCurrentUserOrReadonly(permissions.BasePermission):
@@ -45,9 +46,9 @@ class IsUserOrReadonly(permissions.BasePermission):
 		return request.user == obj
 
 
-class IsAuthenticatedOrCreate(permissions.IsAuthenticated):
+class IsAuthenticatedOrCreate(permissions.BasePermission):
 
 	def has_permission(self, request, view):
 		if request.method == 'POST':
 			return True
-		return super(IsAuthenticatedOrCreate, self).has_permission(request, view)
+		return request.user and request.user.is_authenticated
