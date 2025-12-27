@@ -54,7 +54,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = AccountProfileSerializer(source='accountprofile', read_only=False, required=False)
-    social_nichandles = SocialSerializer(source='social', many=True, read_only=True)
+    socials = SocialSerializer(source='social', many=True, read_only=True)
 
     class Meta:
         model = User
@@ -66,7 +66,7 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'date_joined',
             'profile',
-            'social_nichandles',
+            'socials',
         )
         read_only_fields = ('id', 'username', 'email',)
         extra_kwargs = {
