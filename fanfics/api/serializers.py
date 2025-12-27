@@ -1,30 +1,22 @@
-from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
-from api.customserializer import TemplateSerializer
 from fanfics.models import Fanfic
-from chapters.models import Chapter
 
-from chapters.api.serializers import ChapterSerializer
+class FanficListSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Fanfic
+		fields = [
+			'id', 'slug', 'category', 'subcategory', 'title', 'synopsis', 'author', 'total_likes', 'views', 'created',
+		]
+		read_only_fields = ['id', 'slug', 'total_likes', 'views', 'created', 'category', 'subcategory',]
 
-class FanficSerializer(TemplateSerializer):
-	genres = serializers.MultipleChoiceField(choices=Fanfic.GENRES_CHOICES)
-	classement = serializers.ChoiceField(
-		choices=Fanfic.CLASSEMENT_CHOICES)
-	status = serializers.ChoiceField(
-		choices=Fanfic.STATUS_CHOICES)
-	category = serializers.CharField()
-	subcategory = serializers.CharField()
-	author = serializers.CharField(source='author.username')
-	chapters_count = serializers.SerializerMethodField()
 
+class FanficDetailSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Fanfic
 		fields = '__all__'
-		lookup_field = 'slug'
+		read_only_fields = ['id', 'slug', 'total_likes', 'views', 'created', 'updated',]
 
-	@staticmethod
-	@extend_schema_field(serializers.IntegerField())
-	def get_chapters_count(obj):
-		all_published_chapters = Chapter.objects.filter(
-			fanfic=obj, status='publié')
-		return len(ChapterSerializer(all_published_chapters, many=True).data)
+class FanficCreateSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Fanfic
+		fields = ['title', 'synopsis', 'description', 'genres', 'classement', 'category', 'subcategory', 'language', 'picture']

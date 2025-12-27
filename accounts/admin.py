@@ -25,6 +25,7 @@ class AccountProfileInline(admin.StackedInline):
 	model = AccountProfile
 	can_delete = False
 	verbose_name_plural = 'accounts profiles'
+	list_filter = ('reco_consent_given',)
 
 
 class UserAdmin(BaseUserAdmin):

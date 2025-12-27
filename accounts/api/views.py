@@ -25,7 +25,7 @@ from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSeri
     PasswordResetSerializer, ContactMailSerializer, DeleteAccountSerializer
 from accounts.models import FollowUser, FollowStories, Social, Notification
 from api import custompermission, custompagination
-from fanfics.api.serializers import FanficSerializer
+from fanfics.api.serializers import FanficListSerializer
 from fanfics.models import Fanfic
 import logging
 
@@ -183,7 +183,7 @@ class SignupView(generics.CreateAPIView):
 
 
 class FanficLikeAPIView(generics.GenericAPIView):
-    serializer_class = FanficSerializer
+    serializer_class = FanficListSerializer
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Fanfic.objects.all()
 
@@ -281,7 +281,7 @@ class FollowStoriesAPIView(generics.GenericAPIView):
     """
     Author followed
     """
-    serializer_class = FollowStoriesSerializer()
+    serializer_class = FollowStoriesSerializer
     permission_classes = (permissions.IsAuthenticated,)
     queryset = FollowStories.objects.all()
 
@@ -593,6 +593,7 @@ class NotificationListView(generics.ListAPIView):
         permissions.IsAuthenticated,
     )
     pagination_class = custompagination.StandardResultsSetPagination
+    queryset = Notification.objects.none()
 
     def get_queryset(self):
         following_ids = self.request.user.following.values_list(
@@ -606,3 +607,28 @@ class NotificationListView(generics.ListAPIView):
         ).prefetch_related(
             'target',
         ).order_by('-created')
+
+
+class AcceptRecoConsentView(generics.UpdateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        try:
+            user = self.get_object()
+            consent_data = request.data.get('reco_consent', 'yes')
+            user.accountprofile.reco_consent_given = consent_data
+            user.accountprofile.save()
+            return Response(
+                {'message': 'Consentement accepté', 'user': UserSerializer(user).data},
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            logger.error(f'An error occurred: {str(e)}')
+            return Response(
+                {'error': f'An error occurred: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

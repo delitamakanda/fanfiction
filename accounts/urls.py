@@ -19,6 +19,7 @@ FanficLikeAPIView,
 	NotificationListView,
 	PasswordResetView,
 	PasswordResetConfirmView,
+AcceptRecoConsentView,
 )
 
 app_name = 'accounts'
@@ -53,6 +54,7 @@ urlpatterns = [
 	path('notifications/', NotificationListView.as_view(), name='notifications'),
 	path('password-reset/', PasswordResetView.as_view(), name='password-reset'),
 	path('password-reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
+	path('consent/', AcceptRecoConsentView.as_view(), name='accept-reco-consent'),
 ]
 
 urlpatterns += routers.urls

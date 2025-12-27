@@ -1,23 +1,16 @@
-import weasyprint
-
 from django.conf import settings
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 
 from django.views.generic import View
 from django.template import loader
-from django.template.loader import get_template, render_to_string
-from django.http import HttpResponse, Http404
-from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 from helpcenter.models import Lexique, FoireAuxQuestions
-
-from fanfics.models import Fanfic
-from chapters.models import Chapter
 
 from markdownx.utils import markdownify
 
@@ -72,20 +65,3 @@ def foire_aux_questions_view(request):
         question.reponse = markdownify(question.reponse)
     return render(request, 'help/faq.html', {'questions': questions})
 
-def fanfic_pdf(request, fanfic_id):
-    """
-    Generate pdf output
-    """
-    try:
-        fanfic = Fanfic.objects.get(id=fanfic_id)
-        chapters = Chapter.objects.filter(fanfic=fanfic, status="publié")
-        html = render_to_string(
-            'pdf/fanfic.html', {'fanfic': fanfic, 'chapters': chapters})
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'filename="fanfic_{}.pdf"'.format(
-            fanfic.id)
-        weasyprint.HTML(string=html).write_pdf(response, stylesheets=[
-            weasyprint.CSS(settings.STATIC_ROOT + '/styles/base.css')])
-        return response
-    except ObjectDoesNotExist:
-        raise Http404("Cette fanfiction n'existe pas")

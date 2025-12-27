@@ -40,6 +40,7 @@ class AccountProfile(models.Model):
 	photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True, null=True)
 	location = models.CharField(max_length=30, blank=True)
 	bio = models.TextField(blank=True)
+	reco_consent_given = models.BooleanField(default=True)
 
 	class Meta:
 		verbose_name = 'Account profile'
