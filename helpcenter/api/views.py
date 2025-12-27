@@ -1,72 +1,72 @@
-from django.utils.decorators import method_decorator
-from django.views.decorators.clickjacking import xframe_options_exempt
-from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema_view
-
-from rest_framework import permissions, filters, generics
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from django.contrib.flatpages.models import FlatPage
+from django.core.cache import cache
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, filters, viewsets
 
+from api import custompagination
 from helpcenter.api.serializers import FlatPageSerializer, LexiqueSerializer, FoireAuxQuestionsSerializer
-
 from helpcenter.models import Lexique, FoireAuxQuestions
 
-class FoireAuxQuestionsApiView(ModelViewSet):
-	serializer_class = FoireAuxQuestionsSerializer
-	permission_classes = (
-		permissions.AllowAny,
-	)
-	queryset = FoireAuxQuestions.objects.all()
-	http_method_names = ['get']
+
+class FoireAuxQuestionsApiView(viewsets.ModelViewSet):
+    serializer_class = FoireAuxQuestionsSerializer
+    pagination_class = custompagination.StandardResultsSetPagination
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    queryset = FoireAuxQuestions.objects.all()
+    http_method_names = ['get']
+
+    def list(self, request, *args, **kwargs):
+        cache_key = 'foire_aux_questions_api_view'
+        qs = cache.get(cache_key)
+        if qs is None:
+            qs = FoireAuxQuestions.objects.all()
+            cache.set(cache_key, qs, 60 * 60 * 24)
+        return super().list(request, *args, **kwargs)
+
+class LexiqueApiView(viewsets.ModelViewSet):
+    serializer_class = LexiqueSerializer
+    pagination_class = custompagination.StandardResultsSetPagination
+    filter_backends = (
+        filters.SearchFilter,
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+    )
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    ordering_fields = (
+        'title',
+    )
+    search_fields = (
+        'definition',
+    )
+    queryset = Lexique.objects.all()
+    http_method_names = ['get']
+
+    def list(self, request, *args, **kwargs):
+        cache_key = 'lexique_api_view'
+        qs = cache.get(cache_key)
+        if qs is None:
+            qs = Lexique.objects.all()
+            cache.set(cache_key, qs, 60 * 60 * 24)
+        return super().list(request, *args, **kwargs)
 
 
-@extend_schema_view()
-class LexiqueApiView(ModelViewSet):
-	serializer_class = LexiqueSerializer
-	filter_backends = (
-		filters.SearchFilter,
-		DjangoFilterBackend,
-		filters.OrderingFilter,
-	)
-	permission_classes = (
-		permissions.AllowAny,
-	)
-	ordering_fields = (
-		'title',
-	)
-	search_fields = (
-		'definition',
-	)
-	queryset = Lexique.objects.all()
-	http_method_names = ['get']
+class FlatPageApiView(viewsets.ModelViewSet):
+    queryset = FlatPage.objects.all()
+    serializer_class = FlatPageSerializer
+    pagination_class = custompagination.StandardResultsSetPagination
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    http_method_names = ['get']
 
-
-class FlatPageApiView(ModelViewSet):
-	queryset = FlatPage.objects.all()
-	serializer_class = FlatPageSerializer
-	permission_classes = (
-		permissions.AllowAny,
-	)
-	lookup_field = 'id'
-	lookup_url_kwarg ='id'
-	http_method_names = ['get']
-
-@method_decorator(xframe_options_exempt, name='dispatch')
-class FlatPagesHTMLByIDView(generics.RetrieveAPIView):
-	"""docstring for FlatPagesHTMLByIdView."""
-	queryset = FlatPage.objects.all()
-	renderer_classes = (TemplateHTMLRenderer,)
-	serializer_class = FlatPageSerializer
-
-	permission_classes = (
-		permissions.AllowAny,
-	)
-	lookup_field = 'id'
-	lookup_url_kwarg ='id'
-
-	def get(self, request, *args, **kwargs):
-		self.object = self.get_object()
-		return Response({'page': self.object}, template_name='webview/static_pages.html')
-
+    def list(self, request, *args, **kwargs):
+        cache_key = 'flatpages_api_view'
+        qs = cache.get(cache_key)
+        if qs is None:
+            qs = FlatPage.objects.all()
+            cache.set(cache_key, qs, 60 * 60 * 24)
+        return super().list(request, *args, **kwargs)

@@ -8,13 +8,17 @@ class FoireAuxQuestions(models.Model):
 		('sit', 'Le site'),
 	)
 	libelle = models.CharField(max_length=3, choices=LIBELLE_CHOICES, default='fan')
-	question = models.CharField(max_length=64)
+	question = models.CharField(max_length=255, db_index=True)
 	reponse = MarkdownxField()
+	order = models.PositiveSmallIntegerField(default=1)
 
 	class Meta:
 		verbose_name = 'Foire aux questions'
 		verbose_name_plural = 'Foires aux questions'
 		ordering = ['libelle']
+		indexes = [
+			models.Index(fields=['question']),
+		]
 
 	def __str__(self):
 		return '{}: {}'.format(self.libelle, self.question)
@@ -35,6 +39,9 @@ class Lexique(models.Model):
 		verbose_name = 'Lexique'
 		verbose_name_plural = 'Lexiques'
 		ordering = ['title']
+		indexes = [
+            models.Index(fields=['title']),
+        ]
 
 	def __str__(self):
 		return self.title
