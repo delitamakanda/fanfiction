@@ -1,14 +1,15 @@
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.db import transaction
 from django.http import BadHeaderError
 from django.http.response import Http404
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework import generics, permissions, status, serializers
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
@@ -36,27 +37,98 @@ class PasswordResetView(generics.GenericAPIView):
     Allows users to reset their passwords.
     """
     permission_classes = (permissions.AllowAny,)
-    @staticmethod
-    def post(request):
-        serializer = PasswordResetSerializer(data=request.data)
+    serializer_class = PasswordResetSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            result = serializer.save()
-            user = result['user']
-            token = result['token']
-            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-            protocol = request.is_secure() and 'https' or 'http'
-            link = f'{protocol}://{request.get_host()}/api/accounts/password_reset/{uidb64}/{token}/'
-            send_mail(
-                'Password reset request',
-                f'To reset your password, visit this link: {link}',
-                settings.EMAIL_HOST_USER,
-                [user.email],
-            )
-            return Response({'message': 'Password reset email has been sent.'}, status=status.HTTP_200_OK)
+            email = serializer.validated_data['email']
+            try:
+                user = User.objects.get(email=email)
+                token = default_token_generator.make_token(user)
+                uuid64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+                protocol = request.is_secure() and 'https' or 'http'
+                domain = request.get_host()
+                reset_url = f'{protocol}://{domain}/#/password_reset/{uuid64}/{token}/'
+                context = {
+                    'user': user.username,
+                    'reset_url': reset_url,
+                    'domain': domain,
+                    'uid': uuid64,
+                    'token': token,
+                    'protocol': protocol,
+                }
+
+                html_message = render_to_string('registration/password_reset_email.html', context)
+
+                send_mail(
+                    'Password reset request',
+                    f'To reset your password, visit this link: {reset_url}',
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+                logger.info(f'Password reset email sent to {user.email}')
+                return Response({'message': 'Password reset email has been sent.'}, status=status.HTTP_200_OK)
+            except User.DoesNotExist as e:
+                logger.warning(f'User does not exist: {str(e)}')
+                return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SocialDestroyApiView(generics.UpdateAPIView,generics.DestroyAPIView):
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+            return Response({'error': 'Invalid token or uidb64.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not default_token_generator.check_token(user, token):
+            return Response({
+                'error': 'Invalid token.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        new_password = request.data.get('password')
+        confirm_password = request.data.get('confirm_password')
+
+        if not new_password or not confirm_password or new_password!= confirm_password:
+            return Response({
+                'error': 'Passwords do not match.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user.set_password(new_password)
+            user.save()
+            logger.info(f'Password reset for user {user.username}')
+            return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f'Error resetting password for user {user.username}: {str(e)}')
+            return Response({'error': 'An error occurred while resetting password.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SocialCreateApiView(generics.CreateAPIView):
+    """
+    Create a social account
+    """
+    serializer_class = SocialSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+    )
+
+    def perform_create(self, serializer):
+        try:
+            serializer.save(account=self.request.user.accountprofile, user=self.request.user)
+        except AttributeError as e:
+            raise serializers.ValidationError(str(e))
+
+
+class SocialDestroyApiView(generics.UpdateAPIView, generics.DestroyAPIView):
     """
     Destroy a social account
     """
@@ -110,68 +182,47 @@ class SignupView(generics.CreateAPIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-def liked_fanfic(request):
-    fanfic_id = request.data.get('id')
-    user_id = request.data.get('user')
+class FanficLikeAPIView(generics.GenericAPIView):
+    serializer_class = FanficSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Fanfic.objects.all()
 
-    if fanfic_id and user_id:
+    def get_object(self):
+        fanfic_id = self.request.data.get('id')
+        if not fanfic_id:
+            raise serializers.ValidationError('Fanfic ID is required.')
         try:
-            fanfic = Fanfic.objects.get(id=int(fanfic_id))
-
-            if fanfic:
-                likes = fanfic.users_like.add(user_id)
-                fanfic.users_like = likes
-                fanfic.save()
-            return Response({'status': 'ok'}, status=status.HTTP_201_CREATED)
-        except:
-            return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class FavoritedFanficView(generics.GenericAPIView):
-    """
-    Favorite fanfic
-    """
-    serializer_class = FanficSerializer()
-    authentication_classes = ()
-    permission_classes = ()
+            return Fanfic.objects.get(id=fanfic_id)
+        except (Fanfic.DoesNotExist, ValueError):
+            raise serializers.ValidationError('Fanfic not found.')
 
     def post(self, request, *args, **kwargs):
-        serializer = FanficSerializer()
-        if serializer.data:
-            liked_fanfic(request)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        action = request.data.get('action') # like or unlike
 
+        if action not in ['like', 'unlike']:
+            return Response({'error': 'Invalid action. Use either "like" or "unlike".'}, status=status.HTTP_400_BAD_REQUEST)
 
-def unliked_fanfic(request):
-    fanfic_id = request.data.get('id')
-    user_id = request.data.get('user')
-
-    if fanfic_id and user_id:
         try:
-            fanfic = Fanfic.objects.get(id=int(fanfic_id))
+            fanfic = self.get_object()
+            if action == 'like':
+                fanfic.users_like.add(request.user)
+                message = 'Fanfic liked.'
+            else:
+                fanfic.users_like.remove(request.user)
+                message = 'Fanfic unliked.'
 
-            if fanfic:
-                likes = fanfic.users_like.remove(user_id)
-                fanfic.users_like = likes
-                fanfic.save()
-            return Response({'status': 'ok'}, status=status.HTTP_200_OK)
-        except:
-            return Response({'status': 'nok'}, status=status.HTTP_400_BAD_REQUEST)
+            serializer = self.get_serializer(fanfic)
+            return Response({
+                    'message': message,
+                    'fanfic': serializer.data,
+                'is_liked': fanfic.users_like.filter(id=request.user.id).exists(),
+            }, status=status.HTTP_200_OK)
+        except serializers.ValidationError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-class UnfavoritedFanficView(generics.GenericAPIView):
-    """
-    Unfavorite fanfic
-    """
-    serializer_class = FanficSerializer()
-    authentication_classes = ()
-    permission_classes = ()
-
-    def post(self, request, *args, **kwargs):
-        serializer = FanficSerializer()
-        if serializer.data:
-            unliked_fanfic(request)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class PostFollowAuthor(generics.CreateAPIView):
@@ -211,7 +262,6 @@ class FollowUserView(generics.GenericAPIView):
         except:
             return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
 
-
     def delete(self, request, pk=None):
         follow_user_id = request.data.get('id')
 
@@ -221,6 +271,7 @@ class FollowUserView(generics.GenericAPIView):
             return Response({'status': 'ok'}, status=status.HTTP_200_OK)
         except:
             return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class FollowAuthorDeleteView(generics.GenericAPIView):
     """
@@ -362,12 +413,11 @@ class DeleteAccountView(generics.GenericAPIView):
                 "tokens_blacklisted": tokens_blacklisted
             }, status=status.HTTP_200_OK)
         except serializers.ValidationError as e:
-            logger.warning("Error while validating password: %s", str(e)  )
-            return Response({'status': 'ko','message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            logger.warning("Error while validating password: %s", str(e))
+            return Response({'status': 'ko', 'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             logger.error("Error while deleting user: %s", str(e))
             return Response({'status': 'ko'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
     def _send_confirmation_email(self, user):
         try:
@@ -392,7 +442,6 @@ class DeleteAccountView(generics.GenericAPIView):
         except Exception as e:
             logger.error("Error while sending confirmation email: %s", str(e))
             return False
-
 
 
 class LoginView(generics.GenericAPIView):
@@ -491,8 +540,8 @@ class CheckoutUserView(generics.RetrieveUpdateAPIView):
         return Response({
             'message': 'Utilisateur et profil mis à jour',
             'user': serializer.data,
-                'profile': serializer2.data,
-            }, status=status.HTTP_200_OK,)
+            'profile': serializer2.data,
+        }, status=status.HTTP_200_OK, )
 
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()
@@ -501,11 +550,10 @@ class CheckoutUserView(generics.RetrieveUpdateAPIView):
             {
                 'user': serializer.data,
                 'profile': AccountProfileSerializer(user.accountprofile).data,
-                'social_nichandles': SocialSerializer(Social.objects.filter(account=user.accountprofile), many=True).data,
+                'socials': SocialSerializer(Social.objects.filter(account=user.accountprofile),
+                                                      many=True).data,
             }, status=status.HTTP_200_OK,
         )
-
-
 
 
 class ChangePasswordView(generics.GenericAPIView):
@@ -519,25 +567,26 @@ class ChangePasswordView(generics.GenericAPIView):
         return self.request.user
 
     def put(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        user = self.get_object()
         serializer = ChangePasswordSerializer(data=request.data)
 
-        if serializer.is_valid():
-            old_password = serializer.data.get('old_password')
-            if not self.object.check_password(old_password):
-                return Response({'old_password': ['Mot de passe erroné.']}, status=status.HTTP_400_BAD_REQUEST)
-            self.object.set_password(serializer.data.get('new_password'))
-            self.object.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        old_password = serializer.data.get('old_password')
+        if not user.check_password(old_password):
+            return Response({'old_password': ['Mot de passe erroné.']}, status=status.HTTP_400_BAD_REQUEST)
+        user.set_password(serializer.data.get('new_password'))
+        user.save(update_fields=['password'])
+        return Response({
+            'message': 'Mot de passe mis à jour avec succès.'
+        },status=status.HTTP_200_OK)
 
 
 class ContactFormThrottle(AnonRateThrottle):
     scope = 'contact_form'
     rate = '5/hour'
     description = '5 emails per hour'
+
 
 class ContactMailView(generics.GenericAPIView):
     """
@@ -546,7 +595,7 @@ class ContactMailView(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     serializer_class = ContactMailSerializer
-    throttle_classes = [ContactFormThrottle,]
+    throttle_classes = [ContactFormThrottle, ]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -573,27 +622,27 @@ class ContactMailView(generics.GenericAPIView):
             return Response({"status": "error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
 """
 Notification generics views
 """
 
+
 class NotificationListView(generics.ListAPIView):
-    queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = (
         permissions.IsAuthenticated,
     )
+    pagination_class = custompagination.StandardResultsSetPagination
 
     def get_queryset(self):
-        notifications = Notification.objects.exclude(user=self.request.user)
         following_ids = self.request.user.following.values_list(
             'id', flat=True)
 
-        if following_ids:
-            notifications = notifications.filter(user_id__in=following_ids).select_related(
-                'user', 'user__accountprofile').prefetch_related('target')
-
-        notifications = notifications[:20]
-
-        return notifications
+        return Notification.objects.filter(
+            user_id__in=following_ids
+        ).select_related(
+            'user',
+            'user__accountprofile',
+        ).prefetch_related(
+            'target',
+        ).order_by('-created')
