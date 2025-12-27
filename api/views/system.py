@@ -11,7 +11,7 @@ from api.utils.constants import STATUS
 
 class SystemInfoApiView(generics.GenericAPIView):
 	serializer_class = SystemInfoSerializer
-	permission_classes = [permissions.IsAdminUser, ]
+	permission_classes = [permissions.IsAdminUser, permissions.IsAuthenticated]
 
 	@extend_schema(
 		responses={
