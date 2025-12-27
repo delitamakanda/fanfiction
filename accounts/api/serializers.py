@@ -6,6 +6,7 @@ from rest_framework import serializers
 from accounts.models import Social, AccountProfile, FollowStories, FollowUser, Notification
 from api.utils.notification import create_notification
 from chapters.models import Chapter
+from fanfics.api.serializers import FanficSerializer
 from fanfics.models import Fanfic
 
 
@@ -52,9 +53,60 @@ class AccountProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Image file too large. Maximum size is 5MB.')
         return value
 
+
+class UserFanficSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+        )
+
+
+
+class FollowUserSerializer(serializers.ModelSerializer):
+    user_from = UserFanficSerializer(read_only=True)
+    user_to = UserFanficSerializer(read_only=True)
+
+    class Meta:
+        model = FollowUser
+        fields = (
+            'id',
+            'user_from',
+            'user_to',
+            'created',
+        )
+
+    def create(self, validated_data):
+        create_notification(
+            validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
+        return FollowUser.objects.create(**validated_data)
+
+
+class FollowStoriesSerializer(serializers.ModelSerializer):
+    from_user = UserFanficSerializer(read_only=True)
+    to_fanfic = FanficSerializer(read_only=True)
+
+    class Meta:
+        model = FollowStories
+        fields = (
+            'id',
+            'from_user',
+            'to_fanfic',
+            'created'
+        )
+
+    def create(self, validated_data):
+        create_notification(
+            validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
+        return FollowStories.objects.create(**validated_data)
+
 class UserSerializer(serializers.ModelSerializer):
     profile = AccountProfileSerializer(source='accountprofile', read_only=False, required=False)
     socials = SocialSerializer(source='social', many=True, read_only=True)
+    followed_authors = FollowUserSerializer(source='followed_users', many=True, read_only=True)
+    followed_fanfics = FollowStoriesSerializer(source='followed_stories', many=True, read_only=True)
 
     class Meta:
         model = User
@@ -67,6 +119,8 @@ class UserSerializer(serializers.ModelSerializer):
             'date_joined',
             'profile',
             'socials',
+            'followed_authors',
+            'followed_fanfics',
         )
         read_only_fields = ('id', 'username', 'email',)
         extra_kwargs = {
@@ -108,38 +162,6 @@ class NotificationSerializer(serializers.ModelSerializer):
         }
 
 
-class FollowUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FollowUser
-        fields = (
-            'id',
-            'user_from',
-            'user_to',
-            'created',
-        )
-
-    def create(self, validated_data):
-        create_notification(
-            validated_data['user_from'], 'a commencé à suivre', validated_data['user_to'])
-        return FollowUser.objects.create(**validated_data)
-
-
-class FollowStoriesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FollowStories
-        fields = (
-            'id',
-            'from_user',
-            'to_fanfic',
-            'created'
-        )
-
-    def create(self, validated_data):
-        create_notification(
-            validated_data['from_user'], 'a commencé à suivre', validated_data['to_fanfic'])
-        return FollowStories.objects.create(**validated_data)
-
-
 class SignupSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password], style={'input_type': 'password'})
@@ -179,16 +201,6 @@ class SignupSerializer(serializers.ModelSerializer):
         validated_data.pop('password2')
         user = User.objects.create_user(**validated_data)
         return user
-
-
-class UserFanficSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-        )
 
 
 """
