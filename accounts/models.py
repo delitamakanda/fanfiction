@@ -1,4 +1,7 @@
+from io import BytesIO
+
 from PIL import Image
+from django.core.files.base import ContentFile
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -54,9 +57,12 @@ class AccountProfile(models.Model):
 			max_size = (1000,1000)
 
 			if p_width > 1000:
-				photo.thumbnail(max_size, Image.ANTIALIAS)
-				photo.save(self.photo.path)
-
+				photo.thumbnail(max_size, Image.Resampling.LANCZOS)
+				buffer = BytesIO()
+				photo.save(buffer, format='JPEG', quality=90, optimize=True)
+				buffer.seek(0)
+				self.photo.save(self.photo.name, ContentFile(buffer.getvalue()), save=False)
+				super(AccountProfile, self).save(*args, **kwargs)
 
 
 class Social(models.Model):
@@ -68,13 +74,14 @@ class Social(models.Model):
 	)
 	network = models.CharField(max_length=255, choices=SOCIAL_TYPES)
 	nichandle = models.CharField(max_length=255)
-	account = models.ForeignKey(AccountProfile, related_name="social_network", on_delete=models.CASCADE)
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	account = models.ForeignKey(AccountProfile, related_name="social_network", on_delete=models.CASCADE, db_index=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
 
 	class Meta:
 		ordering = ('network',)
 		verbose_name = 'Social account'
 		verbose_name_plural = 'Social accounts'
+		unique_together = ('network', 'account')
 
 
 	def __str__(self):
@@ -82,28 +89,30 @@ class Social(models.Model):
 
 
 class FollowUser(models.Model):
-	user_from = models.ForeignKey(User, related_name='rel_from_set', on_delete=models.CASCADE)
-	user_to = models.ForeignKey(User, related_name='rel_to_set', on_delete=models.CASCADE)
+	user_from = models.ForeignKey(User, related_name='rel_from_set', on_delete=models.CASCADE, db_index=True)
+	user_to = models.ForeignKey(User, related_name='rel_to_set', on_delete=models.CASCADE, db_index=True)
 	created= models.DateTimeField(auto_now_add=True, db_index=True)
 
 	class Meta:
 		ordering = ('-created',)
 		verbose_name = 'follow user'
 		verbose_name_plural = 'follow users'
+		unique_together = ('user_from', 'user_to')
 
 	def __str__(self):
 		return '{} follows {}'.format(self.user_from, self.user_to)
 
 
 class FollowStories(models.Model):
-	from_user = models.ForeignKey(User, related_name='fanfic', on_delete=models.CASCADE)
-	to_fanfic = models.ForeignKey(Fanfic, related_name='users', on_delete=models.CASCADE)
+	from_user = models.ForeignKey(User, related_name='fanfic', on_delete=models.CASCADE, db_index=True)
+	to_fanfic = models.ForeignKey(Fanfic, related_name='users', on_delete=models.CASCADE, db_index=True)
 	created= models.DateTimeField(auto_now_add=True, db_index=True)
 
 	class Meta:
 		ordering = ('-created',)
 		verbose_name = 'follow story'
 		verbose_name_plural = 'follow stories'
+		unique_together = ('from_user', 'to_fanfic')
 
 	def __str__(self):
 		return '{} follows {}'.format(self.from_user, self.to_fanfic)
