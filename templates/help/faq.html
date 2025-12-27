@@ -11,7 +11,7 @@
     <button class="accordion">{{ question.question }}</button>
     <div class="panel">
         <div class="mt-4 mb-4">
-        {{ question.reponse|safe }}
+        {{ question.reponse|markdown|safe }}
         </div>
     </div>
 {% empty %}

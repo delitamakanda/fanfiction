@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core import cache
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 
@@ -12,11 +13,9 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 from helpcenter.models import Lexique, FoireAuxQuestions
 
-from markdownx.utils import markdownify
-
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
-@cache_page(60 * 15)
+@cache_page(60 * 60 * 24)
 @xframe_options_exempt
 def browse_by_title(request, initial=None):
     if initial:
@@ -59,9 +58,14 @@ class SearchAjaxSubmitView(SearchSubmitView):
 questions = FoireAuxQuestions.objects.all().order_by('libelle')
 
 
+@cache_page(60 * 60 * 20)
 @xframe_options_exempt
 def foire_aux_questions_view(request):
-    for question in questions:
-        question.reponse = markdownify(question.reponse)
-    return render(request, 'help/faq.html', {'questions': questions})
+    cache_key = 'foire_aux_questions_view'
+    qstions = cache.get(cache_key)
+
+    if qstions is None:
+        qstions = FoireAuxQuestions.objects.all()
+        cache.set(cache_key, qstions, 60 * 60 * 24)
+    return render(request, 'help/faq.html', {'questions': qstions})
 
