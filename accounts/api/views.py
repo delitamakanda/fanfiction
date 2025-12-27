@@ -224,142 +224,101 @@ class FanficLikeAPIView(generics.GenericAPIView):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
-class PostFollowAuthor(generics.CreateAPIView):
-    """
-    Follow an author
-    """
-    serializer_class = FollowUserSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-
-
-class UnFollowAuthor(generics.DestroyAPIView):
+class FollowAuthorAPIView(generics.GenericAPIView):
     """
     Unfollow an author
     """
     serializer_class = FollowUserSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    lookup_field = 'user_from__username'
+    queryset = FollowUser.objects.all()
 
-
-class FollowUserView(generics.GenericAPIView):
-    """
-    Users followed
-    """
-    serializer_class = FollowUserSerializer
-    pagination_class = custompagination.StandardResultsSetPagination
-    authentication_classes = ()
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request, username, format=None):
-        """
-        return list of all authors followed
-        """
+    def get_object(self):
+        user_to_id = self.request.data.get('user_to_id')
+        if not user_to_id:
+            raise serializers.ValidationError('User to follow ID is required.')
         try:
-            follow_users = FollowUser.objects.filter(user_from__username=username)
-            serializer = FollowUserSerializer(follow_users, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
-
-    def delete(self, request, pk=None):
-        follow_user_id = request.data.get('id')
-
-        try:
-            follow_user = FollowUser.objects.get(id=follow_user_id)
-            follow_user.delete()
-            return Response({'status': 'ok'}, status=status.HTTP_200_OK)
-        except:
-            return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class FollowAuthorDeleteView(generics.GenericAPIView):
-    """
-    Author followed
-    """
-    serializer_class = FollowUserSerializer()
-    authentication_classes = ()
-    permission_classes = (permissions.AllowAny,)
-
-    def get_object(self, request, user_to):
-        user_from = request.data.get('user_from')
-        try:
-            return FollowUser.objects.get(user_to=user_to, user_from=user_from)
+            return FollowUser.objects.get(
+                user_from=self.request.user,
+                user_to=user_to_id,
+            )
         except FollowUser.DoesNotExist:
-            raise Http404
-
-    def get(self, request, user_to, format=None):
-        author_followed = self.get_object(request, user_to)
-        serializer = FollowUserSerializer(author_followed)
-        return Response(serializer.data)
-
-    def delete(self, request, user_to, format=None):
-        author_followed = self.get_object(request, user_to)
-        author_followed.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            return None
 
 
-class FollowStoriesDeleteView(generics.GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        user_to_id = self.request.data.get('user_to_id')
+        if not user_to_id:
+            return Response({'error': 'User to follow ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            follow_user = self.get_object()
+            if follow_user:
+                return Response({'error': 'You are already following this user.'}, status=status.HTTP_400_BAD_REQUEST)
+            follow_user = FollowUser.objects.create(
+                user_from=self.request.user,
+                user_to=user_to_id,
+            )
+            serializer = self.get_serializer(follow_user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def delete(self, request, *args, **kwargs):
+        follow_user = self.get_object()
+        if not follow_user:
+            return Response({'error': 'You are not following this user.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            follow_user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+class FollowStoriesAPIView(generics.GenericAPIView):
     """
     Author followed
     """
     serializer_class = FollowStoriesSerializer()
-    authentication_classes = ()
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = FollowStories.objects.all()
 
-    def get_object(self, request, to_fanfic):
-        from_user = request.data.get('from_user')
+    def get_object(self):
+        to_fanfic_id = self.request.data.get('to_fanfic_id')
+        if not to_fanfic_id:
+            raise serializers.ValidationError('Fanfic ID is required.')
         try:
-            return FollowStories.objects.get(to_fanfic=to_fanfic, from_user=from_user)
+            return FollowStories.objects.get(to_fanfic=to_fanfic_id, from_user=self.request.user)
         except FollowStories.DoesNotExist:
-            raise Http404
+            return None
 
-    def get(self, request, to_fanfic, format=None):
-        story_followed = self.get_object(request, to_fanfic)
-        serializer = FollowStoriesSerializer(story_followed)
-        return Response(serializer.data)
-
-    def delete(self, request, to_fanfic, format=None):
-        story_followed = self.get_object(request, to_fanfic)
-        story_followed.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class FollowStoriesView(generics.GenericAPIView):
-    """
-    Stories followed
-    """
-    serializer_class = FollowStoriesSerializer
-    authentication_classes = ()
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request, username, format=None):
-        """
-        return list of all stories followed
-        """
+    def post(self, request, *args, **kwargs):
+        to_fanfic_id = request.data.get('to_fanfic_id')
+        if not to_fanfic_id:
+            return Response({'error': 'Fanfic ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            stories = FollowStories.objects.filter(from_user__username=username)
-            serializer = FollowStoriesSerializer(stories, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response({'status': 'no content'}, status=status.HTTP_204_NO_CONTENT)
-
-    def post(self, request):
-        serializer = FollowStoriesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+            follow_stories = self.get_object()
+            if follow_stories:
+                return Response({'error': 'You are already following this fanfic.'}, status=status.HTTP_400_BAD_REQUEST)
+            follow_stories = FollowStories.objects.create(to_fanfic=to_fanfic_id, from_user=self.request.user)
+            serializer = self.get_serializer(follow_stories)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def delete(self, request, pk=None):
-        follow_story_id = request.data.get('id')
-
+    def delete(self, request, *args, **kwargs):
+        follow_stories = self.get_object()
+        if not follow_stories:
+            return Response({'error': 'You are not following this fanfic.'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            follow_story = FollowStories.objects.get(id=follow_story_id)
-            follow_story.delete()
-            return Response({'status': 'ok'}, status=status.HTTP_200_OK)
-        except:
-            return Response({'status': 'ko'}, status=status.HTTP_400_BAD_REQUEST)
+            follow_stories.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            logger.error('An error occurred: %s', str(e))
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class DeleteAccountView(generics.GenericAPIView):
@@ -550,8 +509,9 @@ class CheckoutUserView(generics.RetrieveUpdateAPIView):
             {
                 'user': serializer.data,
                 'profile': AccountProfileSerializer(user.accountprofile).data,
-                'socials': SocialSerializer(Social.objects.filter(account=user.accountprofile),
-                                                      many=True).data,
+                'socials': SocialSerializer(Social.objects.filter(account=user.accountprofile), many=True).data,
+                'followed_authors': FollowUserSerializer(FollowUser.objects.filter(user_from=user), many=True).data,
+                'followed_fanfics': FollowStoriesSerializer(FollowStories.objects.filter(from_user=user), many=True).data,
             }, status=status.HTTP_200_OK,
         )
 

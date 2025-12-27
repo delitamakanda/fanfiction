@@ -9,13 +9,9 @@ from accounts.api.views import (
 	SocialDestroyApiView,
 	SignupView,
 FanficLikeAPIView,
-	FollowUserView,
-	PostFollowAuthor,
-	UnFollowAuthor,
-	FollowStoriesView,
+	FollowAuthorAPIView,
 	DeleteAccountView,
-	FollowAuthorDeleteView,
-	FollowStoriesDeleteView,
+	FollowStoriesAPIView,
 	CheckoutUserView,
 	LogoutView,
 	ChangePasswordView,
@@ -40,23 +36,14 @@ AUTHENTICATION_ROUTES = [
 	path('password_reset/complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
 
-PROFILE_ROUTES = []
-
-FOLLOW_ROUTES = []
-
 urlpatterns = [
 	path('social/', SocialCreateApiView.as_view(), name='socialaccount-create'),
 	path('social/<int:pk>/',
 		 SocialDestroyApiView.as_view(), name='socialaccount-update-destroy'),
 	path('signup/', SignupView.as_view(), name="sign_up"),
 	path('like/', FanficLikeAPIView.as_view(), name='like-fanfic-api'),
-	path('follow-stories/<str:username>/', FollowStoriesView.as_view(), name='follow-stories'),
-	path('follow-user/<str:username>/', FollowUserView.as_view(), name='follow-user'),
-	path('unfollow-user/<str:user_from__username>/', UnFollowAuthor.as_view(), name='unfollow-user'),
-	path('follow-user/', PostFollowAuthor.as_view(), name='post-follow-user'),
-	path('story-followed/<int:to_fanfic>/', FollowStoriesDeleteView.as_view()),
-	path('author-followed/<int:user_to>/', FollowAuthorDeleteView.as_view()),
-
+	path('follow-author/', FollowAuthorAPIView.as_view(), name='follow-author'),
+	path('follow-story/', FollowStoriesAPIView.as_view()),
 	path('disable/', DeleteAccountView.as_view(), name='disable-account'),
 	path('user/', CheckoutUserView.as_view(), name='user'),
 	path('logout/', LogoutView.as_view(), name='logout'),
