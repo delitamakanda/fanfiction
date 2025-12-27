@@ -18,7 +18,7 @@ def create_notification(user, verb, target=None):
     }
 
     if target:
-        filter_kwargs['target_ct'] = ContentType.objects.get_for_model(target),
+        filter_kwargs['target_ct'] = ContentType.objects.get_for_model(target)
         filter_kwargs['target_id'] = target.id,
 
     notification, created = Notification.objects.get_or_create(
