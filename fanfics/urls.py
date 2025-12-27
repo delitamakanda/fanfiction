@@ -4,31 +4,34 @@ from fanfics.api.views import (
     GenresViewSet,
     ClassementViewSet,
     StatusViewSet,
-    FanficCreateApiView,
     FanficViewSet,
-RecommendedFanficViewSet,
 ShareFanficAPIView,
 EmailFeedbackView,
-get_recommendation_list
+UserRecommendationsAPIView,
 )
 
-from fanfics.views import fanfic_detail
+from fanfics.views import (
+    fanfic_pdf,
+)
+
 from rest_framework import routers
 
 app_name = 'fanfics'
 
 router = routers.DefaultRouter()
-router.register(r'genres', GenresViewSet, basename='genres'),
+router.register(r'genres', GenresViewSet, basename='genres')
 router.register(r'classement', ClassementViewSet, basename='classement')
 router.register(r'status', StatusViewSet, basename='status')
 router.register(r'', FanficViewSet, basename='fanfics')
-router.register(r'recommended/list', RecommendedFanficViewSet, basename='recommended')
 
 urlpatterns = [
-    path('fanfics-create/', FanficCreateApiView.as_view(), name='fanfic-create'),
 	path('share/', ShareFanficAPIView.as_view(), name='share'),
 	path('feedback/', EmailFeedbackView.as_view(), name='feedback'),
-	path('recommendation-list/', get_recommendation_list, name='recommendation-list'),
+	path('recommendations/', UserRecommendationsAPIView.as_view(), name='recommendations'),
+]
+
+urlpatterns += [
+    path('<int:fanfic_id>/pdf', fanfic_pdf, name='fanfic_pdf'),
 ]
 
 urlpatterns += router.urls

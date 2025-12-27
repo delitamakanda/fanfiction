@@ -8,8 +8,6 @@ from chapters.models import Chapter
 
 from api import custompagination
 
-from api.tasks import chapter_created
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -24,10 +22,6 @@ class ChapterBaseAPIView(generics.GenericAPIView):
 
     def perform_create_or_update(self, serializer):
         serializer.save(author=self.request.user)
-        try:
-                chapter_created.delay(serializer.data['id'])
-        except Exception as e:
-            logger.error(f'Error occurred while creating chapter: {e}', exc_info=True)
 
 
 class ChapterListApiView(generics.ListAPIView):

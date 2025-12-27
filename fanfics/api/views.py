@@ -1,100 +1,56 @@
-from pydoc import synopsis
-
-from django.http import BadHeaderError, JsonResponse
+from django.http import BadHeaderError
 from django.template.loader import render_to_string, get_template
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.cache import cache
 
-from rest_framework import generics, permissions, filters, status, views
+from rest_framework import generics, filters, status, views
 from rest_framework.throttling import ScopedRateThrottle
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 
 from django.core.mail import send_mail
+
 from fanfics.models import Fanfic, Recommendation
 
-from fanfics.api.serializers import  FanficSerializer
+from fanfics.api.serializers import  FanficListSerializer, FanficCreateSerializer, FanficDetailSerializer
 from fanfics.api.filters import FanficFilter
 
 from api import custompermission, custompagination
 
-from api.tasks import fanfic_created
-from fanfics.services import compute_recommendations
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_recommendation_list(request):
-    try:
-        recos = Recommendation.objects.get(user=request.user)
-        serializer = FanficSerializer(recos.fanfictions.all(), many=True)
-        return Response({ 'recommendations': serializer.data }, status=status.HTTP_200_OK)
-    except Recommendation.DoesNotExist:
-        recos = compute_recommendations(request.user.id)
-        reco = Recommendation.objects.create(user=request.user)
-        for fanfic_id in recos:
-            reco.fanfictions.add(Fanfic.objects.get(id=fanfic_id))
-        serializer = FanficSerializer(recos, many=True)
-        return Response({ 'recommendations': serializer.data }, status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
-class TemplateViewSet(ModelViewSet):
-    permission_classes = [
-        permissions.AllowAny,
-    ]
-    lookup_field = 'id'
-    lookup_url_kwarg ='id'
-    http_method_names = ['get']
-
-
-class GenresViewSet(TemplateViewSet):
-    def get_queryset(self):
-        return [{ 'id': id, 'libelle': libelle } for id, libelle in Fanfic.GENRES_CHOICES]
+class ChoicesViewSet(ViewSet):
+    permission_classes = [AllowAny,]
+    choices = []
+    response_key = None
 
     def list(self, request):
-        return Response({'genres': self.get_queryset()})
+        data = [{ id: id, 'libelle': libelle } for id, libelle in self.choices]
+        return Response({self.response_key: data})
 
 
-class ClassementViewSet(TemplateViewSet):
-    def get_queryset(self):
-        return [{'id': id, 'libelle': libelle } for id, libelle in Fanfic.CLASSEMENT_CHOICES]
-
-    def list(self, request):
-        return Response({'classement': self.get_queryset()})
+class GenresViewSet(ChoicesViewSet):
+    choices = Fanfic.GENRES_CHOICES
+    response_key = 'genres'
 
 
-class StatusViewSet(TemplateViewSet):
-    def get_queryset(self):
-        return  [{ 'id': id, 'libelle': libelle } for id, libelle in Fanfic.STATUS_CHOICES]
-
-    def list(self, request):
-        return Response({'status': self.get_queryset()})
+class ClassementViewSet(ChoicesViewSet):
+    choices = Fanfic.CLASSEMENT_CHOICES
+    response_key = 'classement'
 
 
-class FanficCreateApiView(generics.CreateAPIView):
-    serializer_class = FanficSerializer
-    queryset = Fanfic.objects.all()
-    permission_classes = (
-        custompermission.IsCurrentAuthorOrReadOnly,
-    )
-    name = 'fanfic-create'
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-        # launch asynchronous tasks
-        fanfic_created.delay(serializer.data['id'])
+class StatusViewSet(ChoicesViewSet):
+    choices = Fanfic.STATUS_CHOICES
+    response_key ='status'
 
 
-class FanficViewSet(TemplateViewSet):
-    serializer_class = FanficSerializer
+class FanficViewSet(ModelViewSet):
     queryset = Fanfic.objects.all()
     filter_class = FanficFilter
     pagination_class = custompagination.StandardResultsSetPagination
@@ -124,6 +80,13 @@ class FanficViewSet(TemplateViewSet):
         custompermission.IsCurrentAuthorOrReadOnly,
     )
 
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update':
+            return FanficCreateSerializer
+        elif self.action == 'retrieve':
+            return FanficDetailSerializer
+        return FanficListSerializer
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         session_key = 'viewed_fanfic_{}'.format(instance.pk)
@@ -131,58 +94,46 @@ class FanficViewSet(TemplateViewSet):
             instance.views += 1
             instance.save()
             self.request.session[session_key] = True
-
-        most_liked_fanfics = Fanfic.objects.filter(
-                status='publié').order_by('-total_likes')[:10]
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
-
-class RecommendedFanficViewSet(TemplateViewSet):
-    permission_classes = (permissions.AllowAny,)
-
-    def list(self, request, *args, **kwargs):
-        recommended_fanfics = r.suggest_fanfics_for([fanfic for fanfic in Fanfic.objects.filter(status='publié')], 10)
-
-        reco_serializer_data = FanficSerializer(recommended_fanfics, many=True)
-
-        return Response({'recommended_fanfics': reco_serializer_data.data})
 
 
 class ShareFanficAPIView(views.APIView):
     """
     Share fanfiction with e-mail
     """
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (AllowAny,)
     authentication_classes = ()
+
     def post(self, request, *args, **kwargs):
-        fanfic_id = request.data.get('id')
-        fanfic = Fanfic.objects.get(id=fanfic_id)
-        current_site = get_current_site(request)
-
-        name = request.data.get('name')
-        email = request.data.get('email')
-        to_email = request.data.get('to_email')
-        comments = request.data.get('comments')
-
         try:
-            fanfic_url = current_site.domain + '/' + 'fanfic/detail/' + fanfic.slug
+            fanfic_id = request.data.get('id')
+            fanfic = Fanfic.objects.get(id=fanfic_id)
+            current_site = get_current_site(request)
+
+            name = request.data.get('name')
+            email = request.data.get('email')
+            to_email = request.data.get('to_email')
+            comments = request.data.get('comments')
+
+            fanfic_url = current_site.domain + '/#/' + 'fanfic/' + fanfic.slug
             subject = '{} ({}) recommends you reading "{}"'.format(name, email, fanfic.title)
             message = 'Read "{}" at {}\n\n{}\'s comments: {}'.format(fanfic.title, fanfic_url, name, comments)
             send_mail(subject, message, settings.SERVER_EMAIL, [to_email])
-            sent = True
-            return Response({"message": sent}, status=status.HTTP_200_OK)
+            return Response({"message": "ok"}, status=status.HTTP_200_OK)
         except BadHeaderError as e:
+            logger.warning(f"Invalid header: {str(e)}")
             return Response({"status": f"{str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+        except Fanfic.DoesNotExist:
+            logger.warning(f"Fanfic does not exist")
+            return Response({"status": "Fanfic does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"An error occurred: {str(e)}")
+            return Response({"status": "error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class EmailFeedbackView(views.APIView):
@@ -190,25 +141,50 @@ class EmailFeedbackView(views.APIView):
     Feedback email
     """
     authentication_classes = ()
-    permission_classes = ()
+    permission_classes = (AllowAny,)
 
     @staticmethod
-    def post(request, *args, **kwargs):
-        fanfic_id = request.data.get('id')
-        fanfic = Fanfic.objects.get(id=fanfic_id)
+    def post(self, request, *args, **kwargs):
+        try:
+            fanfic_id = request.data.get('id')
+            fanfic = Fanfic.objects.get(id=fanfic_id)
 
-        template = get_template('mail/feedback.txt')
-        context = {'fanfic': fanfic}
+            template = get_template('mail/feedback.txt')
+            context = {'fanfic': fanfic}
 
-        msg_text = template.render(context)
-        msg_html = render_to_string('mail/feedback.html', context)
+            msg_text = template.render(context)
+            msg_html = render_to_string('mail/feedback.html', context)
 
-        if fanfic:
-            try:
-                send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com',
-                          [settings.SERVER_EMAIL], html_message=msg_html, fail_silently=False)
-            except BadHeaderError:
-                return Response({"status": "invalid header"}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"status": "ok"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"status": "nok"}, status=status.HTTP_400_BAD_REQUEST)
+            send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com',[settings.SERVER_EMAIL], html_message=msg_html, fail_silently=False)
+            return Response({"message": "ok"}, status=status.HTTP_200_OK)
+        except BadHeaderError:
+            logger.warning(f"Invalid header")
+            return Response({"status": "invalid header"}, status=status.HTTP_400_BAD_REQUEST)
+        except Fanfic.DoesNotExist:
+            logger.warning(f"Fanfic does not exist")
+            return Response({"status": "Fanfic does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"An error occurred: {str(e)}")
+            return Response({"status": "error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class UserRecommendationsAPIView(generics.ListAPIView, generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated,]
+    serializer_class = FanficListSerializer
+
+    def get_queryset(self):
+        if not self.request.user.accountprofile.reco_consent_given:
+            return Response({"message": "You must give consent to receive recommendations"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            recs = Recommendation.objects.filter(user=self.request.user)
+            serializer = self.get_serializer(recs, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"An error occurred: {str(e)}")
+            return Response({"status": "error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def delete(self, request, *args, **kwargs):
+        Recommendation.objects.filter(user=self.request.user).delete()
+        cache.delete(f"recs_{self.request.user.id}")
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

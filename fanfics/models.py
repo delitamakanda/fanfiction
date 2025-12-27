@@ -47,7 +47,7 @@ class Fanfic(models.Model):
         ('18', '18+'),
     )
     author = models.ForeignKey(
-        User, related_name="fanfics", on_delete=models.CASCADE)
+        User, related_name="fanfics", on_delete=models.CASCADE, db_index=True)
     title = models.CharField(max_length=255, db_index=True)
     slug = models.SlugField(max_length=255, db_index=True,
                             unique=True, blank=True, null=True)
@@ -64,7 +64,7 @@ class Fanfic(models.Model):
     updated = models.DateTimeField(auto_now=True, blank=True, null=True)
     was_featured_in_home = models.BooleanField(default=False)
     status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default='brouillon')
+        max_length=10, choices=STATUS_CHOICES, default='brouillon', db_index=True)
     users_like = models.ManyToManyField(
         User, related_name='fanfics_liked', blank=True)
     total_likes = models.PositiveIntegerField(db_index=True, default=0)
@@ -74,7 +74,7 @@ class Fanfic(models.Model):
         Category, related_name="categories", on_delete=models.CASCADE)
     subcategory = models.ForeignKey(
         SubCategory, related_name="sub_categories", on_delete=models.CASCADE)
-    completed = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False, db_index=True)
     views = models.PositiveIntegerField(default=0)
     fanfic_is_scraped = models.BooleanField(default=False)
     link_fanfic = models.URLField(max_length=255, blank=True, null=True)
@@ -94,20 +94,19 @@ class Fanfic(models.Model):
 
     @staticmethod
     def most_liked_fanfics():
-        return Fanfic.objects.filter(status='publié').order_by('-total_likes')[:10]
+        return Fanfic.objects.filter(status='publié').select_related('author', 'category', 'subcategory').order_by('-total_likes')[:10]
 
     @staticmethod
-    def newest_fanfics(self):
-        return Fanfic.objects.filter(status='publié').order_by('-publish')[:10]
-
-    def get_absolute_url(self):
-        return reverse('fanfic_detail', args=[self.id, self.slug])
+    def newest_fanfics():
+        return Fanfic.objects.filter(status='publié').select_related(
+            'author', 'category', 'subcategory',
+        ).order_by('-publish')[:10]
 
 
 class Recommendation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
     fanfictions = models.ManyToManyField(Fanfic)
-    generated_at = models.DateTimeField(auto_now=True)
+    generated_at = models.DateTimeField(auto_now=True, db_index=True)
 
     def __str__(self):
         return f'Recommendation for {self.user.username}'
@@ -115,6 +114,9 @@ class Recommendation(models.Model):
     class Meta:
         verbose_name = 'Recommendation'
         verbose_name_plural = 'Recommendations'
+        indexes = [
+            models.Index(fields=['user', '-generated_at']),
+        ]
 
 
 class UserFavorite(models.Model):
@@ -125,6 +127,10 @@ class UserFavorite(models.Model):
     class Meta:
         verbose_name = 'User favorite'
         verbose_name_plural = 'User favorites'
+        unique_together = ('user', 'fanfiction')
+        indexes = [
+            models.Index(fields=['user', 'created_at']),
+        ]
 
     def __str__(self):
         return f'{self.user.username} favorite {self.fanfiction.title}'

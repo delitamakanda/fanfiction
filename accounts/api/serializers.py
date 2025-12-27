@@ -6,7 +6,7 @@ from rest_framework import serializers
 from accounts.models import Social, AccountProfile, FollowStories, FollowUser, Notification
 from api.utils.notification import create_notification
 from chapters.models import Chapter
-from fanfics.api.serializers import FanficSerializer
+from fanfics.api.serializers import FanficListSerializer
 from fanfics.models import Fanfic
 
 
@@ -43,7 +43,7 @@ class AccountProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountProfile
         fields = (
-            'id', 'bio', 'photo', 'date_of_birth', 'location',
+            'id', 'bio', 'photo', 'date_of_birth', 'location', 'reco_consent_given',
         )
         read_only_fields = ('id',)
 
@@ -86,7 +86,7 @@ class FollowUserSerializer(serializers.ModelSerializer):
 
 class FollowStoriesSerializer(serializers.ModelSerializer):
     from_user = UserFanficSerializer(read_only=True)
-    to_fanfic = FanficSerializer(read_only=True)
+    to_fanfic = FanficListSerializer(read_only=True)
 
     class Meta:
         model = FollowStories
