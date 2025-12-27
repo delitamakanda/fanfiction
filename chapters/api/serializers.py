@@ -39,7 +39,7 @@ class ChapterSerializer(serializers.ModelSerializer):
         def validate_text(value):
             if not value or not value.strip():
                 raise serializers.ValidationError('Text is required and cannot be empty')
-
+            return value.strip()
         @staticmethod
         def validate_status(value):
             valid_statuses = dict(Chapter.STATUS_CHOICES)
