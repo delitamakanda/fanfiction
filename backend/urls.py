@@ -28,14 +28,14 @@ from markdownx import urls as markdownx
 sitemaps = {
 	'fanfics': FanficSitemap,
 	'categories': CategorySitemap,
-    'subcategories': SubCategorySitemap,
+	'subcategories': SubCategorySitemap,
 	'flatpages': FlatPageSitemap,
 }
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('api/', include(('api.urls', 'api'), namespace='api')),
-
+	path('docs/', include(('backend.docs_urls', 'docs'), namespace='docs')),
 	path('markdownx/', include(markdownx)),
 	path('pages/', include('django.contrib.flatpages.urls')),
 
@@ -46,15 +46,14 @@ urlpatterns += [
 	path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG and not settings.TESTING:
 	urlpatterns += static(settings.MEDIA_URL,
 						  document_root=settings.MEDIA_ROOT)
 	urlpatterns += static(settings.STATIC_URL,
 						  document_root=settings.STATIC_ROOT)
-	urlpatterns += [path('docs/', include(('backend.docs_urls', 'docs'), namespace='docs'))]
 
 	# django debug toolbar
 	if 'debug_toolbar' in settings.INSTALLED_APPS:
 		urlpatterns += [
-            path('__debug__/', include('debug_toolbar.urls')),
-        ]
+			path('__debug__/', include('debug_toolbar.urls')),
+		]
