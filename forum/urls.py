@@ -1,7 +1,19 @@
 from django.urls import path
 from forum import views
+from rest_framework import routers
+from forum.api.views import (
+MessageViewSet,
+TopicViewSet,
+BoardViewSet
+)
 
-urlpatterns = [
+router = routers.DefaultRouter()
+
+router.register(r'boards', BoardViewSet, basename='board')
+router.register(r'topics', TopicViewSet, basename='topic')
+router.register(r'messages', MessageViewSet, basename='message')
+
+urlpatterns = router.urls + [
     path('', views.CommunitiesListView.as_view(), name='communities_view'),
     path('<int:pk>', views.communities_view_board_topics, name='board_topics'),
     path('<int:pk>/new', views.communities_view_new_topic, name='board_topics_new'),
