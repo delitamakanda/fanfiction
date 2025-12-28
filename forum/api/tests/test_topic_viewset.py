@@ -44,6 +44,38 @@ class TopicAPITestCase(APITestCase):
         self.assertEqual(len(response.data['results']), 1)
         self.assertEqual(response.data['results'][0]['text'], message.text)
 
+    def test_update_topic_by_starter(self):
+        """Test that the topic starter can update their own topic"""
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(f'{self.url}{self.topic.pk}/', {'subject': 'Updated Topic'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.topic.refresh_from_db()
+        self.assertEqual(self.topic.subject, 'Updated Topic')
+
+    def test_update_topic_by_non_starter(self):
+        """Test that non-starter authenticated users cannot update topics"""
+        other_user = User.objects.create_user(username='otheruser', email='other@example.com', password='other123')
+        self.client.force_authenticate(user=other_user)
+        response = self.client.patch(f'{self.url}{self.topic.pk}/', {'subject': 'Hacked Topic'})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.topic.refresh_from_db()
+        self.assertEqual(self.topic.subject, 'Test Topic')
+
+    def test_delete_topic_by_starter(self):
+        """Test that the topic starter can delete their own topic"""
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(f'{self.url}{self.topic.pk}/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Topic.objects.count(), 0)
+
+    def test_delete_topic_by_non_starter(self):
+        """Test that non-starter authenticated users cannot delete topics"""
+        other_user = User.objects.create_user(username='otheruser', email='other@example.com', password='other123')
+        self.client.force_authenticate(user=other_user)
+        response = self.client.delete(f'{self.url}{self.topic.pk}/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Topic.objects.count(), 1)
+
 
 
 
