@@ -36,7 +36,7 @@ class BoardViewSet(viewsets.ModelViewSet):
         
         Args:
             request: The HTTP request object
-            pk (int, optional): The primary key of the board
+            pk (int): The primary key of the board (required)
             
         Returns:
             Response: A list of topics belonging to the specified board,
@@ -80,7 +80,7 @@ class TopicViewSet(viewsets.ModelViewSet):
         
         Args:
             request: The HTTP request object
-            pk (int, optional): The primary key of the topic
+            pk (int): The primary key of the topic (required)
             
         Returns:
             Response: A list of messages belonging to the specified topic,
