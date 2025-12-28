@@ -13,7 +13,11 @@ class BoardViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['GET'])
     def topics(self, request, pk=None):
         board = self.get_object()
-        topics = board.topics.all()
+        topics = board.topics.all().order_by('-last_updated')
+        page = self.paginate_queryset(topics)
+        if page is not None:
+            serializer = TopicSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = TopicSerializer(topics, many=True)
         return Response(serializer.data)
 
@@ -27,7 +31,11 @@ class TopicViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['GET'])
     def messages(self, request, pk=None):
         topic = self.get_object()
-        messages = topic.messages.all()
+        messages = topic.messages.all().order_by('created_at')
+        page = self.paginate_queryset(messages)
+        if page is not None:
+            serializer = MessageSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
 
