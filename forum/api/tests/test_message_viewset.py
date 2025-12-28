@@ -40,6 +40,38 @@ class MessageAPITestCase(APITestCase):
         response = self.client.post(self.url, {'text': 'New Message', 'topic': self.topic.pk, 'created_by': self.user.pk})
         self.assertEqual(response.data['created_by'], self.user.pk)
 
+    def test_update_message_by_creator(self):
+        """Test that the message creator can update their own message"""
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(f'{self.url}{self.message.pk}/', {'text': 'Updated Message'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.message.refresh_from_db()
+        self.assertEqual(self.message.text, 'Updated Message')
+
+    def test_update_message_by_non_creator(self):
+        """Test that non-creator authenticated users cannot update messages"""
+        other_user = User.objects.create_user(username='otheruser', email='other@example.com', password='other123')
+        self.client.force_authenticate(user=other_user)
+        response = self.client.patch(f'{self.url}{self.message.pk}/', {'text': 'Hacked Message'})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.message.refresh_from_db()
+        self.assertEqual(self.message.text, 'Test Message')
+
+    def test_delete_message_by_creator(self):
+        """Test that the message creator can delete their own message"""
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(f'{self.url}{self.message.pk}/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Message.objects.count(), 0)
+
+    def test_delete_message_by_non_creator(self):
+        """Test that non-creator authenticated users cannot delete messages"""
+        other_user = User.objects.create_user(username='otheruser', email='other@example.com', password='other123')
+        self.client.force_authenticate(user=other_user)
+        response = self.client.delete(f'{self.url}{self.message.pk}/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Message.objects.count(), 1)
+
 
 
 
