@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import logging
 import logging.config
+import sys
 from pathlib import Path
 
 from decouple import config
@@ -45,6 +46,8 @@ SECRET_KEY = config('SECRET_KEY', cast=str,
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
+
+TESTING = 'test' in sys.argv
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
 
