@@ -62,10 +62,10 @@ questions = FoireAuxQuestions.objects.all().order_by('libelle')
 @xframe_options_exempt
 def foire_aux_questions_view(request):
     cache_key = 'foire_aux_questions_view'
-    qstions = cache.get(cache_key)
+    questions = cache.get(cache_key)
 
-    if qstions is None:
-        qstions = FoireAuxQuestions.objects.all()
-        cache.set(cache_key, qstions, 60 * 60 * 24)
-    return render(request, 'help/faq.html', {'questions': qstions})
+    if questions is None:
+        questions = FoireAuxQuestions.objects.all()
+        cache.set(cache_key, questions, 60 * 60 * 24)
+    return render(request, 'help/faq.html', {'questions': questions})
 
