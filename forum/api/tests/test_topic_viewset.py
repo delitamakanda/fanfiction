@@ -41,8 +41,8 @@ class TopicAPITestCase(APITestCase):
         message = Message.objects.create(topic=self.topic, text='Test Message', created_by=self.user)
         response = self.client.get(f'{self.url}{self.topic.pk}/messages/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['text'], message.text)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['text'], message.text)
 
 
 
