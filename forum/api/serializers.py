@@ -10,7 +10,6 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class TopicSerializer(serializers.ModelSerializer):
-    starter = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Topic
@@ -18,8 +17,6 @@ class TopicSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
-    updated_by = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Message
         fields = ('id', 'text', 'created_at', 'updated_at', 'created_by', 'updated_by', 'topic')
