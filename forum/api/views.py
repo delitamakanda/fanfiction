@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from forum.models import Topic, Message, Board
 from forum.api.serializers import TopicSerializer, MessageSerializer, BoardSerializer
