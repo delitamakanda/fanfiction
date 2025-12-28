@@ -35,8 +35,6 @@ sitemaps = {
 urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('api/', include(('api.urls', 'api'), namespace='api')),
-	path('docs/', include(('backend.docs_urls', 'docs'), namespace='docs')),
-	path('forum/', include(('forum.urls', 'forum'))),
 
 	path('markdownx/', include(markdownx)),
 	path('pages/', include('django.contrib.flatpages.urls')),
@@ -53,6 +51,7 @@ if settings.DEBUG:
 						  document_root=settings.MEDIA_ROOT)
 	urlpatterns += static(settings.STATIC_URL,
 						  document_root=settings.STATIC_ROOT)
+	urlpatterns += [path('docs/', include(('backend.docs_urls', 'docs'), namespace='docs'))]
 
 	# django debug toolbar
 	if 'debug_toolbar' in settings.INSTALLED_APPS:

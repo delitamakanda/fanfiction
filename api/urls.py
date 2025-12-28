@@ -31,9 +31,14 @@ resources_patterns = [
 	path('fanfics/', include(('fanfics.urls', 'fanfics'), namespace='fanfics')),
 ]
 
+forum_patterns = [
+	path('forum/', include(('forum.urls', 'forum'))),
+]
+
 urlpatterns = [
 	path('', ApiRootView.as_view(), name='root'),
 	path('', include(monitoring_patterns)),
+	path('', include(forum_patterns)),
 	path('auth/', include(auth_patterns)),
 	path('v1/', include(resources_patterns)),
 ]
