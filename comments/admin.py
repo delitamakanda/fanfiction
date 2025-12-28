@@ -4,6 +4,6 @@ from comments.models import Comment
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'fanfic', 'created']
+    list_display = ['fanfic', 'created']
     search_fields = ['created', 'body']
     list_filter = ['created', 'active']

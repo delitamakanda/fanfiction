@@ -5,7 +5,7 @@ from categories.models import Category, SubCategory, EntityCategory
 class CategorySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Category
-		fields = ('id', 'name', 'slug')
+		fields = ('id', 'name', 'slug', 'description',)
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
@@ -13,13 +13,17 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = SubCategory
-		fields = '__all__'
+		fields = (
+			'id', 'name','slug', 'description', 'category', 'image',
+		)
 
 
 class EntityCategorySerializer(serializers.ModelSerializer):
-	category = CategorySerializer(read_only=True)
-	subcategory = SubCategorySerializer(read_only=True)
+	category = serializers.StringRelatedField(read_only=True)
+	subcategory = serializers.StringRelatedField(read_only=True)
 
 	class Meta:
 		model = EntityCategory
-		fields = '__all__'
+		fields = (
+			'id', 'entity', 'logic_value', 'subcategory', 'category',
+		)

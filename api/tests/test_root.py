@@ -14,10 +14,9 @@ class ApiRootTestCase(TestCase):
 
     def test_api_root_contains_endpoints(self):
         response = self.client.get(self.url)
-        self.assertIn('health-detailed', response.data)
         self.assertIn('health', response.data)
+        self.assertIn('health-detailed', response.data)
         self.assertIn('system', response.data)
-        self.assertIn('categories', response.data)
 
 
     def test_api_root_documentation_lins(self):

@@ -8,16 +8,19 @@ class FoireAuxQuestionsSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = FoireAuxQuestions
-		fields = '__all__'
+		fields = ('id', 'libelle', 'question', 'order',)
+		read_only_fields = ('id',)
 
 
 class LexiqueSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Lexique
-		fields = '__all__'
+		fields = ('id', 'title', 'definition',)
+		read_only_fields = ('id',)
 
 
 class FlatPageSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = FlatPage
-		fields = '__all__'
+		fields = ('id', 'url', 'title', 'content')
+		read_only_fields = ('id', 'url',)

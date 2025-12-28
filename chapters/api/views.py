@@ -1,12 +1,28 @@
-from rest_framework import generics, permissions, response, status
+from rest_framework import generics, permissions
+from rest_framework.exceptions import NotFound
+from rest_framework.throttling import UserRateThrottle
 
 from chapters.api.serializers import ChapterSerializer, ChapterFormattedSerializer
 
 from chapters.models import Chapter
 
-from api import custompermission, custompagination
+from api import custompagination
 
-from api.tasks import chapter_created
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class ChapterBaseAPIView(generics.GenericAPIView):
+    queryset = Chapter.objects.all()
+    serializer_class = ChapterSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
+
+    def perform_create_or_update(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 class ChapterListApiView(generics.ListAPIView):
     queryset = Chapter.objects.all()
@@ -20,34 +36,30 @@ class ChapterListApiView(generics.ListAPIView):
     )
 
     def get_queryset(self):
-        try:
-            fanfic = self.kwargs['fanfic']
-            if fanfic:
-                return Chapter.objects.filter(fanfic=fanfic)
-        except:
-            return response.Response({'error': 'No fanfic found'}, status=status.HTTP_404_NOT_FOUND)
+        fanfic_id = self.request.query_params.get('fanfic', None)
+        if fanfic_id is None:
+            raise NotFound('No fanfic id provided')
+        return Chapter.objects.filter(fanfic=fanfic_id)
 
 
-class ChapterCreateApiView(generics.CreateAPIView):
-    queryset = Chapter.objects.all()
-    serializer_class = ChapterSerializer
-    permission_classes = (
-        custompermission.IsCurrentAuthorOrReadOnly,
-    )
-
+class ChapterCreateApiView(ChapterBaseAPIView, generics.CreateAPIView):
+    throttle_classes = [UserRateThrottle,]
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-        chapter_created.delay(serializer.data['id'])
+        self.perform_create_or_update(serializer)
 
 
-class ChapterDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Chapter.objects.all()
-    serializer_class = ChapterSerializer
+
+
+class ChapterDetailView(ChapterBaseAPIView, generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
-    name='chapter-detail'
-    permission_classes = (
-        custompermission.IsCurrentAuthorOrReadOnly,
-    )
+    name = 'chapter-detail'
+
+    def get_queryset(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return Chapter.objects.filter(author=self.request.user)
+        return Chapter.objects.all()
 
     def perform_update(self, serializer):
-        serializer.save(author=self.request.user)
+        instance = serializer.save(author=self.request.user)
+        instance.full_clean()
+        self.perform_create_or_update(serializer)
