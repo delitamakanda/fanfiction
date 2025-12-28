@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
@@ -275,7 +276,7 @@ class ContactMailSerializer(serializers.Serializer):
         response = requests.post(
             'https://www.google.com/recaptcha/api/siteverify',
             data={
-               'secret': 'YOUR_RECAPTCHA_SECRET_KEY',
+               'secret': settings.RECAPTCHA_SECRET_KEY,
                'response': value
             }
         )

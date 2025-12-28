@@ -13,7 +13,7 @@ class TagSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
 	username_author = serializers.CharField(source='user.username', read_only=True)
 	email_author = serializers.CharField(source='user.email', read_only=True)
-	tags = TagSerializer(many=True)
+	tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='word')
 
 	class Meta:
 		model = Post
@@ -30,8 +30,8 @@ class PostSerializer(serializers.ModelSerializer):
 			'category',
 		)
 
-		def to_internal_value(self, data):
-			for tag in data.get('tags', []):
-				Tag.objects.get_or_create(word=tag)
-			return super().to_internal_value(data)
+	def to_internal_value(self, data):
+		for tag in data.get('tags', []):
+			Tag.objects.get_or_create(word=tag)
+		return super().to_internal_value(data)
 
