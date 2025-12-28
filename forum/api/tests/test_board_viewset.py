@@ -38,8 +38,8 @@ class BoardAPITestCase(APITestCase):
         topic = Topic.objects.create(board=self.board, subject='Test Topic', starter=self.user)
         response = self.client.get(f'{self.url}{self.board.pk}/topics/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['subject'], topic.subject)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['subject'], topic.subject)
 
 
 
