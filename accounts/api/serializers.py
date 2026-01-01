@@ -178,20 +178,18 @@ class SignupSerializer(serializers.ModelSerializer):
             'username': {'required': True}
         }
 
-    @staticmethod
     def validate(self, data):
         if data['password'] != data['password2']:
             raise serializers.ValidationError(
                 {'password': 'Passwords did not match'})
         return data
 
-    @staticmethod
     def validate_username(self, attrs):
         if User.objects.filter(username=attrs).exists():
             raise serializers.ValidationError(
                 {'username': 'Username already exists'})
+        return attrs
 
-    @staticmethod
     def validate_email(self, attrs):
         if User.objects.filter(email=attrs).exists():
             raise serializers.ValidationError(
@@ -213,7 +211,6 @@ class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
 
-    @staticmethod
     def validate_new_password(value):
         validate_password(value)
         return value
@@ -229,7 +226,6 @@ class PasswordResetSerializer(serializers.Serializer):
     class Meta:
         fields = ('email',)
 
-    @staticmethod
     def validate_email(value):
         if not User.objects.filter(email=value).exists():
             raise serializers.ValidationError('User with this email does not exist')
