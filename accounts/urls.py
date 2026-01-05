@@ -7,6 +7,7 @@ from rest_framework.routers import DefaultRouter
 from accounts.api.views import (
 	SocialCreateApiView,
 	SocialDestroyApiView,
+	LoginView,
 	SignupView,
 FanficLikeAPIView,
 	FollowAuthorAPIView,
@@ -47,6 +48,7 @@ urlpatterns = [
 	path('follow-story/', FollowStoriesAPIView.as_view()),
 	path('disable/', DeleteAccountView.as_view(), name='disable-account'),
 	path('user/', CheckoutUserView.as_view(), name='user'),
+	path('login/', LoginView.as_view(), name='login'),
 	path('logout/', LogoutView.as_view(), name='logout'),
 	path('change-password/', ChangePasswordView.as_view(),
 		 name='change-password'),
