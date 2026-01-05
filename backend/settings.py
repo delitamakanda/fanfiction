@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 	'django.contrib.humanize',
 	'django.contrib.sitemaps',
 	'django.contrib.flatpages',
+	'django_oss_storage',
 	'multiselectfield',
 	'django_filters',
 	'storages',
