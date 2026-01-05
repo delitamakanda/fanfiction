@@ -155,7 +155,7 @@ class SocialDestroyApiView(generics.UpdateAPIView, generics.DestroyAPIView):
 class SignupView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = SignupSerializer
-    permission_classes = (custompermission.IsAuthenticatedOrCreate,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
 
     @transaction.atomic
@@ -411,7 +411,6 @@ class LoginView(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
 
-    @staticmethod
     def post(self, request, *args, **kwargs):
         username = request.data.get("username")
         password = request.data.get("password")
@@ -431,8 +430,8 @@ class LoginView(generics.GenericAPIView):
 
         refresh_token = RefreshToken.for_user(user)
         return Response({
-            "refresh_token": str(refresh_token),
-            "access_token": str(refresh_token.access_token),
+            "refresh": str(refresh_token),
+            "access": str(refresh_token.access_token),
             'user': {
                 'id': user.id,
                 'email': user.email,
@@ -473,7 +472,6 @@ class CheckoutUserView(generics.RetrieveUpdateAPIView):
     """
     serializer_class = UserSerializer
     permission_classes = (custompermission.IsAuthenticatedOrCreate, custompermission.IsUserOrReadonly,)
-    authentication_classes = ()
 
     def get_object(self):
         return self.request.user
@@ -504,6 +502,7 @@ class CheckoutUserView(generics.RetrieveUpdateAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()
+        print(user)
         serializer = self.get_serializer(user)
         return Response(
             {
