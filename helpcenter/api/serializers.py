@@ -8,7 +8,7 @@ class FoireAuxQuestionsSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = FoireAuxQuestions
-		fields = ('id', 'libelle', 'question', 'order',)
+		fields = ('id', 'libelle', 'question', 'reponse', 'order',)
 		read_only_fields = ('id',)
 
 

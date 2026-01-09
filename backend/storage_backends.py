@@ -1,5 +1,5 @@
-from storages.backends.s3boto3 import S3Boto3Storage
+from django_oss_storage.backends import OssMediaStorage
 
-class MediaStorage(S3Boto3Storage):
+class MediaStorage(OssMediaStorage):
     location = 'media'
     file_overwrite = False
