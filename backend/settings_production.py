@@ -1,5 +1,4 @@
 from backend.settings import *
-import dj_database_url
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -21,17 +20,26 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media storages
 
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
+OSS_ACCESS_KEY_ID = config('OSS_ACCESS_KEY_ID')
+OSS_ACCESS_KEY_SECRET = config('OSS_ACCESS_KEY_SECRET')
+OSS_EXPIRE_TIME = config('OSS_EXPIRE_TIME', cast=int, default=3600)
+OSS_BUCKET_NAME = config('OSS_BUCKET_NAME')
+OSS_ENDPOINT = config('OSS_ENDPOINT')
 
 DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
 
-DATABASES['default'] = dj_database_url.config()
+# Database
+
+DATABASES = {
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql',
+		'NAME': config('ALIYUN_BDD_NAME'),
+		'USER': config('ALIYUN_BDD_USER'),
+		'PASSWORD': config('ALIYUN_BDD_PASSWORD'),
+		'HOST': config('ALIYUN_BDD_HOST'),
+        'PORT': config('ALIYUN_BDD_PORT'),
+	}
+}
 
 # SMTP Email servier
 
@@ -42,16 +50,6 @@ EMAIL_HOST_USER = config('SENDGRID_USERNAME')
 EMAIL_HOST_PASSWORD = config('SENDGRID_PASSWORD')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
-
-# Python Social Auth
-
-SOCIAL_AUTH_JSONFIELD_ENABLED = True
-
-# Asynchronous tasks
-
-CELERY_BROKER_URL = config('HEROKU_REDIS_OLIVE_URL')
-CELERY_RESULT_BACKEND = config('HEROKU_REDIS_OLIVE_URL')
-REDIS_URL = config('HEROKU_REDIS_OLIVE_URL')
 
 # Cache
 
@@ -65,7 +63,6 @@ CACHES = {
 
 # CSRF
 CSRF_TRUSTED_ORIGINS = [
-    "https://fanfiction-fr.netlify.app",
-    "https://fanfiction-fr.herokuapp.com",
-    "http://localhost:8080"
+    "http://localhost:5173",
+    "https://fanfics-fr.netlify.app"
 ]
