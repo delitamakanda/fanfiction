@@ -1,0 +1,60 @@
+name: Deploy Docker to Alibaba ECS
+
+on:
+    push:
+        branches:
+            - main
+
+env:
+    IMAGE_NAME: ${{ secrets.REGISTRY_USERNAME }}/fanfiction:latest
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Log in to registry
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.REGISTRY_USERNAME }}
+                  password: ${{ secrets.REGISTRY_PASSWORD }}
+
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  file: Dockerfile
+                  push: true
+                  tags: ${{ env.IMAGE_NAME }}
+
+            - name: SSH deploy to ECS
+              uses: appleboy/ssh-action@master
+              env:
+                  IMAGE_NAME: ${{ env.IMAGE_NAME }}
+                  ALIYUN_BDD_NAME: ${{ secrets.ALIYUN_BDD_NAME }}
+                  ALIYUN_BDD_USER: ${{ secrets.ALIYUN_BDD_USER }}
+                  ALIYUN_BDD_PASSWORD: ${{ secrets.ALIYUN_BDD_PASSWORD }}
+                  ALIYUN_BDD_HOST: ${{ secrets.ALIYUN_BDD_HOST }}
+                  ALIYUN_BDD_PORT: ${{ secrets.ALIYUN_BDD_PORT }}
+              with:
+                  host: ${{ secrets.ECS_HOST }}
+                  username: ${{ secrets.ECS_USERNAME }}
+                  key: ${{ secrets.ECS_SSH_KEY }}
+                  script: |
+                      docker pull "$IMAGE_NAME"
+                      docker stop fanfiction || true
+                      docker rm fanfiction || true
+                      docker run -d --name fanfiction \
+                        -p 8000:8000 \
+                        -e DJANGO_SETTINGS_MODULE=backend.settings_production \
+                        -e ALIYUN_BDD_NAME="$ALIYUN_BDD_NAME" \
+                        -e ALIYUN_BDD_USER="$ALIYUN_BDD_USER" \
+                        -e ALIYUN_BDD_PASSWORD="$ALIYUN_BDD_PASSWORD" \
+                        -e ALIYUN_BDD_HOST="$ALIYUN_BDD_HOST" \
+                        -e ALIYUN_BDD_PORT="$ALIYUN_BDD_PORT" \
+                        "$IMAGE_NAME"
