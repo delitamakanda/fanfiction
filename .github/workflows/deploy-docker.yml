@@ -23,6 +23,7 @@ jobs:
               with:
                   username: ${{ secrets.REGISTRY_USERNAME }}
                   password: ${{ secrets.REGISTRY_PASSWORD }}
+                  registry: ${{ secrets.REGISTRY_URL }}
 
             - name: Build and push Docker image
               uses: docker/build-push-action@v5
