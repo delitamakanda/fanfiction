@@ -56,7 +56,19 @@ jobs:
                   script: |
                       # login to docker hub
                       mkdir -p ~/.docker
-                      echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"$(echo -n $DOCKER_USERNAME:$DOCKER_PASSWORD | base64)\"}}}" > ~/.docker/config.json
+                      AUTH=$(echo -n "$DOCKER_USERNAME:$DOCKER_PASSWORD" | base64 -w 0)
+
+                      # Write config file with proper JSON
+                      cat > ~/.docker/config.json <<EOF
+                      {
+                        "auths": {
+                          "https://index.docker.io/v1/": {
+                            "auth": "$AUTH"
+                          }
+                        }
+                      }
+                      EOF
+
                       IMAGE_NAME="$DOCKER_USERNAME/fanfiction:latest"
 
                       # run new container with the new image
