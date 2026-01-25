@@ -53,6 +53,7 @@ jobs:
                   port: ${{ secrets.ECS_SSH_PORT }}
                   timeout: 30s
                   command_timeout: 10m
+                  envs: ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
                   script: |
                       # login to docker hub
                       IMAGE_NAME="$DOCKER_USERNAME/fanfiction:latest"
