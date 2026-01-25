@@ -44,6 +44,7 @@ jobs:
                   ALIYUN_BDD_PORT: ${{ secrets.ALIYUN_BDD_PORT }}
                   DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
                   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+                  SECRET_KEY: ${{ secrets.SECRET_KEY }}
               with:
                   host: ${{ secrets.ECS_HOST }}
                   username: ${{ secrets.ECS_USERNAME }}
@@ -63,7 +64,7 @@ jobs:
                       docker run -d --name fanfiction \
                         -p 8000:8000 \
                         -e DJANGO_SETTINGS_MODULE=backend.settings_production \
-                        -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+                        -e SECRET_KEY="$SECRET_KEY" \
                         -e ALIYUN_BDD_NAME="$ALIYUN_BDD_NAME" \
                         -e ALIYUN_BDD_USER="$ALIYUN_BDD_USER" \
                         -e ALIYUN_BDD_PASSWORD="$ALIYUN_BDD_PASSWORD" \
