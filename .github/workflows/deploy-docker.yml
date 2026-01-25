@@ -46,6 +46,9 @@ jobs:
                   host: ${{ secrets.ECS_HOST }}
                   username: ${{ secrets.ECS_USERNAME }}
                   key: ${{ secrets.ECS_SSH_KEY }}
+                  port: ${{ secrets.ECS_SSH_PORT }}
+                  timeout: 30s
+                  command_timeout: 10m
                   script: |
                       docker pull ${{ env.IMAGE_NAME }}
                       docker stop fanfiction || true
