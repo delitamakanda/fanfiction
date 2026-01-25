@@ -56,7 +56,7 @@ jobs:
                   script: |
                       # login to docker hub
                       mkdir -p ~/.docker
-                      AUTH=$(echo -n "$DOCKER_USERNAME:$DOCKER_PASSWORD" | base64 -w 0)
+                      AUTH=$(printf "%s:%s" "$DOCKER_USERNAME" "$DOCKER_PASSWORD" | base64 | tr -d '\n')
 
                       # Write config file with proper JSON
                       cat > ~/.docker/config.json <<EOF
@@ -68,6 +68,8 @@ jobs:
                         }
                       }
                       EOF
+
+                      cat ~/.docker/config.json
 
                       IMAGE_NAME="$DOCKER_USERNAME/fanfiction:latest"
 
