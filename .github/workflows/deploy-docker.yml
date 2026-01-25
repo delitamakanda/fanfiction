@@ -42,6 +42,7 @@ jobs:
                   ALIYUN_BDD_PASSWORD: ${{ secrets.ALIYUN_BDD_PASSWORD }}
                   ALIYUN_BDD_HOST: ${{ secrets.ALIYUN_BDD_HOST }}
                   ALIYUN_BDD_PORT: ${{ secrets.ALIYUN_BDD_PORT }}
+                  IMAGE_NAME: ${{ env.IMAGE_NAME }}
               with:
                   host: ${{ secrets.ECS_HOST }}
                   username: ${{ secrets.ECS_USERNAME }}
@@ -53,12 +54,8 @@ jobs:
                       # login to docker hub
                       docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-                      # pull and stop the current running container
-                      docker stop fanfiction || true
-                      docker rm fanfiction || true
-
                       # run new container with the new image
-                      docker pull ${{ env.IMAGE_NAME }}
+                      docker pull $IMAGE_NAME
                       docker stop fanfiction || true
                       docker rm fanfiction || true
                       docker run -d --name fanfiction \
@@ -70,7 +67,7 @@ jobs:
                         -e ALIYUN_BDD_PASSWORD="$ALIYUN_BDD_PASSWORD" \
                         -e ALIYUN_BDD_HOST="$ALIYUN_BDD_HOST" \
                         -e ALIYUN_BDD_PORT="$ALIYUN_BDD_PORT" \
-                        "$IMAGE_NAME"
+                        $IMAGE_NAME
 
                       # logout from docker hub
                       docker logout
