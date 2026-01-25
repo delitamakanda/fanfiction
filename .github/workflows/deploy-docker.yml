@@ -42,7 +42,8 @@ jobs:
                   ALIYUN_BDD_PASSWORD: ${{ secrets.ALIYUN_BDD_PASSWORD }}
                   ALIYUN_BDD_HOST: ${{ secrets.ALIYUN_BDD_HOST }}
                   ALIYUN_BDD_PORT: ${{ secrets.ALIYUN_BDD_PORT }}
-                  IMAGE_NAME: ${{ env.IMAGE_NAME }}
+                  DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+                  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
               with:
                   host: ${{ secrets.ECS_HOST }}
                   username: ${{ secrets.ECS_USERNAME }}
@@ -53,6 +54,7 @@ jobs:
                   script: |
                       # login to docker hub
                       docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+                      IMAGE_NAME="$DOCKER_USERNAME }}/fanfiction:latest"
 
                       # run new container with the new image
                       docker pull $IMAGE_NAME
