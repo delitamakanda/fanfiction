@@ -55,23 +55,9 @@ jobs:
                   command_timeout: 10m
                   script: |
                       # login to docker hub
-                      mkdir -p ~/.docker
-                      AUTH=$(printf "%s:%s" "$DOCKER_USERNAME" "$DOCKER_PASSWORD" | base64 | tr -d '\n')
-
-                      # Write config file with proper JSON
-                      cat > ~/.docker/config.json <<EOF
-                      {
-                        "auths": {
-                          "https://index.docker.io/v1/": {
-                            "auth": "$AUTH"
-                          }
-                        }
-                      }
-                      EOF
-
-                      cat ~/.docker/config.json
-
                       IMAGE_NAME="$DOCKER_USERNAME/fanfiction:latest"
+
+                      echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
                       # run new container with the new image
                       docker pull $IMAGE_NAME
@@ -90,4 +76,4 @@ jobs:
                         $IMAGE_NAME
 
                       # logout from docker hub
-                      rm ~/.docker/config.json
+                      docker logout
