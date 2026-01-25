@@ -76,4 +76,4 @@ jobs:
                         $IMAGE_NAME
 
                       # logout from docker hub
-                      rm ~/.docker/config.json
+                      docker logout
