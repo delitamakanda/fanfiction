@@ -7,7 +7,7 @@ on:
             - staging
 
 env:
-    IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/fanfiction:latest
+    IMAGE_NAME: ${{ vars.DOCKER_USERNAME }}/fanfiction:latest
 
 jobs:
     deploy:
@@ -22,7 +22,7 @@ jobs:
             - name: Login to Docker Hub
               uses: docker/login-action@v3
               with:
-                  username: ${{ secrets.DOCKER_USERNAME }}
+                  username: ${{ vars.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
             - name: Build and push Docker image
