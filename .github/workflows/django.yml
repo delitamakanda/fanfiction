@@ -24,30 +24,30 @@ jobs:
     
     - name: Build and start services with docker-compose
       run: |
-        docker-compose up -d --build
+        docker compose up -d --build
     
     - name: Wait for services to be ready
       run: |
         sleep 10
-        docker-compose ps
+        docker compose ps
     
     - name: Run migrations
       run: |
-        docker-compose exec -T web python manage.py migrate --noinput
+        docker compose exec -T web python manage.py migrate --noinput
     
     - name: Run tests
       run: |
-        docker-compose exec -T web python manage.py test
+        docker compose exec -T web python manage.py test
     
     - name: Show logs on failure
       if: failure()
       run: |
-        docker-compose logs
+        docker compose logs
     
     - name: Stop services
       if: always()
       run: |
-        docker-compose down -v
+        docker compose down -v
 
   build-traditional:
     runs-on: ubuntu-latest
