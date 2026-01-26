@@ -26,7 +26,7 @@ RUN python manage.py collectstatic --noinput || true
 EXPOSE 8000
 
 # Add health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health/', timeout=2)" || exit 1
 
 # Run the application with optimized Gunicorn settings
