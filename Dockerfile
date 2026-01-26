@@ -25,5 +25,18 @@ RUN python manage.py collectstatic --noinput || true
 # Expose the port the container will run on
 EXPOSE 8000
 
-# Run the application
-CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4", "--threads", "8"  ]
+# Add health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health/', timeout=2)" || exit 1
+
+# Run the application with optimized Gunicorn settings
+CMD ["gunicorn", "backend.wsgi:application", \
+    "--bind", "0.0.0.0:8000", \
+    "--workers", "2", \
+    "--threads", "4", \
+    "--timeout", "120", \
+    "--graceful-timeout", "30", \
+    "--worker-class", "gthread", \
+    "--access-logfile", "-", \
+    "--error-logfile", "-", \
+    "--log-level", "info"]

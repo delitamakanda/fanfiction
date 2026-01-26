@@ -38,6 +38,10 @@ DATABASES = {
 		'PASSWORD': config('ALIYUN_BDD_PASSWORD'),
 		'HOST': config('ALIYUN_BDD_HOST'),
         'PORT': config('ALIYUN_BDD_PORT'),
+        'CONN_MAX_AGE': 60,  # Connection pooling: reuse connections for 60 seconds
+        'OPTIONS': {
+            'connect_timeout': 10,  # Timeout for establishing connections
+        }
 	}
 }
 
