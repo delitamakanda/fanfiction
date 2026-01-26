@@ -52,6 +52,11 @@ jobs:
                   SENDGRID_PORT: ${{secrets.SENDGRID_PORT}}
                   SENDGRID_USERNAME: ${{secrets.SENDGRID_USERNAME}}
                   SENDGRID_PASSWORD: ${{secrets.SENDGRID_PASSWORD}}
+                  OSS_ACCESS_KEY_ID: ${{secrets.OSS_ACCESS_KEY_ID}}
+                  OSS_ACCESS_KEY_SECRET: ${{secrets.OSS_ACCESS_KEY_SECRET}}
+                  OSS_EXPIRE_TIME: ${{secrets.OSS_EXPIRE_TIME}}
+                  OSS_BUCKET_NAME: ${{secrets.OSS_BUCKET_NAME}}
+                  OSS_ENDPOINT: ${{secrets.OSS_ENDPOINT}}
               with:
                   host: ${{ secrets.ECS_HOST }}
                   username: ${{ secrets.ECS_USERNAME }}
@@ -59,7 +64,7 @@ jobs:
                   port: ${{ secrets.ECS_SSH_PORT }}
                   timeout: 30s
                   command_timeout: 10m
-                  envs: SENDGRID_PASSWORD,SENDGRID_USERNAME,SENDGRID_PORT,SENDGRID_SERVER,ADMIN_EMAIL,ADMIN_NAME,ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
+                  envs: OSS_ACCESS_KEY_ID,OSS_ACCESS_KEY_SECRET,OSS_EXPIRE_TIME,OSS_BUCKET_NAME,OSS_ENDPOINT,SENDGRID_PASSWORD,SENDGRID_USERNAME,SENDGRID_PORT,SENDGRID_SERVER,ADMIN_EMAIL,ADMIN_NAME,ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
                   script: |
                       # login to docker hub
                       IMAGE_NAME="$DOCKER_USERNAME/fanfiction:latest"
@@ -86,6 +91,11 @@ jobs:
                         -e SENDGRID_PORT="$SENDGRID_PORT" \
                         -e SENDGRID_USERNAME="$SENDGRID_USERNAME" \
                         -e SENDGRID_PASSWORD="$SENDGRID_PASSWORD" \
+                        -e OSS_ACCESS_KEY_ID="$OSS_ACCESS_KEY_ID" \
+                        -e OSS_ACCESS_KEY_SECRET="$OSS_ACCESS_KEY_SECRET" \
+                        -e OSS_EXPIRE_TIME="$OSS_EXPIRE_TIME" \
+                        -e OSS_BUCKET_NAME="$OSS_BUCKET_NAME" \
+                        -e OSS_ENDPOINT="$OSS_ENDPOINT" \
                         $IMAGE_NAME
 
                       # Wait for container to start
