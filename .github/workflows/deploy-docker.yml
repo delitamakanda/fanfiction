@@ -46,6 +46,12 @@ jobs:
                   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
                   SECRET_KEY: ${{ secrets.SECRET_KEY }}
                   DEBUG: ${{ secrets.DEBUG }}
+                  ADMIN_EMAIL: ${{secrets.ADMIN_EMAIL}}
+                  ADMIN_NAME: ${{secrets.ADMIN_NAME}}
+                  SENDGRID_SERVER: ${{secrets.SENDGRID_SERVER}}
+                  SENDGRID_PORT: ${{secrets.SENDGRID_PORT}}
+                  SENDGRID_USERNAME: ${{secrets.SENDGRID_USERNAME}}
+                  SENDGRID_PASSWORD: ${{secrets.SENDGRID_PASSWORD}}
               with:
                   host: ${{ secrets.ECS_HOST }}
                   username: ${{ secrets.ECS_USERNAME }}
@@ -53,7 +59,7 @@ jobs:
                   port: ${{ secrets.ECS_SSH_PORT }}
                   timeout: 30s
                   command_timeout: 10m
-                  envs: ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
+                  envs: SENDGRID_PASSWORD,SENDGRID_USERNAME,SENDGRID_PORT,SENDGRID_SERVER,ADMIN_EMAIL,ADMIN_NAME,ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
                   script: |
                       # login to docker hub
                       IMAGE_NAME="$DOCKER_USERNAME/fanfiction:latest"
@@ -74,6 +80,12 @@ jobs:
                         -e ALIYUN_BDD_HOST="$ALIYUN_BDD_HOST" \
                         -e ALIYUN_BDD_PORT="$ALIYUN_BDD_PORT" \
                         -e DEBUG="$DEBUG" \
+                        -e ADMIN_EMAIL="$ADMIN_EMAIL" \
+                        -e ADMIN_NAME="$ADMIN_NAME" \
+                        -e SENDGRID_SERVER="$SENDGRID_SERVER" \
+                        -e SENDGRID_PORT="$SENDGRID_PORT" \
+                        -e SENDGRID_USERNAME="$SENDGRID_USERNAME" \
+                        -e SENDGRID_PASSWORD="$SENDGRID_PASSWORD" \
                         $IMAGE_NAME
 
                       # Wait for container to start
