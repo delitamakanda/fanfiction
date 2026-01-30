@@ -6,8 +6,9 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
+    build-essential \
     postgresql-client \
     libpango-1.0-0 \
     libpangoft2-1.0-0 \
@@ -37,7 +38,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
 # Run the application with optimized Gunicorn settings
 CMD ["gunicorn", "backend.wsgi:application", \
     "--bind", "0.0.0.0:8000", \
-    "--workers", "2", \
+    "--workers", "3", \
     "--threads", "4", \
     "--timeout", "120", \
     "--graceful-timeout", "30", \
