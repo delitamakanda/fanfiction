@@ -56,6 +56,7 @@ jobs:
                       ALIYUN_BDD_PASSWORD=${{ secrets.ALIYUN_BDD_PASSWORD }}
                       ALIYUN_BDD_HOST=${{ secrets.ALIYUN_BDD_HOST }}
                       ALIYUN_BDD_PORT=${{ secrets.ALIYUN_BDD_PORT }}
+                      RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
 
             - name: SSH deploy to ECS
               uses: appleboy/ssh-action@master
@@ -81,6 +82,7 @@ jobs:
                   OSS_EXPIRE_TIME: ${{secrets.OSS_EXPIRE_TIME}}
                   OSS_BUCKET_NAME: ${{secrets.OSS_BUCKET_NAME}}
                   OSS_ENDPOINT: ${{secrets.OSS_ENDPOINT}}
+                  RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
               with:
                   host: ${{ secrets.ECS_HOST }}
                   username: ${{ secrets.ECS_USERNAME }}
@@ -88,7 +90,7 @@ jobs:
                   port: ${{ secrets.ECS_SSH_PORT }}
                   timeout: 30s
                   command_timeout: 10m
-                  envs: OSS_ACCESS_KEY_ID,OSS_ACCESS_KEY_SECRET,OSS_EXPIRE_TIME,OSS_BUCKET_NAME,OSS_ENDPOINT,SENDGRID_PASSWORD,SENDGRID_USERNAME,SENDGRID_PORT,SENDGRID_SERVER,ADMIN_EMAIL,ADMIN_NAME,ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
+                  envs: RECAPTCHA_SECRET_KEY,OSS_ACCESS_KEY_ID,OSS_ACCESS_KEY_SECRET,OSS_EXPIRE_TIME,OSS_BUCKET_NAME,OSS_ENDPOINT,SENDGRID_PASSWORD,SENDGRID_USERNAME,SENDGRID_PORT,SENDGRID_SERVER,ADMIN_EMAIL,ADMIN_NAME,ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
                   script: |
                       # login to docker hub
                       IMAGE_NAME="$DOCKER_USERNAME/fanfiction:latest"
@@ -109,6 +111,7 @@ jobs:
                       ALIYUN_BDD_PASSWORD=$ALIYUN_BDD_PASSWORD
                       ALIYUN_BDD_HOST=$ALIYUN_BDD_HOST
                       ALIYUN_BDD_PORT=$ALIYUN_BDD_PORT
+                      RECAPTCHA_SECRET_KEY=$RECAPTCHA_SECRET_KEY
                       DEBUG=$DEBUG
                       ADMIN_EMAIL=$ADMIN_EMAIL
                       ADMIN_NAME=$ADMIN_NAME
