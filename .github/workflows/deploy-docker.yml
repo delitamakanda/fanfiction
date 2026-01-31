@@ -37,6 +37,7 @@ jobs:
                   push: true
                   tags: ${{ env.IMAGE_NAME }}
                   build-args: |
+                      DJANGO_SETTINGS_MODULE=backend:settings_production
                       SECRET_KEY=${{ secrets.SECRET_KEY }}
                       DEBUG=${{ secrets.DEBUG }}
                       ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
@@ -59,6 +60,7 @@ jobs:
             - name: SSH deploy to ECS
               uses: appleboy/ssh-action@master
               env:
+                  DJANGO_SETTINGS_MODULE: backend:settings_production
                   ALIYUN_BDD_NAME: ${{ secrets.ALIYUN_BDD_NAME }}
                   ALIYUN_BDD_USER: ${{ secrets.ALIYUN_BDD_USER }}
                   ALIYUN_BDD_PASSWORD: ${{ secrets.ALIYUN_BDD_PASSWORD }}
