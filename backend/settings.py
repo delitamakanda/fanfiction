@@ -278,7 +278,7 @@ SIMPLE_JWT = {
 	'UPDATE_LAST_LOGIN': True,
 	'VERIFYING_KEY': None,
 	'ALGORITHM': 'HS256',
-	'SIGNING_KEY': SECRET_KEY,
+	'SIGNING_KEY': config('SECRET_KEY', cast=str, default='dummy_secret_key'),
 	'AUTH_HEADER_TYPES': ('Bearer',),
 	'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
 	'USER_ID_FIELD': 'id',
