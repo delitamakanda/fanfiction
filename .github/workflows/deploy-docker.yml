@@ -78,27 +78,34 @@ jobs:
                       docker pull $IMAGE_NAME
                       docker stop fanfiction || true
                       docker rm fanfiction || true
+
+                      # create .env file to pass sensitive data
+                      cat > /tmp/fanfiction/.env <<EOF
+                      SECRET_KEY=$SECRET_KEY \
+                        ALIYUN_BDD_NAME=$ALIYUN_BDD_NAME \
+                        ALIYUN_BDD_USER=$ALIYUN_BDD_USER \
+                        ALIYUN_BDD_PASSWORD=$ALIYUN_BDD_PASSWORD \
+                        ALIYUN_BDD_HOST=$ALIYUN_BDD_HOST \
+                        ALIYUN_BDD_PORT=$ALIYUN_BDD_PORT \
+                        DEBUG=$DEBUG \
+                        ADMIN_EMAIL=$ADMIN_EMAIL \
+                        ADMIN_NAME=$ADMIN_NAME \
+                        SENDGRID_SERVER=$SENDGRID_SERVER \
+                        SENDGRID_PORT=$SENDGRID_PORT \
+                        SENDGRID_USERNAME=$SENDGRID_USERNAME \
+                        SENDGRID_PASSWORD=$SENDGRID_PASSWORD \
+                        OSS_ACCESS_KEY_ID=$OSS_ACCESS_KEY_ID \
+                        OSS_ACCESS_KEY_SECRET=$OSS_ACCESS_KEY_SECRET \
+                        OSS_EXPIRE_TIME=$OSS_EXPIRE_TIME \
+                        OSS_BUCKET_NAME=$OSS_BUCKET_NAME \
+                        OSS_ENDPOINT=$OSS_ENDPOINT \
+                        DJANGO_SETTINGS_MODULE=backend.settings_production \
+                      EOF
+
+
                       docker run -d --name fanfiction \
                         -p 8000:8000 \
-                        -e DJANGO_SETTINGS_MODULE=backend.settings_production \
-                        -e SECRET_KEY="$SECRET_KEY" \
-                        -e ALIYUN_BDD_NAME="$ALIYUN_BDD_NAME" \
-                        -e ALIYUN_BDD_USER="$ALIYUN_BDD_USER" \
-                        -e ALIYUN_BDD_PASSWORD="$ALIYUN_BDD_PASSWORD" \
-                        -e ALIYUN_BDD_HOST="$ALIYUN_BDD_HOST" \
-                        -e ALIYUN_BDD_PORT="$ALIYUN_BDD_PORT" \
-                        -e DEBUG="$DEBUG" \
-                        -e ADMIN_EMAIL="$ADMIN_EMAIL" \
-                        -e ADMIN_NAME="$ADMIN_NAME" \
-                        -e SENDGRID_SERVER="$SENDGRID_SERVER" \
-                        -e SENDGRID_PORT="$SENDGRID_PORT" \
-                        -e SENDGRID_USERNAME="$SENDGRID_USERNAME" \
-                        -e SENDGRID_PASSWORD="$SENDGRID_PASSWORD" \
-                        -e OSS_ACCESS_KEY_ID="$OSS_ACCESS_KEY_ID" \
-                        -e OSS_ACCESS_KEY_SECRET="$OSS_ACCESS_KEY_SECRET" \
-                        -e OSS_EXPIRE_TIME="$OSS_EXPIRE_TIME" \
-                        -e OSS_BUCKET_NAME="$OSS_BUCKET_NAME" \
-                        -e OSS_ENDPOINT="$OSS_ENDPOINT" \
+                        --env-file /tmp/fanfiction.env \
                         $IMAGE_NAME
 
                       # Wait for container to start
@@ -114,3 +121,5 @@ jobs:
 
                       # logout from docker hub
                       docker logout
+
+                      rm /tmp/fanfiction.env
