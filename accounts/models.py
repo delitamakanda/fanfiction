@@ -119,4 +119,13 @@ class FollowStories(models.Model):
 		return '{} follows {}'.format(self.from_user, self.to_fanfic)
 
 # add to User models dynamically
-User.add_to_class('following', models.ManyToManyField('self', through=FollowUser, related_name='followers', symmetrical=False))
+# User.add_to_class('following', models.ManyToManyField('self', through=FollowUser, related_name='followers', symmetrical=False))
+
+def user_following(self):
+	return User.objects.filter(rel_to_set__user_from=self)
+
+def user_followers(self):
+	return User.objects.filter(rel_from_set__user_to=self)
+
+User.following = property(user_following)
+User.followers = property(user_followers)
