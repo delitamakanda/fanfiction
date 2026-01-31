@@ -81,25 +81,25 @@ jobs:
 
                       # create .env file to pass sensitive data
                       cat > /tmp/fanfiction.env << EOF
-                      DJANGO_SETTINGS_MODULE=backend \.settings_production
-                      SECRET_KEY=$SECRET_KEY \
-                      ALIYUN_BDD_NAME=$ALIYUN_BDD_NAME \
-                      ALIYUN_BDD_USER=$ALIYUN_BDD_USER \
-                      ALIYUN_BDD_PASSWORD=$ALIYUN_BDD_PASSWORD \
-                      ALIYUN_BDD_HOST=$ALIYUN_BDD_HOST \
-                      ALIYUN_BDD_PORT=$ALIYUN_BDD_PORT \
-                      DEBUG=$DEBUG \
-                      ADMIN_EMAIL=$ADMIN_EMAIL \
-                      ADMIN_NAME=$ADMIN_NAME \
-                      SENDGRID_SERVER=$SENDGRID_SERVER \
-                      SENDGRID_PORT=$SENDGRID_PORT \
-                      SENDGRID_USERNAME=$SENDGRID_USERNAME \
-                      SENDGRID_PASSWORD=$SENDGRID_PASSWORD \
-                      OSS_ACCESS_KEY_ID=$OSS_ACCESS_KEY_ID \
-                      OSS_ACCESS_KEY_SECRET=$OSS_ACCESS_KEY_SECRET \
-                      OSS_EXPIRE_TIME=$OSS_EXPIRE_TIME \
-                      OSS_BUCKET_NAME=$OSS_BUCKET_NAME \
-                      OSS_ENDPOINT=$OSS_ENDPOINT \
+                      DJANGO_SETTINGS_MODULE=backend.settings_production
+                      SECRET_KEY=$SECRET_KEY
+                      ALIYUN_BDD_NAME=$ALIYUN_BDD_NAME
+                      ALIYUN_BDD_USER=$ALIYUN_BDD_USER
+                      ALIYUN_BDD_PASSWORD=$ALIYUN_BDD_PASSWORD
+                      ALIYUN_BDD_HOST=$ALIYUN_BDD_HOST
+                      ALIYUN_BDD_PORT=$ALIYUN_BDD_PORT
+                      DEBUG=$DEBUG
+                      ADMIN_EMAIL=$ADMIN_EMAIL
+                      ADMIN_NAME=$ADMIN_NAME
+                      SENDGRID_SERVER=$SENDGRID_SERVER
+                      SENDGRID_PORT=$SENDGRID_PORT
+                      SENDGRID_USERNAME=$SENDGRID_USERNAME
+                      SENDGRID_PASSWORD=$SENDGRID_PASSWORD
+                      OSS_ACCESS_KEY_ID=$OSS_ACCESS_KEY_ID
+                      OSS_ACCESS_KEY_SECRET=$OSS_ACCESS_KEY_SECRET
+                      OSS_EXPIRE_TIME=$OSS_EXPIRE_TIME
+                      OSS_BUCKET_NAME=$OSS_BUCKET_NAME
+                      OSS_ENDPOINT=$OSS_ENDPOINT
                       EOF
 
 
