@@ -36,6 +36,25 @@ jobs:
                   file: Dockerfile
                   push: true
                   tags: ${{ env.IMAGE_NAME }}
+                  build-args: |
+                      SECRET_KEY=${{ secrets.SECRET_KEY }}
+                      DEBUG=${{ secrets.DEBUG }}
+                      ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
+                      ADMIN_NAME=${{ secrets.ADMIN_NAME }}
+                      SENDGRID_SERVER=${{ secrets.SENDGRID_SERVER }}
+                      SENDGRID_PORT=${{ secrets.SENDGRID_PORT }}
+                      SENDGRID_USERNAME=${{ secrets.SENDGRID_USERNAME }}
+                      SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }}
+                      OSS_ACCESS_KEY_ID=${{ secrets.OSS_ACCESS_KEY_ID }}
+                      OSS_ACCESS_KEY_SECRET=${{ secrets.OSS_ACCESS_KEY_SECRET }}
+                      OSS_EXPIRE_TIME=${{ secrets.OSS_EXPIRE_TIME }}
+                      OSS_BUCKET_NAME=${{ secrets.OSS_BUCKET_NAME }}
+                      OSS_ENDPOINT=${{ secrets.OSS_ENDPOINT }}
+                      ALIYUN_BDD_NAME=${{ secrets.ALIYUN_BDD_NAME }}
+                      ALIYUN_BDD_USER=${{ secrets.ALIYUN_BDD_USER }}
+                      ALIYUN_BDD_PASSWORD=${{ secrets.ALIYUN_BDD_PASSWORD }}
+                      ALIYUN_BDD_HOST=${{ secrets.ALIYUN_BDD_HOST }}
+                      ALIYUN_BDD_PORT=${{ secrets.ALIYUN_BDD_PORT }}
 
             - name: SSH deploy to ECS
               uses: appleboy/ssh-action@master
