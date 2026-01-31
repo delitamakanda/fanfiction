@@ -104,6 +104,10 @@ jobs:
                       # Wait for container to start
                       sleep 10
 
+                      # verify env variables
+                      echo "=== Environment Variables ==="
+                      docker exec fanfiction env | grep -E "SECRET_KEY|DEBUG|ADMIN_EMAIL|SENDGRID|OSS_|ALIYUN_" || echo "Error: Missing or incorrect environment variables"
+
                       # Display logs
                       echo "=== Docker Container Logs ==="
                       docker logs fanfiction --tail 100
