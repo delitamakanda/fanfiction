@@ -34,11 +34,11 @@ DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': config('ALIYUN_BDD_NAME'),
-		'USER': config('ALIYUN_BDD_USER'),
-		'PASSWORD': config('ALIYUN_BDD_PASSWORD'),
-		'HOST': config('ALIYUN_BDD_HOST'),
-        'PORT': config('ALIYUN_BDD_PORT'),
+		'NAME': config('ALIYUN_BDD_NAME', default=None),
+		'USER': config('ALIYUN_BDD_USER', default=None),
+		'PASSWORD': config('ALIYUN_BDD_PASSWORD', default=None),
+		'HOST': config('ALIYUN_BDD_HOST', default=None),
+        'PORT': config('ALIYUN_BDD_PORT', default=None),
         'CONN_MAX_AGE': 60,  # Connection pooling: reuse connections for 60 seconds
         'OPTIONS': {
             'connect_timeout': 10,  # Timeout for establishing connections
