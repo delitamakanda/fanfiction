@@ -90,7 +90,7 @@ jobs:
                   port: ${{ secrets.ECS_SSH_PORT }}
                   timeout: 30s
                   command_timeout: 10m
-                  envs: RECAPTCHA_SECRET_KEY,OSS_ACCESS_KEY_ID,OSS_ACCESS_KEY_SECRET,OSS_EXPIRE_TIME,OSS_BUCKET_NAME,OSS_ENDPOINT,SENDGRID_PASSWORD,SENDGRID_USERNAME,SENDGRID_PORT,SENDGRID_SERVER,ADMIN_EMAIL,ADMIN_NAME,ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
+                  envs: DJANGO_SETTINGS_MODULE,RECAPTCHA_SECRET_KEY,OSS_ACCESS_KEY_ID,OSS_ACCESS_KEY_SECRET,OSS_EXPIRE_TIME,OSS_BUCKET_NAME,OSS_ENDPOINT,SENDGRID_PASSWORD,SENDGRID_USERNAME,SENDGRID_PORT,SENDGRID_SERVER,ADMIN_EMAIL,ADMIN_NAME,ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
                   script: |
                       # login to docker hub
                       IMAGE_NAME="$DOCKER_USERNAME/fanfiction:latest"
@@ -137,7 +137,7 @@ jobs:
 
                       # verify env variables
                       echo "=== Environment Variables ==="
-                      docker exec fanfiction env | grep -E "SECRET_KEY|DEBUG|ADMIN_EMAIL|SENDGRID|OSS_|ALIYUN_" || echo "Error: Missing or incorrect environment variables"
+                      docker exec fanfiction env | grep -E "DJANGO_SETTINGS_MODULE|SECRET_KEY|DEBUG|ADMIN_EMAIL|SENDGRID|OSS_|ALIYUN_" || echo "Error: Missing or incorrect environment variables"
 
                       # Display logs
                       echo "=== Docker Container Logs ==="
