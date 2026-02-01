@@ -80,6 +80,6 @@ vine==5.1.0
 wcwidth==0.2.14
 weasyprint==68.0
 webencodings==0.5.1
-wheel==0.46.2
+wheel==0.46.3
 whitenoise==6.11.0
 zopfli==0.4.0
