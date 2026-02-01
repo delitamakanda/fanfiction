@@ -79,7 +79,7 @@ tzlocal==5.3.1
 uritemplate==4.2.0
 urllib3==2.6.3
 vine==5.1.0
-wcwidth==0.2.14
+wcwidth==0.5.3
 weasyprint==68.0
 webencodings==0.5.1
 wheel==0.46.3
