@@ -4,7 +4,7 @@ services:
         build:
             context: .
             args:
-                SECRET_KEY: ${SECRET_KEY}
+                SECRET_KEY: $secrets.SECRET_KEY
                 DEBUG: ${DEBUG}
                 ADMIN_EMAIL: ${ADMIN_EMAIL}
                 ADMIN_NAME: ${ADMIN_NAME}
@@ -23,6 +23,7 @@ services:
                 ALIYUN_BDD_HOST: ${ALIYUN_BDD_HOST}
                 ALIYUN_BDD_PORT: ${ALIYUN_BDD_PORT}
                 RECAPTCHA_SECRET_KEY: ${RECAPTCHA_SECRET_KEY}
+                DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
         command: >
             sh -c "
             python manage.py migrate &&

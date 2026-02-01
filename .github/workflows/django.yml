@@ -9,41 +9,81 @@ on:
 jobs:
   test-with-docker-compose:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-    
+
     - name: Create .env file
       run: |
         echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
         echo "DEBUG=${{ secrets.DEBUG }}" >> .env
         echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> .env
-    
+        echo "ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}" >> .env
+        echo "ADMIN_NAME=${{ secrets.ADMIN_NAME }}" >> .env
+        echo "SENDGRID_SERVER=${{ secrets.SENDGRID_SERVER }}" >> .env
+        echo "SENDGRID_PORT=${{ secrets.SENDGRID_PORT }}" >> .env
+        echo "SENDGRID_USERNAME=${{ secrets.SENDGRID_USERNAME }}" >> .env
+        echo "SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }}" >> .env
+        echo "OSS_ACCESS_KEY_ID=${{ secrets.OSS_ACCESS_KEY_ID }}" >> .env
+        echo "OSS_ACCESS_KEY_SECRET=${{ secrets.OSS_ACCESS_KEY_SECRET }}" >> .env
+        echo "OSS_EXPIRE_TIME=${{ secrets.OSS_EXPIRE_TIME }}" >> .env
+        echo "OSS_BUCKET_NAME=${{ secrets.OSS_BUCKET_NAME }}" >> .env
+        echo "OSS_ENDPOINT=${{ secrets.OSS_ENDPOINT }}" >> .env
+        echo "ALIYUN_BDD_NAME=${{ secrets.ALIYUN_BDD_NAME }}" >> .env
+        echo "ALIYUN_BDD_USER=${{ secrets.ALIYUN_BDD_USER }}" >> .env
+        echo "ALIYUN_BDD_PASSWORD=${{ secrets.ALIYUN_BDD_PASSWORD }}" >> .env
+        echo "ALIYUN_BDD_HOST=${{ secrets.ALIYUN_BDD_HOST }}" >> .env
+        echo "ALIYUN_BDD_PORT=${{ secrets.ALIYUN_BDD_PORT }}" >> .env
+        echo "RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}" >> .env
+        echo "DJANGO_SETTINGS_MODULE=${{ secrets.DJANGO_SETTINGS_MODULE }}" >> .env
+
     - name: Build and start services with docker-compose
+      env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: ${{ secrets.DEBUG }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_NAME: ${{ secrets.ADMIN_NAME }}
+          SENDGRID_SERVER: ${{ secrets.SENDGRID_SERVER }}
+          SENDGRID_PORT: ${{ secrets.SENDGRID_PORT }}
+          SENDGRID_USERNAME: ${{ secrets.SENDGRID_USERNAME }}
+          SENDGRID_PASSWORD: ${{ secrets.SENDGRID_PASSWORD }}
+          OSS_ACCESS_KEY_ID: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          OSS_ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+          OSS_EXPIRE_TIME: ${{ secrets.OSS_EXPIRE_TIME }}
+          OSS_BUCKET_NAME: ${{ secrets.OSS_BUCKET_NAME }}
+          OSS_ENDPOINT: ${{ secrets.OSS_ENDPOINT }}
+          ALIYUN_BDD_NAME: ${{ secrets.ALIYUN_BDD_NAME }}
+          ALIYUN_BDD_USER: ${{ secrets.ALIYUN_BDD_USER }}
+          ALIYUN_BDD_PASSWORD: ${{ secrets.ALIYUN_BDD_PASSWORD }}
+          ALIYUN_BDD_HOST: ${{ secrets.ALIYUN_BDD_HOST }}
+          ALIYUN_BDD_PORT: ${{ secrets.ALIYUN_BDD_PORT }}
+          RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+          DJANGO_SETTINGS_MODULE: ${{ secrets.DJANGO_SETTINGS_MODULE }}
       run: |
         docker compose up -d --build
-    
+
     - name: Wait for services to be ready
       run: |
         sleep 10
         docker compose ps
-    
+
     - name: Run migrations
       run: |
         docker compose exec -T web python manage.py migrate --noinput
-    
+
     - name: Run tests
       run: |
         docker compose exec -T web python manage.py test
-    
+
     - name: Show logs on failure
       if: failure()
       run: |
         docker compose logs
-    
+
     - name: Stop services
       if: always()
       run: |
