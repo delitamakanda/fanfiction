@@ -54,6 +54,25 @@ A live demo of the mobile web application is available at
 - Redis (for Celery/recommendations) – optional during development
 - A PostgreSQL database in production (SQLite is used by default for local dev)
 
+## Environment Variables
+The project includes an environment variable export script at `/env/envs_export.sh` that can be sourced on the VM or within Docker containers to set up all necessary environment variables. See [env/README.md](env/README.md) for detailed usage instructions.
+
+### Docker Deployment
+When deploying with Docker, environment variables can be passed via `--env-file` or individually with `-e`. The entrypoint script automatically:
+1. Sources `/env/envs_export.sh` if it exists
+2. Executes an optional `BUILD_COMMAND` if set
+3. Runs database migrations and collects static files
+
+Example:
+```bash
+docker run -d --name fanfiction \
+  -p 8000:8000 \
+  --env-file /path/to/.env \
+  -e BUILD_COMMAND="python manage.py custom_command" \
+  --restart unless-stopped \
+  fanfiction:latest
+```
+
 ## Quick start
 Clone the repository and create the environment files (`.env`, `.env.production`, etc.) as
 needed. Example configuration for local development:
