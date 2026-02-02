@@ -99,9 +99,7 @@ jobs:
 
                       # create .env file to pass sensitive data
                       echo "Creating environment file..."
-                      cat > /tmp/fanfiction.env << 'ENVEOF'
-DJANGO_SETTINGS_MODULE=backend.settings_production
-ENVEOF
+                      echo "DJANGO_SETTINGS_MODULE=backend.settings_production" > /tmp/fanfiction.env
 
                       # Append environment variables with proper quoting
                       {
