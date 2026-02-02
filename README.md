@@ -57,6 +57,13 @@ A live demo of the mobile web application is available at
 ## Environment Variables
 The project includes an environment variable export script at `/env/envs_export.sh` that can be sourced on the VM or within Docker containers to set up all necessary environment variables. See [env/README.md](env/README.md) for detailed usage instructions.
 
+### GitHub Actions Secrets
+For CI/CD workflows, all secrets must be configured as **Repository secrets** (not Environment secrets). See [docs/github-secrets-configuration.md](docs/github-secrets-configuration.md) for a comprehensive guide on:
+- The difference between Repository and Environment secrets
+- Required secrets and variables
+- How to configure them
+- Troubleshooting tips
+
 ### Docker Deployment
 When deploying with Docker, environment variables can be passed via `--env-file` or individually with `-e`. The entrypoint script automatically:
 1. Sources `/env/envs_export.sh` if it exists

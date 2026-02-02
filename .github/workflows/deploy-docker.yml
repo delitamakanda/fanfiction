@@ -1,5 +1,13 @@
 name: Deploy Docker to Alibaba ECS
 
+# Secrets Configuration:
+# All secrets must be configured as Repository secrets (not Environment secrets)
+# Go to: Settings > Secrets and variables > Actions > Repository secrets
+# Required secrets: DOCKER_PASSWORD, ECS_HOST, ECS_USERNAME, ECS_SSH_KEY, ECS_SSH_PORT,
+#                   SECRET_KEY, ALIYUN_BDD_*, RECAPTCHA_SECRET_KEY, DEBUG, ADMIN_*,
+#                   SENDGRID_*, OSS_*
+# Required variables: DOCKER_USERNAME
+
 on:
     push:
         branches:
@@ -12,7 +20,9 @@ env:
 jobs:
     deploy:
         runs-on: ubuntu-latest
-        environment: fanfiction-fr
+        # Note: Removed 'environment: fanfiction-fr' to use Repository secrets instead of Environment secrets
+        # This provides consistency with django.yml and simplifies secret management
+        # All secrets should be configured at Settings > Secrets and variables > Actions > Repository secrets
         permissions:
             contents: read
             packages: write
