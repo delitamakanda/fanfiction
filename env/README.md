@@ -16,17 +16,24 @@ This will export all the necessary environment variables for the application.
 
 ### With BUILD_COMMAND
 
-If you need to run a build command after setting up the environment, you can set the `BUILD_COMMAND` environment variable before sourcing the script or before starting the container:
+If you need to run a build command after setting up the environment variables, you can set the `BUILD_COMMAND` environment variable before starting the Docker container. The command will be executed by the entrypoint script during container startup:
 
 ```bash
-# Set the BUILD_COMMAND
-export BUILD_COMMAND="python manage.py migrate && python manage.py collectstatic --noinput"
+# Set the BUILD_COMMAND when running the container
+docker run -d --name fanfiction \
+  -p 8000:8000 \
+  --env-file /tmp/fanfiction.env \
+  -e BUILD_COMMAND="python manage.py custom_command" \
+  --restart unless-stopped \
+  fanfiction:latest
 
-# Source the environment variables
-source /env/envs_export.sh
-
-# The BUILD_COMMAND will be executed automatically by entrypoint.sh
+# The entrypoint.sh will automatically:
+# 1. Source /env/envs_export.sh
+# 2. Execute the BUILD_COMMAND
+# 3. Run migrations and collectstatic
 ```
+
+Note: When manually sourcing the script on the VM, BUILD_COMMAND is not automatically executed. You need to manually run any commands you need.
 
 ### Docker Container
 
