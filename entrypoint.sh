@@ -11,6 +11,8 @@ else
 fi
 
 # Execute optional build command if BUILD_COMMAND is set
+# Note: BUILD_COMMAND should only be set by trusted deployment scripts or administrators
+# as it allows arbitrary command execution. Do not expose this to user input.
 if [ -n "${BUILD_COMMAND:-}" ]; then
     echo "Executing BUILD_COMMAND: $BUILD_COMMAND"
     eval "$BUILD_COMMAND"
