@@ -17,6 +17,7 @@
 - [Recommendation engine](#recommendation-engine)
 - [Scraper](#scraper)
 - [Testing](#testing)
+- [Deployment](#deployment)
 - [Additional resources](#additional-resources)
 
 ## Overview
@@ -163,6 +164,14 @@ For a quicker feedback loop you can also use Django's built-in test runner direc
 ```bash
 python manage.py test
 ```
+
+## Deployment
+For production deployment and running migrations on the Aliyun/Apsara database via SSH, see the [Deployment Guide](docs/deployment.md).
+
+Key points:
+- The `manage.py` script automatically detects production environment variables
+- When Aliyun database variables are set, it uses production settings
+- Simply run `python manage.py migrate` on the production server
 
 ## Additional resources
 - [Django documentation](https://docs.djangoproject.com/)
