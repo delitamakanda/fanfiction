@@ -1,5 +1,4 @@
 name: Deploy Docker to Alibaba ECS
-# Environment variable fixes applied - removes build-args, improves .env creation with proper quoting
 
 on:
     push:
@@ -37,27 +36,6 @@ jobs:
                   file: Dockerfile
                   push: true
                   tags: ${{ env.IMAGE_NAME }}
-                  build-args: |
-                      DJANGO_SETTINGS_MODULE=backend.settings_production
-                      SECRET_KEY=${{ secrets.SECRET_KEY }}
-                      DEBUG=${{ secrets.DEBUG }}
-                      ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
-                      ADMIN_NAME=${{ secrets.ADMIN_NAME }}
-                      SENDGRID_SERVER=${{ secrets.SENDGRID_SERVER }}
-                      SENDGRID_PORT=${{ secrets.SENDGRID_PORT }}
-                      SENDGRID_USERNAME=${{ secrets.SENDGRID_USERNAME }}
-                      SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }}
-                      OSS_ACCESS_KEY_ID=${{ secrets.OSS_ACCESS_KEY_ID }}
-                      OSS_ACCESS_KEY_SECRET=${{ secrets.OSS_ACCESS_KEY_SECRET }}
-                      OSS_EXPIRE_TIME=${{ secrets.OSS_EXPIRE_TIME }}
-                      OSS_BUCKET_NAME=${{ secrets.OSS_BUCKET_NAME }}
-                      OSS_ENDPOINT=${{ secrets.OSS_ENDPOINT }}
-                      ALIYUN_BDD_NAME=${{ secrets.ALIYUN_BDD_NAME }}
-                      ALIYUN_BDD_USER=${{ secrets.ALIYUN_BDD_USER }}
-                      ALIYUN_BDD_PASSWORD=${{ secrets.ALIYUN_BDD_PASSWORD }}
-                      ALIYUN_BDD_HOST=${{ secrets.ALIYUN_BDD_HOST }}
-                      ALIYUN_BDD_PORT=${{ secrets.ALIYUN_BDD_PORT }}
-                      RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}
 
             - name: SSH deploy to ECS
               uses: appleboy/ssh-action@master
@@ -93,58 +71,97 @@ jobs:
                   command_timeout: 10m
                   envs: DJANGO_SETTINGS_MODULE,RECAPTCHA_SECRET_KEY,OSS_ACCESS_KEY_ID,OSS_ACCESS_KEY_SECRET,OSS_EXPIRE_TIME,OSS_BUCKET_NAME,OSS_ENDPOINT,SENDGRID_PASSWORD,SENDGRID_USERNAME,SENDGRID_PORT,SENDGRID_SERVER,ADMIN_EMAIL,ADMIN_NAME,ALIYUN_BDD_NAME,ALIYUN_BDD_USER,ALIYUN_BDD_PASSWORD,ALIYUN_BDD_HOST,ALIYUN_BDD_PORT,DOCKER_USERNAME,DOCKER_PASSWORD,SECRET_KEY,DEBUG
                   script: |
+                      set -e  # Exit on any error
+                      
+                      # Debug: Print which variables are set (without values for security)
+                      echo "=== Checking Environment Variables ==="
+                      echo "DJANGO_SETTINGS_MODULE is set: ${DJANGO_SETTINGS_MODULE:+yes}"
+                      echo "SECRET_KEY is set: ${SECRET_KEY:+yes}"
+                      echo "DEBUG is set: ${DEBUG:+yes}"
+                      echo "DOCKER_USERNAME is set: ${DOCKER_USERNAME:+yes}"
+                      echo "DOCKER_PASSWORD is set: ${DOCKER_PASSWORD:+yes}"
+                      echo "ALIYUN_BDD_NAME is set: ${ALIYUN_BDD_NAME:+yes}"
+                      echo "ALIYUN_BDD_HOST is set: ${ALIYUN_BDD_HOST:+yes}"
+                      
                       # login to docker hub
                       IMAGE_NAME="$DOCKER_USERNAME/fanfiction:latest"
 
+                      echo "Logging in to Docker Hub..."
                       echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
                       # run new container with the new image
+                      echo "Pulling Docker image: $IMAGE_NAME"
                       docker pull $IMAGE_NAME
+                      
+                      echo "Stopping existing container..."
                       docker stop fanfiction || true
                       docker rm fanfiction || true
 
                       # create .env file to pass sensitive data
-                      cat > /tmp/fanfiction.env << EOF
-                      DJANGO_SETTINGS_MODULE=backend.settings_production
-                      SECRET_KEY=$SECRET_KEY
-                      ALIYUN_BDD_NAME=$ALIYUN_BDD_NAME
-                      ALIYUN_BDD_USER=$ALIYUN_BDD_USER
-                      ALIYUN_BDD_PASSWORD=$ALIYUN_BDD_PASSWORD
-                      ALIYUN_BDD_HOST=$ALIYUN_BDD_HOST
-                      ALIYUN_BDD_PORT=$ALIYUN_BDD_PORT
-                      RECAPTCHA_SECRET_KEY=$RECAPTCHA_SECRET_KEY
-                      DEBUG=$DEBUG
-                      ADMIN_EMAIL=$ADMIN_EMAIL
-                      ADMIN_NAME=$ADMIN_NAME
-                      SENDGRID_SERVER=$SENDGRID_SERVER
-                      SENDGRID_PORT=$SENDGRID_PORT
-                      SENDGRID_USERNAME=$SENDGRID_USERNAME
-                      SENDGRID_PASSWORD=$SENDGRID_PASSWORD
-                      OSS_ACCESS_KEY_ID=$OSS_ACCESS_KEY_ID
-                      OSS_ACCESS_KEY_SECRET=$OSS_ACCESS_KEY_SECRET
-                      OSS_EXPIRE_TIME=$OSS_EXPIRE_TIME
-                      OSS_BUCKET_NAME=$OSS_BUCKET_NAME
-                      OSS_ENDPOINT=$OSS_ENDPOINT
-                      EOF
+                      echo "Creating environment file..."
+                      cat > /tmp/fanfiction.env << 'ENVEOF'
+DJANGO_SETTINGS_MODULE=backend.settings_production
+ENVEOF
 
+                      # Append environment variables with proper quoting
+                      {
+                        echo "SECRET_KEY=${SECRET_KEY}"
+                        echo "ALIYUN_BDD_NAME=${ALIYUN_BDD_NAME}"
+                        echo "ALIYUN_BDD_USER=${ALIYUN_BDD_USER}"
+                        echo "ALIYUN_BDD_PASSWORD=${ALIYUN_BDD_PASSWORD}"
+                        echo "ALIYUN_BDD_HOST=${ALIYUN_BDD_HOST}"
+                        echo "ALIYUN_BDD_PORT=${ALIYUN_BDD_PORT}"
+                        echo "RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}"
+                        echo "DEBUG=${DEBUG}"
+                        echo "ADMIN_EMAIL=${ADMIN_EMAIL}"
+                        echo "ADMIN_NAME=${ADMIN_NAME}"
+                        echo "SENDGRID_SERVER=${SENDGRID_SERVER}"
+                        echo "SENDGRID_PORT=${SENDGRID_PORT}"
+                        echo "SENDGRID_USERNAME=${SENDGRID_USERNAME}"
+                        echo "SENDGRID_PASSWORD=${SENDGRID_PASSWORD}"
+                        echo "OSS_ACCESS_KEY_ID=${OSS_ACCESS_KEY_ID}"
+                        echo "OSS_ACCESS_KEY_SECRET=${OSS_ACCESS_KEY_SECRET}"
+                        echo "OSS_EXPIRE_TIME=${OSS_EXPIRE_TIME}"
+                        echo "OSS_BUCKET_NAME=${OSS_BUCKET_NAME}"
+                        echo "OSS_ENDPOINT=${OSS_ENDPOINT}"
+                      } >> /tmp/fanfiction.env
 
+                      # Verify .env file was created
+                      if [ ! -f /tmp/fanfiction.env ]; then
+                        echo "Error: Failed to create /tmp/fanfiction.env"
+                        exit 1
+                      fi
+                      
+                      echo "Environment file created successfully"
+                      echo "Number of variables in .env file: $(wc -l < /tmp/fanfiction.env)"
+
+                      echo "Starting Docker container..."
                       docker run -d --name fanfiction \
                         -p 8000:8000 \
                         --env-file /tmp/fanfiction.env \
+                        --restart unless-stopped \
                         $IMAGE_NAME
 
                       # Wait for container to start
+                      echo "Waiting for container to start..."
                       sleep 10
 
-                      # verify env variables
-                      echo "=== Environment Variables ==="
-                      docker exec fanfiction env | grep -E "DJANGO_SETTINGS_MODULE|SECRET_KEY|DEBUG|ADMIN_EMAIL|SENDGRID|OSS_|ALIYUN_" || echo "Error: Missing or incorrect environment variables"
+                      # verify env variables are accessible in container
+                      echo "=== Environment Variables in Container ==="
+                      docker exec fanfiction env | grep -E "DJANGO_SETTINGS_MODULE|SECRET_KEY|DEBUG|ADMIN_EMAIL|SENDGRID|OSS_|ALIYUN_" || echo "Warning: Some environment variables may be missing"
 
                       # Display logs
                       echo "=== Docker Container Logs ==="
                       docker logs fanfiction --tail 100
 
+                      # Check container status
+                      echo "=== Container Status ==="
+                      docker ps -f name=fanfiction
+
                       # logout from docker hub
+                      echo "Logging out from Docker Hub..."
                       docker logout
 
-                      rm /tmp/fanfiction.env
+                      # Clean up sensitive file
+                      rm -f /tmp/fanfiction.env
+                      echo "Deployment completed successfully"
