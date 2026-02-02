@@ -1,4 +1,5 @@
 name: Deploy Docker to Alibaba ECS
+# Environment variable fixes applied - removes build-args, improves .env creation with proper quoting
 
 on:
     push:
