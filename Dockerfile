@@ -24,6 +24,11 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 # Copy the application code to the container
 COPY . .
 
+# Create /env directory and copy environment export script
+RUN mkdir -p /env
+COPY env/envs_export.sh /env/envs_export.sh
+RUN chmod +x /env/envs_export.sh
+
 
 # Collect static files
 RUN python manage.py collectstatic --noinput || true
