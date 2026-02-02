@@ -14,8 +14,8 @@ ALLOWED_HOSTS = ['*', ]
 
 # email admin
 
-admin_email = config_or_none('ADMIN_EMAIL', default='admin@example.com')
-admin_name = config_or_none('ADMIN_NAME', default='Admin')
+admin_email = config_or_none('ADMIN_EMAIL', default='noreply@example.com')
+admin_name = config_or_none('ADMIN_NAME', default='System Admin')
 
 SERVER_EMAIL = admin_email
 
@@ -50,7 +50,7 @@ db_host = config_or_none('ALIYUN_BDD_HOST', default=None)
 db_port = config_or_none('ALIYUN_BDD_PORT', default=None)
 
 # Use PostgreSQL if credentials are provided, otherwise fallback to SQLite
-if db_name and db_host:
+if db_name and db_host and db_user:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -85,7 +85,7 @@ sendgrid_password = config_or_none('SENDGRID_PASSWORD', default='')
 if sendgrid_server and sendgrid_username:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = sendgrid_server
-    EMAIL_PORT = sendgrid_port
+    EMAIL_PORT = int(sendgrid_port) if sendgrid_port else 587
     EMAIL_HOST_USER = sendgrid_username
     EMAIL_HOST_PASSWORD = sendgrid_password
     EMAIL_USE_TLS = True
