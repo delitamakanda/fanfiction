@@ -5,7 +5,7 @@ services:
             context: .
         environment:
             - SECRET_KEY=${SECRET_KEY}
-            - DEBUG=${DEBUG:-False}
+            - DEBUG=${DEBUG:-false}
             - ADMIN_EMAIL=${ADMIN_EMAIL}
             - ADMIN_NAME=${ADMIN_NAME}
             - SENDGRID_SERVER=${SENDGRID_SERVER}
