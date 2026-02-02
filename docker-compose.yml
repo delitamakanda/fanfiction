@@ -5,7 +5,7 @@ services:
             context: .
         environment:
             - SECRET_KEY=${SECRET_KEY}
-            - DEBUG=${DEBUG}
+            - DEBUG=${DEBUG:-False}
             - ADMIN_EMAIL=${ADMIN_EMAIL}
             - ADMIN_NAME=${ADMIN_NAME}
             - SENDGRID_SERVER=${SENDGRID_SERVER}
@@ -14,7 +14,7 @@ services:
             - SENDGRID_PASSWORD=${SENDGRID_PASSWORD}
             - OSS_ACCESS_KEY_ID=${OSS_ACCESS_KEY_ID}
             - OSS_ACCESS_KEY_SECRET=${OSS_ACCESS_KEY_SECRET}
-            - OSS_EXPIRE_TIME=${OSS_EXPIRE_TIME}
+            - OSS_EXPIRE_TIME=${OSS_EXPIRE_TIME:-3600}
             - OSS_BUCKET_NAME=${OSS_BUCKET_NAME}
             - OSS_ENDPOINT=${OSS_ENDPOINT}
             - ALIYUN_BDD_NAME=${ALIYUN_BDD_NAME}
@@ -23,7 +23,7 @@ services:
             - ALIYUN_BDD_HOST=${ALIYUN_BDD_HOST}
             - ALIYUN_BDD_PORT=${ALIYUN_BDD_PORT}
             - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
-            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-backend.settings_production}
         ports:
             - "8000:8000"
         volumes:
