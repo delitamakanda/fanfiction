@@ -3,33 +3,27 @@ services:
         restart: always
         build:
             context: .
-            args:
-                SECRET_KEY: $secrets.SECRET_KEY
-                DEBUG: ${DEBUG}
-                ADMIN_EMAIL: ${ADMIN_EMAIL}
-                ADMIN_NAME: ${ADMIN_NAME}
-                SENDGRID_SERVER: ${SENDGRID_SERVER}
-                SENDGRID_PORT: ${SENDGRID_PORT}
-                SENDGRID_USERNAME: ${SENDGRID_USERNAME}
-                SENDGRID_PASSWORD: ${SENDGRID_PASSWORD}
-                OSS_ACCESS_KEY_ID: ${OSS_ACCESS_KEY_ID}
-                OSS_ACCESS_KEY_SECRET: ${OSS_ACCESS_KEY_SECRET}
-                OSS_EXPIRE_TIME: ${OSS_EXPIRE_TIME}
-                OSS_BUCKET_NAME: ${OSS_BUCKET_NAME}
-                OSS_ENDPOINT: ${OSS_ENDPOINT}
-                ALIYUN_BDD_NAME: ${ALIYUN_BDD_NAME}
-                ALIYUN_BDD_USER: ${ALIYUN_BDD_USER}
-                ALIYUN_BDD_PASSWORD: ${ALIYUN_BDD_PASSWORD}
-                ALIYUN_BDD_HOST: ${ALIYUN_BDD_HOST}
-                ALIYUN_BDD_PORT: ${ALIYUN_BDD_PORT}
-                RECAPTCHA_SECRET_KEY: ${RECAPTCHA_SECRET_KEY}
-                DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
-        command: >
-            sh -c "
-            python manage.py migrate &&
-            python manage.py collectstatic --noinput &&
-            gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 60
-            "
+        environment:
+            - SECRET_KEY=${SECRET_KEY}
+            - DEBUG=${DEBUG}
+            - ADMIN_EMAIL=${ADMIN_EMAIL}
+            - ADMIN_NAME=${ADMIN_NAME}
+            - SENDGRID_SERVER=${SENDGRID_SERVER}
+            - SENDGRID_PORT=${SENDGRID_PORT}
+            - SENDGRID_USERNAME=${SENDGRID_USERNAME}
+            - SENDGRID_PASSWORD=${SENDGRID_PASSWORD}
+            - OSS_ACCESS_KEY_ID=${OSS_ACCESS_KEY_ID}
+            - OSS_ACCESS_KEY_SECRET=${OSS_ACCESS_KEY_SECRET}
+            - OSS_EXPIRE_TIME=${OSS_EXPIRE_TIME}
+            - OSS_BUCKET_NAME=${OSS_BUCKET_NAME}
+            - OSS_ENDPOINT=${OSS_ENDPOINT}
+            - ALIYUN_BDD_NAME=${ALIYUN_BDD_NAME}
+            - ALIYUN_BDD_USER=${ALIYUN_BDD_USER}
+            - ALIYUN_BDD_PASSWORD=${ALIYUN_BDD_PASSWORD}
+            - ALIYUN_BDD_HOST=${ALIYUN_BDD_HOST}
+            - ALIYUN_BDD_PORT=${ALIYUN_BDD_PORT}
+            - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
+            - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
         ports:
             - "8000:8000"
         volumes:
