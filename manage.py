@@ -15,11 +15,11 @@ if __name__ == "__main__":
             'ALIYUN_BDD_USER',
         ]
         
-        # If any production database variables exist, assume production environment
+        # If any production database variables exist with non-empty values, assume production environment
         if any(os.environ.get(var) for var in production_vars):
-            os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings_production")
+            os.environ['DJANGO_SETTINGS_MODULE'] = 'backend.settings_production'
         else:
-            os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
+            os.environ['DJANGO_SETTINGS_MODULE'] = 'backend.settings'
     
     try:
         from django.core.management import execute_from_command_line
