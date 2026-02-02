@@ -1,5 +1,11 @@
 name: Django CI
 
+# Secrets Configuration:
+# All secrets must be configured as Repository secrets (not Environment secrets)
+# Go to: Settings > Secrets and variables > Actions > Repository secrets
+# Required secrets: SECRET_KEY, DEBUG, REDIS_URL, ADMIN_*, SENDGRID_*, OSS_*,
+#                   ALIYUN_BDD_*, RECAPTCHA_SECRET_KEY, DJANGO_SETTINGS_MODULE
+
 on:
   push:
     branches: [ main ]
