@@ -77,7 +77,7 @@ else:
 # SMTP Email server
 
 sendgrid_server = config_or_none('SENDGRID_SERVER', default='')
-sendgrid_port = config_or_none('SENDGRID_PORT', default='587')
+sendgrid_port = config_or_none('SENDGRID_PORT', default=None)
 sendgrid_username = config_or_none('SENDGRID_USERNAME', default='')
 sendgrid_password = config_or_none('SENDGRID_PASSWORD', default='')
 
@@ -85,7 +85,7 @@ sendgrid_password = config_or_none('SENDGRID_PASSWORD', default='')
 if sendgrid_server and sendgrid_username:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = sendgrid_server
-    EMAIL_PORT = int(sendgrid_port) if sendgrid_port else 587
+    EMAIL_PORT = int(sendgrid_port) if sendgrid_port is not None else 587
     EMAIL_HOST_USER = sendgrid_username
     EMAIL_HOST_PASSWORD = sendgrid_password
     EMAIL_USE_TLS = True
