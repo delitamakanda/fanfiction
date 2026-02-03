@@ -16,7 +16,7 @@ click-repl==0.3.0
 cron_descriptor==2.0.6
 cssselect2==0.8.0
 dj-database-url==3.0.1
-Django==5.2.9
+Django==5.2.11
 django-allauth==65.13.1
 django-celery-beat==2.8.1
 django-cors-headers==4.9.0
