@@ -1,5 +1,7 @@
 services:
     web:
+        depends_on:
+            -   db
         deploy:
             resources:
                 limits:
@@ -49,6 +51,16 @@ services:
             - static_volumes:/static:ro
             - media_volumes:/media:ro
     db:
+        image: postgres:15
+        restart: always
+        environment:
+            - POSTGRES_USER=${ALIYUN_BDD_USER}
+            - POSTGRES_PASSWORD=${ALIYUN_BDD_PASSWORD}
+            - POSTGRES_DB=${{ALIYUN_BDD_NAME}}
+        ports:
+            -   "5432:5432"
+        volumes:
+            -   db_volumes:/var/lib/postgresql/data
         deploy:
             resources:
                 limits:
