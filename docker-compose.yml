@@ -69,5 +69,5 @@ services:
 volumes:
     static_volumes:
     media_volumes:
-
+    db_volumes:
 
