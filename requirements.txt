@@ -15,7 +15,7 @@ click-plugins==1.1.1.2
 click-repl==0.3.0
 cron_descriptor==2.0.6
 cssselect2==0.8.0
-dj-database-url==3.0.1
+dj-database-url==3.1.2
 Django==5.2.12
 django-allauth==65.14.1
 django-celery-beat==2.8.1
