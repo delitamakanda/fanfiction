@@ -11,7 +11,12 @@ services:
         restart: always
         build:
             context: .
+        networks:
+            - default
+        command:
+            -   python manage.py runserver 0.0.0.0:8000
         environment:
+            - DATABASE_URL=postgresql://$ALIYUN_BDD_USER:$ALIYUN_BDD_PASSWORD@db:5432/$ALIYUN_BDD_NAME
             - SECRET_KEY=${SECRET_KEY}
             - DEBUG=${DEBUG:-false}
             - ADMIN_EMAIL=${ADMIN_EMAIL}
