@@ -1,3 +1,5 @@
+import os
+
 from backend.settings import *
 
 # Helper function to convert empty strings to None
@@ -46,7 +48,7 @@ if OSS_ACCESS_KEY_ID and OSS_BUCKET_NAME:
 db_name = config_or_none('ALIYUN_BDD_NAME', default=None)
 db_user = config_or_none('ALIYUN_BDD_USER', default=None)
 db_password = config_or_none('ALIYUN_BDD_PASSWORD', default=None)
-db_host = config_or_none('ALIYUN_BDD_HOST', default=None)
+db_host = config_or_none('ALIYUN_BDD_HOST', default='db')
 db_port = config_or_none('ALIYUN_BDD_PORT', default=None)
 
 # Use PostgreSQL if credentials are provided, otherwise fallback to SQLite
