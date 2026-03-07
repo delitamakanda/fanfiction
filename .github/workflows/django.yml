@@ -1,5 +1,11 @@
 name: Django CI
 
+# Secrets Configuration:
+# All secrets must be configured as Repository secrets (not Environment secrets)
+# Go to: Settings > Secrets and variables > Actions > Repository secrets
+# Required secrets: SECRET_KEY, DEBUG, REDIS_URL, ADMIN_*, SENDGRID_*, OSS_*,
+#                   ALIYUN_BDD_*, RECAPTCHA_SECRET_KEY, DJANGO_SETTINGS_MODULE
+
 on:
   push:
     branches: [ main ]
@@ -68,8 +74,19 @@ jobs:
 
     - name: Wait for services to be ready
       run: |
-        sleep 10
+        echo "Waiting for db to be ready..."
+        for i in {1..30}; do
+          if docker compose exec -T db pg_isready  -U ${{ secrets.ALIYUN_BDD_USER }} > /dev/null 2>&1; then
+            break
+          fi
+          echo "Waiting for db to be ready... ($i/30)"
+          sleep 2
+        done
+
+        echo " Waiting for service to be ready..."
+        sleep 15
         docker compose ps
+        docker compose logs web --tail=20
 
     - name: Run migrations
       run: |

@@ -11,7 +11,12 @@ services:
         restart: always
         build:
             context: .
+        networks:
+            - default
+        command:
+            -   python manage.py runserver 0.0.0.0:8000
         environment:
+            - DATABASE_URL=postgresql://$ALIYUN_BDD_USER:$ALIYUN_BDD_PASSWORD@db:5432/$ALIYUN_BDD_NAME
             - SECRET_KEY=${SECRET_KEY}
             - DEBUG=${DEBUG:-false}
             - ADMIN_EMAIL=${ADMIN_EMAIL}
@@ -56,7 +61,7 @@ services:
         environment:
             - POSTGRES_USER=${ALIYUN_BDD_USER}
             - POSTGRES_PASSWORD=${ALIYUN_BDD_PASSWORD}
-            - POSTGRES_DB=${{ALIYUN_BDD_NAME}}
+            - POSTGRES_DB=${ALIYUN_BDD_NAME}
         ports:
             -   "5432:5432"
         volumes:
@@ -69,5 +74,5 @@ services:
 volumes:
     static_volumes:
     media_volumes:
-
+    db_volumes:
 
