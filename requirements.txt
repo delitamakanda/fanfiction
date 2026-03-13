@@ -56,7 +56,7 @@ psutil==7.2.2
 psycopg==3.2.3
 pycparser==2.23
 pydyf==0.12.1
-PyJWT==2.10.1
+PyJWT==2.12.0
 pyphen==0.17.2
 python-crontab==3.3.0
 python-dateutil==2.9.0.post0
