@@ -13,7 +13,7 @@ click==8.3.1
 click-didyoumean==0.3.1
 click-plugins==1.1.1.2
 click-repl==0.3.0
-cron_descriptor==2.0.8
+cron_descriptor==1.2.32
 cssselect2==0.8.0
 dj-database-url==3.1.2
 Django==6.0.3
