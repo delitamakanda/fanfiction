@@ -22,20 +22,20 @@
 ## Overview
 This repository contains the source code for a bilingual fanfiction community. The Django
 backend exposes a REST API, background workers and administrative interfaces, while the
-Vue.js/Ionic application delivers the user-facing experience. Supporting utilities provide
+Vue.js application delivers the user-facing experience. Supporting utilities provide
 recommendations, content import and automated notifications.
 
 A live demo of the mobile web application is available at
-[fanfiction-fr.netlify.app](https://fanfiction-fr.netlify.app/).
+[fanfics-fr.netlify.app](https://fanfics-fr.netlify.app/).
 
 ## Features
 - Fanfiction catalogue with categories, tags, chapters, comments and user favourites.
 - JWT/OAuth2-secured REST API built with Django REST Framework and Spectacular.
 - Celery workers for scheduled notifications and account maintenance.
-- Redis-backed recommendation engine based on user co-likes.
+- Recommendation engine based on user co-likes.
 - Admin and moderation tooling for managing content and users.
 - Internationalisation support and automated translation compilation.
-- Modern stack targeting Django 5.1 and Python 3.12 deployments.
+- Modern stack targeting Django 6.* and Python 3.13 deployments.
 
 ## Architecture
 ```
@@ -49,29 +49,12 @@ A live demo of the mobile web application is available at
 ```
 
 ## Requirements
-- Python 3.12+
-- Node.js 16+ and npm
-- Redis (for Celery/recommendations) – optional during development
+- Python 3.13+
+- django-celery-beat (for Celery/recommendations) – optional during development
 - A PostgreSQL database in production (SQLite is used by default for local dev)
 
 ## Environment Variables
 The project includes an environment variable export script at `/env/envs_export.sh` that can be sourced on the VM or within Docker containers to set up all necessary environment variables. See [env/README.md](env/README.md) for detailed usage instructions.
-
-### Docker Deployment
-When deploying with Docker, environment variables can be passed via `--env-file` or individually with `-e`. The entrypoint script automatically:
-1. Sources `/env/envs_export.sh` if it exists
-2. Executes an optional `BUILD_COMMAND` if set
-3. Runs database migrations and collects static files
-
-Example:
-```bash
-docker run -d --name fanfiction \
-  -p 8000:8000 \
-  --env-file /path/to/.env \
-  -e BUILD_COMMAND="python manage.py custom_command" \
-  --restart unless-stopped \
-  fanfiction:latest
-```
 
 ## Quick start
 Clone the repository and create the environment files (`.env`, `.env.production`, etc.) as
@@ -101,23 +84,6 @@ python manage.py createsuperuser
 
 # Start the development server
 python manage.py runserver
-```
-
-### Frontend (Vue.js/Ionic)
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Serve with hot reload at http://localhost:8080
-npm run dev
-
-# Build for production
-npm run build
-
-# Build with bundle analysis report
-npm run build --report
 ```
 
 ## Background tasks
