@@ -31,7 +31,7 @@ django-stubs==5.2.9
 django-stubs-ext==5.2.8
 django-timezone-field==7.2.1
 django_celery_results==2.6.0
-djangorestframework==3.16.1
+djangorestframework==3.17.1
 djangorestframework-stubs==3.16.6
 djangorestframework_simplejwt==5.5.1
 drf-spectacular==0.29.0
