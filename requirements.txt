@@ -73,7 +73,7 @@ tinyhtml5==2.0.0
 types-PyYAML==6.0.12.20250915
 types-requests==2.32.4.20250913
 typing_extensions==4.15.0
-tzdata==2025.3
+tzdata==2026.2
 tzlocal==5.3.1
 uritemplate==4.2.0
 urllib3==2.6.3
