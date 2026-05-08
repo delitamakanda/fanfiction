@@ -1,11 +1,8 @@
-from django.conf.global_settings import DEFAULT_FROM_EMAIL
-
 from backend.settings import * # NOQA
 import os
 import dj_database_url
 
 DATABASES["default"] = dj_database_url.config()  # NOQA
-DATABASES["default"]["ENGINE"] = "django.db.backends.postgresql"  # NOQA
 DATABASES["default"]["CONN_MAX_AGE"] = 60  # NOQA
 DATABASES["default"]["ATOMIC_REQUESTS"] = True  # NOQA
 
@@ -18,6 +15,10 @@ SECURE_HSTS_SECONDS = 60 * 60 * 24 * 7
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 SECURE_REFERRER_POLICY = "strict-origin"
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
@@ -36,9 +37,16 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media storages
-STORAGES["default"] = { # NOQA
-	"BACKEND": "backend.storage_backends.MediaStorage"
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
 }
+
+DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
 
 # Cache
 
@@ -51,8 +59,7 @@ CACHES = {
 }
 
 # CSRF
-CSRF_TRUSTED_ORIGINS = [os.getenv('CSRF_TRUSTED_ORIGINS')]
-
+CSRF_TRUSTED_ORIGINS=os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
 
 # Mail support
 
