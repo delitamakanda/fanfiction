@@ -22,15 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-STORAGES = {
-	"default": {
-		"BACKEND": "django.core.files.storage.FileSystemStorage",
-	},
-	"staticfiles": {
-		"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-	}
-}
-
 from django.urls import reverse
 
 from django.utils.translation import gettext_lazy as _
