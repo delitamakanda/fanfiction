@@ -46,7 +46,7 @@ urlpatterns += [
 	path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
 ]
 
-if settings.DEBUG:
+if settings.DEBUGand not settings.TESTING:
 	urlpatterns += static(settings.MEDIA_URL,
 						  document_root=settings.MEDIA_ROOT)
 	urlpatterns += static(settings.STATIC_URL,
