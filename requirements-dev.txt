@@ -24,8 +24,6 @@ django-debug-toolbar==6.3.0
 django-filter==25.2
 django-markdownx==4.0.9
 django-multiselectfield==1.0.1
-django-oss-storage==1.1.1
-django-oss-storage-v2==2.0.1
 django-storages==1.14.6
 django-stubs==5.2.9
 django-stubs-ext==5.2.9
