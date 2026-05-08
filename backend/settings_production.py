@@ -36,7 +36,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media storages
-DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
+STORAGES["default"] = { # NOQA
+	"BACKEND": "backend.storage_backends.MediaStorage"
+}
 
 # Cache
 
