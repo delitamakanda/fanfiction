@@ -46,7 +46,9 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
-DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
+STORAGES["default"] = { # NOQA
+	"BACKEND": "backend.storage_backends.MediaStorage"
+}
 
 # Cache
 
