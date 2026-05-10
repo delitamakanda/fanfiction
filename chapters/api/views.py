@@ -1,18 +1,25 @@
-from rest_framework import generics, permissions
-from rest_framework.exceptions import NotFound
-from rest_framework.throttling import UserRateThrottle
-from rest_framework.response import Response
+import logging
+
+from django.conf import settings
+from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiResponse, OpenApiParameter
+from openai import OpenAI
+from openai.types.chat import (
+    ChatCompletionSystemMessageParam,
+    ChatCompletionUserMessageParam
+)
+from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
-
-from chapters.api.serializers import ChapterSerializer, ChapterFormattedSerializer
-
-from chapters.models import Chapter
+from rest_framework.response import Response
+from rest_framework.throttling import UserRateThrottle
 
 from api import custompagination
+from chapters.api.serializers import ChapterSerializer, ChapterFormattedSerializer, ChapterSummaryRequestSerializer, \
+    ChapterSummaryResponseSerializer
+from chapters.models import Chapter
 
-import logging
-import openai
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +76,23 @@ class ChapterDetailView(ChapterBaseAPIView, generics.RetrieveUpdateDestroyAPIVie
         self.perform_create_or_update(serializer)
 
 
+@extend_schema(
+	summary='List all styles prompts',
+	description="List all available styles prompts for the chapters.",
+    responses={
+        200: OpenApiResponse(
+			description="List of styles prompts",
+                response=OpenApiExample(
+					name="Styles",
+                    value=list(),
+                ),
+		),
+        403: OpenApiResponse(
+            description="Forbidden",
+        )
+	},
+    tags=['Chapters'],
+)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_styles_prompts(request):
@@ -76,37 +100,89 @@ def list_styles_prompts(request):
     return Response(styles)
 
 
+@extend_schema(
+    summary="generate chapter summary",
+    description="Generate a summary for a given chapter.",
+    request=ChapterSummaryRequestSerializer,
+    responses={
+        200: ChapterSummaryResponseSerializer,
+    },
+    examples=[
+        OpenApiExample(
+            name="Neutre",
+            value={
+                "prompt": "Le château est une maison, et il est en plein jour.",
+                "style": "neutre",
+            },
+        )
+    ]
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def generate_chapter_summary(request):
-    prompt = request.data.get('prompt', '')
-    style = request.data.get('style', 'neutre')
+    serializer = ChapterSummaryRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    prompt = serializer.validated_data['prompt']
+    style = serializer.validated_data.get('style', 'neutre')
 
-    styles = {
-        'neutre': 'avec un ton neutre et équilibré',
-        'romantique': 'avec un ton romantique et poétique',
-        'dramatique': 'avec une intensité dramatique',
-        'comique': 'avec un ton humoristique',
-        'mystérieux': 'avec une ambiance inquétante',
-    }
+    system_message = f"""
+    Tu es un auteur expert de fanfiction expert.
+    Style demandé : {style}.
+    Ecris un texte immersif, mature et cohérent.
+    """
 
-    prompt_style = styles.get(style, 'avec un ton neutre et équilibré')
-    system_message = f"Tu es un écrivain de fanfiction expert. Ecris {prompt_style}""'"
+    messages: list[ChatCompletionSystemMessageParam | ChatCompletionUserMessageParam] = [
+        {"role": "system", "content": system_message},
+        {"role": "user", "content": prompt},
+    ]
 
-    response = openai.Completion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": prompt},
-        ],
-        max_tokens=600,
-    )
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4.1-mini",
+            temperature=0.9,
+            max_tokens=600,
+            messages=messages
+        )
 
-    return Response({
-        'generated_summary': response["choices"][0]["message"]["content"],
-    })
+        return Response({
+            'generated_summary': response.choices[0].message.content,
+        })
+    except Exception as e:
+        logger.error(f"An error occurred: {str(e)}")
+        return Response({
+            'error': str(e),
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+
+@extend_schema(
+	summary='Autosave a chapter',
+    description="Allow users to autosave their chapters.",
+    parameters=[
+        OpenApiParameter(
+            name='fanfic',
+			description='Fanfic ID',
+            type=int,
+            required=True,
+        ),
+    ],
+    responses={
+        200: ChapterSerializer,
+        403: OpenApiResponse(
+            description="Forbidden",
+        ),
+        404: OpenApiResponse(
+            description="Fanfic not found",
+        ),
+        400: OpenApiResponse(
+            description="Bad request",
+        ),
+        500: OpenApiResponse(
+            description="Internal server error",
+        )
+    },
+    tags=['Chapters'],
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def autosave_chapter(request, fanfic):
