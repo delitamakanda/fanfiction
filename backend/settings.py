@@ -246,7 +246,7 @@ CORS_ALLOW_HEADERS = (
 	'Range',
 )
 CORS_ORIGIN_WHITELIST = [
-	'http://localhost:5173',
+	'http://localhost:5173', 'https://fanfics-fr.netlify.app',
 ]
 
 # cache
