@@ -190,11 +190,13 @@ def autosave_chapter(request, fanfic):
     chapter, created = Chapter.objects.update_or_create(
         author=request.user,
         fanfic_id=fanfic,
-        title=data_rq['title'],
-        description=data_rq['description'],
-        text=data_rq['text'],
-        order=data_rq['order'],
-        status=data_rq['status'],
+        defaults={
+			'order': data_rq.get('order', 1),
+            'title': data_rq.get('title', ''),
+            'description': data_rq.get('description', ''),
+            'text': data_rq.get('text', ''),
+            'published': data_rq.get('published', False),
+		}
     )
     return Response({
         'message': 'Autosaved',
