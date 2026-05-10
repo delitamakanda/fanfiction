@@ -189,7 +189,7 @@ def autosave_chapter(request, fanfic):
     data_rq = request.data
     chapter, created = Chapter.objects.update_or_create(
         author=request.user,
-        fanfic=fanfic,
+        fanfic_id=fanfic,
         title=data_rq['title'],
         description=data_rq['description'],
         text=data_rq['text'],
