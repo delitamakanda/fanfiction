@@ -71,3 +71,11 @@ class ChapterSerializer(serializers.ModelSerializer):
             validated_data.pop('fanfic_id', None)
             return super().update(instance, validated_data)
 
+class ChapterSummaryRequestSerializer(serializers.Serializer):
+    prompt = serializers.CharField(required=True, help_text='The prompt for the chapter summary')
+    style = serializers.CharField(required=False, default='neutre', help_text='The style of the chapter summary')
+
+
+class ChapterSummaryResponseSerializer(serializers.Serializer):
+    generated_summary = serializers.CharField()
+

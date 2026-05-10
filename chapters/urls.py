@@ -17,7 +17,7 @@ path('<int:fanfic>/list/',
     path('<int:pk>/',
          ChapterDetailView.as_view(), name='chapter-detail'),
 	path('generate', generate_chapter_summary, name='generate'),
-	path('styles-prompts', list_styles_prompts, name='styles-prompts'),
+	path('styles', list_styles_prompts, name='styles-prompts'),
 	# fanfic_id is passed as a parameter to the view
 	path('<int:fanfic>/autosave', autosave_chapter, name='autosave'),
 ]
