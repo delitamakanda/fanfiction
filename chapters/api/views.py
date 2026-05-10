@@ -1,4 +1,3 @@
-from Crypto.SelfTest.Hash.test_keccak import data
 from rest_framework import generics, permissions
 from rest_framework.exceptions import NotFound
 from rest_framework.throttling import UserRateThrottle
@@ -110,11 +109,11 @@ def generate_chapter_summary(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def autosave_chapter(request, fanfic_id):
+def autosave_chapter(request, fanfic):
     data_rq = request.data
     chapter, created = Chapter.objects.update_or_create(
         author=request.user,
-        fanfic=fanfic_id,
+        fanfic=fanfic,
         title=data_rq['title'],
         description=data_rq['description'],
         text=data_rq['text'],
