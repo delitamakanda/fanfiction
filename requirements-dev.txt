@@ -25,7 +25,7 @@ django-filter==25.2
 django-markdownx==4.0.9
 django-multiselectfield==1.0.1
 django-storages==1.14.6
-django-stubs==5.2.9
+django-stubs==6.0.5
 django-stubs-ext==5.2.9
 django-timezone-field==7.2.1
 django_celery_results==2.6.0
