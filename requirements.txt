@@ -25,8 +25,8 @@ django-filter==25.2
 django-markdownx==4.0.9
 django-multiselectfield==1.0.1
 django-storages==1.14.6
-django-stubs==5.2.9
-django-stubs-ext==5.2.9
+django-stubs==6.0.5
+django-stubs-ext==6.0.2
 django-timezone-field==7.2.1
 django_celery_results==2.6.0
 djangorestframework==3.17.1
@@ -44,7 +44,7 @@ jmespath==0.7.1
 jsonschema==4.25.1
 jsonschema-specifications==2025.9.1
 kombu==5.6.2
-Markdown==3.10.1
+Markdown==3.10.2
 MarkupSafe==3.0.3
 packaging==26.0
 pillow==12.2.0
@@ -53,7 +53,7 @@ psutil==7.2.2
 psycopg==3.2.3
 pycparser==2.23
 pydyf==0.12.1
-PyJWT==2.12.1
+PyJWT==2.13.0
 pyphen==0.17.2
 python-crontab==3.3.0
 python-dateutil==2.9.0.post0
