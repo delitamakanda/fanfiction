@@ -25,8 +25,8 @@ django-filter==25.2
 django-markdownx==4.0.9
 django-multiselectfield==1.0.1
 django-storages==1.14.6
-django-stubs==5.2.9
-django-stubs-ext==5.2.9
+django-stubs==6.0.5
+django-stubs-ext==6.0.2
 django-timezone-field==7.2.1
 django_celery_results==2.6.0
 djangorestframework==3.17.1
@@ -51,7 +51,7 @@ prompt_toolkit==3.0.52
 psutil==7.2.2
 pycparser==2.23
 pydyf==0.12.1
-PyJWT==2.12.1
+PyJWT==2.13.0
 pyphen==0.17.2
 python-crontab==3.3.0
 python-dateutil==2.9.0.post0
@@ -79,5 +79,5 @@ weasyprint==68.0
 webencodings==0.5.1
 wheel==0.47.0
 whitenoise==6.12.0
-zopfli==0.4.1
+zopfli==0.4.2
 openai==2.36.0
