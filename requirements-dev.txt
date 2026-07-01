@@ -49,7 +49,7 @@ packaging==26.2
 pillow==12.2.0
 prompt_toolkit==3.0.52
 psutil==7.2.2
-pycparser==2.23
+pycparser==3.0
 pydyf==0.12.1
 PyJWT==2.13.0
 pyphen==0.17.2
