@@ -46,7 +46,7 @@ kombu==5.6.2
 Markdown==3.10.2
 MarkupSafe==3.0.3
 packaging==26.2
-pillow==12.2.0
+pillow==12.3.0
 prompt_toolkit==3.0.52
 psutil==7.2.2
 pycparser==3.0
