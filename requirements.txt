@@ -40,7 +40,7 @@ idna==3.18
 inflection==0.5.1
 itypes==1.2.0
 Jinja2==3.1.6
-jmespath==0.7.1
+jmespath==1.1.0
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
 kombu==5.6.2
