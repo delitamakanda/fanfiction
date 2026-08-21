@@ -13,3 +13,8 @@ updates:
       # responses has a pinning conflict in 0.12.1 with urllib3.
       # pip doesn't fail on but issues a warning. Stop updating it for now.
       - dependency-name: "responses"
+      # sqlparse is already pinned to the patched 0.6.0 release in both
+      # requirements files. Ignore that exact version so Dependabot doesn't
+      # keep retrying the already-applied security update as a failing no-op.
+      - dependency-name: "sqlparse"
+        versions: "==0.6.0"
