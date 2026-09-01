@@ -50,7 +50,7 @@ packaging==26.0
 pillow==12.3.0
 prompt_toolkit==3.0.52
 psutil==7.2.2
-psycopg==3.2.3
+psycopg==3.3.4
 pycparser==3.0
 pydyf==0.12.1
 PyJWT==2.13.0
