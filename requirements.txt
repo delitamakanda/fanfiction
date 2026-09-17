@@ -50,7 +50,7 @@ packaging==26.0
 pillow==12.3.0
 prompt_toolkit==3.0.52
 psutil==7.2.2
-psycopg==3.2.3
+psycopg==3.3.4
 pycparser==3.0
 pydyf==0.12.1
 PyJWT==2.13.0
@@ -77,7 +77,7 @@ uritemplate==4.2.0
 urllib3==2.7.0
 vine==5.1.0
 wcwidth==0.5.3
-weasyprint==68.0
+weasyprint==70.0
 webencodings==0.6.1
 wheel==0.46.3
 whitenoise==6.11.0
