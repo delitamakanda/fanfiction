@@ -16,7 +16,7 @@ click-repl==0.3.0
 cron_descriptor==1.2.32
 cssselect2==0.9.0
 dj-database-url==3.1.2
-Django==6.0.7
+Django==6.0.8
 django-allauth==65.19.0
 django-celery-beat==2.9.0
 django-cors-headers==4.9.0
@@ -53,7 +53,7 @@ psutil==7.2.2
 psycopg==3.3.4
 pycparser==3.0
 pydyf==0.12.1
-PyJWT==2.13.0
+PyJWT==2.15.0
 pyphen==0.17.2
 python-crontab==3.3.0
 python-dateutil==2.9.0.post0
