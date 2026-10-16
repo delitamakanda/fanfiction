@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16-alpine
+    env_file:
+      - .env.docker
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-fanfiction}
+      POSTGRES_USER: ${POSTGRES_USER:-fanfiction}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fanfiction}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fanfiction} -d ${POSTGRES_DB:-fanfiction}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+
+  web:
+    build: .
+    env_file:
+      - .env.docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  postgres_data:
+  redis_data:
+  media_data:
