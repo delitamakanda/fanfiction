@@ -14,9 +14,9 @@ click-didyoumean==0.3.1
 click-plugins==1.1.1.2
 click-repl==0.3.0
 cron_descriptor==1.2.32
-cssselect2==0.9.0
+cssselect2==0.10.1
 dj-database-url==3.1.2
-Django==6.0.7
+Django==6.0.8
 django-allauth==65.19.0
 django-celery-beat==2.9.0
 django-cors-headers==4.9.0
@@ -25,8 +25,8 @@ django-filter==25.2
 django-markdownx==4.0.9
 django-multiselectfield==1.0.1
 django-storages==1.14.6
-django-stubs==6.1.0
-django-stubs-ext==6.0.2
+django-stubs==6.1.1
+django-stubs-ext==6.1.1
 django-timezone-field==7.2.1
 django_celery_results==2.6.0
 djangorestframework==3.17.2
@@ -47,11 +47,11 @@ Markdown==3.10.2
 MarkupSafe==3.0.3
 packaging==26.2
 pillow==12.3.0
-prompt_toolkit==3.0.52
+prompt_toolkit==3.0.53
 psutil==7.2.2
 pycparser==3.0
 pydyf==0.12.1
-PyJWT==2.13.0
+PyJWT==2.15.0
 pyphen==0.17.2
 python-crontab==3.3.0
 python-dateutil==2.9.0.post0
@@ -72,7 +72,7 @@ typing_extensions==4.15.0
 tzdata==2026.2
 tzlocal==5.3.1
 uritemplate==4.2.0
-urllib3==2.7.0
+urllib3==2.8.0
 vine==5.1.0
 wcwidth==0.5.3
 weasyprint==70.0
