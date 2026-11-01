@@ -44,7 +44,7 @@ jmespath==1.1.0
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
 kombu==5.6.2
-Markdown==3.10.2
+Markdown==3.11.2
 MarkupSafe==3.0.3
 packaging==26.0
 pillow==13.0.0
