@@ -7,5 +7,11 @@ class MediaStorage(S3Boto3Storage):
 
 
 class LenientManifestStaticFilesStorage(CompressedManifestStaticFilesStorage):
-    """Ne plante pas sur un fichier statique absent du manifeste."""
+    """Ne plante pas sur un fichier statique absent du manifeste ou du disque."""
     manifest_strict = False
+
+    def stored_name(self, name):
+        try:
+            return super().stored_name(name)
+        except ValueError:
+            return name
