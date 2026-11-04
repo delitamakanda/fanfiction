@@ -34,7 +34,6 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media storages
 
@@ -46,7 +45,11 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
-DEFAULT_FILE_STORAGE = "backend.storage_backends.MediaStorage"
+# STATICFILES_STORAGE / DEFAULT_FILE_STORAGE are ignored since Django 5.1.
+STORAGES = {
+    "default": {"BACKEND": "backend.storage_backends.MediaStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}
 
 # Cache
 
