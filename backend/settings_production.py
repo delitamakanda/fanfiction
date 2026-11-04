@@ -48,7 +48,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 # STATICFILES_STORAGE / DEFAULT_FILE_STORAGE are ignored since Django 5.1.
 STORAGES = {
     "default": {"BACKEND": "backend.storage_backends.MediaStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    "staticfiles": {"BACKEND": "backend.storage_backends.LenientManifestStaticFilesStorage"},
 }
 
 # Cache
