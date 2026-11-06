@@ -30,3 +30,6 @@ build/
 config/
 !frontend/src/config/
 schema.yml
+
+# Agents (workflow agentique)
+.agent-out/

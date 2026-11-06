@@ -149,6 +149,14 @@ For a quicker feedback loop you can also use Django's built-in test runner direc
 python manage.py test
 ```
 
+## Demo data
+```bash
+python manage.py seed_demo   # DEBUG only — demo-admin / demo-author / demo-reader, password demo-password-123
+```
+
+## Agentic workflow
+Issues are specs: a Claude agent refines them, implements one ticket at a time and opens a PR for human review. See [docs/agentic-workflow.md](docs/agentic-workflow.md).
+
 ## Additional resources
 - [Django documentation](https://docs.djangoproject.com/)
 - [Django REST Framework](https://www.django-rest-framework.org/)
