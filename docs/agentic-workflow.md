@@ -132,7 +132,7 @@ Le premier lancement manuel importe tout le backlog existant dans le board.
 
 ## Différences avec elearning
 
-- Le dépôt est surtout une **API** (le front Vue.js/Ionic est séparé) :
+- Le dépôt est surtout une **API** (le front Vue 3 `fanfiction-front-vue` est séparé) :
   l'agent vérifie ses critères en appelant les endpoints avec
   `bash scripts/agent/api.sh [--as demo-admin|demo-author|demo-reader] METHODE /chemin [json]`
   (le script obtient un jeton JWT sur `/api/auth/token/`). Le navigateur sert à

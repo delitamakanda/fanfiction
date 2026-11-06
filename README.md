@@ -2,7 +2,7 @@
 
 [![Django CI](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml/badge.svg?branch=main)](https://github.com/delitamakanda/fanfiction/actions/workflows/django.yml)
 
-> A fanfiction platform powered by a Django REST backend and a Vue.js/Ionic frontend.
+> A fanfiction platform powered by a Django REST backend and a separate Vue 3 frontend ([`fanfiction-front-vue`](https://github.com/delitamakanda/fanfiction-front-vue)).
 
 ## Table of contents
 - [Overview](#overview)
@@ -11,7 +11,6 @@
 - [Requirements](#requirements)
 - [Quick start](#quick-start)
   - [Backend (Django)](#backend-django)
-  - [Frontend (Vue.js/Ionic)](#frontend-vuejsionic)
 - [Background tasks](#background-tasks)
 - [Translations](#translations)
 - [Recommendation engine](#recommendation-engine)
@@ -45,7 +44,7 @@ A live demo of the mobile web application is available at
 ├── chapters/, comments/, categories/, helpcenter/, posts/, forum/  # Domain apps
 ├── templates/, static/   # Django templates and static assets
 ├── docs/           # Additional documentation and guidelines
-└── frontend (Vue.js/Ionic)  # Separate project served from the same repository
+(the Vue 3 frontend lives in a separate project: fanfiction-front-vue)
 ```
 
 ## Requirements
@@ -161,5 +160,4 @@ Issues are specs: a Claude agent refines them, implements one ticket at a time a
 - [Django documentation](https://docs.djangoproject.com/)
 - [Django REST Framework](https://www.django-rest-framework.org/)
 - [Celery task queue](https://docs.celeryq.dev/)
-- [Vue.js guide](https://vuejs.org/v2/guide/)
-- [Ionic documentation](https://ionicframework.com/docs)
+- [Vue 3 guide](https://vuejs.org/guide/)

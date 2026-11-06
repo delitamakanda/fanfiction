@@ -25,7 +25,7 @@ Lint/format: Ruff (config in `pyproject.toml`). The codebase is **not** clean ye
 
 ## Architecture
 
-Django 6, Python 3.12/3.13 (CI matrix; `runtime.txt` is 3.12). Bilingual fanfiction platform: a DRF API consumed by a separate Vue.js/Ionic front (`http://localhost:5173`, fanfics-fr.netlify.app). Project package `backend/` (settings, URLs, Celery app with the beat schedule, sitemaps, S3 storage for production via `settings_production.py`).
+Django 6, Python 3.12/3.13 (CI matrix; `runtime.txt` is 3.12). Bilingual fanfiction platform: a DRF API consumed by a separate Vue 3 front, `fanfiction-front-vue` (`http://localhost:5173`, fanfics-fr.netlify.app). Project package `backend/` (settings, URLs, Celery app with the beat schedule, sitemaps, S3 storage for production via `settings_production.py`).
 
 - `api/` — URL hub (`/api/` root and health checks, `/api/auth/token/` JWT, `/api/v1/<app>/` resources, `/api/forum/`), shared permissions (`custompermission.py`), pagination, auth backends (`EmailAuthBackend`: login with the e-mail address), recommendation engine (`recommender.py`), Celery tasks.
 - `fanfics/` — `Fanfic` (`status` `brouillon` / `publié`, `Fanfic.published` manager, `MultiSelectField` genres, `classement`, likes, `total_likes`, `views`), `Recommendation`, `UserFavorite`, scraper and CSV import, PDF export.
