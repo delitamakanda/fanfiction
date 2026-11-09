@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -9,25 +11,34 @@ from django.http.response import Http404
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from rest_framework import generics, permissions, status, serializers
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from rest_framework import generics, permissions, serializers, status
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.token_blacklist.models import (
-    OutstandingToken,
     BlacklistedToken,
+    OutstandingToken,
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from accounts.api.serializers import AccountProfileSerializer, FollowStoriesSerializer, FollowUserSerializer, \
-    SignupSerializer, SocialSerializer, UserSerializer, ChangePasswordSerializer, NotificationSerializer, \
-    PasswordResetSerializer, ContactMailSerializer, DeleteAccountSerializer
-from accounts.models import FollowUser, FollowStories, Social, Notification
-from api import custompermission, custompagination
+from accounts.api.serializers import (
+    AccountProfileSerializer,
+    ChangePasswordSerializer,
+    ContactMailSerializer,
+    DeleteAccountSerializer,
+    FollowStoriesSerializer,
+    FollowUserSerializer,
+    NotificationSerializer,
+    PasswordResetSerializer,
+    SignupSerializer,
+    SocialSerializer,
+    UserSerializer,
+)
+from accounts.models import FollowStories, FollowUser, Notification, Social
+from api import custompagination, custompermission
 from fanfics.api.serializers import FanficListSerializer
 from fanfics.models import Fanfic
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +97,7 @@ class PasswordResetConfirmView(generics.GenericAPIView):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             return Response({'error': 'Invalid token or uidb64.'}, status=status.HTTP_400_BAD_REQUEST)
 
         if not default_token_generator.check_token(user, token):
@@ -591,7 +602,7 @@ class NotificationListView(generics.ListAPIView):
     permission_classes = (
         permissions.IsAuthenticated,
     )
-    pagination_class = custompagination.StandardResultsSetPagination
+    pagination_class = custompagination.NotificationCursorPagination
     queryset = Notification.objects.none()
 
     def get_queryset(self):
@@ -605,7 +616,7 @@ class NotificationListView(generics.ListAPIView):
             'user__accountprofile',
         ).prefetch_related(
             'target',
-        ).order_by('-created')
+        ).order_by('-created', '-id')
 
 
 class AcceptRecoConsentView(generics.UpdateAPIView):

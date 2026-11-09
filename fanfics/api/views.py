@@ -1,26 +1,28 @@
-from django.http import BadHeaderError
-from django.template.loader import render_to_string, get_template
-from django_filters.rest_framework import DjangoFilterBackend
-from django.core.cache import cache
+import logging
 
-from rest_framework import generics, filters, status, views
-from rest_framework.throttling import ScopedRateThrottle
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, ViewSet
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-
+from django.core.cache import cache
 from django.core.mail import send_mail
+from django.db.models import Q
+from django.http import BadHeaderError
+from django.template.loader import get_template, render_to_string
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics, status, views
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
+from rest_framework.viewsets import ModelViewSet, ViewSet
 
-from fanfics.models import Fanfic, Recommendation
-
-from fanfics.api.serializers import  FanficListSerializer, FanficCreateSerializer, FanficDetailSerializer
+from api import custompagination, custompermission
 from fanfics.api.filters import FanficFilter
-
-from api import custompermission, custompagination
-
-import logging
+from fanfics.api.search import FanficSearchFilter
+from fanfics.api.serializers import (
+    FanficCreateSerializer,
+    FanficDetailSerializer,
+    FanficListSerializer,
+)
+from fanfics.models import Fanfic, Recommendation
 
 logger = logging.getLogger(__name__)
 
@@ -52,14 +54,15 @@ class StatusViewSet(ChoicesViewSet):
 
 class FanficViewSet(ModelViewSet):
     queryset = Fanfic.objects.all()
-    filter_class = FanficFilter
-    pagination_class = custompagination.StandardResultsSetPagination
+    filterset_class = FanficFilter
+    pagination_class = custompagination.StandardLimitOffsetPagination
     lookup_field = 'slug'
     lookup_url_kwarg = 'slug'
     throttle_scope = 'anon'
     throttle_classes = (ScopedRateThrottle,)
     filter_backends = [
         DjangoFilterBackend,
+        FanficSearchFilter,
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
@@ -80,6 +83,15 @@ class FanficViewSet(ModelViewSet):
         custompermission.IsCurrentAuthorOrReadOnly,
     )
 
+    def get_queryset(self):
+        """Published fanfics, plus the drafts of the current user."""
+        user = self.request.user
+        visible = Q(status='publié')
+        if user.is_authenticated:
+            visible |= Q(author=user)
+        return Fanfic.objects.filter(visible).select_related(
+            'author', 'category', 'subcategory')
+
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update':
             return FanficCreateSerializer
@@ -89,7 +101,7 @@ class FanficViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        session_key = 'viewed_fanfic_{}'.format(instance.pk)
+        session_key = f'viewed_fanfic_{instance.pk}'
         if not self.request.session.get(session_key, False):
             instance.views += 1
             instance.save()
@@ -121,15 +133,15 @@ class ShareFanficAPIView(views.APIView):
             comments = request.data.get('comments')
 
             fanfic_url = current_site.domain + '/#/' + 'fanfic/' + fanfic.slug
-            subject = '{} ({}) recommends you reading "{}"'.format(name, email, fanfic.title)
-            message = 'Read "{}" at {}\n\n{}\'s comments: {}'.format(fanfic.title, fanfic_url, name, comments)
+            subject = f'{name} ({email}) recommends you reading "{fanfic.title}"'
+            message = f'Read "{fanfic.title}" at {fanfic_url}\n\n{name}\'s comments: {comments}'
             send_mail(subject, message, settings.SERVER_EMAIL, [to_email])
             return Response({"message": "ok"}, status=status.HTTP_200_OK)
         except BadHeaderError as e:
             logger.warning(f"Invalid header: {str(e)}")
             return Response({"status": f"{str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
         except Fanfic.DoesNotExist:
-            logger.warning(f"Fanfic does not exist")
+            logger.warning("Fanfic does not exist")
             return Response({"status": "Fanfic does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
@@ -158,10 +170,10 @@ class EmailFeedbackView(views.APIView):
             send_mail('fanfiction signalee', msg_text, 'no-reply@fanfiction.com',[settings.SERVER_EMAIL], html_message=msg_html, fail_silently=False)
             return Response({"message": "ok"}, status=status.HTTP_200_OK)
         except BadHeaderError:
-            logger.warning(f"Invalid header")
+            logger.warning("Invalid header")
             return Response({"status": "invalid header"}, status=status.HTTP_400_BAD_REQUEST)
         except Fanfic.DoesNotExist:
-            logger.warning(f"Fanfic does not exist")
+            logger.warning("Fanfic does not exist")
             return Response({"status": "Fanfic does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
