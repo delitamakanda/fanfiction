@@ -1,9 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, viewsets, status, filters
+from rest_framework import filters, permissions, viewsets
 from rest_framework.exceptions import PermissionDenied
 
-from comments.models import Comment
+from api.custompagination import CommentCursorPagination
 from comments.api.serializers import CommentSerializer
+from comments.models import Comment
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
@@ -11,6 +13,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = (
         permissions.IsAuthenticated,
     )
+    pagination_class = CommentCursorPagination
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['fanfic', 'chapter',]
     ordering_fields = ['created', 'updated']

@@ -179,8 +179,7 @@ STATICFILES_DIRS = [
 ]
 
 REST_FRAMEWORK = {
-	'DEFAULT_PAGINATION_CLASS': 'api.custompagination.StandardResultsSetPagination',
-	'PAGE_SIZE': 50,
+	'DEFAULT_PAGINATION_CLASS': 'api.custompagination.StandardLimitOffsetPagination',
 	'DEFAULT_FILTER_BACKENDS': (
 		'django_filters.rest_framework.DjangoFilterBackend',
 		'rest_framework.filters.OrderingFilter',

@@ -1,16 +1,20 @@
 from django.contrib.flatpages.models import FlatPage
 from django.core.cache import cache
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, filters, viewsets
+from rest_framework import filters, permissions, viewsets
 
 from api import custompagination
-from helpcenter.api.serializers import FlatPageSerializer, LexiqueSerializer, FoireAuxQuestionsSerializer
-from helpcenter.models import Lexique, FoireAuxQuestions
+from helpcenter.api.serializers import (
+    FlatPageSerializer,
+    FoireAuxQuestionsSerializer,
+    LexiqueSerializer,
+)
+from helpcenter.models import FoireAuxQuestions, Lexique
 
 
 class FoireAuxQuestionsApiView(viewsets.ModelViewSet):
     serializer_class = FoireAuxQuestionsSerializer
-    pagination_class = custompagination.StandardResultsSetPagination
+    pagination_class = custompagination.StandardLimitOffsetPagination
     permission_classes = (
         permissions.AllowAny,
     )
@@ -27,7 +31,7 @@ class FoireAuxQuestionsApiView(viewsets.ModelViewSet):
 
 class LexiqueApiView(viewsets.ModelViewSet):
     serializer_class = LexiqueSerializer
-    pagination_class = custompagination.StandardResultsSetPagination
+    pagination_class = custompagination.StandardLimitOffsetPagination
     filter_backends = (
         filters.SearchFilter,
         DjangoFilterBackend,
@@ -57,7 +61,7 @@ class LexiqueApiView(viewsets.ModelViewSet):
 class FlatPageApiView(viewsets.ModelViewSet):
     queryset = FlatPage.objects.all()
     serializer_class = FlatPageSerializer
-    pagination_class = custompagination.StandardResultsSetPagination
+    pagination_class = custompagination.StandardLimitOffsetPagination
     permission_classes = (
         permissions.AllowAny,
     )

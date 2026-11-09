@@ -1,11 +1,16 @@
 import logging
 
 from django.conf import settings
-from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiResponse, OpenApiParameter
+from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiParameter,
+    OpenApiResponse,
+    extend_schema,
+)
 from openai import OpenAI
 from openai.types.chat import (
     ChatCompletionSystemMessageParam,
-    ChatCompletionUserMessageParam
+    ChatCompletionUserMessageParam,
 )
 from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
@@ -15,8 +20,12 @@ from rest_framework.response import Response
 from rest_framework.throttling import UserRateThrottle
 
 from api import custompagination
-from chapters.api.serializers import ChapterSerializer, ChapterFormattedSerializer, ChapterSummaryRequestSerializer, \
-    ChapterSummaryResponseSerializer
+from chapters.api.serializers import (
+    ChapterFormattedSerializer,
+    ChapterSerializer,
+    ChapterSummaryRequestSerializer,
+    ChapterSummaryResponseSerializer,
+)
 from chapters.models import Chapter
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
@@ -41,7 +50,7 @@ class ChapterListApiView(generics.ListAPIView):
     permission_classes = (
         permissions.AllowAny,
     )
-    pagination_class = custompagination.StandardResultsSetPagination
+    pagination_class = custompagination.StandardLimitOffsetPagination
     filter_fields = (
         'status',
     )
