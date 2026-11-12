@@ -14,7 +14,7 @@
 - [Background tasks](#background-tasks)
 - [Translations](#translations)
 - [Recommendation engine](#recommendation-engine)
-- [Scraper](#scraper)
+- [CSV import](#csv-import)
 - [Testing](#testing)
 - [Additional resources](#additional-resources)
 
@@ -29,43 +29,60 @@ A live demo of the mobile web application is available at
 
 ## Features
 - Fanfiction catalogue with categories, tags, chapters, comments and user favourites.
-- JWT/OAuth2-secured REST API built with Django REST Framework and Spectacular.
+- JWT-secured REST API built with Django REST Framework, documented with drf-spectacular.
 - Celery workers for scheduled notifications and account maintenance.
-- Recommendation engine based on user co-likes.
+- Recommendation engine based on user co-favourites ("readers who liked X also liked Y").
 - Admin and moderation tooling for managing content and users.
 - Internationalisation support and automated translation compilation.
 - Modern stack targeting Django 6.* and Python 3.13 deployments.
 
 ## Architecture
 ```
-├── backend/        # Django project configuration and Celery entrypoint
-├── api/            # REST API endpoints, serializers and services
-├── fanfics/        # Core fanfiction models, scraping utilities, recommendation engine
-├── chapters/, comments/, categories/, helpcenter/, posts/, forum/  # Domain apps
-├── templates/, static/   # Django templates and static assets
-├── docs/           # Additional documentation and guidelines
+├── backend/                 # Django project: settings, root URLs, Celery app, WSGI/ASGI
+│   ├── settings/            # base.py + development.py / test.py / production.py
+│   ├── api_urls.py          # /api/ hub (monitoring, JWT, /api/v1/<app>/, /api/forum/)
+│   └── celery.py
+├── apps/                    # Django applications (app labels unchanged: fanfics, chapters…)
+│   ├── core/                # shared: permissions, pagination, OrderField, choices,
+│   │                        # Markdown, template tags, health / system endpoints
+│   ├── accounts/            # profiles, JWT login/signup, follows, notifications, contact
+│   ├── fanfics/             # fanfics, likes, recommendations, PDF export, CSV import
+│   ├── chapters/            # chapters, autosave, AI summary (OpenAI)
+│   ├── comments/ categories/ posts/ helpcenter/ forum/
+│   └── <app>/
+│       ├── models.py        # models + QuerySets (`visible_to(user)`, `published()`…)
+│       ├── services.py      # business logic, reused by views, tasks and commands
+│       ├── api/             # serializers.py, views.py (thin), filters.py
+│       ├── urls.py
+│       ├── tasks.py         # Celery tasks (explicit names)
+│       ├── management/commands/
+│       └── tests/
+├── templates/, static/, locale/
+└── docs/
 (the Vue 3 frontend lives in a separate project: fanfiction-front-vue)
 ```
 
+Settings are picked with `DJANGO_SETTINGS_MODULE`: `manage.py` defaults to
+`backend.settings.development` (`backend.settings.test` for `manage.py test`),
+WSGI/ASGI default to `backend.settings.production`. `backend.settings_production` is kept
+as a deprecated alias.
+
 ## Requirements
-- Python 3.13+
-- django-celery-beat (for Celery/recommendations) – optional during development
+- Python 3.12+ (CI runs 3.12 and 3.13)
+- Redis for Celery (optional during development)
 - A PostgreSQL database in production (SQLite is used by default for local dev)
 
 ## Environment Variables
-The project includes an environment variable export script at `/env/envs_export.sh` that can be sourced on the VM or within Docker containers to set up all necessary environment variables. See [env/README.md](env/README.md) for detailed usage instructions.
+Settings read the environment (or a `.env` file) with `python-decouple`. See `.env.example`
+(local), `.env.docker` (docker compose) and `.env.production.example`. In Docker, `entrypoint.sh`
+also sources `/env/envs_export.sh` when it exists.
 
 ## Quick start
 Clone the repository and create the environment files (`.env`, `.env.production`, etc.) as
 needed. Example configuration for local development:
 
-```dotenv
-SECRET_KEY=change-me
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-DATABASE_URL=sqlite:///db.sqlite3
-EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-CELERY_BROKER_URL=redis://localhost:6379/0
+```bash
+cp .env.example .env
 ```
 
 ### Backend (Django)
@@ -94,6 +111,9 @@ celery -A backend worker -l info
 celery -A backend beat -l info
 ```
 
+The schedule lives in `CELERY_BEAT_SCHEDULE` (`backend/settings/base.py`): login reminders,
+deactivation of inactive accounts, daily refresh and purge of recommendations.
+
 You can also combine worker and scheduler in a single process if required:
 
 ```bash
@@ -112,33 +132,33 @@ django-admin compilemessages
 ```
 
 ## Recommendation engine
-The recommendation engine leverages Redis to track user likes and compute co-occurrence scores.
-You can experiment with it from the Django shell:
+Recommendations are computed from `UserFavorite` co-occurrences for users who gave their
+consent (`AccountProfile.reco_consent_given`), stored in `Recommendation` and cached. A daily
+Celery task refreshes them; the API serves them on `/api/v1/fanfics/recommendations/`.
 
 ```python
->>> from api.models import Fanfic
->>> from api.recommender import Recommender
->>> favourites = Fanfic.objects.filter(id__in=[1, 2])
->>> Recommender().suggest_fanfics_for(favourites)
-[<Fanfic: Elementary>, <Fanfic: Nature>, ...]
+>>> from apps.fanfics import services
+>>> services.compute_recommendations(user_id=1)
+[{'id': 12, 'title': '...', 'synopsis': '...'}, ...]
 ```
 
-## Scraper
-Import fanfiction content from external sources using the scraper utilities:
+## CSV import
+Fanfictions previously scraped from fanfiction.net are stored as CSV files in
+`apps/fanfics/management/commands/data/`. Import them (idempotent) with:
 
 ```bash
-python manage.py import_from_fanfiction_as_csv output_ccs.csv
-python manage.py import_from_fanfiction_as_csv output_op.csv
-python manage.py import_from_fanfiction_as_csv output_marvel.csv
+python manage.py populate_categories
+python manage.py import_from_fanfiction_as_csv output_ccs.csv output_op.csv output_marvel.csv --author <username>
 ```
 
-See `fanfics/scraper.py` for commands that generate these CSV files.
+Other seed commands: `populate_subcategories`, `populate_faq`, `populate_lexique`, `board`
+(forum boards), `seed_demo` (DEBUG only).
 
 ## Testing
 Run the test suite with coverage reporting:
 
 ```bash
-coverage run --source=api --omit=*/migrations/* manage.py test
+coverage run manage.py test
 coverage report -m
 ```
 
@@ -146,6 +166,13 @@ For a quicker feedback loop you can also use Django's built-in test runner direc
 
 ```bash
 python manage.py test
+python manage.py test apps.fanfics    # one app
+```
+
+Lint and format with Ruff (configuration in `pyproject.toml`):
+
+```bash
+ruff check . && ruff format --check .
 ```
 
 ## Demo data

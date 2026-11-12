@@ -1,11 +1,47 @@
+[project]
+name = "fanfiction"
+version = "1.0.0"
+description = "Bilingual fanfiction platform: Django REST API for the Vue front."
+requires-python = ">=3.12"
+
 [tool.ruff]
 line-length = 88
 target-version = "py312"
+extend-exclude = ["*/migrations/*"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "SIM"]
-ignore = ["F403", "F405", "E501", "B904", "E712"]
+select = [
+    "E", "W",   # pycodestyle
+    "F",        # pyflakes
+    "I",        # isort
+    "B",        # bugbear
+    "UP",       # pyupgrade
+    "SIM",      # simplify
+    "C4",       # comprehensions
+    "DJ",       # django
+    "PIE",
+    "RET",
+    "S",        # bandit (security)
+    "BLE",      # blind except
+    "RUF",
+]
+ignore = [
+    "E501",     # line length is handled by the formatter
+    "RUF012",   # mutable class attributes are idiomatic in Django/DRF classes
+    "DJ001",    # existing nullable CharFields are part of the schema
+    "RUF001", "RUF002", "RUF003",  # French typography (’ « » –) is intended
+]
 
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "backend.settings"
-python_files = ["test_*.py", "*_test.py"]
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["S101", "S105", "S106"]
+"backend/settings/*.py" = ["F405"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apps", "backend"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.coverage.run]
+source = ["apps", "backend"]
+omit = ["*/migrations/*", "*/tests/*"]

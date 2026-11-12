@@ -7,7 +7,7 @@ if [ -f /env/envs_export.sh ]; then
     source /env/envs_export.sh
 else
     # Fallback to default DJANGO_SETTINGS_MODULE
-    export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-backend.settings_production}"
+    export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-backend.settings.production}"
 fi
 
 # Execute optional build command if BUILD_COMMAND is set
