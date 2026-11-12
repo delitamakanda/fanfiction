@@ -128,7 +128,7 @@ Le premier lancement manuel importe tout le backlog existant dans le board.
 | `scripts/agent/start-app.sh`                      | SQLite jetable + `seed_demo` + `runserver` pour l'agent     |
 | `scripts/agent/api.sh`                            | Appels à l'API locale avec les comptes de démo              |
 | `scripts/agent/lint-changed.sh`                   | Ruff sur les seuls fichiers Python modifiés (sans reformater les fichiers à tabulations) |
-| `fanfics/management/commands/seed_demo.py`        | Données de démo (comptes, fanfics, chapitres, commentaire)  |
+| `apps/fanfics/management/commands/seed_demo.py`   | Données de démo (comptes, fanfics, chapitres, commentaire)  |
 
 ## Différences avec elearning
 

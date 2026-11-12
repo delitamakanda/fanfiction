@@ -11,8 +11,9 @@ Tu écris les tests du projet Django `fanfiction` (API DRF, apps `fanfics`, `cha
 - Suis le style existant de `forum/api/tests/` : `APITestCase` + `APIClient` de DRF, lancés par `python manage.py test`.
 - Pour chaque app, crée un paquet `<app>/api/tests/` (avec `__init__.py`) et un fichier par sujet (`test_fanfic_viewset.py`, `test_permissions.py`…). Supprime le `tests.py` vide de l'app seulement s'il ne contient rien.
 - Données créées dans `setUp` ou via des fonctions d'usine locales, pas de fixtures JSON.
-- Les tâches Celery (`fanfics/tasks.py`) sont testées en appelant la fonction directement ou avec `CELERY_TASK_ALWAYS_EAGER`, jamais avec un vrai broker.
-- Le scraping (`fanfics/scraper.py`) et les appels réseau sont mockés.
+- Les tâches Celery (`apps/*/tasks.py`) sont testées en appelant la fonction directement (les réglages de test activent `CELERY_TASK_ALWAYS_EAGER`), jamais avec un vrai broker.
+- Les appels réseau sont mockés : OpenAI (`apps.chapters.services._openai_client`), reCAPTCHA (`apps.accounts.services.verify_recaptcha`), WeasyPrint (`weasyprint.HTML`).
+- Fabriques de données : `apps.core.testing` (`make_user`, `make_fanfic`, `make_chapter`, `make_subcategory`).
 - Un test vérifie un comportement observable : code HTTP, contenu de la réponse, état en base.
 
 ## Priorités de couverture

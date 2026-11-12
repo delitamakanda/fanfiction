@@ -1,21 +1,24 @@
+"""Sitemaps. Locations point at the Vue front routes or the public API."""
+
 from django.contrib.sitemaps import Sitemap
-from fanfics.models import Fanfic
-from categories.models import Category, SubCategory
+
+from apps.categories.models import Category, SubCategory
+from apps.fanfics.models import Fanfic
 
 
 class FanficSitemap(Sitemap):
     changefreq = "daily"
     priority = 0.8
-    protocol = 'https'
+    protocol = "https"
 
     def items(self):
-        return Fanfic.objects.filter(status='publié').select_related('category','subcategory').order_by('-publish')
+        return Fanfic.published.order_by("-publish")
 
     def lastmod(self, obj):
-        return obj.updated if hasattr(obj, 'updated') else obj.publish
+        return obj.updated or obj.publish
 
     def location(self, obj):
-        return f'/fanfics/{obj.slug}/'
+        return f"/fanfics/{obj.slug}/"
 
 
 class CategorySitemap(Sitemap):
@@ -25,16 +28,10 @@ class CategorySitemap(Sitemap):
     def items(self):
         return Category.objects.all()
 
-    def location(self, obj):
-        return obj.get_absolute_url()
-
 
 class SubCategorySitemap(Sitemap):
     changefreq = "monthly"
     priority = 0.3
 
     def items(self):
-        return SubCategory.objects.select_related('category')
-
-    def location(self, obj):
-        return obj.get_absolute_url()
+        return SubCategory.objects.select_related("category")

@@ -1,20 +1,21 @@
-{% load rest_framework %}
-{% load static %}
-<html>
+<!DOCTYPE html>
+<html lang="{{ fanfic.language|default:'fr' }}">
+<head>
+    <meta charset="utf-8">
+    <title>{{ fanfic.title }}</title>
+    <style>
+        body { font-family: "DejaVu Serif", Georgia, serif; line-height: 1.5; }
+        h1 { font-size: 1.8em; margin-bottom: 0.2em; }
+        h2 { font-size: 1.3em; margin-top: 2em; page-break-before: always; }
+        .meta { color: #555; font-size: 0.9em; }
+    </style>
+</head>
 <body>
-    <h2>
-        {{ fanfic.title }}
-    </h2>
-    <span>
-        Publié le : {{ fanfic.created|date:"d F Y" }}
-    </span>
-    {% for item in chapters.all %}
-        <h4>{{ item.title }}</h4>
-        <div>
-            {% autoescape on %}
-                {{ item.text | safe }}
-            {% endautoescape %}
-        </div>
+    <h1>{{ fanfic.title }}</h1>
+    <p class="meta">Publié le : {{ fanfic.publish|date:"d F Y" }} — {{ fanfic.author.username }}</p>
+    {% for chapter in chapters %}
+        <h2>{{ chapter.title }}</h2>
+        <div>{{ chapter.text|linebreaks }}</div>
     {% endfor %}
 </body>
 </html>

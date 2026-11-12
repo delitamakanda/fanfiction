@@ -34,6 +34,19 @@ services:
       redis:
         condition: service_started
 
+  worker:
+    build: .
+    env_file:
+      - .env.docker
+    # Celery worker with the embedded beat scheduler (CELERY_BEAT_SCHEDULE).
+    entrypoint: ["celery"]
+    command: ["-A", "backend", "worker", "-B", "-l", "info"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
 volumes:
   postgres_data:
   redis_data:
